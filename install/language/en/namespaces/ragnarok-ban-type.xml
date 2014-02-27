@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-ban-type" key="1">Permanent ban</word>
+    <word namespace="ragnarok-ban-type" key="2">Temporary ban</word>
+    <word namespace="ragnarok-ban-type" key="3">Unban</word>
+  </wordgroup>
+</languageimport>

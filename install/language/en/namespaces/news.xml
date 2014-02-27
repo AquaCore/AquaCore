@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="news" key="edit-post">Edit Post</word>
+    <word namespace="news" key="featured-desc">Featured posts are displayed in the front page.</word>
+    <word namespace="news" key="more-posts">More</word>
+    <word namespace="news" key="new-post">New Post</word>
+    <word namespace="news" key="news">News</word>
+    <word namespace="news" key="news-category">News Category</word>
+    <word namespace="news" key="post-create-fail">Failed to create post.</word>
+    <word namespace="news" key="post-created">Post created successfully.</word>
+    <word namespace="news" key="posts-deleted-s">%s post deleted.</word>
+    <word namespace="news" key="posts-deleted-p">%s posts deleted.</word>
+    <word namespace="news" key="post-deleted"><![CDATA[The post <b%s</b> has been deleted.]]></word>
+    <word namespace="news" key="failed-to-delete"><![CDATA[Failed to delete <b%s</b>.]]></word>
+    <word namespace="news" key="cannot-delete"><![CDATA[The post <b%s</b> cannot be deleted.]]></word>
+    <word namespace="news" key="post-updated">Post updated.</word>
+    <word namespace="news" key="posted-by">Posted by %s</word>
+    <word namespace="news" key="posts">Posts</word>
+    <word namespace="news" key="post">Post</word>
+    <word namespace="news" key="view-post">View Post</word>
+    <word namespace="news" key="confirm-delete-s">Are you sure you want to delete this post?</word>
+    <word namespace="news" key="confirm-delete-p">Are you sure you want to delete these posts?</word>
+  </wordgroup>
+</languageimport>

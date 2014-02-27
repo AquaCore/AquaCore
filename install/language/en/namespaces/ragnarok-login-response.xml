@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-login-response" key="-3">IP banned</word>
+    <word namespace="ragnarok-login-response" key="0">Unregistered ID</word>
+    <word namespace="ragnarok-login-response" key="1">Incorrect password</word>
+    <word namespace="ragnarok-login-response" key="2">Account expired</word>
+    <word namespace="ragnarok-login-response" key="3">Rejected from server</word>
+    <word namespace="ragnarok-login-response" key="4">Blocked by GM</word>
+    <word namespace="ragnarok-login-response" key="5">Not latest game EXE</word>
+    <word namespace="ragnarok-login-response" key="6">Banned</word>
+    <word namespace="ragnarok-login-response" key="7">Server over-population</word>
+    <word namespace="ragnarok-login-response" key="8">Account limit from company</word>
+    <word namespace="ragnarok-login-response" key="9">Ban by DBA</word>
+    <word namespace="ragnarok-login-response" key="10">Email not confirmed</word>
+    <word namespace="ragnarok-login-response" key="11">Ban by GM</word>
+    <word namespace="ragnarok-login-response" key="12">Working in DB</word>
+    <word namespace="ragnarok-login-response" key="13">Self lock</word>
+    <word namespace="ragnarok-login-response" key="14">Not Permitted Group</word>
+    <word namespace="ragnarok-login-response" key="15">Not Permitted Group</word>
+    <word namespace="ragnarok-login-response" key="99">Account gone</word>
+    <word namespace="ragnarok-login-response" key="100">Successful</word>
+    <word namespace="ragnarok-login-response" key="101">Hacking investigation</word>
+    <word namespace="ragnarok-login-response" key="102">Bug investigation</word>
+    <word namespace="ragnarok-login-response" key="103">Deleting character</word>
+    <word namespace="ragnarok-login-response" key="104">Deleting spouse char</word>
+  </wordgroup>
+</languageimport>

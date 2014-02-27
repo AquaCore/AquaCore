@@ -1,0 +1,58 @@
+.ac-pagination-form {
+	display: inline-block;
+}
+.ac-pagination {
+	display: block;
+}
+.ac-pagination-disabled:hover,
+.ac-pagination-link,
+.ac-pagination-previous,
+.ac-pagination-next,
+.ac-pagination-first,
+.ac-pagination-last {
+	display: inline-block;
+	padding: 1px 5px 0 5px;
+	margin: 0 4px;
+	color: $bluish-gray-3;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	font-size: 15px;
+	text-align: center;
+	text-decoration: none;
+	line-height: 25px !important;
+	border-color: $mid-gray-3;
+	border-style: solid;
+	border-width: 1px 1px 3px 1px;
+	background: $light-gray-2;
+	cursor: pointer;
+	@include box-shadow(none);
+	@include background(linear-gradient($light-gray-3, $mid-gray-2));
+	@include border-radius(5px);
+}
+
+.ac-pagination-link,
+.ac-pagination-previous,
+.ac-pagination-next,
+.ac-pagination-first,
+.ac-pagination-last {
+	&:hover {
+		color: $mid-blue-2;
+	}
+	&:active {
+		border-width: 1px;
+		@include text-shadow(-1px -1px 0 white);
+	}
+}
+.ac-pagination-disabled {
+	cursor: default !important;
+}
+.ac-pagination-normal.ac-pagination-active,
+.ac-pagination-normal.ac-pagination-active:hover,
+.ac-pagination-normal.ac-pagination-active:active
+{
+	font-style: normal;
+	color: white;
+	border-color: $mid-blue-2;
+	@include text-shadow(-1px -1px 0 $mid-blue-2);
+	@include background(linear-gradient($light-blue-3, $mid-blue-3));
+}

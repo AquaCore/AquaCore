@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="profile" key="preferences">Preferences</word>
+    <word namespace="profile" key="id">ID</word>
+    <word namespace="profile" key="username">Username</word>
+    <word namespace="profile" key="x-account">%s's Account</word>
+    <word namespace="profile" key="display-name">Display mame</word>
+    <word namespace="profile" key="email">Email</word>
+    <word namespace="profile" key="avatar">Avatar</word>
+    <word namespace="profile" key="birthday">Birthday</word>
+    <word namespace="profile" key="password">Password</word>
+    <word namespace="profile" key="role">Role</word>
+    <word namespace="profile" key="status">Status</word>
+    <word namespace="profile" key="registration-date">Registration date</word>
+    <word namespace="profile" key="ip-address">IP address</word>
+    <word namespace="profile" key="use-custom-pic">Use custom image</word>
+    <word namespace="profile" key="use-gravatar">Use gravatar</word>
+    <word namespace="profile" key="avatar-file">File</word>
+    <word namespace="profile" key="avatar-url">URL</word>
+    <word namespace="profile" key="gravatar">Gravatar</word>
+    <word namespace="profile" key="gravatar-desc"><![CDATA[<a href="https://gravatar.com" target="_blank">More information bout Gravatar</a>]]></word>
+    <word namespace="profile" key="password-incorrect">The password you have entered is incorrect.</word>
+    <word namespace="profile" key="password-mismatch">The passwords you have entered do not match.</word>
+    <word namespace="profile" key="username-taken">The username you have chosen is already in use.</word>
+    <word namespace="profile" key="display-name-taken">The display name you have chosen is already in use.</word>
+    <word namespace="profile" key="email-taken">The email you have chosen is already in use.</word>
+    <word namespace="profile" key="username-len-min">The username you have entered is invalid, usernames must be at least %d characters long.</word>
+    <word namespace="profile" key="username-len-range">The username you have entered is invalid, usernames must be between %d and %d characters long.</word>
+    <word namespace="profile" key="password-len-min">The password you have entered is invalid, passwords must be at least %d characters long.</word>
+    <word namespace="profile" key="password-len-range">The password you have entered is invalid, passwords must be between %d and %d characters long.</word>
+    <word namespace="profile" key="display-name-len-min">The display name you have entered is invalid, display names must be at least %d characters long.</word>
+    <word namespace="profile" key="display-name-len-range">The display name you have entered is invalid, display names must be between %d and %d characters long.</word>
+    <word namespace="profile" key="email-len-min">The email you have entered is invalid, emails must be at least %d characters long.</word>
+    <word namespace="profile" key="email-len-range">The email you have entered is invalid, emails must be between %d and %d characters long.</word>
+    <word namespace="profile" key="birthday-len-min">The birthday you have entered is invalid, please enter a date later than %s.</word>
+    <word namespace="profile" key="birthday-len-range">The birthday you have entered is invalid, birthdays must be between %d and %d characters long.</word>
+    <word namespace="profile" key="username-invalid-character">Your username contains invalid characters, the following characters aren't allowed: %s</word>
+    <word namespace="profile" key="password-invalid-character">Your password contains invalid characters, the following characters aren't allowed: %s</word>
+    <word namespace="profile" key="display-name-invalid-character">Your display name contains invalid characters, the following characters aren't allowed: %s</word>
+    <word namespace="profile" key="current-password">Current password</word>
+    <word namespace="profile" key="avatar-size-limit">Your avatar's dimensions cannot exceed %dx%d pixels.</word>
+    <word namespace="profile" key="ban-account">Ban %s</word>
+    <word namespace="profile" key="unban-account">Unban %s</word>
+    <word namespace="profile" key="ban">Ban</word>
+    <word namespace="profile" key="unban">Unban</word>
+    <word namespace="profile" key="unban-time">Unban time</word>
+    <word namespace="profile" key="unban-time-desc">Leave this field blank to ban this user permanently.</word>
+    <word namespace="profile" key="ban-reason">Ban reason</word>
+    <word namespace="profile" key="unban-reason">Unban reason</word>
+    <word namespace="profile" key="edit-account">Edit Account</word>
+    <word namespace="profile" key="edit-account-admin">Edit %s's Account</word>
+    <word namespace="profile" key="account-info">%s's Information</word>
+    <word namespace="profile" key="ragnarok-accounts">Ragnarök Accounts</word>
+    <word namespace="profile" key="user">User</word>
+    <word namespace="profile" key="banned-by">Banned/Unbanned by</word>
+    <word namespace="profile" key="ban-date">Date</word>
+    <word namespace="profile" key="unban-date">Unban date</word>
+    <word namespace="profile" key="ban-type">Ban type</word>
+    <word namespace="profile" key="ban-accounts">Ban RO accounts</word>
+    <word namespace="profile" key="unban-accounts">Unban RO accounts</word>
+  </wordgroup>
+</languageimport>

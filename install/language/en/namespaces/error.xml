@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="error" key="view-error">View Error</word>
+    <word namespace="error" key="error-not-found">Error not found.</word>
+    <word namespace="error" key="error-info">Error Info</word>
+    <word namespace="error" key="date">Date</word>
+    <word namespace="error" key="url">URL</word>
+    <word namespace="error" key="ip-address">IP address</word>
+    <word namespace="error" key="user">User</word>
+    <word namespace="error" key="error-title"><![CDATA[(#%d) <b>%s</b> - Error <b>%s</b>]]></word>
+    <word namespace="error" key="line-number">line %d</word>
+    <word namespace="error" key="function">Function/Method</word>
+    <word namespace="error" key="file">File</word>
+    <word namespace="error" key="line">Line</word>
+    <word namespace="error" key="class">Class</word>
+    <word namespace="error" key="code">Code</word>
+    <word namespace="error" key="id">Error ID</word>
+    <word namespace="error" key="viewing-error">Viewing Error #%d</word>
+    <word namespace="error" key="no-errors-found">No errors found.</word>
+    <word namespace="error" key="x-errors-found">%d errors found.</word>
+    <word namespace="error" key="view-plain-text">View as plain text</word>
+  </wordgroup>
+</languageimport>

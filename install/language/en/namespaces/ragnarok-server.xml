@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-server" key="new-server">Add Server</word>
+    <word namespace="ragnarok-server" key="new-server-settings">Add Server - Settings</word>
+    <word namespace="ragnarok-server" key="new-server-groups">Add Server - Groups</word>
+    <word namespace="ragnarok-server" key="new-server-servers">Add Server - Servers</word>
+    <word namespace="ragnarok-server" key="server-name-label">Name</word>
+    <word namespace="ragnarok-server" key="server-key-label">Server Key</word>
+    <word namespace="ragnarok-server" key="server-key-desc">Server's unique identifier, used in URLs.</word>
+    <word namespace="ragnarok-server" key="db-host-label">Host</word>
+    <word namespace="ragnarok-server" key="db-port-label">Port</word>
+    <word namespace="ragnarok-server" key="db-database-label">Database Name</word>
+    <word namespace="ragnarok-server" key="db-username-label">Username</word>
+    <word namespace="ragnarok-server" key="db-password-label">Password</word>
+    <word namespace="ragnarok-server" key="db-charset-label">Charset</word>
+    <word namespace="ragnarok-server" key="db-timezone-label">Timezone</word>
+    <word namespace="ragnarok-server" key="db-timezone-desc">Timezone or time offset (e.g.: GTM, -3:00)</word>
+    <word namespace="ragnarok-server" key="duplicate-key">This key is already in use.</word>
+    <word namespace="ragnarok-server" key="use-md5-label">Use MD5</word>
+    <word namespace="ragnarok-server" key="use-pincode-label">Use Pincode</word>
+    <word namespace="ragnarok-server" key="case-sensitive-login-label">Case Sensitive Login</word>
+    <word namespace="ragnarok-server" key="default-group-id-label">Default Group ID</word>
+    <word namespace="ragnarok-server" key="group-id-label">Group ID</word>
+    <word namespace="ragnarok-server" key="group-name-label">Name</word>
+    <word namespace="ragnarok-server" key="group-desc-label">Description</word>
+    <word namespace="ragnarok-server" key="use-slots-label">Character Slots</word>
+    <word namespace="ragnarok-server" key="use-slots-desc"><![CDATA[Default number of available char slots. Use "0" to disable or in case your server doesn't support this feature.]]></word>
+    <word namespace="ragnarok-server" key="max-acc-label">Maximum Accounts</word>
+    <word namespace="ragnarok-server" key="max-acc-desc"><![CDATA[Limit of accounts a user can register under their CP account. Use "0" to disable this feature.]]></word>
+    <word namespace="ragnarok-server" key="password-min-label">Minimum Password Length</word>
+    <word namespace="ragnarok-server" key="password-max-label">Maximum Password Length</word>
+    <word namespace="ragnarok-server" key="password-regex-label">Password Pattern</word>
+    <word namespace="ragnarok-server" key="password-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in passwords.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
+    <word namespace="ragnarok-server" key="username-min-label">Minimum Username Length</word>
+    <word namespace="ragnarok-server" key="username-max-label">Maximum Username Length</word>
+    <word namespace="ragnarok-server" key="username-regex-label">Username Pattern</word>
+    <word namespace="ragnarok-server" key="username-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in usernames.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
+    <word namespace="ragnarok-server" key="emulator-label">Emulator</word>
+    <word namespace="ragnarok-server" key="login-server-host-label">Login Server IP</word>
+    <word namespace="ragnarok-server" key="login-server-port-label">Login Server Port</word>
+    <word namespace="ragnarok-server" key="status-timeout-label">Status Timeout</word>
+    <word namespace="ragnarok-server" key="status-timeout-desc">Time spent to determine whether the server is up (seconds).</word>
+    <word namespace="ragnarok-server" key="status-cache-label">Status Cache</word>
+    <word namespace="ragnarok-server" key="status-cache-desc">Time to wait before updating the server's status (seconds).</word>
+    <word namespace="ragnarok-server" key="add-group">Add Group</word>
+    <word namespace="ragnarok-server" key="section-login-connection">Login Database</word>
+    <word namespace="ragnarok-server" key="section-log-connection">Log Database</word>
+    <word namespace="ragnarok-server" key="section-settings">Settings</word>
+    <word namespace="ragnarok-server" key="section-password">Password</word>
+    <word namespace="ragnarok-server" key="section-username">Username</word>
+    <word namespace="ragnarok-server" key="section-group-id">Group ID</word>
+    <word namespace="ragnarok-server" key="max-username-err">The maximum username length must be higher than the minimum.</word>
+    <word namespace="ragnarok-server" key="max-password-err">The maximum password length must be higher than the minimum.</word>
+    <word namespace="ragnarok-server" key="group-count-mismatch">The number of group IDs does not correspond to the number of names inserted.</word>
+    <word namespace="ragnarok-server" key="group-id-not-number">The group ID inserted is not a number.</word>
+    <word namespace="ragnarok-server" key="group-id-wrong-value">The group IDs must be numbers between 0 and 99.</word>
+    <word namespace="ragnarok-server" key="group-name-len">Group names cannot be longer than 255 characters.</word>
+    <word namespace="ragnarok-server" key="delete-server">Delete Server</word>
+    <word namespace="ragnarok-server" key="edit-server">Edit Server - %s</word>
+    <word namespace="ragnarok-server" key="updated"><![CDATA[Server <b>%s</b> updated.]]></word>
+    <word namespace="ragnarok-server" key="confirm-delete">Are you sure you want to remove this server from the control panel?</word>
+    <word namespace="ragnarok-server" key="link-label">Account Linking</word>
+    <word namespace="ragnarok-server" key="link-desc">Allow users to link pre existing game accounts to their site accounts.</word>
+    <word namespace="ragnarok-server" key="ban-log">Ban Log</word>
+    <word namespace="ragnarok-server" key="login-log">Login Log</word>
+    <word namespace="ragnarok-server" key="password-reset-log">Password Reset Log</word>
+    <word namespace="ragnarok-server" key="accounts">Accounts</word>
+    <word namespace="ragnarok-server" key="settings">Settings</word>
+    <word namespace="ragnarok-server" key="add-charmap">Add Server</word>
+  </wordgroup>
+</languageimport>

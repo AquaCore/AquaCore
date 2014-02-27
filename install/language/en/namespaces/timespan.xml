@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="timespan" key="hourly">Hourly</word>
+    <word namespace="timespan" key="daily">Daily</word>
+    <word namespace="timespan" key="weekly">Weekly</word>
+    <word namespace="timespan" key="monthly">Monthly</word>
+    <word namespace="timespan" key="yearly">Yearly</word>
+  </wordgroup>
+</languageimport>

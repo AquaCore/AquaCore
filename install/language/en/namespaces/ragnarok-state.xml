@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-state" key="0">Normal</word>
+    <word namespace="ragnarok-state" key="1">Unregistered ID</word>
+    <word namespace="ragnarok-state" key="2">Incorrect user ID</word>
+    <word namespace="ragnarok-state" key="3">Expired</word>
+    <word namespace="ragnarok-state" key="4">Rejected from server</word>
+    <word namespace="ragnarok-state" key="5">Blocked by GM</word>
+    <word namespace="ragnarok-state" key="6">Game EXE not up-to-date</word>
+    <word namespace="ragnarok-state" key="7">Temporarily banned</word>
+    <word namespace="ragnarok-state" key="8">Server jammed</word>
+    <word namespace="ragnarok-state" key="9">Server closed</word>
+    <word namespace="ragnarok-state" key="10">Permanently banned</word>
+    <word namespace="ragnarok-state" key="11">Awaiting validation</word>
+    <word namespace="ragnarok-state" key="12">Permanently banned</word>
+    <word namespace="ragnarok-state" key="13">Suspended</word>
+    <word namespace="ragnarok-state" key="14">Locked</word>
+    <word namespace="ragnarok-state" key="15">Server closed</word>
+    <word namespace="ragnarok-state" key="16">Awaiting validation</word>
+    <word namespace="ragnarok-state" key="18">Banned</word>
+    <word namespace="ragnarok-state" key="19">Unlicensed client</word>
+    <word namespace="ragnarok-state" key="20">Rejected from server</word>
+  </wordgroup>
+</languageimport>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-card-prefix" key="4001">Lucky</word>
+    <word namespace="ragnarok-card-prefix" key="4002">Vital</word>
+    <word namespace="ragnarok-card-prefix" key="4003">Hard</word>
+    <word namespace="ragnarok-card-prefix" key="4004">Dexterous</word>
+    <word namespace="ragnarok-card-prefix" key="4005">Hallowed</word>
+    <word namespace="ragnarok-card-prefix" key="4006">Lucky</word>
+    <word namespace="ragnarok-card-prefix" key="4007">Beholder</word>
+    <word namespace="ragnarok-card-prefix" key="4008">Extra</word>
+    <word namespace="ragnarok-card-prefix" key="4009">Light</word>
+    <word namespace="ragnarok-card-prefix" key="4010">Wise</word>
+    <word namespace="ragnarok-card-prefix" key="4011">Dynamic</word>
+    <word namespace="ragnarok-card-prefix" key="4012">Rigid</word>
+    <word namespace="ragnarok-card-prefix" key="4013">Excellent</word>
+    <word namespace="ragnarok-card-prefix" key="4015">Quick</word>
+    <word namespace="ragnarok-card-prefix" key="4016">Speedy</word>
+    <word namespace="ragnarok-card-prefix" key="4017">Stun</word>
+    <word namespace="ragnarok-card-prefix" key="4018">Smart</word>
+    <word namespace="ragnarok-card-prefix" key="4019">Martyr</word>
+    <word namespace="ragnarok-card-prefix" key="4020">Blink</word>
+    <word namespace="ragnarok-card-prefix" key="4021">Skillful</word>
+    <word namespace="ragnarok-card-prefix" key="4024">Drowsy</word>
+    <word namespace="ragnarok-card-prefix" key="4025">Keen</word>
+    <word namespace="ragnarok-card-prefix" key="4026">Shrewd</word>
+    <word namespace="ragnarok-card-prefix" key="4027">Athletic</word>
+    <word namespace="ragnarok-card-prefix" key="4028">Double-forced</word>
+    <word namespace="ragnarok-card-prefix" key="4029">Wolverine</word>
+    <word namespace="ragnarok-card-prefix" key="4030">Windy</word>
+    <word namespace="ragnarok-card-prefix" key="4033">Detoxication</word>
+    <word namespace="ragnarok-card-prefix" key="4034">Clever</word>
+    <word namespace="ragnarok-card-prefix" key="4035">Bloody</word>
+    <word namespace="ragnarok-card-prefix" key="4036">Robust</word>
+    <word namespace="ragnarok-card-prefix" key="4037">Untouchable</word>
+    <word namespace="ragnarok-card-prefix" key="4040">Teleport</word>
+    <word namespace="ragnarok-card-prefix" key="4043">Hurricane</word>
+    <word namespace="ragnarok-card-prefix" key="4044">Hiding</word>
+    <word namespace="ragnarok-card-prefix" key="4045">Heavy</word>
+    <word namespace="ragnarok-card-prefix" key="4047">Ghost</word>
+    <word namespace="ragnarok-card-prefix" key="4048">Poison</word>
+    <word namespace="ragnarok-card-prefix" key="4049">Flammable</word>
+    <word namespace="ragnarok-card-prefix" key="4052">Erudite</word>
+    <word namespace="ragnarok-card-prefix" key="4053">Healing</word>
+    <word namespace="ragnarok-card-prefix" key="4054">Holy</word>
+    <word namespace="ragnarok-card-prefix" key="4055">Ice</word>
+    <word namespace="ragnarok-card-prefix" key="4057">Silence</word>
+    <word namespace="ragnarok-card-prefix" key="4058">Cranial</word>
+    <word namespace="ragnarok-card-prefix" key="4060">Clamorous</word>
+    <word namespace="ragnarok-card-prefix" key="4061">Immortal</word>
+    <word namespace="ragnarok-card-prefix" key="4062">Envenom</word>
+    <word namespace="ragnarok-card-prefix" key="4063">Insecticide</word>
+    <word namespace="ragnarok-card-prefix" key="4064">Nimble</word>
+    <word namespace="ragnarok-card-prefix" key="4065">Underneath</word>
+    <word namespace="ragnarok-card-prefix" key="4066">Brutal</word>
+    <word namespace="ragnarok-card-prefix" key="4067">Atomic</word>
+    <word namespace="ragnarok-card-prefix" key="4068">Chemical</word>
+    <word namespace="ragnarok-card-prefix" key="4069">Saharic</word>
+    <word namespace="ragnarok-card-prefix" key="4071">Angelic</word>
+    <word namespace="ragnarok-card-prefix" key="4072">Solid</word>
+    <word namespace="ragnarok-card-prefix" key="4073">Discount</word>
+    <word namespace="ragnarok-card-prefix" key="4075">Hypnotic</word>
+    <word namespace="ragnarok-card-prefix" key="4076">Cursing</word>
+    <word namespace="ragnarok-card-prefix" key="4077">Under a Cast</word>
+    <word namespace="ragnarok-card-prefix" key="4080">Fisher</word>
+    <word namespace="ragnarok-card-prefix" key="4081">Glorious</word>
+    <word namespace="ragnarok-card-prefix" key="4082">Gigantic</word>
+    <word namespace="ragnarok-card-prefix" key="4083">Homer's</word>
+    <word namespace="ragnarok-card-prefix" key="4084">Blast</word>
+    <word namespace="ragnarok-card-prefix" key="4085">Damned</word>
+    <word namespace="ragnarok-card-prefix" key="4086">Critical</word>
+    <word namespace="ragnarok-card-prefix" key="4087">Order</word>
+    <word namespace="ragnarok-card-prefix" key="4088">Guard</word>
+    <word namespace="ragnarok-card-prefix" key="4089">Aqua</word>
+    <word namespace="ragnarok-card-prefix" key="4090">Amulet</word>
+    <word namespace="ragnarok-card-prefix" key="4092">Boned</word>
+    <word namespace="ragnarok-card-prefix" key="4093">Cure</word>
+    <word namespace="ragnarok-card-prefix" key="4094">Kingbird</word>
+    <word namespace="ragnarok-card-prefix" key="4095">Genie's</word>
+    <word namespace="ragnarok-card-prefix" key="4096">Venomer's</word>
+    <word namespace="ragnarok-card-prefix" key="4097">Green</word>
+    <word namespace="ragnarok-card-prefix" key="4100">Soul-Enchanted</word>
+    <word namespace="ragnarok-card-prefix" key="4102">Mocking</word>
+    <word namespace="ragnarok-card-prefix" key="4103">Clairvoyant</word>
+    <word namespace="ragnarok-card-prefix" key="4104">Chaos</word>
+    <word namespace="ragnarok-card-prefix" key="4105">Unfrozen</word>
+    <word namespace="ragnarok-card-prefix" key="4106">Ancient</word>
+    <word namespace="ragnarok-card-prefix" key="4107">Fledged</word>
+    <word namespace="ragnarok-card-prefix" key="4108">Innoxious</word>
+    <word namespace="ragnarok-card-prefix" key="4109">Flameguard</word>
+    <word namespace="ragnarok-card-prefix" key="4110">Viper's</word>
+    <word namespace="ragnarok-card-prefix" key="4111">Decussate</word>
+    <word namespace="ragnarok-card-prefix" key="4112">Peerless</word>
+    <word namespace="ragnarok-card-prefix" key="4114">Poisoning</word>
+    <word namespace="ragnarok-card-prefix" key="4115">Malicious</word>
+    <word namespace="ragnarok-card-prefix" key="4116">Divine</word>
+    <word namespace="ragnarok-card-prefix" key="4117">Hybrid</word>
+    <word namespace="ragnarok-card-prefix" key="4118">Dragoon</word>
+    <word namespace="ragnarok-card-prefix" key="4119">Evil</word>
+    <word namespace="ragnarok-card-prefix" key="4121">Perfect</word>
+    <word namespace="ragnarok-card-prefix" key="4122">Adurate</word>
+    <word namespace="ragnarok-card-prefix" key="4123">Bearer's</word>
+    <word namespace="ragnarok-card-prefix" key="4124">Plasterer's</word>
+    <word namespace="ragnarok-card-prefix" key="4125">Aqua</word>
+    <word namespace="ragnarok-card-prefix" key="4126">Titan</word>
+    <word namespace="ragnarok-card-prefix" key="4127">Insomniac</word>
+    <word namespace="ragnarok-card-prefix" key="4130">Divine</word>
+    <word namespace="ragnarok-card-prefix" key="4131">Hasty</word>
+    <word namespace="ragnarok-card-prefix" key="4133">Immune</word>
+    <word namespace="ragnarok-card-prefix" key="4134">Spiritual</word>
+    <word namespace="ragnarok-card-prefix" key="4135">Mirror</word>
+    <word namespace="ragnarok-card-prefix" key="4138">Satanic</word>
+    <word namespace="ragnarok-card-prefix" key="4140">Liberation</word>
+    <word namespace="ragnarok-card-prefix" key="4141">Deadly</word>
+    <word namespace="ragnarok-card-prefix" key="4143">Neutral</word>
+    <word namespace="ragnarok-card-prefix" key="4146">Reflect</word>
+    <word namespace="ragnarok-card-prefix" key="4147">Scythe-like</word>
+    <word namespace="ragnarok-card-prefix" key="4150">Spell-Proof</word>
+    <word namespace="ragnarok-card-prefix" key="4151">Havoc Bringer's</word>
+    <word namespace="ragnarok-card-prefix" key="4152">Sprightly</word>
+    <word namespace="ragnarok-card-prefix" key="4154">Sweet Scented</word>
+    <word namespace="ragnarok-card-prefix" key="4155">Deadly Goblin's</word>
+    <word namespace="ragnarok-card-prefix" key="4157">Piercing</word>
+    <word namespace="ragnarok-card-prefix" key="4158">Slaughter</word>
+    <word namespace="ragnarok-card-prefix" key="4159">Deluxe</word>
+    <word namespace="ragnarok-card-prefix" key="4160">Superior</word>
+    <word namespace="ragnarok-card-prefix" key="4161">Anti-Magic</word>
+    <word namespace="ragnarok-card-prefix" key="4162">Sightless</word>
+    <word namespace="ragnarok-card-prefix" key="4163">Wild</word>
+    <word namespace="ragnarok-card-prefix" key="4164">Fisherman's</word>
+    <word namespace="ragnarok-card-prefix" key="4169">Spell Master's</word>
+    <word namespace="ragnarok-card-prefix" key="4170">Solidifying</word>
+    <word namespace="ragnarok-card-prefix" key="4171">Soul Draining</word>
+    <word namespace="ragnarok-card-prefix" key="4172">Slicing</word>
+    <word namespace="ragnarok-card-prefix" key="4173">Mesmerizing</word>
+    <word namespace="ragnarok-card-prefix" key="4174">Deviant</word>
+    <word namespace="ragnarok-card-prefix" key="4175">Shoving</word>
+    <word namespace="ragnarok-card-prefix" key="4176">Fatal Serpentine</word>
+    <word namespace="ragnarok-card-prefix" key="4177">Green Stone</word>
+    <word namespace="ragnarok-card-prefix" key="4178">Bow-Master's</word>
+    <word namespace="ragnarok-card-prefix" key="4181">Soundless</word>
+    <word namespace="ragnarok-card-prefix" key="4183">Werewolf</word>
+    <word namespace="ragnarok-card-prefix" key="4184">Crushing</word>
+    <word namespace="ragnarok-card-prefix" key="4186">Strenuous</word>
+    <word namespace="ragnarok-card-prefix" key="4188">Red Stone</word>
+    <word namespace="ragnarok-card-prefix" key="4194">Overpowering</word>
+    <word namespace="ragnarok-card-prefix" key="4195">Blue Stone</word>
+    <word namespace="ragnarok-card-prefix" key="4197">Lucky Streak</word>
+    <word namespace="ragnarok-card-prefix" key="4199">Dashing</word>
+    <word namespace="ragnarok-card-prefix" key="4201">Crippling</word>
+    <word namespace="ragnarok-card-prefix" key="4203">Blazing</word>
+    <word namespace="ragnarok-card-prefix" key="4204">Poacher's</word>
+    <word namespace="ragnarok-card-prefix" key="4205">Blue Cubic</word>
+    <word namespace="ragnarok-card-prefix" key="4206">Cubic</word>
+    <word namespace="ragnarok-card-prefix" key="4207">Anti-Small</word>
+    <word namespace="ragnarok-card-prefix" key="4208">Energetic</word>
+    <word namespace="ragnarok-card-prefix" key="4209">Fiddler's</word>
+    <word namespace="ragnarok-card-prefix" key="4210">Pressure</word>
+    <word namespace="ragnarok-card-prefix" key="4211">Virtuoso's</word>
+    <word namespace="ragnarok-card-prefix" key="4214">Man-Eater's</word>
+    <word namespace="ragnarok-card-prefix" key="4215">Rationing</word>
+    <word namespace="ragnarok-card-prefix" key="4216">Freezing</word>
+    <word namespace="ragnarok-card-prefix" key="4217">Rejuvenating</word>
+    <word namespace="ragnarok-card-prefix" key="4218">Nightmarish</word>
+    <word namespace="ragnarok-card-prefix" key="4219">Magic Stone</word>
+    <word namespace="ragnarok-card-prefix" key="4220">Faithful</word>
+    <word namespace="ragnarok-card-prefix" key="4221">Insect Collector's</word>
+    <word namespace="ragnarok-card-prefix" key="4223">Stun-Proof</word>
+    <word namespace="ragnarok-card-prefix" key="4224">Monsoon</word>
+    <word namespace="ragnarok-card-prefix" key="4225">Slingshot</word>
+    <word namespace="ragnarok-card-prefix" key="4226">Supreme</word>
+    <word namespace="ragnarok-card-prefix" key="4227">Roast Scented</word>
+    <word namespace="ragnarok-card-prefix" key="4230">Coward's</word>
+    <word namespace="ragnarok-card-prefix" key="4231">Charging</word>
+    <word namespace="ragnarok-card-prefix" key="4232">Refreshing</word>
+    <word namespace="ragnarok-card-prefix" key="4233">Lucky Fluke</word>
+    <word namespace="ragnarok-card-prefix" key="4235">Fallen Angel's</word>
+    <word namespace="ragnarok-card-prefix" key="4236">Protective</word>
+    <word namespace="ragnarok-card-prefix" key="4239">Veteran Hunter's</word>
+    <word namespace="ragnarok-card-prefix" key="4240">Magic-Proof</word>
+    <word namespace="ragnarok-card-prefix" key="4241">Miraculous</word>
+    <word namespace="ragnarok-card-prefix" key="4242">Prime</word>
+    <word namespace="ragnarok-card-prefix" key="4244">Seeker's</word>
+    <word namespace="ragnarok-card-prefix" key="4245">Assassinator's</word>
+    <word namespace="ragnarok-card-prefix" key="4246">Killing</word>
+    <word namespace="ragnarok-card-prefix" key="4247">Starfish's</word>
+    <word namespace="ragnarok-card-prefix" key="4248">Shining Cross</word>
+    <word namespace="ragnarok-card-prefix" key="4249">Witch Doctor's</word>
+    <word namespace="ragnarok-card-prefix" key="4250">Anti-Large</word>
+    <word namespace="ragnarok-card-prefix" key="4251">Invasion</word>
+    <word namespace="ragnarok-card-prefix" key="4252">Four Leaf Clover</word>
+    <word namespace="ragnarok-card-prefix" key="4254">Anti-Medium</word>
+    <word namespace="ragnarok-card-prefix" key="4255">Smashing</word>
+    <word namespace="ragnarok-card-prefix" key="4256">Desirable</word>
+    <word namespace="ragnarok-card-prefix" key="4257">Wing</word>
+    <word namespace="ragnarok-card-prefix" key="4258">Prodigy</word>
+    <word namespace="ragnarok-card-prefix" key="4260">Confusion Resistant</word>
+    <word namespace="ragnarok-card-prefix" key="4261">Bleed Resistant</word>
+    <word namespace="ragnarok-card-prefix" key="4262">Dark Sky</word>
+    <word namespace="ragnarok-card-prefix" key="4263">Bloodlust</word>
+    <word namespace="ragnarok-card-prefix" key="4264">Thunderbolt</word>
+    <word namespace="ragnarok-card-prefix" key="4266">Magic Resistant</word>
+    <word namespace="ragnarok-card-prefix" key="4267">Dragon Slayer's</word>
+    <word namespace="ragnarok-card-prefix" key="4268">Extending</word>
+    <word namespace="ragnarok-card-prefix" key="4269">Fatasm</word>
+    <word namespace="ragnarok-card-prefix" key="4271">Yellow Stone</word>
+    <word namespace="ragnarok-card-prefix" key="4272">Swift</word>
+    <word namespace="ragnarok-card-prefix" key="4273">Shell</word>
+    <word namespace="ragnarok-card-prefix" key="4275">Undead Killer's</word>
+    <word namespace="ragnarok-card-prefix" key="4276">Crucial</word>
+    <word namespace="ragnarok-card-prefix" key="4277">Dominatrix</word>
+    <word namespace="ragnarok-card-prefix" key="4279">Soul Collector's</word>
+    <word namespace="ragnarok-card-prefix" key="4280">Blessed</word>
+    <word namespace="ragnarok-card-prefix" key="4281">Diligent</word>
+    <word namespace="ragnarok-card-prefix" key="4283">Mana Sphere</word>
+    <word namespace="ragnarok-card-prefix" key="4285">Elven-Enchanted</word>
+    <word namespace="ragnarok-card-prefix" key="4286">Terrorizing</word>
+    <word namespace="ragnarok-card-prefix" key="4287">Magically Shielded</word>
+    <word namespace="ragnarok-card-prefix" key="4288">Maestro</word>
+    <word namespace="ragnarok-card-prefix" key="4290">Mirror</word>
+    <word namespace="ragnarok-card-prefix" key="4291">Deadly Kobold's</word>
+    <word namespace="ragnarok-card-prefix" key="4292">Deadly Plant's</word>
+    <word namespace="ragnarok-card-prefix" key="4294">Sneaky</word>
+    <word namespace="ragnarok-card-prefix" key="4296">Greedy</word>
+    <word namespace="ragnarok-card-prefix" key="4297">Poaching</word>
+    <word namespace="ragnarok-card-prefix" key="4299">Guardian's</word>
+    <word namespace="ragnarok-card-prefix" key="4300">Venomous Charge</word>
+    <word namespace="ragnarok-card-prefix" key="4301">Traumatic</word>
+    <word namespace="ragnarok-card-prefix" key="4302">High Risk</word>
+    <word namespace="ragnarok-card-prefix" key="4303">Mystic</word>
+    <word namespace="ragnarok-card-prefix" key="4304">Shield Master's</word>
+    <word namespace="ragnarok-card-prefix" key="4305">Explosive</word>
+    <word namespace="ragnarok-card-prefix" key="4306">King's</word>
+    <word namespace="ragnarok-card-prefix" key="4308">Power Draining</word>
+    <word namespace="ragnarok-card-prefix" key="4309">Reinforced</word>
+    <word namespace="ragnarok-card-prefix" key="4310">Fatally Evil</word>
+    <word namespace="ragnarok-card-prefix" key="4311">Anti-Evil</word>
+    <word namespace="ragnarok-card-prefix" key="4313">Bogie</word>
+    <word namespace="ragnarok-card-prefix" key="4314">Fire-Proof</word>
+    <word namespace="ragnarok-card-prefix" key="4317">Aural</word>
+    <word namespace="ragnarok-card-prefix" key="4318">Storm-Bringer's</word>
+    <word namespace="ragnarok-card-prefix" key="4319">Sword-Master's</word>
+    <word namespace="ragnarok-card-prefix" key="4320">Meteoric</word>
+    <word namespace="ragnarok-card-prefix" key="4321">Polymorphic</word>
+    <word namespace="ragnarok-card-prefix" key="4324">Arctic</word>
+    <word namespace="ragnarok-card-prefix" key="4325">Vicious</word>
+    <word namespace="ragnarok-card-prefix" key="4326">Ocean Scented</word>
+    <word namespace="ragnarok-card-prefix" key="4327">Spell Flow</word>
+    <word namespace="ragnarok-card-prefix" key="4328">Hyper</word>
+    <word namespace="ragnarok-card-prefix" key="4329">Soul Gain</word>
+    <word namespace="ragnarok-card-prefix" key="4330">Curse Lift</word>
+    <word namespace="ragnarok-card-prefix" key="4331">Evasion</word>
+    <word namespace="ragnarok-card-prefix" key="4334">Anti-Sniping</word>
+    <word namespace="ragnarok-card-prefix" key="4335">Gnome</word>
+    <word namespace="ragnarok-card-prefix" key="4341">Disarm</word>
+    <word namespace="ragnarok-card-prefix" key="4342">Mammoth</word>
+    <word namespace="ragnarok-card-prefix" key="4345">Sylph</word>
+    <word namespace="ragnarok-card-prefix" key="4347">Stamina</word>
+    <word namespace="ragnarok-card-prefix" key="4348">Gangster</word>
+    <word namespace="ragnarok-card-prefix" key="4349">Anti-Arrow</word>
+    <word namespace="ragnarok-card-prefix" key="4350">Undine</word>
+    <word namespace="ragnarok-card-prefix" key="4351">Low Level</word>
+    <word namespace="ragnarok-card-prefix" key="4355">Healthy</word>
+    <word namespace="ragnarok-card-prefix" key="4356">Magic Cancel</word>
+    <word namespace="ragnarok-card-prefix" key="4358">Lost-Power</word>
+    <word namespace="ragnarok-card-prefix" key="4360">Assassin</word>
+    <word namespace="ragnarok-card-prefix" key="4362">Heat</word>
+    <word namespace="ragnarok-card-prefix" key="4363">Protection</word>
+    <word namespace="ragnarok-card-prefix" key="4368">Rapid</word>
+    <word namespace="ragnarok-card-prefix" key="4370">Weakening</word>
+    <word namespace="ragnarok-card-prefix" key="4372">Life Stream</word>
+    <word namespace="ragnarok-card-prefix" key="4373">Cursed</word>
+    <word namespace="ragnarok-card-prefix" key="4375">Extra High Level</word>
+    <word namespace="ragnarok-card-prefix" key="4376">Manful</word>
+    <word namespace="ragnarok-card-prefix" key="4377">Sweetie</word>
+    <word namespace="ragnarok-card-prefix" key="4378">Low Level</word>
+    <word namespace="ragnarok-card-prefix" key="4379">Low Level</word>
+    <word namespace="ragnarok-card-prefix" key="4380">Salamander</word>
+    <word namespace="ragnarok-card-prefix" key="4383">Chaotic</word>
+    <word namespace="ragnarok-card-prefix" key="4384">Magic Eater</word>
+    <word namespace="ragnarok-card-prefix" key="4385">Drink</word>
+    <word namespace="ragnarok-card-prefix" key="4388">Soul</word>
+    <word namespace="ragnarok-card-prefix" key="4389">Elemental</word>
+    <word namespace="ragnarok-card-prefix" key="4390">Blooding</word>
+    <word namespace="ragnarok-card-prefix" key="4391">Snack</word>
+    <word namespace="ragnarok-card-prefix" key="4394">Divine Cross</word>
+    <word namespace="ragnarok-card-prefix" key="4395">Slug</word>
+    <word namespace="ragnarok-card-prefix" key="4396">Dull</word>
+    <word namespace="ragnarok-card-prefix" key="4397">Stupidity</word>
+    <word namespace="ragnarok-card-prefix" key="4398">Darkness</word>
+    <word namespace="ragnarok-card-prefix" key="4399">Penetration</word>
+    <word namespace="ragnarok-card-prefix" key="4401">Swift</word>
+    <word namespace="ragnarok-card-prefix" key="4402">Strange</word>
+    <word namespace="ragnarok-card-prefix" key="4406">Twinkle</word>
+    <word namespace="ragnarok-card-prefix" key="4408">Abyss</word>
+    <word namespace="ragnarok-card-prefix" key="4409">Panic</word>
+    <word namespace="ragnarok-card-prefix" key="4410">Madness</word>
+    <word namespace="ragnarok-card-prefix" key="4411">Arta's</word>
+    <word namespace="ragnarok-card-prefix" key="4412">Aria</word>
+    <word namespace="ragnarok-card-prefix" key="4413">Resistance</word>
+    <word namespace="ragnarok-card-prefix" key="4414">Gorgon's</word>
+    <word namespace="ragnarok-card-prefix" key="4415">Sweet</word>
+    <word namespace="ragnarok-card-prefix" key="4419">Jack Frost</word>
+    <word namespace="ragnarok-card-prefix" key="4422">Breeze</word>
+    <word namespace="ragnarok-card-prefix" key="4424">Stony</word>
+    <word namespace="ragnarok-card-prefix" key="4425">Beast</word>
+    <word namespace="ragnarok-card-prefix" key="4426">Exceeding</word>
+    <word namespace="ragnarok-card-prefix" key="4429">Nessus's</word>
+    <word namespace="ragnarok-card-prefix" key="4431">Stygian</word>
+    <word namespace="ragnarok-card-prefix" key="4432">Scorching</word>
+    <word namespace="ragnarok-card-prefix" key="4434">Miner's</word>
+    <word namespace="ragnarok-card-prefix" key="4435">Outrageous</word>
+    <word namespace="ragnarok-card-prefix" key="4436">Lunatic</word>
+    <word namespace="ragnarok-card-prefix" key="4437">Rabid</word>
+    <word namespace="ragnarok-card-prefix" key="4438">Mental</word>
+    <word namespace="ragnarok-card-prefix" key="4441">Arrogant</word>
+    <word namespace="ragnarok-card-prefix" key="4450">Surplus</word>
+    <word namespace="ragnarok-card-prefix" key="4452">Magical</word>
+    <word namespace="ragnarok-card-prefix" key="4453">Fierce</word>
+    <word namespace="ragnarok-card-prefix" key="4454">Sorry</word>
+    <word namespace="ragnarok-card-prefix" key="4455">Love</word>
+    <word namespace="ragnarok-card-prefix" key="4456">Spell Master</word>
+    <word namespace="ragnarok-card-prefix" key="4457">Psychic</word>
+    <word namespace="ragnarok-card-prefix" key="4462">Prime Defense</word>
+    <word namespace="ragnarok-card-prefix" key="4463">Prime Attack</word>
+    <word namespace="ragnarok-card-prefix" key="4464">Fatal</word>
+    <word namespace="ragnarok-card-prefix" key="4465">Sweep</word>
+    <word namespace="ragnarok-card-prefix" key="4466">Straight</word>
+    <word namespace="ragnarok-card-prefix" key="4467">Heavy</word>
+    <word namespace="ragnarok-card-prefix" key="4468">Pollution</word>
+    <word namespace="ragnarok-card-prefix" key="4469">Marine</word>
+    <word namespace="ragnarok-card-prefix" key="4470">Botany</word>
+    <word namespace="ragnarok-card-prefix" key="4471">Draco</word>
+    <word namespace="ragnarok-card-prefix" key="4472">Carnival</word>
+    <word namespace="ragnarok-card-prefix" key="4473">Undead</word>
+    <word namespace="ragnarok-card-prefix" key="4474">Mortal</word>
+    <word namespace="ragnarok-card-prefix" key="4475">Intangible</word>
+    <word namespace="ragnarok-card-prefix" key="4476">Entomic</word>
+    <word namespace="ragnarok-card-prefix" key="4477">Demonic</word>
+    <word namespace="ragnarok-card-prefix" key="4481">Half Jack Frost</word>
+    <word namespace="ragnarok-card-prefix" key="4483">Half Spiritual</word>
+    <word namespace="ragnarok-card-prefix" key="4485">Half Abyss</word>
+    <word namespace="ragnarok-card-prefix" key="4507">Scaraba</word>
+    <word namespace="ragnarok-card-prefix" key="4509">Insectproof</word>
+    <word namespace="ragnarok-card-prefix" key="4510">Black-out</word>
+    <word namespace="ragnarok-card-prefix" key="4511">Silentium</word>
+    <word namespace="ragnarok-card-prefix" key="4514">Exorcism</word>
+    <word namespace="ragnarok-card-prefix" key="4515">Flora</word>
+    <word namespace="ragnarok-card-prefix" key="4518">Burning</word>
+    <word namespace="ragnarok-card-prefix" key="4519">Seraphim</word>
+    <word namespace="ragnarok-card-prefix" key="4520">Screaming</word>
+    <word namespace="ragnarok-card-prefix" key="4521">Mortal Blow</word>
+    <word namespace="ragnarok-card-prefix" key="4522">Cold</word>
+    <word namespace="ragnarok-card-prefix" key="4523">Aquarius</word>
+    <word namespace="ragnarok-card-prefix" key="4525">Sweeping</word>
+    <word namespace="ragnarok-card-prefix" key="4528">Spirit</word>
+    <word namespace="ragnarok-card-prefix" key="4529">Physical</word>
+    <word namespace="ragnarok-card-prefix" key="4531">Under Curse</word>
+    <word namespace="ragnarok-card-prefix" key="4532">Sprinting</word>
+    <word namespace="ragnarok-card-prefix" key="4533">Blinding</word>
+    <word namespace="ragnarok-card-prefix" key="4534">Water Bomb</word>
+    <word namespace="ragnarok-card-prefix" key="4493">Half High Risk</word>
+  </wordgroup>
+</languageimport>

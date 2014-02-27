@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="donation" key="transfer">Transfer Credits</word>
+    <word namespace="donation" key="transfer-history">Transfer History</word>
+    <word namespace="donation" key="history">Donation History</word>
+    <word namespace="donation" key="sender">From</word>
+    <word namespace="donation" key="receiver">To</word>
+    <word namespace="donation" key="xfer-date">Transfer date</word>
+    <word namespace="donation" key="send-credits"><![CDATA[Are you sure you want to send <b>%s</b> to %s?<br/>This action is irreversible.]]></word>
+    <word namespace="donation" key="target-display-label">User</word>
+    <word namespace="donation" key="target-display-desc">The user who will receive your credit points.</word>
+    <word namespace="donation" key="transfer-amount">Amount</word>
+    <word namespace="donation" key="confirm-amount">Confirm Amount</word>
+    <word namespace="donation" key="credit-points"><![CDATA[%s <small>CP</small>]]></word>
+    <word namespace="donation" key="credits">Credits</word>
+    <word namespace="donation" key="donate">Donate</word>
+    <word namespace="donation" key="donation-message">By donating, you're supporting the costs of running this server and maintaining it. In return, you will be rewarded donation credits that you may use to purchase items from our item shop.</word>
+    <word namespace="donation" key="exchange-rate">Credit exchange rate</word>
+    <word namespace="donation" key="login-warning"><![CDATA[<b>WARNING</b>: You will not receive credits from your donations if you're not logged in!]]></word>
+    <word namespace="donation" key="min-donation">Minimum donation amount</word>
+    <word namespace="donation" key="thank-you">Thank you for your donation!</word>
+    <word namespace="donation" key="pp-item-name">Credit Points (%d)</word>
+    <word namespace="donation" key="donation-history">Donation History</word>
+    <word namespace="donation" key="id">ID</word>
+    <word namespace="donation" key="amount">Amount</word>
+    <word namespace="donation" key="currency">Currency</word>
+    <word namespace="donation" key="gross">Gross</word>
+    <word namespace="donation" key="deposited">Deposited</word>
+    <word namespace="donation" key="txn-type">Transaction type</word>
+    <word namespace="donation" key="payer-statys">Payer status</word>
+    <word namespace="donation" key="payer-email">Payer email</word>
+    <word namespace="donation" key="payer-id">Payer ID</word>
+    <word namespace="donation" key="payer-name">Payer name</word>
+    <word namespace="donation" key="receiver-id">Receiver ID</word>
+    <word namespace="donation" key="receiver-email">Receiver email</word>
+    <word namespace="donation" key="sandbox">Sandbox</word>
+    <word namespace="donation" key="ip-address">IP address</word>
+    <word namespace="donation" key="user">User</word>
+    <word namespace="donation" key="item-name">Item name</word>
+    <word namespace="donation" key="quantity">Quantity</word>
+    <word namespace="donation" key="credit-exchange-rate">Exchange rate</word>
+    <word namespace="donation" key="fee">Fee</word>
+    <word namespace="donation" key="txn-id">Transaction ID</word>
+    <word namespace="donation" key="parent-txn-id">Parent transaction ID</word>
+    <word namespace="donation" key="payment-type">Payment type</word>
+    <word namespace="donation" key="payment-date">Payment date</word>
+    <word namespace="donation" key="process-date">Process date</word>
+    <word namespace="donation" key="credits-transferred"><![CDATA[Transferred <b>%s</b> to %s.]]></word>
+    <word namespace="donation" key="credits-not-transferred"><![CDATA[Failed to transfer <b>%s</b> to %s.]]></word>
+    <word namespace="donation" key="transfer-not-enough-credits">You don't have enough credits.</word>
+    <word namespace="donation" key="target-not-found">User not found.</word>
+    <word namespace="donation" key="cannot-transfer-to-self">You cannot transfer credits to your own account.</word>
+  </wordgroup>
+</languageimport>

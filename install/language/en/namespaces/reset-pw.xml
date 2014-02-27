@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="reset-pw" key="recover-password">Recover Password</word>
+    <word namespace="reset-pw" key="reset-x-password">Reset %s's Password</word>
+    <word namespace="reset-pw" key="email-sent"></word>
+    <word namespace="reset-pw" key="success">Your password has been reset.</word>
+  </wordgroup>
+</languageimport>

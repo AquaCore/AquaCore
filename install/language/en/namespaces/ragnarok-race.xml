@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-race" key="0">Formless</word>
+    <word namespace="ragnarok-race" key="1">Undead</word>
+    <word namespace="ragnarok-race" key="2">Brute</word>
+    <word namespace="ragnarok-race" key="3">Plant</word>
+    <word namespace="ragnarok-race" key="4">Insect</word>
+    <word namespace="ragnarok-race" key="5">Fish</word>
+    <word namespace="ragnarok-race" key="6">Demon</word>
+    <word namespace="ragnarok-race" key="7">Demi-Human</word>
+    <word namespace="ragnarok-race" key="8">Angel</word>
+    <word namespace="ragnarok-race" key="9">Dragon</word>
+  </wordgroup>
+</languageimport>

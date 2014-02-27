@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="application" key="cp-title">AquaCore Admin</word>
+    <word namespace="application" key="all">All</word>
+    <word namespace="application" key="yes">Yes</word>
+    <word namespace="application" key="no">No</word>
+    <word namespace="application" key="more">More</word>
+    <word namespace="application" key="save">Save Changes</word>
+    <word namespace="application" key="next">Next</word>
+    <word namespace="application" key="prev">Prev</word>
+    <word namespace="application" key="previous">Previous</word>
+    <word namespace="application" key="submit">Submit</word>
+    <word namespace="application" key="search">Search</word>
+    <word namespace="application" key="confirm">Confirm</word>
+    <word namespace="application" key="action">Action</word>
+    <word namespace="application" key="apply">Apply</word>
+    <word namespace="application" key="never">Never</word>
+    <word namespace="application" key="none">None</word>
+    <word namespace="application" key="no-search-results">No search results.</word>
+    <word namespace="application" key="search-results-s">%s result found.</word>
+    <word namespace="application" key="search-results-p">%s results found.</word>
+    <word namespace="application" key="tos">Terms of Service</word>
+    <word namespace="application" key="unexpected-error-title">Unexpected Error</word>
+    <word namespace="application" key="unexpected-error">An unexpected error occurred, please try again later.</word>
+    <word namespace="application" key="page-memory">Memory peak usage: %smb</word>
+    <word namespace="application" key="page-time">Page generated in %ss</word>
+  </wordgroup>
+</languageimport>

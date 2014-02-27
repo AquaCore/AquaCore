@@ -1,0 +1,26 @@
+Options -Indexes
+AddType image/x-icon .ico
+<IfModule rewrite_module>
+	SetEnv APACHE_MOD_REWRITE On
+
+	RewriteEngine On
+	RewriteBase /admin
+
+	RewriteRule ^index\.php$ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L,QSA]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(?:(.*)/)?action/?(index)?$ index.php?path=$1 [L,QSA]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^/?action/(.*)?$ index.php?action=$1 [L,QSA]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)(?:/action/([^/]+))(.*)?$ index.php?path=$1&action=$2&arg=$3 [L,QSA]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)(?!/action/?)$ index.php?path=$1 [L,QSA]
+</IfModule>

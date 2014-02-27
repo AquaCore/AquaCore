@@ -1,0 +1,59 @@
+.ac-flash-messages {
+	position: fixed;
+	z-index: 9999;
+	bottom: 20px;
+	right: 20px;
+	width: 400px;
+	.ac-flash {
+		position: relative;
+		padding: 5px 10px 5px 25px;
+		margin: 10px 0;
+		background-repeat: no-repeat;
+		background-position: 5px 5px;
+		font-size: 0.75em;
+		color: white;
+		border: 1px solid;
+		@include border-radius(4px);
+	}
+	.ac-flash-title {
+		padding-bottom: 3px;
+		font-size: 1.2em;
+		font-weight: bold;
+		@include text-shadow(1px 1px 0 white);
+	}
+	.ac-flash-type-notification {
+		padding: 5px 10px;
+		background-image: none;
+		background-color: #f4f6f9;
+		color: #9da5b7;
+	}
+	.ac-flash-type-error {
+		background-image: url('../../../../../assets/images/icons/f_error.png');
+		background-color: #fad9d9;
+		color: #c25372;
+	}
+	.ac-flash-type-warning {
+		background-image: url('../../../../../assets/images/icons/f_warning.png');
+		background-color: #f8f2e0;
+		color: #b1786b;
+	}
+	.ac-flash-type-success {
+		background-image: url('../../../../../assets/images/icons/f_success.png');
+		background-color: #e4f5df;
+		color: #55a660;
+	}
+	.ac-flash-type-info {
+		background-image: url('../../../../../assets/images/icons/f_info.png');
+		background-color: #dae9f4;
+		color: #188ed2;
+	}
+	.ac-flash-close {
+		top: 8px;
+		right: 5px;
+		width: 10px;
+		height: 10px;
+		position: absolute;
+		background: transparent url('../../../../../assets/images/check-no.png') center left no-repeat;
+		cursor: pointer;
+	}
+}

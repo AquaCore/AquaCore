@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-emulator" key="1">rAthena</word>
+    <word namespace="ragnarok-emulator" key="2">Hercules</word>
+  </wordgroup>
+</languageimport>

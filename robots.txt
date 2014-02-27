@@ -1,0 +1,7 @@
+User-Agent: *
+Disallow: /admin/
+Disallow: /captcha.php
+Disallow: /img.php
+Disallow: /paypal.php
+Disallow: /rate.php
+Disallow: /ratecomment.php

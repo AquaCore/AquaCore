@@ -1,0 +1,109 @@
+.ac-table {
+	width: 100%;
+	margin-bottom: 15px;
+	padding: 0;
+	border: 1px solid $bluish-gray-1;
+	border-spacing: 0;
+	@include box-shadow($bluish-gray-1 0 1px 3px 0);
+	@include border-radius(5px);
+	thead, tfoot {
+		margin: 0;
+		padding: 0;
+	}
+	thead {
+		tr:first-child {
+			td, th {
+				border-top: 0;
+			}
+			& > :first-child {
+				@include border-top-left-radius(5px);
+			}
+			& > :last-child {
+				@include border-top-right-radius(5px);
+			}
+		}
+		tr:last-child {
+			td, th {
+				border-bottom: 0;
+			}
+		}
+	}
+	tbody {
+		tr {
+			td {
+				background: #e9eef4;
+				padding: 5px;
+				border-top: 1px solid white;
+				border-bottom: 1px solid #d9e1e9;
+				vertical-align: middle;
+				border-left: 1px solid #e0e7f1;
+				border-right: 1px solid white;
+			}
+			&:nth-child(odd) td, td.odd {
+				background: #f4f6f9;
+			}
+		}
+	}
+	tfoot {
+		tr:last-child {
+			& > :first-child {
+				@include border-bottom-left-radius(5px);
+			}
+			& > :last-child {
+				@include border-bottom-right-radius(5px);
+			}
+		}
+	}
+	tr {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		border-spacing: 0;
+		border-collapse: collapse;
+		vertical-align: top;
+	}
+	tbody tr.ac-table-header,
+	thead tr,
+	tfoot tr {
+		td, th {
+			height: 1em;
+			padding: 5px 10px;
+			border-top: 1px solid white;
+			border-bottom: 1px solid $mid-gray-1;
+			color: $mid-gray-1;
+			font-weight: normal;
+			font-size: 0.9375em;
+			@include text-shadow(1px 1px 0 white);
+			@include background(linear-gradient($light-gray-3, $mid-gray-2));
+			border-left: 1px solid $mid-gray-2;
+			border-right: 1px solid $light-gray-3;
+		}
+		&.alt td, &.alt th {
+			color: $light-gray-2;
+			border-top: 1px solid $light-blue-2;
+			border-bottom: 1px solid #4586d0;
+			@include text-shadow(-1px -1px 0 $mid-blue-2);
+			@include background(linear-gradient(#68e2f2, #52aae0));
+			border-left: 1px solid #52aae0;
+			border-right: 1px solid #68e2f2;
+		}
+		//		td:last-child, th:last-child { border-right: none; }
+		//		td:first-child, th:last-child { border-left: none; }
+	}
+	td {
+		text-align: center;
+	}
+}
+.ac-search-result {
+	margin: 5px 0;
+	display: block;
+	width: 100%;
+	text-align: right;
+	color: $bluish-gray-4;
+	font-style: italic;
+}
+.ac-table-no-result {
+	text-align: center;
+	font-style: italic;
+	color: $bluish-gray-4;
+}

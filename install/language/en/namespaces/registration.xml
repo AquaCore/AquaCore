@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="registration" key="register">Register</word>
+    <word namespace="registration" key="reset-code">Resend Validation Code</word>
+    <word namespace="registration" key="failed-to-register">Failed to register</word>
+    <word namespace="registration" key="registration">Failed to Send Email</word>
+    <word namespace="registration" key="agree-tos">I Agree</word>
+    <word namespace="registration" key="disagree-tos">I Disagree</word>
+    <word namespace="registration" key="agree-tos-desc"><![CDATA[I have read and agree with the <a href="%s">Terms of Service</a>]]></word>
+    <word namespace="registration" key="tos-required">You must agree with the Terms of Service to register an account.</word>
+    <word namespace="registration" key="completed">Registration completed</word>
+    <word namespace="registration" key="email-failed">Failed to send email</word>
+    <word namespace="registration" key="registered">You account has been created and is ready to use! You have been automatically logged.</word>
+    <word namespace="registration" key="email-not-sent">You account has been created but the activation code could not be sent to your email. Please enter your email or username again to resend the email.</word>
+    <word namespace="registration" key="email-sent">You account has been created! An email has been sent to you with information on how to activate your account.</word>
+    <word namespace="registration" key="account-activated">Your account has been activated.</word>
+  </wordgroup>
+</languageimport>

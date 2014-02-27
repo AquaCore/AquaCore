@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="login-type" key="0">Normal</word>
+    <word namespace="login-type" key="1">Persistent</word>
+  </wordgroup>
+</languageimport>

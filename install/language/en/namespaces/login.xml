@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="login" key="login">Login</word>
+    <word namespace="login" key="logout">Logout</word>
+    <word namespace="login" key="account-suspended">This account is suspended indefinitely.</word>
+    <word namespace="login" key="account-suspended-reason"><![CDATA[This account is suspended until %s.<br/><b>Reason:</b> %s]]></word>
+    <word namespace="login" key="account-banned">This account is banned indefinitely.</word>
+    <word namespace="login" key="account-banned-reason"><![CDATA[This account is banned indefinitely.<br/><b>Reason:</b> %s]]></word>
+    <word namespace="login" key="invalid-credentials">Invalid login credentials, please verify that the information provided is correct.</word>
+    <word namespace="login" key="attempt-captcha">You have attempted to login too many times, in addition to your login credentials you must fill a challenge field to verify you're human.</word>
+    <word namespace="login" key="attempt-wait">You have attempted to login too many times, please wait a few minutes before trying again.</word>
+    <word namespace="login" key="logged-in">You are logged in as %s.</word>
+    <word namespace="login" key="logged-out">You have logged out of your account.</word>
+    <word namespace="login" key="remember-me">Remember me</word>
+    <word namespace="login" key="remember-me-warning">This is not recommended for public or shared computers.</word>
+  </wordgroup>
+</languageimport>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-charmap-settings" key="new-server">Add Char/Map Server</word>
+    <word namespace="ragnarok-charmap-settings" key="new-server-name">Add Char/Map Server - %s</word>
+    <word namespace="ragnarok-charmap-settings" key="edit-server">Edit Char/Map Server</word>
+    <word namespace="ragnarok-charmap-settings" key="edit-server-name">Edit Char/Map Server - %s</word>
+    <word namespace="ragnarok-charmap-settings" key="name-label">Name</word>
+    <word namespace="ragnarok-charmap-settings" key="key-label">Key</word>
+    <word namespace="ragnarok-charmap-settings" key="key-desc">Server's unique identifier, used in URLs.</word>
+    <word namespace="ragnarok-charmap-settings" key="timezone-label">Timezone</word>
+    <word namespace="ragnarok-charmap-settings" key="char-host-label">Char Server IP</word>
+    <word namespace="ragnarok-charmap-settings" key="char-port-label">Char Server Port</word>
+    <word namespace="ragnarok-charmap-settings" key="map-host-label">Map Server IP</word>
+    <word namespace="ragnarok-charmap-settings" key="map-port-label">Map Server Port</word>
+    <word namespace="ragnarok-charmap-settings" key="db-host-label">Host</word>
+    <word namespace="ragnarok-charmap-settings" key="db-port-label">Port</word>
+    <word namespace="ragnarok-charmap-settings" key="db-database-label">Database Name</word>
+    <word namespace="ragnarok-charmap-settings" key="db-username-label">Username</word>
+    <word namespace="ragnarok-charmap-settings" key="db-password-label">Password</word>
+    <word namespace="ragnarok-charmap-settings" key="db-charset-label">Charset</word>
+    <word namespace="ragnarok-charmap-settings" key="db-timezone-label">Timezone</word>
+    <word namespace="ragnarok-charmap-settings" key="db-timezone-desc">Timezone or time offset (e.g.: GTM, -3:00)</word>
+    <word namespace="ragnarok-charmap-settings" key="renewal-label">Renewal</word>
+    <word namespace="ragnarok-charmap-settings" key="fame-label">Fame Ranking Places</word>
+    <word namespace="ragnarok-charmap-settings" key="online-stats-label">Online States Interval</word>
+    <word namespace="ragnarok-charmap-settings" key="online-stats-desc"><![CDATA[Log online players every <i>x</i> minutes.<br/><a href="https://dev.mysql.com/doc/refman/5.1/en/events-configuration.html">MYSQL's Event Scheduler</a> must be enabled to log online players periodically, use "0" to disable this feature.]]></word>
+    <word namespace="ragnarok-charmap-settings" key="default-map-label">Default Map</word>
+    <word namespace="ragnarok-charmap-settings" key="default-map-desc">Default Map</word>
+    <word namespace="ragnarok-charmap-settings" key="section-sql-connection">Char/Map Database</word>
+    <word namespace="ragnarok-charmap-settings" key="section-log-connection">Log Database</word>
+    <word namespace="ragnarok-charmap-settings" key="section-settings">Settings</word>
+    <word namespace="ragnarok-charmap-settings" key="section-map-reset">Map Reset</word>
+  </wordgroup>
+</languageimport>

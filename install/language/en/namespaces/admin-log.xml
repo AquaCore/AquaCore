@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="admin-log" key="ban-log">Ban Log</word>
+    <word namespace="admin-log" key="login-log">Login Log</word>
+    <word namespace="admin-log" key="paypal-log">Paypal Log</word>
+    <word namespace="admin-log" key="credit-log">Credit Transfer Log</word>
+    <word namespace="admin-log" key="error-log">Error Log</word>
+  </wordgroup>
+</languageimport>

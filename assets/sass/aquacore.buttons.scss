@@ -1,0 +1,34 @@
+button, input[type=submit], .ac-button {
+	padding: 3px 10px;
+	font-weight: bold;
+	border: 1px solid $mid-blue-2;
+	color: $light-gray-3;
+	cursor: pointer;
+	@include text-shadow(-1px -1px 0 $mid-blue-2);
+	@include box-shadow($light-blue-2 1px 1px 0 0 inset, $light-blue-2 0 0 4px 0 inset);
+	@include background(linear-gradient($light-blue-3, $mid-blue-3));
+	@include border-radius(10px);
+	a {
+		display: block;
+		color: inherit !important;
+		width: 100%;
+		height: 100%;
+	}
+	&:disabled, &.disabled, &.gray {
+		color: $bluish-gray-4;
+		border: 1px solid $bluish-gray-4;
+		@include text-shadow(1px 1px 0 white);
+		@include box-shadow(white 1px 1px 0 0 inset, white 0 0 4px 0 inset);
+		@include background(linear-gradient($light-gray-3, $mid-gray-2));
+	}
+	&.red {
+		color: #ffe8f7;
+		border: 1px solid #c25372;
+		@include text-shadow(-1px -1px 0 #CC4747);
+		@include box-shadow(#FFDBF4 1px 1px 0 0 inset, #FFDBF4 0 0 4px 0 inset);
+		@include background(linear-gradient(#FFB5B6, #F26F6F));
+	}
+}
+.ac-button {
+	float: right;
+}

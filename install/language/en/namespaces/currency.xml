@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="currency" key="AUD">Australian Dollar</word>
+    <word namespace="currency" key="BRL">Brazilian Real</word>
+    <word namespace="currency" key="CAD">Canadian Dollar</word>
+    <word namespace="currency" key="CZK">Czech Koruna</word>
+    <word namespace="currency" key="DKK">Danish Krone</word>
+    <word namespace="currency" key="EUR">Euro</word>
+    <word namespace="currency" key="HKD">Hong Kong Dollar</word>
+    <word namespace="currency" key="HUF">Hungarian Forint</word>
+    <word namespace="currency" key="ILS">Israeli New Sheqel</word>
+    <word namespace="currency" key="JPY">Japanese Yen</word>
+    <word namespace="currency" key="MYR">Malaysian Ringgit</word>
+    <word namespace="currency" key="MXN">Mexican Peso</word>
+    <word namespace="currency" key="NOK">Norwegian Krone</word>
+    <word namespace="currency" key="NZD">New Zealand Dollar</word>
+    <word namespace="currency" key="PHP">Philippine Peso</word>
+    <word namespace="currency" key="PLN">Polish Zloty</word>
+    <word namespace="currency" key="GBP">Pound Sterling</word>
+    <word namespace="currency" key="SGD">Singapore Dollar</word>
+    <word namespace="currency" key="SEK">Swedish Krona</word>
+    <word namespace="currency" key="CHF">Swiss Franc</word>
+    <word namespace="currency" key="TWD">Taiwan New Dollar</word>
+    <word namespace="currency" key="THB">Thai Baht</word>
+    <word namespace="currency" key="TRY">Turkish Lira</word>
+    <word namespace="currency" key="USD">U.S. Dollar</word>
+  </wordgroup>
+</languageimport>

@@ -1,0 +1,6 @@
+﻿/*
+ Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or http://ckeditor.com/license
+*/
+(function(){CKEDITOR.plugins.add("placeholder",{requires:"widget,dialog",lang:"en",icons:"placeholder",hidpi:!0,onLoad:function(){CKEDITOR.addCss(".cke_placeholder{background-color:#ff0}")},init:function(a){CKEDITOR.dialog.add("placeholder",this.path+"dialogs/placeholder.js");a.widgets.add("placeholder",{button:a.lang.placeholder.toolbar,dialog:"placeholder",template:'<span class="cke_placeholder">[[]]</span>',downcast:function(){return new CKEDITOR.htmlParser.text("[["+this.data.name+"]]")},init:function(){this.setData("name",
+this.element.getText().slice(2,-2))},data:function(){this.element.setText("[["+this.data.name+"]]")}})},afterInit:function(a){var c=/\[\[([^\[\]])+\]\]/g;a.dataProcessor.dataFilter.addRules({text:function(d){return d.replace(c,function(c){var b=null,b=new CKEDITOR.htmlParser.element("span",{"class":"cke_placeholder"});b.add(new CKEDITOR.htmlParser.text(c));b=a.widgets.wrapElement(b,"placeholder");return b.getOuterHtml()})}})}})})();

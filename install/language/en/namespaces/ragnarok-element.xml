@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-element" key="0">Neutral</word>
+    <word namespace="ragnarok-element" key="1">Water</word>
+    <word namespace="ragnarok-element" key="2">Earth</word>
+    <word namespace="ragnarok-element" key="3">Fire</word>
+    <word namespace="ragnarok-element" key="4">Wind</word>
+    <word namespace="ragnarok-element" key="5">Poison</word>
+    <word namespace="ragnarok-element" key="6">Holy</word>
+    <word namespace="ragnarok-element" key="7">Dark</word>
+    <word namespace="ragnarok-element" key="8">Ghost</word>
+    <word namespace="ragnarok-element" key="9">Undead</word>
+  </wordgroup>
+</languageimport>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="week" key="0">Sunday</word>
+    <word namespace="week" key="1">Monday</word>
+    <word namespace="week" key="2">Tuesday</word>
+    <word namespace="week" key="3">Wednesday</word>
+    <word namespace="week" key="4">Thursday</word>
+    <word namespace="week" key="5">Friday</word>
+    <word namespace="week" key="6">Saturday</word>
+  </wordgroup>
+</languageimport>

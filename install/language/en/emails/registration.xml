@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <emailgroup language="en">
+    <email key="registration">
+      <title>:site-title Registration</title>
+      <body><![CDATA[<html>
+	<body>
+	Welcome, :display-name.<br>
+	You have created an account on <a href=":site-url">:site-title</a>,<br>
+	in order to proceed with your registration please use the link below:<br>
+	<a href=":url">Confirm Registration</a><br>
+	You may log in to your account using your username <b><i>(:username)</i></b> and your password.<br>
+	This link will expire in <b>:hours-left</b> hours.
+	</body>
+</html>]]></body>
+    </email>
+  </emailgroup>
+</languageimport>

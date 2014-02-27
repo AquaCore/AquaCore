@@ -1,0 +1,86 @@
+$experimental-support-for-mozilla : true;
+$experimental-support-for-webkit : true;
+$support-for-original-webkit-gradients : true;
+$experimental-support-for-opera : true;
+$experimental-support-for-microsoft : true;
+$experimental-support-for-khtml : true;
+$experimental-support-for-pie: false;
+
+@import
+"compass",
+"compass/support",
+"compass/css3",
+"compass/css3/pie",
+"compass/css3/images",
+"compass/css3/inline-block",
+"compass/css3/user-interface",
+"bourbon/bourbon",
+"compass/typography/text",
+"compass/utilities/general/float",
+"compass/utilities/general/hacks",
+"compass/utilities/general/min",
+"compass/utilities/sprites";
+
+$light-gray-1: #bfbfbf;
+$light-gray-2: #e9eef3;
+$light-gray-3: #f7f9fc;
+$mid-gray-1: #959aa3;
+$mid-gray-2: #d7dee8;
+$mid-gray-3: #a8b5bc;
+$dark-gray-1: #686868;
+$bluish-gray-1: #bbc1cc;
+$bluish-gray-2: #8ba0ba;
+$bluish-gray-3: #b7c6d6;
+$bluish-gray-4: #9da5b7;
+$light-blue-1: #52c5f3;
+$light-blue-2: #b7fcff;
+$light-blue-3: #68e2f2;
+$light-blue-4: #cff7ff;
+$light-blue-5: #8ef2ff;
+$mid-blue-1: #2296ef;
+$mid-blue-2: #4586d0;
+$mid-blue-3: #52aae0;
+$mid-blue-4: #43beff;
+$dark-blue-1: #0e5ea6;
+$light-red-1: #f96e75;
+$mid-red-1: #bb2f46;
+
+.ac-checkbox-group,
+.ac-radio-group {
+	.ac-checkbox, .ac-radio {
+		clear: both;
+		display: table;
+	}
+	label {
+		display: table-cell;
+		width: 100%;
+		padding-left: 5px;
+		font-weight: bold;
+		font-size: .85em;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+}
+.ac_captcha_refresh {
+	width: 16px;
+	height: 16px;
+	background: transparent url('../../../../../assets/images/icons/refresh.png') center center no-repeat;
+	cursor: pointer;
+}
+.ac-username {
+	display: inline;
+	&.has-background {
+		padding: 2px 7px;
+		@include border-radius(3px);
+	}
+	&.has-color {
+		font-weight: bold;
+	}
+}
+.ac-guest {
+	font-style: italic;
+}

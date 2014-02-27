@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-item-type" key="0">Healing</word>
+    <word namespace="ragnarok-item-type" key="1">Unknown</word>
+    <word namespace="ragnarok-item-type" key="2">Usable</word>
+    <word namespace="ragnarok-item-type" key="3">Misc</word>
+    <word namespace="ragnarok-item-type" key="4">Weapon</word>
+    <word namespace="ragnarok-item-type" key="5">Armor</word>
+    <word namespace="ragnarok-item-type" key="6">Card</word>
+    <word namespace="ragnarok-item-type" key="7">Pet Egg</word>
+    <word namespace="ragnarok-item-type" key="8">Pet Equipment</word>
+    <word namespace="ragnarok-item-type" key="9">Unknown</word>
+    <word namespace="ragnarok-item-type" key="10">Ammunition</word>
+    <word namespace="ragnarok-item-type" key="11">Delayed Consumable</word>
+    <word namespace="ragnarok-item-type" key="12">Taming Item</word>
+    <word namespace="ragnarok-item-type" key="13">Cash Shop Item</word>
+  </wordgroup>
+</languageimport>

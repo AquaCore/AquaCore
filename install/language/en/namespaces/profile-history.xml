@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="profile-history" key="profile-history">Profile Edit History</word>
+    <word namespace="profile-history" key="x-profile-history">%s's Profile Edit History</word>
+    <word namespace="profile-history" key="id">ID</word>
+    <word namespace="profile-history" key="user">User</word>
+    <word namespace="profile-history" key="ip-address">IP Address</word>
+    <word namespace="profile-history" key="field">Field</word>
+    <word namespace="profile-history" key="old-value">Old Value</word>
+    <word namespace="profile-history" key="new-value">New Value</word>
+    <word namespace="profile-history" key="date">Date</word>
+  </wordgroup>
+</languageimport>

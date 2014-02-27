@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="permission-desc" key="register-account"></word>
+    <word namespace="permission-desc" key="comment">Add comments to posts.</word>
+    <word namespace="permission-desc" key="rate">Rate comments and content.</word>
+    <word namespace="permission-desc" key="view-admin-cp"></word>
+    <word namespace="permission-desc" key="edit-cp-user">Edit users' account data (username, password, display name, etc).</word>
+    <word namespace="permission-desc" key="edit-server-user">Edit servers' accounts and characters</word>
+    <word namespace="permission-desc" key="edit-cp-settings"></word>
+    <word namespace="permission-desc" key="edit-server-settings"></word>
+    <word namespace="permission-desc" key="view-cp-logs">View the site's logs.</word>
+    <word namespace="permission-desc" key="view-server-logs">View the servers' logs.</word>
+    <word namespace="permission-desc" key="manage-roles">Create and edit user roles.</word>
+    <word namespace="permission-desc" key="manage-plugins">Import, delete, enable and disable plugins.</word>
+    <word namespace="permission-desc" key="create-pages">Create and edit pages.</word>
+    <word namespace="permission-desc" key="publish-posts">Create and edit posts and categories and edit comments.</word>
+    <word namespace="permission-desc" key="view-user-items">View users' storage, cart and inventory in the Admin CP.</word>
+    <word namespace="permission-desc" key="ban-cp-user">Ban site's users and their respective Ragnarök accounts..</word>
+    <word namespace="permission-desc" key="ban-server-user">Ban Ragnarök accounts and characters.</word>
+  </wordgroup>
+</languageimport>

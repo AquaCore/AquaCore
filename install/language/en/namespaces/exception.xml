@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="exception" key="assertion">Assertion failed: %1$s. %2$s</word>
+    <word namespace="exception" key="critical-error">Critical Error</word>
+    <word namespace="exception" key="headers-sent">Headers have already been sent.</word>
+    <word namespace="exception" key="invalid-role">Invalid user role %s.</word>
+    <word namespace="exception" key="invalid-timezone"><![CDATA[<i>%1$s</i> is not a valid timezone, consult <a href="http://php.net/timezones" target="_blank">http://php.net/timezones</a> for a list of valid timezones.]]></word>
+    <word namespace="exception" key="line">Line</word>
+    <word namespace="exception" key="pagination-not-callable">Rendering function must be callable.</word>
+    <word namespace="exception" key="pagination-sliding-style">Invalid pagination sliding style #%d.</word>
+    <word namespace="exception" key="undefined-domain">Domain not defined.</word>
+    <word namespace="exception" key="could-not-open-socket">Could not open socket.</word>
+    <word namespace="exception" key="missing-extension">%s requires the %s PHP module.</word>
+    <word namespace="exception" key="session-already-open">Session is already open.</word>
+    <word namespace="exception" key="session-not-open">Session is not open.</word>
+    <word namespace="exception" key="session-collision">Failed to create session more than %d times.</word>
+    <word namespace="exception" key="error-open-session">Unable to open session.</word>
+    <word namespace="exception" key="error-close-session">Unable to close session.</word>
+    <word namespace="exception" key="error-commit-session">Unable to commit session changes.</word>
+    <word namespace="exception" key="pdo-access-denied"><![CDATA[<b>Access denied:</b> %2$s]]></word>
+    <word namespace="exception" key="pdo-invalid-timezone"><![CDATA[<b>Invalid timezone:</b> %2$s]]></word>
+    <word namespace="exception" key="pdo-connection-failed"><![CDATA[<b>Failed to establish connection:</b> %2$s]]></word>
+    <word namespace="exception" key="pdo-unknown-db"><![CDATA[<b>Unknown database:</b> %2$s]]></word>
+    <word namespace="exception" key="pdo-exception"><![CDATA[<b>PDO Exception:</b> %2$s]]></word>
+    <word namespace="exception" key="internal-pcre-error">Internal PCRE error</word>
+    <word namespace="exception" key="pcre-backtrack-limit">The backtrack limit was exhausted.</word>
+    <word namespace="exception" key="pcre-recursion-limit">The recursion limit was exhausted.</word>
+    <word namespace="exception" key="pcre-bad-utf8">Bad UTF-8 error.</word>
+    <word namespace="exception" key="pcre-bad-utf8-offset">Bad UTF-8 offset error.</word>
+    <word namespace="exception" key="missing-template">Template file not found (%s)</word>
+    <word namespace="exception" key="invalid-dir-permission"><![CDATA[<b>%s</b> directory requires %s permission(s).]]></word>
+    <word namespace="exception" key="open-file">Failed to open file %s.</word>
+    <word namespace="exception" key="create-file">Failed to create file %s.</word>
+    <word namespace="exception" key="write-file">Failed to write to file %s.</word>
+    <word namespace="exception" key="truncate-file">Failed to truncate file %s.</word>
+    <word namespace="exception" key="acquire-lock">Failed to acquire lock for %s.</word>
+    <word namespace="exception" key="change-permission">Unable to change file permission for %1$s.</word>
+  </wordgroup>
+</languageimport>

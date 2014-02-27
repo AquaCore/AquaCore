@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="page" key="pages">Pages</word>
+    <word namespace="page" key="new-page">New Page</word>
+    <word namespace="page" key="edit-page">Edit Page</word>
+    <word namespace="page" key="id">ID</word>
+    <word namespace="page" key="title">Title</word>
+    <word namespace="page" key="slug">Slug</word>
+    <word namespace="page" key="author">Author</word>
+    <word namespace="page" key="editor">Editor</word>
+    <word namespace="page" key="parent">Parent</word>
+    <word namespace="page" key="status">Status</word>
+    <word namespace="page" key="publish-date">Publish Date</word>
+    <word namespace="page" key="edit-date">Last Edited</word>
+    <word namespace="page" key="delete">Delete</word>
+    <word namespace="page" key="preview">Preview</word>
+    <word namespace="page" key="publishing-options">Publishing Options</word>
+    <word namespace="page" key="select-parent">Select a Page</word>
+    <word namespace="page" key="page-deleted-p">%s pages deleted.</word>
+    <word namespace="page" key="page-deleted-s"><![CDATA[The page <b>%s</b> has been deleted.]]></word>
+    <word namespace="page" key="confirm-delete-p">Are you sure you want to delete these pages?</word>
+    <word namespace="page" key="confirm-delete-s">Are you sure you want to delete this page?</word>
+    <word namespace="page" key="protected-page"><![CDATA[The page <b>%s</b> cannot be deleted.]]></word>
+  </wordgroup>
+</languageimport>

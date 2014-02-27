@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-equip-location" key="8192">Ammunition</word>
+    <word namespace="ragnarok-equip-location" key="7168">Upper/Mid/Lower costume</word>
+    <word namespace="ragnarok-equip-location" key="6144">Mid/Lower costume</word>
+    <word namespace="ragnarok-equip-location" key="5120">Upper/Lower costume</word>
+    <word namespace="ragnarok-equip-location" key="4096">Lower costume</word>
+    <word namespace="ragnarok-equip-location" key="3072">Upper/Mid costume</word>
+    <word namespace="ragnarok-equip-location" key="2048">Middle costume</word>
+    <word namespace="ragnarok-equip-location" key="1024">Upper costume</word>
+    <word namespace="ragnarok-equip-location" key="769">Upper/Mid/Lower headgear</word>
+    <word namespace="ragnarok-equip-location" key="768">Upper/Mid headgear</word>
+    <word namespace="ragnarok-equip-location" key="513">Mid/Lower headgear</word>
+    <word namespace="ragnarok-equip-location" key="512">Middle headgear</word>
+    <word namespace="ragnarok-equip-location" key="257">Upper/Lower headgear</word>
+    <word namespace="ragnarok-equip-location" key="256">Upper headgear</word>
+    <word namespace="ragnarok-equip-location" key="128">Accessory 2</word>
+    <word namespace="ragnarok-equip-location" key="64">Shoes</word>
+    <word namespace="ragnarok-equip-location" key="32">Left hand</word>
+    <word namespace="ragnarok-equip-location" key="16">Armor</word>
+    <word namespace="ragnarok-equip-location" key="8">Accessory 1</word>
+    <word namespace="ragnarok-equip-location" key="4">Mantle</word>
+    <word namespace="ragnarok-equip-location" key="2">Right hand</word>
+    <word namespace="ragnarok-equip-location" key="1">Lower headgear</word>
+  </wordgroup>
+</languageimport>

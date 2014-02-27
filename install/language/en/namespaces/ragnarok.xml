@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok" key="account">Account</word>
+    <word namespace="ragnarok" key="account-info">%s's Information</word>
+    <word namespace="ragnarok" key="account-updated">Your account has been updated.</word>
+    <word namespace="ragnarok" key="accounts-registered">Accounts Registered</word>
+    <word namespace="ragnarok" key="add-to-cart">Add to cart</word>
+    <word namespace="ragnarok" key="agility">Agility</word>
+    <word namespace="ragnarok" key="alch-ranking">Alchemist Ranking</word>
+    <word namespace="ragnarok" key="amount">Amount</word>
+    <word namespace="ragnarok" key="applicable-jobs">Applicable Jobs</word>
+    <word namespace="ragnarok" key="attack">Attack</word>
+    <word namespace="ragnarok" key="attack-delay">Attack Delay</word>
+    <word namespace="ragnarok" key="attack-motion">Attack Motion</word>
+    <word namespace="ragnarok" key="attack-range">Attack Range</word>
+    <word namespace="ragnarok" key="avg-level">Avg. Level</word>
+    <word namespace="ragnarok" key="base-exp">B. Experience</word>
+    <word namespace="ragnarok" key="base-level">B. Level</word>
+    <word namespace="ragnarok" key="buy-price">Buying Price</word>
+    <word namespace="ragnarok" key="card">Card</word>
+    <word namespace="ragnarok" key="cart">Cart</word>
+    <word namespace="ragnarok" key="item-forger">%s's</word>
+    <word namespace="ragnarok" key="cart-add-m">%d %s added to cart.</word>
+    <word namespace="ragnarok" key="cart-clear">All items have been removed from your cart.</word>
+    <word namespace="ragnarok" key="cart-remove">%s removed from cart.</word>
+    <word namespace="ragnarok" key="cart-remove-m">%d %s removed from cart.</word>
+    <word namespace="ragnarok" key="cash-shop">Cash Shop</word>
+    <word namespace="ragnarok" key="castles">Castles</word>
+    <word namespace="ragnarok" key="cells">%d cells</word>
+    <word namespace="ragnarok" key="change-slot">Change Slots</word>
+    <word namespace="ragnarok" key="changeslot-duplicate">Failed to change slots, duplicate slot number.</word>
+    <word namespace="ragnarok" key="changeslot-missing-char">Failed to change slots, missing character %s.</word>
+    <word namespace="ragnarok" key="char-preferences">Character Preferences</word>
+    <word namespace="ragnarok" key="char-ranking">Character Ranking</word>
+    <word namespace="ragnarok" key="character">Character</word>
+    <word namespace="ragnarok" key="characters">Characters</word>
+    <word namespace="ragnarok" key="chars-registered">Characters Registered</word>
+    <word namespace="ragnarok" key="checkout">Checkout</word>
+    <word namespace="ragnarok" key="class">Class</word>
+    <word namespace="ragnarok" key="class-1st">1st Class</word>
+    <word namespace="ragnarok" key="class-2nd">2nd Class</word>
+    <word namespace="ragnarok" key="class-3rd">3rd Class</word>
+    <word namespace="ragnarok" key="class-other">Other</word>
+    <word namespace="ragnarok" key="class-population">Class Population</word>
+    <word namespace="ragnarok" key="class-trans">Transcendent</word>
+    <word namespace="ragnarok" key="clear-cart">Clear Cart</word>
+    <word namespace="ragnarok" key="current-password">Current Password</word>
+    <word namespace="ragnarok" key="current-pincode">Pincode</word>
+    <word namespace="ragnarok" key="custom-item">Custom item</word>
+    <word namespace="ragnarok" key="custom-mob">Custom Monster</word>
+    <word namespace="ragnarok" key="defence">Defence</word>
+    <word namespace="ragnarok" key="delay-motion">Delay Motion</word>
+    <word namespace="ragnarok" key="dexterity">Dexterity</word>
+    <word namespace="ragnarok" key="drag-drop-sort">Drag and drop characters to sort.</word>
+    <word namespace="ragnarok" key="edit-account">Edit Account</word>
+    <word namespace="ragnarok" key="edit-char">Edit Character</word>
+    <word namespace="ragnarok" key="element">Element</word>
+    <word namespace="ragnarok" key="empty-cart">Your cart is empty.</word>
+    <word namespace="ragnarok" key="equip-locations">Equip Locations</word>
+    <word namespace="ragnarok" key="equip-script">Equip Script</word>
+    <word namespace="ragnarok" key="experience">Experience</word>
+    <word namespace="ragnarok" key="fame">Fame</word>
+    <word namespace="ragnarok" key="female">Female</word>
+    <word namespace="ragnarok" key="gender">Gender</word>
+    <word namespace="ragnarok" key="group">Group</word>
+    <word namespace="ragnarok" key="guild">Guild</word>
+    <word namespace="ragnarok" key="guild-name">Guild Name</word>
+    <word namespace="ragnarok" key="guild-ranking">Guild Ranking</word>
+    <word namespace="ragnarok" key="guilds">Guilds</word>
+    <word namespace="ragnarok" key="hidden">Hidden</word>
+    <word namespace="ragnarok" key="hide-map-whos-online">Hide map from who is online</word>
+    <word namespace="ragnarok" key="hide-whos-online">Hide from who is online</word>
+    <word namespace="ragnarok" key="hide-zeny">Hide from zeny ranking</word>
+    <word namespace="ragnarok" key="hp">HP</word>
+    <word namespace="ragnarok" key="identifier">Identifier</word>
+    <word namespace="ragnarok" key="intelligence">Intelligence</word>
+    <word namespace="ragnarok" key="invalid-account">The account you have selected is not valid.</word>
+    <word namespace="ragnarok" key="invalid-server-selected">Invalid server selected.</word>
+    <word namespace="ragnarok" key="inventory">Inventory</word>
+    <word namespace="ragnarok" key="iro-name">iRO Name</word>
+    <word namespace="ragnarok" key="item">Item</word>
+    <word namespace="ragnarok" key="item-db">Item Database</word>
+    <word namespace="ragnarok" key="item-id">Item Id</word>
+    <word namespace="ragnarok" key="item-not-found">Item not found.</word>
+    <word namespace="ragnarok" key="job-exp">J. Experience</word>
+    <word namespace="ragnarok" key="job-level">J. Level</word>
+    <word namespace="ragnarok" key="karma">Karma</word>
+    <word namespace="ragnarok" key="kro-name">kRO Name</word>
+    <word namespace="ragnarok" key="last-ip">Last Ip</word>
+    <word namespace="ragnarok" key="last-login">Last Login</word>
+    <word namespace="ragnarok" key="last-map">Last Map</word>
+    <word namespace="ragnarok" key="leader">Leader</word>
+    <word namespace="ragnarok" key="level">Level</word>
+    <word namespace="ragnarok" key="lockdown-desc">Lock/unlock your account temporarily</word>
+    <word namespace="ragnarok" key="locked">Locked</word>
+    <word namespace="ragnarok" key="login-count">Login Count</word>
+    <word namespace="ragnarok" key="look-reset">Your character's look has been reset.</word>
+    <word namespace="ragnarok" key="luck">Luck</word>
+    <word namespace="ragnarok" key="magic-attack">M. Attack</word>
+    <word namespace="ragnarok" key="magic-defence">M. Defence</word>
+    <word namespace="ragnarok" key="male">Male</word>
+    <word namespace="ragnarok" key="manner">Manner</word>
+    <word namespace="ragnarok" key="map-eg">Map (e.g: pay_dun01)</word>
+    <word namespace="ragnarok" key="max-attack">Max Attack</word>
+    <word namespace="ragnarok" key="max-lvl">Max Level</word>
+    <word namespace="ragnarok" key="members">Members</word>
+    <word namespace="ragnarok" key="min-attack">Min Attack</word>
+    <word namespace="ragnarok" key="min-lvl">Min Level</word>
+    <word namespace="ragnarok" key="mob-db">Monster Database</word>
+    <word namespace="ragnarok" key="mob-id">Monster Id</word>
+    <word namespace="ragnarok" key="mob-not-found">Monster not found.</word>
+    <word namespace="ragnarok" key="monster">Monster</word>
+    <word namespace="ragnarok" key="mvp-exp">MVP Experience</word>
+    <word namespace="ragnarok" key="name">Name</word>
+    <word namespace="ragnarok" key="no-accounts-registered">You haven't registered any game accounts.</word>
+    <word namespace="ragnarok" key="no-accounts-found">No accounts found.</word>
+    <word namespace="ragnarok" key="x-accounts-found">%s accounts found.</word>
+    <word namespace="ragnarok" key="no-desc">No description available.</word>
+    <word namespace="ragnarok" key="no-drops">This monster doesn't drop any items.</word>
+    <word namespace="ragnarok" key="no-guild">No Guild</word>
+    <word namespace="ragnarok" key="not-dropped">This item is not dropped by monsters.</word>
+    <word namespace="ragnarok" key="not-enough-credits">You don't have enough credits to complete your purchase.</word>
+    <word namespace="ragnarok" key="pass-pin-incorrect">The password or pincode provided is incorrect.</word>
+    <word namespace="ragnarok" key="password">Password</word>
+    <word namespace="ragnarok" key="password-email-sent">An email has been sent to you with information on how to recover your password.</word>
+    <word namespace="ragnarok" key="password-incorrect">The password provided is incorrect.</word>
+    <word namespace="ragnarok" key="password-invalid-character">Your password contains invalid characters, the following characters aren't allowed: %s</word>
+    <word namespace="ragnarok" key="password-invalid-length">The password you have entered is invalid, passwords must be between %d and %d characters long.</word>
+    <word namespace="ragnarok" key="password-len">The password you have entered is invalid, passwords must be between %d and %d characters long.</word>
+    <word namespace="ragnarok" key="password-mismatch">The passwords you have entered do not match.</word>
+    <word namespace="ragnarok" key="password-repeat">Repeat Password</word>
+    <word namespace="ragnarok" key="password-reset-success">Your password has been reset.</word>
+    <word namespace="ragnarok" key="pincode">Pincode</word>
+    <word namespace="ragnarok" key="pincode-digit">Pincodes must contain digits only.</word>
+    <word namespace="ragnarok" key="pincode-len">The pincode you have entered is invalid, pincodes must be between %d and %d characters long.</word>
+    <word namespace="ragnarok" key="pincode-len2">The pincode you have entered is invalid, pincodes must be %d characters long.</word>
+    <word namespace="ragnarok" key="pincode-mismatch">The pincodes you have entered do not match.</word>
+    <word namespace="ragnarok" key="pincode-repeat">Repeat Pincode</word>
+    <word namespace="ragnarok" key="pos-reset">Your character's position has been reset.</word>
+    <word namespace="ragnarok" key="preferences">Preferences</word>
+    <word namespace="ragnarok" key="purchase">Purchase</word>
+    <word namespace="ragnarok" key="purchase-complete">Your items have been added to your storage.</word>
+    <word namespace="ragnarok" key="race">Race</word>
+    <word namespace="ragnarok" key="ragnarok">Ragnarök</word>
+    <word namespace="ragnarok" key="range">Range</word>
+    <word namespace="ragnarok" key="rank">Rank</word>
+    <word namespace="ragnarok" key="rate">Rate</word>
+    <word namespace="ragnarok" key="recover-password">Recover Password</word>
+    <word namespace="ragnarok" key="recover-x-password">Recover Password - %s</word>
+    <word namespace="ragnarok" key="refinable">Refinable</word>
+    <word namespace="ragnarok" key="register-account">Register Account</word>
+    <word namespace="ragnarok" key="register-account-server">Register Account - %s</word>
+    <word namespace="ragnarok" key="registration-account-limit">You already have %d accounts at this server, you can't register any more accounts.</word>
+    <word namespace="ragnarok" key="registration-completed">Registration completed</word>
+    <word namespace="ragnarok" key="registration-success">Your new account has been registered successfully.</word>
+    <word namespace="ragnarok" key="reset-look">Reset Look</word>
+    <word namespace="ragnarok" key="reset-look-online">You can't reset your look while your character is online.</word>
+    <word namespace="ragnarok" key="reset-map-restriction">You can't reset your position from your current map (%s).</word>
+    <word namespace="ragnarok" key="reset-pos-online">You can't reset your position while your character is online.</word>
+    <word namespace="ragnarok" key="reset-position">Reset Position</word>
+    <word namespace="ragnarok" key="reset-x-password">Reset Password - %s</word>
+    <word namespace="ragnarok" key="ro-account">RagnarÃƒÂ¶k Account</word>
+    <word namespace="ragnarok" key="ro-password-recovery">Ragnarok Password Recovery</word>
+    <word namespace="ragnarok" key="sell-price">Selling Price</word>
+    <word namespace="ragnarok" key="server">Server</word>
+    <word namespace="ragnarok" key="server-info">Server Information</word>
+    <word namespace="ragnarok" key="sex">Sex</word>
+    <word namespace="ragnarok" key="sight-range">Sight Range</word>
+    <word namespace="ragnarok" key="site-password">Site Password</word>
+    <word namespace="ragnarok" key="size">Size</word>
+    <word namespace="ragnarok" key="slot">Slot</word>
+    <word namespace="ragnarok" key="slot-saved">Your characters' slot order has been updated.</word>
+    <word namespace="ragnarok" key="slots">Slots</word>
+    <word namespace="ragnarok" key="smith-ranking">Blacksmith Ranking</word>
+    <word namespace="ragnarok" key="sp">SP</word>
+    <word namespace="ragnarok" key="spell-range">Spell Range</word>
+    <word namespace="ragnarok" key="state">State</word>
+    <word namespace="ragnarok" key="storage">Storage</word>
+    <word namespace="ragnarok" key="strength">Strength</word>
+    <word namespace="ragnarok" key="tk-ranking">Taekwon Ranking</word>
+    <word namespace="ragnarok" key="type">Type</word>
+    <word namespace="ragnarok" key="unequip-script">Unequip Script</word>
+    <word namespace="ragnarok" key="unidentified">Unidentified</word>
+    <word namespace="ragnarok" key="update-cart">Update</word>
+    <word namespace="ragnarok" key="use-script">Use Script</word>
+    <word namespace="ragnarok" key="username">Username</word>
+    <word namespace="ragnarok" key="username-invalid-character">Your username contains invalid characters, the following characters aren't allowed: %s</word>
+    <word namespace="ragnarok" key="username-len-min">The username you have entered is invalid, usernames must be at least %d characters long.</word>
+    <word namespace="ragnarok" key="username-len-range">The username you have entered is invalid, usernames must be between %d and %d characters long.</word>
+    <word namespace="ragnarok" key="username-taken">The username you have chosen is already taken.</word>
+    <word namespace="ragnarok" key="viewing-item">Viewing Item</word>
+    <word namespace="ragnarok" key="viewing-mob">Viewing Monster</word>
+    <word namespace="ragnarok" key="viewing-x-account">Viewing Account - %s</word>
+    <word namespace="ragnarok" key="viewing-x-character">Viewing Character - %s</word>
+    <word namespace="ragnarok" key="vitality">Vitality</word>
+    <word namespace="ragnarok" key="weapon-lvl">Weapon Level</word>
+    <word namespace="ragnarok" key="weapon-type">Weapon Type</word>
+    <word namespace="ragnarok" key="weight">Weight</word>
+    <word namespace="ragnarok" key="who-drops">Who Drops %s</word>
+    <word namespace="ragnarok" key="whos-online">Who's Online</word>
+    <word namespace="ragnarok" key="x-cart">%s's Cart</word>
+    <word namespace="ragnarok" key="x-characters">%s's Characters</word>
+    <word namespace="ragnarok" key="x-characters-registered">%s characters registered.</word>
+    <word namespace="ragnarok" key="x-chars-found">%s characters found.</word>
+    <word namespace="ragnarok" key="x-coord">X Coordinate</word>
+    <word namespace="ragnarok" key="x-drops">%s's Drops</word>
+    <word namespace="ragnarok" key="x-inventory">%s's Inventory</word>
+    <word namespace="ragnarok" key="x-items">%s items found.</word>
+    <word namespace="ragnarok" key="x-monsters-found">%s monsters found.</word>
+    <word namespace="ragnarok" key="x-online">%s users online</word>
+    <word namespace="ragnarok" key="x-server-info">Server Information - %s</word>
+    <word namespace="ragnarok" key="x-storage">%s's Storage</word>
+    <word namespace="ragnarok" key="y-coord">Y Coordinate</word>
+    <word namespace="ragnarok" key="zeny">Zeny</word>
+    <word namespace="ragnarok" key="zeny-ranking">Zeny Ranking</word>
+    <word namespace="ragnarok" key="account-id">Account ID</word>
+    <word namespace="ragnarok" key="unban-time">Unban Time</word>
+    <word namespace="ragnarok" key="birthday">Birthday</word>
+    <word namespace="ragnarok" key="email">Email</word>
+    <word namespace="ragnarok" key="user-not-found">User not found, please insert an existing display name.</word>
+  </wordgroup>
+</languageimport>

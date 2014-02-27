@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-jobs" key="0">Novice</word>
+    <word namespace="ragnarok-jobs" key="1">Swordsman</word>
+    <word namespace="ragnarok-jobs" key="2">Mage</word>
+    <word namespace="ragnarok-jobs" key="3">Archer</word>
+    <word namespace="ragnarok-jobs" key="4">Acolyte</word>
+    <word namespace="ragnarok-jobs" key="5">Merchant</word>
+    <word namespace="ragnarok-jobs" key="6">Thief</word>
+    <word namespace="ragnarok-jobs" key="7">Knight</word>
+    <word namespace="ragnarok-jobs" key="8">Priest</word>
+    <word namespace="ragnarok-jobs" key="9">Wizard</word>
+    <word namespace="ragnarok-jobs" key="10">Blacksmith</word>
+    <word namespace="ragnarok-jobs" key="11">Hunter</word>
+    <word namespace="ragnarok-jobs" key="12">Assassin</word>
+    <word namespace="ragnarok-jobs" key="14">Crusader</word>
+    <word namespace="ragnarok-jobs" key="15">Monk</word>
+    <word namespace="ragnarok-jobs" key="16">Sage</word>
+    <word namespace="ragnarok-jobs" key="17">Rogue</word>
+    <word namespace="ragnarok-jobs" key="18">Alchemist</word>
+    <word namespace="ragnarok-jobs" key="19">Bard</word>
+    <word namespace="ragnarok-jobs" key="20">Dancer</word>
+    <word namespace="ragnarok-jobs" key="22">Wedding</word>
+    <word namespace="ragnarok-jobs" key="23">Super Novice</word>
+    <word namespace="ragnarok-jobs" key="24">Gunslinger</word>
+    <word namespace="ragnarok-jobs" key="25">Ninja</word>
+    <word namespace="ragnarok-jobs" key="26">Xmas</word>
+    <word namespace="ragnarok-jobs" key="27">Summer</word>
+    <word namespace="ragnarok-jobs" key="4001">High Novice</word>
+    <word namespace="ragnarok-jobs" key="4002">High Swordsman</word>
+    <word namespace="ragnarok-jobs" key="4003">High Mage</word>
+    <word namespace="ragnarok-jobs" key="4004">High Archer</word>
+    <word namespace="ragnarok-jobs" key="4005">High Acolyte</word>
+    <word namespace="ragnarok-jobs" key="4006">High Merchant</word>
+    <word namespace="ragnarok-jobs" key="4007">High Thief</word>
+    <word namespace="ragnarok-jobs" key="4008">Lord Knight</word>
+    <word namespace="ragnarok-jobs" key="4009">High Priest</word>
+    <word namespace="ragnarok-jobs" key="4010">High Wizard</word>
+    <word namespace="ragnarok-jobs" key="4011">Whitesmith</word>
+    <word namespace="ragnarok-jobs" key="4012">Sniper</word>
+    <word namespace="ragnarok-jobs" key="4013">Assassin Cross</word>
+    <word namespace="ragnarok-jobs" key="4015">Paladin</word>
+    <word namespace="ragnarok-jobs" key="4016">Champion</word>
+    <word namespace="ragnarok-jobs" key="4017">Professor</word>
+    <word namespace="ragnarok-jobs" key="4018">Stalker</word>
+    <word namespace="ragnarok-jobs" key="4019">Creator</word>
+    <word namespace="ragnarok-jobs" key="4020">Clown</word>
+    <word namespace="ragnarok-jobs" key="4021">Gypsy</word>
+    <word namespace="ragnarok-jobs" key="4023">Baby</word>
+    <word namespace="ragnarok-jobs" key="4024">Baby Swordsman</word>
+    <word namespace="ragnarok-jobs" key="4025">Baby Mage</word>
+    <word namespace="ragnarok-jobs" key="4026">Baby Archer</word>
+    <word namespace="ragnarok-jobs" key="4027">Baby Acolyte</word>
+    <word namespace="ragnarok-jobs" key="4028">Baby Merchant</word>
+    <word namespace="ragnarok-jobs" key="4029">Baby Thief</word>
+    <word namespace="ragnarok-jobs" key="4030">Baby Knight</word>
+    <word namespace="ragnarok-jobs" key="4031">Baby Priest</word>
+    <word namespace="ragnarok-jobs" key="4032">Baby Wizard</word>
+    <word namespace="ragnarok-jobs" key="4033">Baby Blacksmith</word>
+    <word namespace="ragnarok-jobs" key="4034">Baby Hunter</word>
+    <word namespace="ragnarok-jobs" key="4035">Baby Assassin</word>
+    <word namespace="ragnarok-jobs" key="4037">Baby Crusader</word>
+    <word namespace="ragnarok-jobs" key="4038">Baby Monk</word>
+    <word namespace="ragnarok-jobs" key="4039">Baby Sage</word>
+    <word namespace="ragnarok-jobs" key="4040">Baby Rogue</word>
+    <word namespace="ragnarok-jobs" key="4041">Baby Alchemist</word>
+    <word namespace="ragnarok-jobs" key="4042">Baby Bard</word>
+    <word namespace="ragnarok-jobs" key="4043">Baby Dancer</word>
+    <word namespace="ragnarok-jobs" key="4045">Super Baby</word>
+    <word namespace="ragnarok-jobs" key="4046">Taekwon</word>
+    <word namespace="ragnarok-jobs" key="4047">Star Gladiator</word>
+    <word namespace="ragnarok-jobs" key="4049">Soul Linker</word>
+    <word namespace="ragnarok-jobs" key="4054">Rune Knight</word>
+    <word namespace="ragnarok-jobs" key="4055">Warlock</word>
+    <word namespace="ragnarok-jobs" key="4056">Ranger</word>
+    <word namespace="ragnarok-jobs" key="4057">Arch Bishop</word>
+    <word namespace="ragnarok-jobs" key="4058">Mechanic</word>
+    <word namespace="ragnarok-jobs" key="4059">Guillotine Cross</word>
+    <word namespace="ragnarok-jobs" key="4060">Rune Knight+</word>
+    <word namespace="ragnarok-jobs" key="4061">Warlock+</word>
+    <word namespace="ragnarok-jobs" key="4062">Ranger+</word>
+    <word namespace="ragnarok-jobs" key="4063">Arch Bishop+</word>
+    <word namespace="ragnarok-jobs" key="4064">Mechanic+</word>
+    <word namespace="ragnarok-jobs" key="4065">Guillotine Cross+</word>
+    <word namespace="ragnarok-jobs" key="4066">Royal Guard</word>
+    <word namespace="ragnarok-jobs" key="4067">Sorceror</word>
+    <word namespace="ragnarok-jobs" key="4068">Minstrel</word>
+    <word namespace="ragnarok-jobs" key="4069">Wanderer</word>
+    <word namespace="ragnarok-jobs" key="4070">Sura</word>
+    <word namespace="ragnarok-jobs" key="4071">Genetic</word>
+    <word namespace="ragnarok-jobs" key="4072">Shadow Chaser</word>
+    <word namespace="ragnarok-jobs" key="4073">Royal Guard+</word>
+    <word namespace="ragnarok-jobs" key="4074">Sorceror+</word>
+    <word namespace="ragnarok-jobs" key="4075">Minstrel+</word>
+    <word namespace="ragnarok-jobs" key="4076">Wanderer+</word>
+    <word namespace="ragnarok-jobs" key="4077">Sura+</word>
+    <word namespace="ragnarok-jobs" key="4078">Genetic+</word>
+    <word namespace="ragnarok-jobs" key="4079">Shadow Chaser+</word>
+    <word namespace="ragnarok-jobs" key="4096">Baby Rune Knight</word>
+    <word namespace="ragnarok-jobs" key="4097">Baby Warlock</word>
+    <word namespace="ragnarok-jobs" key="4098">Baby Ranger</word>
+    <word namespace="ragnarok-jobs" key="4099">Baby Arch Bishop</word>
+    <word namespace="ragnarok-jobs" key="4100">Baby Mechanic</word>
+    <word namespace="ragnarok-jobs" key="4101">Baby Guillotine Cross</word>
+    <word namespace="ragnarok-jobs" key="4102">Baby Royal Guard</word>
+    <word namespace="ragnarok-jobs" key="4103">Baby Sorceror</word>
+    <word namespace="ragnarok-jobs" key="4104">Baby Minstrel</word>
+    <word namespace="ragnarok-jobs" key="4105">Baby Wanderer</word>
+    <word namespace="ragnarok-jobs" key="4106">Baby Sura</word>
+    <word namespace="ragnarok-jobs" key="4107">Baby Genetic</word>
+    <word namespace="ragnarok-jobs" key="4108">Baby Shadow Chaser</word>
+    <word namespace="ragnarok-jobs" key="4211">Kagerou</word>
+    <word namespace="ragnarok-jobs" key="4212">Oboro</word>
+  </wordgroup>
+</languageimport>

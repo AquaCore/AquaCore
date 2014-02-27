@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="login-log" key="id">ID</word>
+    <word namespace="login-log" key="date">Date</word>
+    <word namespace="login-log" key="username">Username/Key</word>
+    <word namespace="login-log" key="status">Status</word>
+    <word namespace="login-log" key="type">Login type</word>
+    <word namespace="login-log" key="ip-address">IP Address</word>
+    <word namespace="login-log" key="logged-as">Logged in as</word>
+  </wordgroup>
+</languageimport>

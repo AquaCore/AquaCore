@@ -1,0 +1,45 @@
+html{
+	width: 100%;
+	height: 100%;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background: #55cde9; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover, #66dae9 0%, #1c74b9 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #66dae9), color-stop(100%,#1c74b9)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover, #66dae9 0%,#1c74b9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover, #66dae9 0%,#1c74b9 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover, #66dae9 0%,#1c74b9 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center, #66dae9 0%,#1c74b9 100); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55cde9', endColorstr='#1c74b9',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	font-family: "Trebuchet MS", "Calibri", Helvetica, sans-serif;
+	display: table;
+}
+
+#main {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 25px;
+	color: #fff;
+	text-shadow: 1px 1px 30px #d8eeff;
+	filter: dropshadow(color=#d8eeff, offx=0, offy=0);
+}
+
+.page-title {
+	font-size: 50px;
+	border-bottom: 2px solid;
+	width: 600px;
+	margin: 0 auto;
+	height: 53px;
+	font-style: italic;
+}
+.navigation {
+	display: none;
+}

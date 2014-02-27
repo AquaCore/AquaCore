@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="upload" key="invalid-mime-type">The uploaded file's type is invalid.</word>
+    <word namespace="upload" key="file-too-large">The file uploaded is too large.</word>
+    <word namespace="upload" key="too-many-files">Too many files uploaded.</word>
+    <word namespace="upload" key="partially-uploaded">The uploaded file was only partially uploaded.</word>
+    <word namespace="upload" key="missing-tmp-folder">Missing a temporary folder.</word>
+    <word namespace="upload" key="upload-fail">File upload failed.</word>
+    <word namespace="upload" key="invalid-url">The url provided is not valid.</word>
+    <word namespace="upload" key="invalid-extension">The uploaded file's extension is invalid.</word>
+    <word namespace="upload" key="not-an-image">The uploaded file is not an image.</word>
+    <word namespace="upload" key="ext-mime-mismatch">The uploaded file's extension does not match the file's mime type.</word>
+    <word namespace="upload" key="failed-to-move">Failed to move uploaded file.</word>
+    <word namespace="upload" key="image-too-large">The image uploaded is too large. The maximum dimensions are %dx%d</word>
+    <word namespace="upload" key="failed-to-connect">Failed to connect to remote server.</word>
+    <word namespace="upload" key="connection-timeout">Connection timeout.</word>
+  </wordgroup>
+</languageimport>

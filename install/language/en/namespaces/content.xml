@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="content" key="author">Author</word>
+    <word namespace="content" key="editor">Last Editor</word>
+    <word namespace="content" key="categories">News Categories</word>
+    <word namespace="content" key="categories-deleted">%d categories deleted.</word>
+    <word namespace="content" key="category">Category</word>
+    <word namespace="content" key="category-cannot-delete">The category %s cannot be deleted.</word>
+    <word namespace="content" key="category-created"><![CDATA[Category <b%s</b> has been created.]]></word>
+    <word namespace="content" key="category-deleted"><![CDATA[Category <b>%s</b> updated.]]></word>
+    <word namespace="content" key="category-name">Name</word>
+    <word namespace="content" key="category-image">Image</word>
+    <word namespace="content" key="category-description">Description</word>
+    <word namespace="content" key="category-not-found">Category not found.</word>
+    <word namespace="content" key="category-updated"><![CDATA[Category <b>%s</b> updated.]]></word>
+    <word namespace="content" key="comments">Comments</word>
+    <word namespace="content" key="enable-rating">Enable Rating</word>
+    <word namespace="content" key="anonymous-enabled">Enable Anon Comments</word>
+    <word namespace="content" key="comments-enabled">Enable Comments</word>
+    <word namespace="content" key="create-category">Create Category</word>
+    <word namespace="content" key="delete">Delete</word>
+    <word namespace="content" key="delete-category">Delete</word>
+    <word namespace="content" key="description">Description</word>
+    <word namespace="content" key="edit">Edit</word>
+    <word namespace="content" key="edit-category">Edit Category</word>
+    <word namespace="content" key="edit-category-x">Edit Category %s</word>
+    <word namespace="content" key="edit-date">Last Edited</word>
+    <word namespace="content" key="featured">Featured</word>
+    <word namespace="content" key="id">ID</word>
+    <word namespace="content" key="keyword">Keyword</word>
+    <word namespace="content" key="category-x">%s Category</word>
+    <word namespace="content" key="preview">Preview</word>
+    <word namespace="content" key="publish-date">Publish Date</word>
+    <word namespace="content" key="publishing-options">Publishing Options</word>
+    <word namespace="content" key="read-more">Read More</word>
+    <word namespace="content" key="rss-feed">Rss Feed</word>
+    <word namespace="content" key="save">Save Changes</word>
+    <word namespace="content" key="slug">Slug</word>
+    <word namespace="content" key="status">Status</word>
+    <word namespace="content" key="tagged-x">Tagged %s</word>
+    <word namespace="content" key="tags">Tags</word>
+    <word namespace="content" key="tags-desc">Separate tags with comma.</word>
+    <word namespace="content" key="title">Title</word>
+    <word namespace="content" key="parent">Parent</word>
+    <word namespace="content" key="select-parent">Select parent</word>
+    <word namespace="content" key="rating">Rating</word>
+  </wordgroup>
+</languageimport>

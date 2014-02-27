@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-attribute" key="0"></word>
+    <word namespace="ragnarok-attribute" key="1">Ice</word>
+    <word namespace="ragnarok-attribute" key="2">Earth</word>
+    <word namespace="ragnarok-attribute" key="3">Fire</word>
+    <word namespace="ragnarok-attribute" key="4">Wind</word>
+  </wordgroup>
+</languageimport>

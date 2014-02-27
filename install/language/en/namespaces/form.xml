@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="form" key="validation-fail">Please verify that all the information provided is correct.</word>
+    <word namespace="form" key="field-required">This field is required.</word>
+    <word namespace="form" key="invalid-pattern">The value you have entered does not match the pattern.</word>
+    <word namespace="form" key="value-too-long">The value you have entered is too long.</word>
+    <word namespace="form" key="invalid-color">The color you have entered is not a valid hex color.</word>
+    <word namespace="form" key="invalid-number">The number you have entered is not valid.</word>
+    <word namespace="form" key="invalid-range">The number you have entered is out of range.</word>
+    <word namespace="form" key="invalid-email">The email you have entered is not valid.</word>
+    <word namespace="form" key="invalid-date">The date you have entered is not valid.</word>
+    <word namespace="form" key="invalid-url">The url you have entered is not valid.</word>
+    <word namespace="form" key="invalid-captcha">The verification code you have entered is incorrect.</word>
+    <word namespace="form" key="invalid-value-selected">The option you have chosen is not valid.</word>
+  </wordgroup>
+</languageimport>

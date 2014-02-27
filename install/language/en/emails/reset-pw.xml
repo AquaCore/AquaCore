@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <emailgroup language="en">
+    <email key="reset-pw">
+      <title>:site-title Password Recovery</title>
+      <body><![CDATA[<html>
+	<body>
+		Hello, :display-name.<br>
+		You have received this email because you or someone else have requested a new password for your account at <a href=":site-url">:site-title</a>,<br>
+		Please click the link below to proceed:<br>
+		<a href=":url">Reset Password</a><br>
+	</body>
+</html>]]></body>
+    </email>
+  </emailgroup>
+</languageimport>

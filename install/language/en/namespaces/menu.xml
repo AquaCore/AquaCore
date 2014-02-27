@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="menu" key="home">Home</word>
+    <word namespace="menu" key="register">Register</word>
+    <word namespace="menu" key="news">News</word>
+    <word namespace="menu" key="donate">Donate</word>
+    <word namespace="menu" key="my-account">My Account</word>
+    <word namespace="menu" key="server">Server</word>
+    <word namespace="menu" key="item-db">Item DB</word>
+    <word namespace="menu" key="mob-db">Monster DB</word>
+    <word namespace="menu" key="whos-online">Who's Online</word>
+    <word namespace="menu" key="item-shop">Item Shop</word>
+    <word namespace="menu" key="rankings">Rankings</word>
+  </wordgroup>
+</languageimport>

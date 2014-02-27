@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="dashboard" key="dashboard">Dashboard</word>
+    <word namespace="dashboard" key="this-week">This week</word>
+    <word namespace="dashboard" key="weeks-ago-s">Last week</word>
+    <word namespace="dashboard" key="weeks-ago-p">%d weeks ago</word>
+    <word namespace="dashboard" key="last-users">Recently Registered</word>
+    <word namespace="dashboard" key="last-donations">Latest Donations</word>
+    <word namespace="dashboard" key="last-transfers">Latest Credit Transfers</word>
+    <word namespace="dashboard" key="registration-stats">Registration Statistics</word>
+    <word namespace="dashboard" key="txn-info">(Transaction Info)</word>
+    <word namespace="dashboard" key="donation-goal-tooltip">%3$s goal: %1$s %2$s</word>
+  </wordgroup>
+</languageimport>

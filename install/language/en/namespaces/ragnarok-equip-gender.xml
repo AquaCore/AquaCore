@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-equip-gender" key="2"><![CDATA[Male & Female]]></word>
+    <word namespace="ragnarok-equip-gender" key="1">Female</word>
+    <word namespace="ragnarok-equip-gender" key="0">Male</word>
+  </wordgroup>
+</languageimport>

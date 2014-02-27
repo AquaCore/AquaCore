@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <language>
+    <code>en</code>
+    <name>English</name>
+    <direction>LTR</direction>
+    <locale>en.UTF-8</locale>
+    <locale>en_US.UTF-8</locale>
+    <locale>English</locale>
+  </language>
+</languageimport>

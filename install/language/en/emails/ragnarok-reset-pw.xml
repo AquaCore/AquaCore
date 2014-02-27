@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <emailgroup language="en">
+    <email key="ragnarok-reset-pw">
+      <title>:site-title Password Recovery</title>
+      <body><![CDATA[<html>
+	<body>
+		Hello, :display-name,<br>
+		You have received this e-mail because you have requested
+		a new password for your Ragnarok account <b>:ro-username</b><br>
+		Please use the link below to reset your password:<br>
+		<a href=":url">Reset Password</a>
+	</body>
+</html>]]></body>
+    </email>
+  </emailgroup>
+</languageimport>

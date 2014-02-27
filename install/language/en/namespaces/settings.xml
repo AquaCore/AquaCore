@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="settings" key="settings">Settings</word>
+    <word namespace="settings" key="settings-categories">Settings Categories</word>
+    <word namespace="settings" key="application">Application Settings</word>
+    <word namespace="settings" key="email">Email Settings</word>
+    <word namespace="settings" key="donation">Donation Settings</word>
+    <word namespace="settings" key="captcha">Captcha Settings</word>
+    <word namespace="settings" key="cache">Cache Settings</word>
+    <word namespace="settings" key="user">User Settings</word>
+    <word namespace="settings" key="account">Account Settings</word>
+    <word namespace="settings" key="content">Content Settings</word>
+    <word namespace="settings" key="rss">RSS Settings</word>
+    <word namespace="settings" key="ragnarok">Ragnarök Settings</word>
+    <word namespace="settings" key="section-registration">Registration</word>
+    <word namespace="settings" key="section-persistent-login">Persistent Login</word>
+    <word namespace="settings" key="section-user-session">Session</word>
+    <word namespace="settings" key="section-smtp">SMTP</word>
+    <word namespace="settings" key="section-paypal">PayPal</word>
+    <word namespace="settings" key="section-recaptcha">ReCaptcha</word>
+    <word namespace="settings" key="section-datetime"><![CDATA[Date & Time]]></word>
+    <word namespace="settings" key="section-avatar">Avatar</word>
+    <word namespace="settings" key="section-username">Username</word>
+    <word namespace="settings" key="section-display-name">Display Name</word>
+    <word namespace="settings" key="section-password">Password</word>
+    <word namespace="settings" key="section-email">Email</word>
+    <word namespace="settings" key="section-birthday">Birthday</word>
+    <word namespace="settings" key="section-emblem">Emblem Icon Generation</word>
+    <word namespace="settings" key="section-sprite">Character Sprite Generation</word>
+    <word namespace="settings" key="bbcode">BBCode Settings</word>
+    <word namespace="settings" key="app-title-label">Site Title</word>
+    <word namespace="settings" key="app-domain-label">Domain</word>
+    <word namespace="settings" key="app-base-dir-label">Base Directory</word>
+    <word namespace="settings" key="app-rewrite-label">Url Rewrite</word>
+    <word namespace="settings" key="app-rewrite-desc"><![CDATA[Use clean urls like <i>/news</i> instead of <i>/?path=news</i>.<br/>This feature requires a rewrite engine such as Apache's mod_rewrite or IIS's urlRewrite.<br/>Make sure one is avaiable before enabling this feature.]]></word>
+    <word namespace="settings" key="app-ob-label">Output Compression</word>
+    <word namespace="settings" key="app-ob-desc">Whether to compress the html output before sending the response.</word>
+    <word namespace="settings" key="app-language-label">Language</word>
+    <word namespace="settings" key="app-ssl-label">Force SSL</word>
+    <word namespace="settings" key="app-ssl-desc"><![CDATA[Redirect requests from HTTP to HTTPS.<br/>Make sure you have an SSL certificate before enabling this feature.]]></word>
+    <word namespace="settings" key="app-timezone-label">Timezone</word>
+    <word namespace="settings" key="app-timezone-desc"><![CDATA[Check <a href="http://php.net/manual/en/timezones.php" target="_blank">php.net</a> for a list of valid timezones.]]></word>
+    <word namespace="settings" key="app-date-format-label">Date Format</word>
+    <word namespace="settings" key="app-date-format-desc"><![CDATA[<a href="http://us2.php.net/strftime">Documentation on date and time formatting</a>.]]></word>
+    <word namespace="settings" key="app-time-format-label">Time Format</word>
+    <word namespace="settings" key="app-time-format-desc"><![CDATA[<a href="http://us2.php.net/strftime">Documentation on date and time formatting</a>.]]></word>
+    <word namespace="settings" key="app-datetime-format-label">Date/time Format</word>
+    <word namespace="settings" key="app-datetime-format-desc"><![CDATA[<a href="http://us2.php.net/strftime">Documentation on date and time formatting</a>.]]></word>
+    <word namespace="settings" key="app-ssl-0">Disabled</word>
+    <word namespace="settings" key="app-ssl-1">Form submission</word>
+    <word namespace="settings" key="app-ssl-2">Every page</word>
+    <word namespace="settings" key="email-address-label">Email Address</word>
+    <word namespace="settings" key="email-name-label">Sender Name</word>
+    <word namespace="settings" key="email-use-smtp-label">Use SMTP</word>
+    <word namespace="settings" key="email-smtp-host-label">SMTP Host</word>
+    <word namespace="settings" key="email-smtp-port-label">SMTP Port</word>
+    <word namespace="settings" key="email-smtp-enc-label">SMTP Encryption</word>
+    <word namespace="settings" key="email-smtp-timeout-label">SMTP Timeout</word>
+    <word namespace="settings" key="email-smtp-timeout-desc">SMTP server connection timeout in seconds</word>
+    <word namespace="settings" key="email-smtp-username-label">SMTP Username</word>
+    <word namespace="settings" key="email-smtp-username-desc">Leave this field blank to disable SMTP authentication.</word>
+    <word namespace="settings" key="email-smtp-password-label">SMTP Password</word>
+    <word namespace="settings" key="email-enc-none">None</word>
+    <word namespace="settings" key="email-enc-ssl">SSL</word>
+    <word namespace="settings" key="email-enc-tls">TLS</word>
+    <word namespace="settings" key="rss-title-label">Channel Title</word>
+    <word namespace="settings" key="rss-category-label">Channel Categories</word>
+    <word namespace="settings" key="rss-category-desc">Separate categories with comma.</word>
+    <word namespace="settings" key="rss-description-label">Channel Description</word>
+    <word namespace="settings" key="rss-image-label">Channel Image</word>
+    <word namespace="settings" key="rss-ttl-label">Cache Time to Live</word>
+    <word namespace="settings" key="rss-copyright-label">Copyright</word>
+    <word namespace="settings" key="use-recaptcha-label">Use ReCaptcha</word>
+    <word namespace="settings" key="use-recaptcha-desc"><![CDATA[<a href="%s" target="_blank">Create a reCaptcha key pair</a> and paste keys on the fields below.]]></word>
+    <word namespace="settings" key="recaptcha-public-key-label">ReCaptcha Public Key</word>
+    <word namespace="settings" key="recaptcha-private-key-label">ReCaptcha Private Key</word>
+    <word namespace="settings" key="captcha-width-label">Captcha Width</word>
+    <word namespace="settings" key="captcha-height-label">Captcha Height</word>
+    <word namespace="settings" key="captcha-case-label">Case Sensitive</word>
+    <word namespace="settings" key="captcha-bg-color-label">Background Color</word>
+    <word namespace="settings" key="captcha-font-label">Font</word>
+    <word namespace="settings" key="captcha-font-desc">A TTF font used to render the verification code.</word>
+    <word namespace="settings" key="captcha-font-size-label">Font Size</word>
+    <word namespace="settings" key="captcha-font-color-label">Text Color</word>
+    <word namespace="settings" key="captcha-font-color-var-label">Text Color Variation</word>
+    <word namespace="settings" key="captcha-noise-color-label">Background Noise Color</word>
+    <word namespace="settings" key="captcha-noise-tint-label">Background Noise Tint</word>
+    <word namespace="settings" key="captcha-noise-level-label">Background Noise Level</word>
+    <word namespace="settings" key="captcha-lines-color-label">Lines Color</word>
+    <word namespace="settings" key="captcha-min-lines-label">Minumum Lines</word>
+    <word namespace="settings" key="captcha-max-lines-label">Maximum Lines</word>
+    <word namespace="settings" key="captcha-characters-label">Number of Characters</word>
+    <word namespace="settings" key="captcha-char-list-label">Character List</word>
+    <word namespace="settings" key="captcha-ttl-label">Expiration Time</word>
+    <word namespace="settings" key="captcha-ttl-desc">Captcha key expiration time in minutes.</word>
+    <word namespace="settings" key="captcha-gc-label">Garbage Collection Probability</word>
+    <word namespace="settings" key="captcha-gc-desc"><![CDATA[Probability that the garbage collection routine is started for each request.<br>100 = 100%, 0 = Disabled.]]></word>
+    <word namespace="settings" key="recaptcha-ssl-label">SSL</word>
+    <word namespace="settings" key="user-username-case-label">Case Sensitive Username</word>
+    <word namespace="settings" key="user-login-case-label">Case Sensitive Login</word>
+    <word namespace="settings" key="user-login-case-desc"><![CDATA[Users must provide their exact usernames (case-sensitive) to login.<br>It is already case-sensitive when <i><b>Case Sensitive Username</b></i> is enabled.]]></word>
+    <word namespace="settings" key="user-login-email-label">Email Login</word>
+    <word namespace="settings" key="user-login-email-desc">Allow users to login using either their usernames or emails.</word>
+    <word namespace="settings" key="user-tos-label">Require TOS</word>
+    <word namespace="settings" key="user-tos-desc"><![CDATA[Users must agree with the <a href="%s">Terms of Service</a> before registering an account.]]></word>
+    <word namespace="settings" key="user-captcha-label">Require Captcha Verification</word>
+    <word namespace="settings" key="user-email-validation-label">Require Email Validation</word>
+    <word namespace="settings" key="user-validation-time-label">Email Validation Time</word>
+    <word namespace="settings" key="user-validation-time-desc">Validation email expiration time in hours.</word>
+    <word namespace="settings" key="user-key-len-label">Validation Key Length</word>
+    <word namespace="settings" key="user-session-name-label">Cookie name</word>
+    <word namespace="settings" key="user-session-http-only-label">Http-Only Cookie</word>
+    <word namespace="settings" key="user-session-secure-label">Secure Cookie</word>
+    <word namespace="settings" key="user-session-ip-label">Match IP Address</word>
+    <word namespace="settings" key="user-session-user-agent-label">Match User Agent</word>
+    <word namespace="settings" key="user-session-expire-label">Idle Timeout</word>
+    <word namespace="settings" key="user-session-expire-desc">Time in minutes to keep a session key when there's no user activity.</word>
+    <word namespace="settings" key="user-session-regen-label">Key Regeneration Time</word>
+    <word namespace="settings" key="user-session-regen-desc">Interval in minutes between session key replacements.</word>
+    <word namespace="settings" key="user-session-collision-label">Maximum Collision</word>
+    <word namespace="settings" key="user-session-gc-label">Garbage Collection Probability</word>
+    <word namespace="settings" key="user-session-gc-desc"><![CDATA[Probability that the garbage collection routine is started for each request.<br>100 = 100%, 0 = Disabled.]]></word>
+    <word namespace="settings" key="user-pl-label">Enable Persistent Login</word>
+    <word namespace="settings" key="user-pl-name-label">Cookie Name</word>
+    <word namespace="settings" key="user-pl-secure-label">Secure Cookie</word>
+    <word namespace="settings" key="user-pl-secure-desc">This is not recommended unless your site redirects all requests to HTTPS.</word>
+    <word namespace="settings" key="user-pl-http-only-label">Http-Only Cookie</word>
+    <word namespace="settings" key="user-pl-expire-label">Expiration Time</word>
+    <word namespace="settings" key="user-pl-expire-desc">Expiration time in days for unused login keys.</word>
+    <word namespace="settings" key="user-pl-timeout-label">Cookie Expiration Time</word>
+    <word namespace="settings" key="user-pl-timeout-desc">Cookie time to live in seconds.</word>
+    <word namespace="settings" key="user-pl-len-label">Login Key Length</word>
+    <word namespace="settings" key="acc-avatar-default-label">Default Avatar</word>
+    <word namespace="settings" key="acc-avatar-width-label">Maximum Width</word>
+    <word namespace="settings" key="acc-avatar-height-label">Maximum Height</word>
+    <word namespace="settings" key="acc-avatar-size-label">Maximum Size</word>
+    <word namespace="settings" key="acc-avatar-size-desc">Maximum uploaded image size in megabytes.</word>
+    <word namespace="settings" key="acc-username-min-label">Minimum Length</word>
+    <word namespace="settings" key="acc-username-max-label">Maximum Length</word>
+    <word namespace="settings" key="acc-username-regex-label">Username Patterm</word>
+    <word namespace="settings" key="acc-username-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in usernames.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
+    <word namespace="settings" key="acc-display-name-min-label">Minimum Length</word>
+    <word namespace="settings" key="acc-display-name-max-label">Maximum Length</word>
+    <word namespace="settings" key="acc-display-name-regex-label">Display Name Pattern</word>
+    <word namespace="settings" key="acc-display-name-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in display names.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
+    <word namespace="settings" key="acc-display-name-update-limit-label">Update Limit</word>
+    <word namespace="settings" key="acc-display-name-update-limit-desc">Number of times users can change their display names every 30 days.</word>
+    <word namespace="settings" key="acc-password-min-label">Minimum Length</word>
+    <word namespace="settings" key="acc-password-max-label">Maximum Length</word>
+    <word namespace="settings" key="acc-password-regex-label">Password Pattern</word>
+    <word namespace="settings" key="acc-password-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in passwords.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
+    <word namespace="settings" key="ro-acc-url-label">Username in URL</word>
+    <word namespace="settings" key="ro-char-url-label">Character Name in URL</word>
+    <word namespace="settings" key="ro-item-script-label">Display Item Script</word>
+    <word namespace="settings" key="ro-pincode-min-label">Minimum Picode Length</word>
+    <word namespace="settings" key="ro-pincode-max-label">Maximum Picode Length</word>
+    <word namespace="settings" key="ro-purchase-max-label">Maximum Cash Shop Items</word>
+    <word namespace="settings" key="ro-emblem-cache-label">Browser Caching</word>
+    <word namespace="settings" key="ro-emblem-ttl-label">Expiration Time</word>
+    <word namespace="settings" key="ro-emblem-compress-label">Image Compression</word>
+    <word namespace="settings" key="ro-sprite-cache-label">Browser Caching</word>
+    <word namespace="settings" key="ro-sprite-ttl-label">Expiration Time</word>
+    <word namespace="settings" key="ro-sprite-compress-label">Image Compression</word>
+    <word namespace="settings" key="ro-head-dir-label">Head Direction</word>
+    <word namespace="settings" key="ro-body-dir-label">Body Direction</word>
+    <word namespace="settings" key="ro-body-action-label">Character Action</word>
+    <word namespace="settings" key="ro-pos-s">South</word>
+    <word namespace="settings" key="ro-pos-sw">South West</word>
+    <word namespace="settings" key="ro-pos-w">West</word>
+    <word namespace="settings" key="ro-pos-nw">Noth West</word>
+    <word namespace="settings" key="ro-pos-n">North</word>
+    <word namespace="settings" key="ro-pos-ne">Noth East</word>
+    <word namespace="settings" key="ro-pos-e">East</word>
+    <word namespace="settings" key="ro-pos-se">South East</word>
+    <word namespace="settings" key="ro-act-idle">Idle</word>
+    <word namespace="settings" key="ro-act-walk">Walking</word>
+    <word namespace="settings" key="ro-act-sit">Sitting</word>
+    <word namespace="settings" key="ro-act-pick">Picking item</word>
+    <word namespace="settings" key="ro-act-fight">Ready to fight</word>
+    <word namespace="settings" key="ro-act-attack">Attacking</word>
+    <word namespace="settings" key="ro-act-hurt">Hit</word>
+    <word namespace="settings" key="ro-act-die">Dead</word>
+    <word namespace="settings" key="ro-act-attack2">Attack 2</word>
+    <word namespace="settings" key="ro-act-attack3">Attack 3</word>
+    <word namespace="settings" key="ro-act-skill">Casting skill</word>
+    <word namespace="settings" key="donation-pp-sandbox-label">Use PayPal Sandbox</word>
+    <word namespace="settings" key="donation-pp-sandbox-desc">Direct payments to PayPal's test server.</word>
+    <word namespace="settings" key="donation-pp-email-label">PayPal Business Email</word>
+    <word namespace="settings" key="donation-pp-receiver-label">PayPal Receiver Emails</word>
+    <word namespace="settings" key="donation-pp-receiver-desc"><![CDATA[List of receiver email addresses allowed to receive payments.<br>Separate emails with comma.]]></word>
+    <word namespace="settings" key="donation-currency-label">Currency</word>
+    <word namespace="settings" key="donation-currency-desc">Only donations made in this currency will be processed.</word>
+    <word namespace="settings" key="donation-min-label">Minimum Donation</word>
+    <word namespace="settings" key="donation-min-desc">Minimum donation required to exchange credits.</word>
+    <word namespace="settings" key="donation-exchange-rate-label">Exchange Rate</word>
+    <word namespace="settings" key="donation-goal-label">Donation Goal</word>
+    <word namespace="settings" key="donation-goal-interval-label">Goal Interval</word>
+    <word namespace="settings" key="invalid-timezone"><![CDATA[<b>Timezone</b>: "%s" is not a valid timezone.]]></word>
+    <word namespace="settings" key="invalid-domain"><![CDATA[<b>Domain</b>: "%s" is not a valid url.]]></word>
+    <word namespace="settings" key="invalid-date-format"><![CDATA[<b>Date Format</b>: "%s" is not a valid date/time format.]]></word>
+    <word namespace="settings" key="invalid-time-format"><![CDATA[<b>Time Format</b>: "%s" is not a valid date/time format.]]></word>
+    <word namespace="settings" key="invalid-datetime-format"><![CDATA[<b>Date/Time Format</b>: "%s" is not a valid date/time format.]]></word>
+    <word namespace="settings" key="invalid-email-address"><![CDATA[<b>Email Address</b>: "%s" is not a valid email address.]]></word>
+    <word namespace="settings" key="invalid-smtp-encryption"><![CDATA[<b>SMTP Encryption</b>: Invalid value selected.]]></word>
+    <word namespace="settings" key="invalid-business-email"><![CDATA[<b>Business Email</b>: "%s" is not a valid email address.]]></word>
+    <word namespace="settings" key="invalid-receiver-email"><![CDATA[<b>Receiver Emails</b>: "%s" is not a valid email address.]]></word>
+    <word namespace="settings" key="invalid-username-regex"><![CDATA[<b>Username Pattern</b>: "%s" is not a valid regular expression.]]></word>
+    <word namespace="settings" key="invalid-display-name-regex"><![CDATA[<b>Display Name Pattern</b>: "%s" is not a valid regular expression.]]></word>
+    <word namespace="settings" key="invalid-password-regex"><![CDATA[<b>Password Pattern</b>: "%s" is not a valid regular expression.]]></word>
+    <word namespace="settings" key="invalid-font-color"><![CDATA[<b>Text Color</b>: "%s" is not a valid hex color.]]></word>
+    <word namespace="settings" key="invalid-font-shadow-color"><![CDATA[<b>Text Shadow Color</b>: "%s" is not a valid hex color.]]></word>
+    <word namespace="settings" key="invalid-bg-color"><![CDATA[<b>Background Color</b>: "%s" is not a valid hex color.]]></word>
+    <word namespace="settings" key="invalid-noise-color"><![CDATA[<b>Background Noise Color</b>: "%s" is not a valid hex color.]]></word>
+    <word namespace="settings" key="invalid-noise-tint"><![CDATA[<b>Background Noise Tint</b>: "%s" is not a valid hex color.]]></word>
+    <word namespace="settings" key="invalid-lines-color"><![CDATA[<b>Lines Color</b>: "%s" is not a valid hex color.]]></word>
+    <word namespace="settings" key="captcha-font-upload-error"><![CDATA[<b>Font</b>: %s.]]></word>
+    <word namespace="settings" key="invalid-captcha-font"><![CDATA[<b>Font</b>: The file uploaded is not a valid TTF font.]]></word>
+    <word namespace="settings" key="rss-upload-error"><![CDATA[<b>Channel Image</b>: %s]]></word>
+    <word namespace="settings" key="avatar-upload-error"><![CDATA[<b>Default Avatar</b>: %s]]></word>
+    <word namespace="settings" key="invalid-rss-image"><![CDATA[<b>Channel Image</b>: The file uploaded is not a valid JPEG, PNG or GIF image.]]></word>
+    <word namespace="settings" key="invalid-avatar-image"><![CDATA[<b>Default Avatar</b>: The file uploaded is not a valid JPEG, PNG or GIF image.]]></word>
+    <word namespace="settings" key="failed-to-upload-avatar"><![CDATA[<b>Default Avatar</b>: Failed to save uploaded file.]]></word>
+    <word namespace="settings" key="failed-to-upload-rss-image"><![CDATA[<b>Channel Image</b>: Failed to save uploaded file.]]></word>
+  </wordgroup>
+</languageimport>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="permission-name" key="register-account">Register Ragnarök Accounts</word>
+    <word namespace="permission-name" key="comment">Comment</word>
+    <word namespace="permission-name" key="rate">Rate Content</word>
+    <word namespace="permission-name" key="view-admin-cp">View Admin CP</word>
+    <word namespace="permission-name" key="edit-cp-user">Edit Site Users</word>
+    <word namespace="permission-name" key="edit-server-user">Edit Ragnarök Users</word>
+    <word namespace="permission-name" key="edit-cp-settings">Edit Site Settings</word>
+    <word namespace="permission-name" key="edit-server-settings">Edit Server Settings</word>
+    <word namespace="permission-name" key="view-cp-logs">View Site Logs</word>
+    <word namespace="permission-name" key="view-server-logs">View Server Logs</word>
+    <word namespace="permission-name" key="manage-roles">Manage Roles</word>
+    <word namespace="permission-name" key="manage-plugins">Manage Plugins</word>
+    <word namespace="permission-name" key="create-pages">Create Pages</word>
+    <word namespace="permission-name" key="publish-posts">Publish Posts</word>
+    <word namespace="permission-name" key="view-user-items">View users' items</word>
+    <word namespace="permission-name" key="ban-cp-user">Ban users</word>
+    <word namespace="permission-name" key="ban-server-user">Ban Ragnarök accounts</word>
+  </wordgroup>
+</languageimport>

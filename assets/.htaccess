@@ -1,0 +1,6 @@
+Options -Indexes
+<IfModule rewrite_module>
+	RewriteEngine Off
+</IfModule>
+Order Allow,Deny
+Allow from all

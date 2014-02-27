@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-card-suffix" key="4530">of Merchant</word>
+    <word namespace="ragnarok-card-suffix" key="4516">of Stone wall</word>
+    <word namespace="ragnarok-card-suffix" key="4517">of Magician</word>
+    <word namespace="ragnarok-card-suffix" key="4508">of Mad Berserker</word>
+    <word namespace="ragnarok-card-suffix" key="4505">of Mad Witch</word>
+    <word namespace="ragnarok-card-suffix" key="4506">of Archer</word>
+    <word namespace="ragnarok-card-suffix" key="4482">of Half regeneration</word>
+    <word namespace="ragnarok-card-suffix" key="4484">of Half Gemstone</word>
+    <word namespace="ragnarok-card-suffix" key="4524">of Swordman</word>
+    <word namespace="ragnarok-card-suffix" key="4480">of Halfreload</word>
+    <word namespace="ragnarok-card-suffix" key="4458">of Illusion</word>
+    <word namespace="ragnarok-card-suffix" key="4459">of Fast</word>
+    <word namespace="ragnarok-card-suffix" key="4460">of Healing</word>
+    <word namespace="ragnarok-card-suffix" key="4461">of Sharp</word>
+    <word namespace="ragnarok-card-suffix" key="4526">of MDEF</word>
+    <word namespace="ragnarok-card-suffix" key="4527">of DEF</word>
+    <word namespace="ragnarok-card-suffix" key="4451">of Excess</word>
+    <word namespace="ragnarok-card-suffix" key="4442">of Basis</word>
+    <word namespace="ragnarok-card-suffix" key="4443">of Saharic</word>
+    <word namespace="ragnarok-card-suffix" key="4444">of Underneath</word>
+    <word namespace="ragnarok-card-suffix" key="4445">of Windy</word>
+    <word namespace="ragnarok-card-suffix" key="4447">of Envenom</word>
+    <word namespace="ragnarok-card-suffix" key="4448">of Damned</word>
+    <word namespace="ragnarok-card-suffix" key="4449">of Hallowed</word>
+    <word namespace="ragnarok-card-suffix" key="4439">of Anathema</word>
+    <word namespace="ragnarok-card-suffix" key="4440">of Ignoring</word>
+    <word namespace="ragnarok-card-suffix" key="4512">of Acolyte</word>
+    <word namespace="ragnarok-card-suffix" key="4513">of Thief</word>
+    <word namespace="ragnarok-card-suffix" key="4014">of Champion</word>
+    <word namespace="ragnarok-card-suffix" key="4022">of Spore</word>
+    <word namespace="ragnarok-card-suffix" key="4023">of Desert</word>
+    <word namespace="ragnarok-card-suffix" key="4038">of Health</word>
+    <word namespace="ragnarok-card-suffix" key="4039">of Aristotle</word>
+    <word namespace="ragnarok-card-suffix" key="4031">of Ares</word>
+    <word namespace="ragnarok-card-suffix" key="4032">of Athena</word>
+    <word namespace="ragnarok-card-suffix" key="4041">of Sandman</word>
+    <word namespace="ragnarok-card-suffix" key="4042">of Heman</word>
+    <word namespace="ragnarok-card-suffix" key="4050">of Hermes</word>
+    <word namespace="ragnarok-card-suffix" key="4051">of Flash</word>
+    <word namespace="ragnarok-card-suffix" key="4056">of Warmth</word>
+    <word namespace="ragnarok-card-suffix" key="4059">of Cadi</word>
+    <word namespace="ragnarok-card-suffix" key="4046">of Cleric</word>
+    <word namespace="ragnarok-card-suffix" key="4070">of Witch</word>
+    <word namespace="ragnarok-card-suffix" key="4074">of Gargantua</word>
+    <word namespace="ragnarok-card-suffix" key="4078">of Recovery</word>
+    <word namespace="ragnarok-card-suffix" key="4079">of Muscle</word>
+    <word namespace="ragnarok-card-suffix" key="4091">of Counter</word>
+    <word namespace="ragnarok-card-suffix" key="4098">of Zephyrus</word>
+    <word namespace="ragnarok-card-suffix" key="4099">of Ifrit</word>
+    <word namespace="ragnarok-card-suffix" key="4101">of Gnome</word>
+    <word namespace="ragnarok-card-suffix" key="4113">of Ghost</word>
+    <word namespace="ragnarok-card-suffix" key="4120">of Dragoon</word>
+    <word namespace="ragnarok-card-suffix" key="4128">of Deaf</word>
+    <word namespace="ragnarok-card-suffix" key="4129">of Rogue</word>
+    <word namespace="ragnarok-card-suffix" key="4132">of Gemstone</word>
+    <word namespace="ragnarok-card-suffix" key="4137">of Infinity</word>
+    <word namespace="ragnarok-card-suffix" key="4139">of Moonlight</word>
+    <word namespace="ragnarok-card-suffix" key="4142">of Berserk</word>
+    <word namespace="ragnarok-card-suffix" key="4144">of Eternity</word>
+    <word namespace="ragnarok-card-suffix" key="4145">of Bigmouth</word>
+    <word namespace="ragnarok-card-suffix" key="4148">of Kirin</word>
+    <word namespace="ragnarok-card-suffix" key="4149">of Serenity</word>
+    <word namespace="ragnarok-card-suffix" key="4153">of Cancer</word>
+    <word namespace="ragnarok-card-suffix" key="4156">of Fatal Flame</word>
+    <word namespace="ragnarok-card-suffix" key="4165">of Insect Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4166">of Jinx</word>
+    <word namespace="ragnarok-card-suffix" key="4167">of Beast Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4168">of Doom</word>
+    <word namespace="ragnarok-card-suffix" key="4179">of Highlight</word>
+    <word namespace="ragnarok-card-suffix" key="4180">of Dragon Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4182">of Demon Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4185">of Wisdom</word>
+    <word namespace="ragnarok-card-suffix" key="4187">of the Spooky Night</word>
+    <word namespace="ragnarok-card-suffix" key="4189">of Misfortune</word>
+    <word namespace="ragnarok-card-suffix" key="4190">of Last Laugh</word>
+    <word namespace="ragnarok-card-suffix" key="4191">of the Stix</word>
+    <word namespace="ragnarok-card-suffix" key="4192">of Fatal Pisces</word>
+    <word namespace="ragnarok-card-suffix" key="4193">of Patience</word>
+    <word namespace="ragnarok-card-suffix" key="4202">of Exorcism</word>
+    <word namespace="ragnarok-card-suffix" key="4200">of Mystical Resistance</word>
+    <word namespace="ragnarok-card-suffix" key="4198">of True Sight</word>
+    <word namespace="ragnarok-card-suffix" key="4196">of Jellopy</word>
+    <word namespace="ragnarok-card-suffix" key="4212">of Knock-Back</word>
+    <word namespace="ragnarok-card-suffix" key="4213">of Reticence</word>
+    <word namespace="ragnarok-card-suffix" key="4222">of Sleep</word>
+    <word namespace="ragnarok-card-suffix" key="4237">of Godly Wrath</word>
+    <word namespace="ragnarok-card-suffix" key="4238">of Doubled Power</word>
+    <word namespace="ragnarok-card-suffix" key="4234">of Clarity</word>
+    <word namespace="ragnarok-card-suffix" key="4228">of Siesta</word>
+    <word namespace="ragnarok-card-suffix" key="4229">of Torment</word>
+    <word namespace="ragnarok-card-suffix" key="4243">of Escape</word>
+    <word namespace="ragnarok-card-suffix" key="4253">of Royal Guard</word>
+    <word namespace="ragnarok-card-suffix" key="4265">of Dawn</word>
+    <word namespace="ragnarok-card-suffix" key="4259">of Nature</word>
+    <word namespace="ragnarok-card-suffix" key="4270">of Venom</word>
+    <word namespace="ragnarok-card-suffix" key="4274">of Undead Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4278">of Magical Immunity</word>
+    <word namespace="ragnarok-card-suffix" key="4282">of Reservoir</word>
+    <word namespace="ragnarok-card-suffix" key="4430">of Inferno</word>
+    <word namespace="ragnarok-card-suffix" key="4433">of Ignis</word>
+    <word namespace="ragnarok-card-suffix" key="4427">of Force</word>
+    <word namespace="ragnarok-card-suffix" key="4428">of Shaft</word>
+    <word namespace="ragnarok-card-suffix" key="4423">of Sharkia</word>
+    <word namespace="ragnarok-card-suffix" key="4420">of Comfort</word>
+    <word namespace="ragnarok-card-suffix" key="4421">of Chinook</word>
+    <word namespace="ragnarok-card-suffix" key="4416">of Grain</word>
+    <word namespace="ragnarok-card-suffix" key="4417">of Flow</word>
+    <word namespace="ragnarok-card-suffix" key="4418">of Hail</word>
+    <word namespace="ragnarok-card-suffix" key="4407">of Elimination</word>
+    <word namespace="ragnarok-card-suffix" key="4403">of Reload</word>
+    <word namespace="ragnarok-card-suffix" key="4404">of Chaotic Bleeding</word>
+    <word namespace="ragnarok-card-suffix" key="4405">of Magic Mirror</word>
+    <word namespace="ragnarok-card-suffix" key="4400">of Temptation</word>
+    <word namespace="ragnarok-card-suffix" key="4392">of Dexterity Switching</word>
+    <word namespace="ragnarok-card-suffix" key="4393">of Intelligence Switching</word>
+    <word namespace="ragnarok-card-suffix" key="4386">of Magic Shelter</word>
+    <word namespace="ragnarok-card-suffix" key="4387">of Agility Switching</word>
+    <word namespace="ragnarok-card-suffix" key="4381">of Wanderer</word>
+    <word namespace="ragnarok-card-suffix" key="4382">of Scholar</word>
+    <word namespace="ragnarok-card-suffix" key="4374">of Vision</word>
+    <word namespace="ragnarok-card-suffix" key="4371">of Paladin</word>
+    <word namespace="ragnarok-card-suffix" key="4369">of Luck Switching</word>
+    <word namespace="ragnarok-card-suffix" key="4364">of Magic Sealing</word>
+    <word namespace="ragnarok-card-suffix" key="4365">of Tempest</word>
+    <word namespace="ragnarok-card-suffix" key="4366">of Caster</word>
+    <word namespace="ragnarok-card-suffix" key="4367">of Squeezing</word>
+    <word namespace="ragnarok-card-suffix" key="4361">of Hollgrehenn</word>
+    <word namespace="ragnarok-card-suffix" key="4359">of Shadow</word>
+    <word namespace="ragnarok-card-suffix" key="4357">of Fury</word>
+    <word namespace="ragnarok-card-suffix" key="4352">of Regeneration</word>
+    <word namespace="ragnarok-card-suffix" key="4353">of Rejuvenation</word>
+    <word namespace="ragnarok-card-suffix" key="4354">of Stability</word>
+    <word namespace="ragnarok-card-suffix" key="4346">of Power Switching</word>
+    <word namespace="ragnarok-card-suffix" key="4343">of Creator</word>
+    <word namespace="ragnarok-card-suffix" key="4344">of Value</word>
+    <word namespace="ragnarok-card-suffix" key="4336">of Vitality</word>
+    <word namespace="ragnarok-card-suffix" key="4337">of Wildcat</word>
+    <word namespace="ragnarok-card-suffix" key="4338">of Vital Switching</word>
+    <word namespace="ragnarok-card-suffix" key="4339">of Stone Wall</word>
+    <word namespace="ragnarok-card-suffix" key="4340">of Requiem</word>
+    <word namespace="ragnarok-card-suffix" key="4332">of Talent</word>
+    <word namespace="ragnarok-card-suffix" key="4333">of Chaotic Venom</word>
+    <word namespace="ragnarok-card-suffix" key="4322">of Retaliation</word>
+    <word namespace="ragnarok-card-suffix" key="4323">of Frost</word>
+    <word namespace="ragnarok-card-suffix" key="4315">of Stone Curse</word>
+    <word namespace="ragnarok-card-suffix" key="4316">of Angel Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4312">of the Soul</word>
+    <word namespace="ragnarok-card-suffix" key="4307">of Marine Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4298">of Mayhem</word>
+    <word namespace="ragnarok-card-suffix" key="4295">of Blackout</word>
+    <word namespace="ragnarok-card-suffix" key="4293">of Chance</word>
+    <word namespace="ragnarok-card-suffix" key="4289">of Plant Soul Eater</word>
+    <word namespace="ragnarok-card-suffix" key="4284">of Caress</word>
+    <word namespace="ragnarok-card-suffix" key="4136">from Hell</word>
+  </wordgroup>
+</languageimport>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="role" key="id">ID</word>
+    <word namespace="role" key="name">Name</word>
+    <word namespace="role" key="description">Description</word>
+    <word namespace="role" key="color">Font Color</word>
+    <word namespace="role" key="background">Background Color</word>
+    <word namespace="role" key="permissions">Permissions</word>
+    <word namespace="role" key="role-created"><![CDATA[The role <b>%s</b> has been created.]]></word>
+    <word namespace="role" key="role-not-created">Failed to create role.</word>
+    <word namespace="role" key="role-delete-p">%s roles deleted.</word>
+    <word namespace="role" key="role-delete-s"><![CDATA[The role <b>%s</b> has been deleted.]]></word>
+    <word namespace="role" key="confirm-delete-p">Are you sure you want to delete these roles?</word>
+    <word namespace="role" key="confirm-delete-s">Are you sure you want to delete this role?</word>
+    <word namespace="role" key="new-role">New Role</word>
+    <word namespace="role" key="edit-role">Edit Role</word>
+    <word namespace="role" key="edit">Edit</word>
+    <word namespace="role" key="delete">Delete</word>
+  </wordgroup>
+</languageimport>

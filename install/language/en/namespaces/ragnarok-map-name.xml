@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-map-name" key="06guild_01">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_02">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_03">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_04">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_05">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_06">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_07">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_08">Guild War Arena</word>
+    <word namespace="ragnarok-map-name" key="06guild_r">Guild War Arena - Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="1@cash">Octopus Cave</word>
+    <word namespace="ragnarok-map-name" key="1@cata">Catacomb</word>
+    <word namespace="ragnarok-map-name" key="1@ma_b">Bakonawa Hideout</word>
+    <word namespace="ragnarok-map-name" key="1@ma_c">Buwaya Cave</word>
+    <word namespace="ragnarok-map-name" key="1@ma_h">Bangungot Hospital 2F</word>
+    <word namespace="ragnarok-map-name" key="1@mist">The Hazy Maze Forest</word>
+    <word namespace="ragnarok-map-name" key="1@nyd">Nidhoggur's Nest</word>
+    <word namespace="ragnarok-map-name" key="1@orcs">Subterranean Orc Cave</word>
+    <word namespace="ragnarok-map-name" key="1@pump">Drain</word>
+    <word namespace="ragnarok-map-name" key="1@tower">Endless Tower</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_01">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_02">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_03">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_04">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_05">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_06">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_07">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_08">2007 USRC Arena</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_09">2007 Ragnarok World Championship Arena 9</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_10">2007 Ragnarok World Championship Arena 10</word>
+    <word namespace="ragnarok-map-name" key="2007rwc_r">2007 Ragnarok World Championship Arena Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_01">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_02">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_03">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_04">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_05">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_06">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_07">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_08">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_f01">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_f02">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2009rwc_r">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_01">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_02">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_03">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_04">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_05">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_06">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_07">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_08">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2010rwc_r">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="2@cata">Sealed Shrine</word>
+    <word namespace="ragnarok-map-name" key="2@nyd">Nidhoggur's Nest</word>
+    <word namespace="ragnarok-map-name" key="2@orcs">Subterranean Orc Cave</word>
+    <word namespace="ragnarok-map-name" key="2@pump">Drain</word>
+    <word namespace="ragnarok-map-name" key="2@tower">Endless Tower</word>
+    <word namespace="ragnarok-map-name" key="3@tower">Endless Tower</word>
+    <word namespace="ragnarok-map-name" key="4@tower">Endless Tower</word>
+    <word namespace="ragnarok-map-name" key="5@tower">Endless Tower</word>
+    <word namespace="ragnarok-map-name" key="6@tower">Endless Tower(Unknown Area)</word>
+    <word namespace="ragnarok-map-name" key="abbey01">Cursed Monastery</word>
+    <word namespace="ragnarok-map-name" key="abbey02">Cursed Monastery</word>
+    <word namespace="ragnarok-map-name" key="abbey03">Cursed Monastery</word>
+    <word namespace="ragnarok-map-name" key="abyss_01">Abyss Lake Underground Cave</word>
+    <word namespace="ragnarok-map-name" key="abyss_02">Abyss Lake Underground Cave</word>
+    <word namespace="ragnarok-map-name" key="abyss_03">Abyss Lake Underground Cave</word>
+    <word namespace="ragnarok-map-name" key="airplane">Airship</word>
+    <word namespace="ragnarok-map-name" key="airplane_01">Airship</word>
+    <word namespace="ragnarok-map-name" key="airport">Airport</word>
+    <word namespace="ragnarok-map-name" key="alb2trea"> Alberta Island</word>
+    <word namespace="ragnarok-map-name" key="alb_ship">Alberta Ship</word>
+    <word namespace="ragnarok-map-name" key="alberta">Alberta</word>
+    <word namespace="ragnarok-map-name" key="alberta_in">Inside Alberta</word>
+    <word namespace="ragnarok-map-name" key="alberta_x">Alberta</word>
+    <word namespace="ragnarok-map-name" key="alde_alche">Alchemist Realm</word>
+    <word namespace="ragnarok-map-name" key="alde_dun01">Clock Tower B1f</word>
+    <word namespace="ragnarok-map-name" key="alde_dun02">Clock Tower B2f</word>
+    <word namespace="ragnarok-map-name" key="alde_dun03">Clock Tower B3f</word>
+    <word namespace="ragnarok-map-name" key="alde_dun04">Clock Tower B4f</word>
+    <word namespace="ragnarok-map-name" key="alde_gld">Luina the satellite of Al De Baran</word>
+    <word namespace="ragnarok-map-name" key="aldeba_in">Inside Al De Baran</word>
+    <word namespace="ragnarok-map-name" key="aldebaran"> Al De Baran</word>
+    <word namespace="ragnarok-map-name" key="aldebaran_x">Aldebaran</word>
+    <word namespace="ragnarok-map-name" key="aldeg_cas01">Luina Guild</word>
+    <word namespace="ragnarok-map-name" key="aldeg_cas02">Luina Guild</word>
+    <word namespace="ragnarok-map-name" key="aldeg_cas03">Luina Guild</word>
+    <word namespace="ragnarok-map-name" key="aldeg_cas04">Luina Guild</word>
+    <word namespace="ragnarok-map-name" key="aldeg_cas05">Luina Guild</word>
+    <word namespace="ragnarok-map-name" key="ama_dun01">Tatami Maze</word>
+    <word namespace="ragnarok-map-name" key="ama_dun02">Battle Field in the Underground Forest</word>
+    <word namespace="ragnarok-map-name" key="ama_dun03">Amatsu Underground Shrine</word>
+    <word namespace="ragnarok-map-name" key="ama_fild01">Amatsu Field</word>
+    <word namespace="ragnarok-map-name" key="ama_in01">Inside Amatsu</word>
+    <word namespace="ragnarok-map-name" key="ama_in02">Inside Himezi Castle</word>
+    <word namespace="ragnarok-map-name" key="ama_test">Momotaro Experience Place</word>
+    <word namespace="ragnarok-map-name" key="amatsu">Amatsu, the Land of Destiny</word>
+    <word namespace="ragnarok-map-name" key="anothership">Another Ship</word>
+    <word namespace="ragnarok-map-name" key="anthell01">Ant Hell</word>
+    <word namespace="ragnarok-map-name" key="anthell02">Ant Hell</word>
+    <word namespace="ragnarok-map-name" key="arena_room">Waiting room</word>
+    <word namespace="ragnarok-map-name" key="aru_gld">Valfreyja</word>
+    <word namespace="ragnarok-map-name" key="arug_cas01">Valfreyja Guild</word>
+    <word namespace="ragnarok-map-name" key="arug_cas02">Valfreyja Guild</word>
+    <word namespace="ragnarok-map-name" key="arug_cas03">Valfreyja Guild</word>
+    <word namespace="ragnarok-map-name" key="arug_cas04">Valfreyja Guild</word>
+    <word namespace="ragnarok-map-name" key="arug_cas05">Valfreyja Guild</word>
+    <word namespace="ragnarok-map-name" key="arug_dun01">Subterranean Guild Dungeon</word>
+    <word namespace="ragnarok-map-name" key="arug_que01">Morestone Prairie</word>
+    <word namespace="ragnarok-map-name" key="auction_01">Auction Hall</word>
+    <word namespace="ragnarok-map-name" key="auction_02">Auction Hall</word>
+    <word namespace="ragnarok-map-name" key="ayo_dun01">Ancient Shrine Maze</word>
+    <word namespace="ragnarok-map-name" key="ayo_dun02">Inside Ancient Shrine</word>
+    <word namespace="ragnarok-map-name" key="ayo_fild01">Ayotaya Field</word>
+    <word namespace="ragnarok-map-name" key="ayo_fild02">Ayotaya Field</word>
+    <word namespace="ragnarok-map-name" key="ayo_in01">Inside Ayotaya</word>
+    <word namespace="ragnarok-map-name" key="ayo_in02">Inside Ayotaya</word>
+    <word namespace="ragnarok-map-name" key="ayothaya">Ayotaya</word>
+    <word namespace="ragnarok-map-name" key="ayothaya_e">Ayothaya Excavation Site</word>
+    <word namespace="ragnarok-map-name" key="baby_para">Playground</word>
+    <word namespace="ragnarok-map-name" key="bat_a01">Tierra Canyon</word>
+    <word namespace="ragnarok-map-name" key="bat_a02">Tierra Canyon</word>
+    <word namespace="ragnarok-map-name" key="bat_b01">Flavian</word>
+    <word namespace="ragnarok-map-name" key="bat_b02">Flavian</word>
+    <word namespace="ragnarok-map-name" key="bat_c01">Krieger von Midgards</word>
+    <word namespace="ragnarok-map-name" key="bat_c02">Krieger von Midgards</word>
+    <word namespace="ragnarok-map-name" key="bat_c03">Krieger von Midgards</word>
+    <word namespace="ragnarok-map-name" key="bat_room">Battle Field Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="beach_dun">Karu, the West cave</word>
+    <word namespace="ragnarok-map-name" key="beach_dun2">Ruande the northern cave</word>
+    <word namespace="ragnarok-map-name" key="beach_dun3">Mao, the East Cave</word>
+    <word namespace="ragnarok-map-name" key="bif_fild01">Bifrost Bridge</word>
+    <word namespace="ragnarok-map-name" key="bif_fild02">Bifrost Bridge</word>
+    <word namespace="ragnarok-map-name" key="bossnia_01">Bossnia</word>
+    <word namespace="ragnarok-map-name" key="bossnia_02">Bossnia</word>
+    <word namespace="ragnarok-map-name" key="bossnia_03">Bossnia</word>
+    <word namespace="ragnarok-map-name" key="bossnia_04">Bossnia</word>
+    <word namespace="ragnarok-map-name" key="bra_dun01">Beyond the Waterfall</word>
+    <word namespace="ragnarok-map-name" key="bra_dun02">Beyond the Waterfall</word>
+    <word namespace="ragnarok-map-name" key="bra_fild01">Brasilis Field</word>
+    <word namespace="ragnarok-map-name" key="bra_in01">Inside Brasilis</word>
+    <word namespace="ragnarok-map-name" key="brasilis">Brasilis</word>
+    <word namespace="ragnarok-map-name" key="c_tower1">Clock Tower 1f</word>
+    <word namespace="ragnarok-map-name" key="c_tower2">Clock Tower 2f</word>
+    <word namespace="ragnarok-map-name" key="c_tower3">Clock Tower 3f</word>
+    <word namespace="ragnarok-map-name" key="c_tower4">Clock Tower 4f</word>
+    <word namespace="ragnarok-map-name" key="cave">Cave Village</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild01">Papuchicha Forest</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild02">Kokomo beach</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild03">Zenhai Marsh</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild04">Kokomo beach</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild05">Border of Papuchica forest</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild06">Fortress Saint Darmain(West)</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild07">Beacon Island, Pharos</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild08">Fortress Saint Darmain (East)</word>
+    <word namespace="ragnarok-map-name" key="cmd_fild09">Fortress Saint Darmain (South)</word>
+    <word namespace="ragnarok-map-name" key="cmd_in01">Inside Comodo</word>
+    <word namespace="ragnarok-map-name" key="cmd_in02">Inside Comodo</word>
+    <word namespace="ragnarok-map-name" key="comodo">Beach town,Comodo</word>
+    <word namespace="ragnarok-map-name" key="darkness_z">Darkness Island</word>
+    <word namespace="ragnarok-map-name" key="dew_dun01">Volcanic Island of Krakatoa</word>
+    <word namespace="ragnarok-map-name" key="dew_dun02">Tina Grace Cave</word>
+    <word namespace="ragnarok-map-name" key="dew_fild01">Dewata Field (Tribal Village)</word>
+    <word namespace="ragnarok-map-name" key="dew_in01">Inside Dewata</word>
+    <word namespace="ragnarok-map-name" key="dewata">Dewata</word>
+    <word namespace="ragnarok-map-name" key="dic_dun01">Kamidal Tunnel</word>
+    <word namespace="ragnarok-map-name" key="dic_dun02">Scaraba Hall</word>
+    <word namespace="ragnarok-map-name" key="dic_dun03">Scaraba Hole - Nightmare Mode</word>
+    <word namespace="ragnarok-map-name" key="dic_fild01">Outskirts of Kamidal Mountain</word>
+    <word namespace="ragnarok-map-name" key="dic_fild02">Outskirts of Kamidal Mountain</word>
+    <word namespace="ragnarok-map-name" key="dic_in01">Inside of El Dicastes</word>
+    <word namespace="ragnarok-map-name" key="dicastes01">El Dicastes, the Sapha Capital</word>
+    <word namespace="ragnarok-map-name" key="dicastes02">Dicastes Diel</word>
+    <word namespace="ragnarok-map-name" key="dragon_nes2">Evil Dragon Nest</word>
+    <word namespace="ragnarok-map-name" key="dragon_nest">Evil Dragon Nest</word>
+    <word namespace="ragnarok-map-name" key="e_tower">Misty Island</word>
+    <word namespace="ragnarok-map-name" key="ein_dun01">Mine Dungeon</word>
+    <word namespace="ragnarok-map-name" key="ein_dun02">Mine Dungeon</word>
+    <word namespace="ragnarok-map-name" key="ein_fild01">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild02">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild03">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild04">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild05">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild06">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild07">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild08">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild09">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_fild10">Einbroch Field</word>
+    <word namespace="ragnarok-map-name" key="ein_in01">Inside Einbroch</word>
+    <word namespace="ragnarok-map-name" key="ein_polu">Indoor</word>
+    <word namespace="ragnarok-map-name" key="einbech">Einbech, the mining village</word>
+    <word namespace="ragnarok-map-name" key="einbroch">Einbroch, the city of steel</word>
+    <word namespace="ragnarok-map-name" key="evt_hello">Dead Angel's landing</word>
+    <word namespace="ragnarok-map-name" key="evt_xmas">Toy Factory</word>
+    <word namespace="ragnarok-map-name" key="evt_zombie">Run_From_Zombies</word>
+    <word namespace="ragnarok-map-name" key="fay_vilg00">Payon Village</word>
+    <word namespace="ragnarok-map-name" key="fay_vilg01">Payon Village</word>
+    <word namespace="ragnarok-map-name" key="force_1-1">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_1-2">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_1-3">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_2-1">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_2-2">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_2-3">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_3-1">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_3-2">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_3-3">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_map1">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_map2">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="force_map3">Time Limit Fight</word>
+    <word namespace="ragnarok-map-name" key="g_room1-1">Quiz Revolution</word>
+    <word namespace="ragnarok-map-name" key="g_room1-2">Quiz Revolution</word>
+    <word namespace="ragnarok-map-name" key="g_room1-3">Quiz Revolution</word>
+    <word namespace="ragnarok-map-name" key="g_room2">Quiz Revolution</word>
+    <word namespace="ragnarok-map-name" key="gef_dun00">Geffen Dungeon</word>
+    <word namespace="ragnarok-map-name" key="gef_dun01">Geffen Dungeon</word>
+    <word namespace="ragnarok-map-name" key="gef_dun02">Geffenia</word>
+    <word namespace="ragnarok-map-name" key="gef_dun03">Geffenia</word>
+    <word namespace="ragnarok-map-name" key="gef_fild00">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild01">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild02">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild03">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild04">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild05">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild06">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild07">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild08">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild09">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild10">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild11">Geffen Field</word>
+    <word namespace="ragnarok-map-name" key="gef_fild12">Kordt Forest</word>
+    <word namespace="ragnarok-map-name" key="gef_fild13">Britoniah</word>
+    <word namespace="ragnarok-map-name" key="gef_fild14">West Orc Village</word>
+    <word namespace="ragnarok-map-name" key="gef_tower">Geffen Tower</word>
+    <word namespace="ragnarok-map-name" key="gef_vilg00">Geffen Village</word>
+    <word namespace="ragnarok-map-name" key="gef_vilg01">Geffen Village</word>
+    <word namespace="ragnarok-map-name" key="gefenia01">Geffenia</word>
+    <word namespace="ragnarok-map-name" key="gefenia02">Geffenia</word>
+    <word namespace="ragnarok-map-name" key="gefenia03">Geffenia</word>
+    <word namespace="ragnarok-map-name" key="gefenia04">Geffenia</word>
+    <word namespace="ragnarok-map-name" key="geffen">Geffen</word>
+    <word namespace="ragnarok-map-name" key="geffen_in">Inside Geffen</word>
+    <word namespace="ragnarok-map-name" key="geffen_x">Geffen</word>
+    <word namespace="ragnarok-map-name" key="gefg_cas01">Britoniah Guild</word>
+    <word namespace="ragnarok-map-name" key="gefg_cas02">Britoniah Guild</word>
+    <word namespace="ragnarok-map-name" key="gefg_cas03">Britoniah Guild</word>
+    <word namespace="ragnarok-map-name" key="gefg_cas04">Britoniah Guild</word>
+    <word namespace="ragnarok-map-name" key="gefg_cas05">Britoniah Guild</word>
+    <word namespace="ragnarok-map-name" key="gl_cas01">Glast Heim 1f</word>
+    <word namespace="ragnarok-map-name" key="gl_cas02">Glast Heim 2f</word>
+    <word namespace="ragnarok-map-name" key="gl_church">Glast Heim St. Abbey</word>
+    <word namespace="ragnarok-map-name" key="gl_chyard">Glast Heim Churchyard</word>
+    <word namespace="ragnarok-map-name" key="gl_dun01">The Lowest Cave in Glast Heim</word>
+    <word namespace="ragnarok-map-name" key="gl_dun02">The Lowest Cave in Glast Heim</word>
+    <word namespace="ragnarok-map-name" key="gl_in01">Inside Glast Heim</word>
+    <word namespace="ragnarok-map-name" key="gl_in01_ev">Event Crazy Drops</word>
+    <word namespace="ragnarok-map-name" key="gl_knt01">Inside Glast Heim Chivalry</word>
+    <word namespace="ragnarok-map-name" key="gl_knt02">Inside Glast Heim Chivalry</word>
+    <word namespace="ragnarok-map-name" key="gl_prison">Glast Heim Underprison</word>
+    <word namespace="ragnarok-map-name" key="gl_prison1">Glast Heim Underprison</word>
+    <word namespace="ragnarok-map-name" key="gl_sew01">Glast Heim Culvert</word>
+    <word namespace="ragnarok-map-name" key="gl_sew02">Glast Heim Culvert</word>
+    <word namespace="ragnarok-map-name" key="gl_sew03">Glast Heim Culvert</word>
+    <word namespace="ragnarok-map-name" key="gl_sew04">Glast Heim Culvert</word>
+    <word namespace="ragnarok-map-name" key="gl_step">Glast Heim Staircase Dungeon</word>
+    <word namespace="ragnarok-map-name" key="glast_01">Glast Heim</word>
+    <word namespace="ragnarok-map-name" key="gld_dun01">Guild Dungeon</word>
+    <word namespace="ragnarok-map-name" key="gld_dun02">Guild Dungeon</word>
+    <word namespace="ragnarok-map-name" key="gld_dun03">Guild Dungeon</word>
+    <word namespace="ragnarok-map-name" key="gld_dun04">Guild Dungeon</word>
+    <word namespace="ragnarok-map-name" key="gon_dun01">Shrine of Gonryun Queen</word>
+    <word namespace="ragnarok-map-name" key="gon_dun02">Hermit's Checkers</word>
+    <word namespace="ragnarok-map-name" key="gon_dun03">Arcadia</word>
+    <word namespace="ragnarok-map-name" key="gon_fild01">Gonryun Field</word>
+    <word namespace="ragnarok-map-name" key="gon_in">Inside Gonryun</word>
+    <word namespace="ragnarok-map-name" key="gon_test">Arena</word>
+    <word namespace="ragnarok-map-name" key="gonryun">Gonryun, the Hermit Land</word>
+    <word namespace="ragnarok-map-name" key="guild_room">Guild Arena Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="guild_rwc1">Training Room</word>
+    <word namespace="ragnarok-map-name" key="guild_rwc2">Training Room</word>
+    <word namespace="ragnarok-map-name" key="guild_rwc3">Training Room</word>
+    <word namespace="ragnarok-map-name" key="guild_rwc4">Training Room</word>
+    <word namespace="ragnarok-map-name" key="guild_rwc5">Training Room</word>
+    <word namespace="ragnarok-map-name" key="guild_vs01">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs02">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs03">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs04">RWC Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs1-1">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs1-2">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs1-3">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs1-4">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs1">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2-1">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2-2">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2ga">Geffen Room A</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2gb">Geffen Room B</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2gc">Geffen Room C</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2ia">Izlude Room A</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2ib">Izlude Room B</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2ic">Izlude Room C</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2ma">Morocc Room A</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2mb">Morocc Room B</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2mc">Morocc Room C</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2pa">Prontera Room A</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2pb">Prontera Room B</word>
+    <word namespace="ragnarok-map-name" key="guild_vs2pc">Prontera Room C</word>
+    <word namespace="ragnarok-map-name" key="guild_vs3">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs4">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="guild_vs5">Guild Arena</word>
+    <word namespace="ragnarok-map-name" key="himinn">Valkyrie Hall (Himinn)</word>
+    <word namespace="ragnarok-map-name" key="holy_gold">Gold Sanctuary</word>
+    <word namespace="ragnarok-map-name" key="holy_silver">Silver Sanctuary</word>
+    <word namespace="ragnarok-map-name" key="hu_fild01">Thanatos Tower</word>
+    <word namespace="ragnarok-map-name" key="hu_fild02">Hugel Field</word>
+    <word namespace="ragnarok-map-name" key="hu_fild03">Hugel Field</word>
+    <word namespace="ragnarok-map-name" key="hu_fild04">Hugel Field</word>
+    <word namespace="ragnarok-map-name" key="hu_fild05">The Abyss Lake</word>
+    <word namespace="ragnarok-map-name" key="hu_fild06">Hugel Field</word>
+    <word namespace="ragnarok-map-name" key="hu_fild07">Hugel Field</word>
+    <word namespace="ragnarok-map-name" key="hu_in01">Inside Hugel</word>
+    <word namespace="ragnarok-map-name" key="hugel">Hugel, the Quaint Garden Village</word>
+    <word namespace="ragnarok-map-name" key="hunter_1-1">Hunter Guild</word>
+    <word namespace="ragnarok-map-name" key="hunter_2-1">Hunter Guild</word>
+    <word namespace="ragnarok-map-name" key="hunter_3-1">Hunter Guild</word>
+    <word namespace="ragnarok-map-name" key="ice_dun01">Ice Cave</word>
+    <word namespace="ragnarok-map-name" key="ice_dun02">Ice Cave</word>
+    <word namespace="ragnarok-map-name" key="ice_dun03">Ice Cave</word>
+    <word namespace="ragnarok-map-name" key="ice_dun04">Ice Cave</word>
+    <word namespace="ragnarok-map-name" key="in_hunter">Hunter Guild</word>
+    <word namespace="ragnarok-map-name" key="in_moc_16">Assassin Clan</word>
+    <word namespace="ragnarok-map-name" key="in_orcs01">Orc village</word>
+    <word namespace="ragnarok-map-name" key="in_rogue">Inside the Rogue Guild</word>
+    <word namespace="ragnarok-map-name" key="in_sphinx1">Sphinx</word>
+    <word namespace="ragnarok-map-name" key="in_sphinx2">Sphinx</word>
+    <word namespace="ragnarok-map-name" key="in_sphinx3">Sphinx</word>
+    <word namespace="ragnarok-map-name" key="in_sphinx4">Sphinx</word>
+    <word namespace="ragnarok-map-name" key="in_sphinx5">Sphinx</word>
+    <word namespace="ragnarok-map-name" key="itemmall">Kafra Shop</word>
+    <word namespace="ragnarok-map-name" key="itemmall_p">Item mall</word>
+    <word namespace="ragnarok-map-name" key="itemmall_s">Item mall</word>
+    <word namespace="ragnarok-map-name" key="iz_dun00">Undersea Tunnel</word>
+    <word namespace="ragnarok-map-name" key="iz_dun00t">Overlook Water Dungeon</word>
+    <word namespace="ragnarok-map-name" key="iz_dun01">Undersea Tunnel</word>
+    <word namespace="ragnarok-map-name" key="iz_dun01t">Overlook Water Dungeon</word>
+    <word namespace="ragnarok-map-name" key="iz_dun02">Undersea Tunnel</word>
+    <word namespace="ragnarok-map-name" key="iz_dun02t">Overlook Water Dungeon</word>
+    <word namespace="ragnarok-map-name" key="iz_dun03">Undersea Tunnel</word>
+    <word namespace="ragnarok-map-name" key="iz_dun03t">Overlook Water Dungeon</word>
+    <word namespace="ragnarok-map-name" key="iz_dun04">Undersea Tunnel</word>
+    <word namespace="ragnarok-map-name" key="iz_dun04t">Overlook Water Dungeon</word>
+    <word namespace="ragnarok-map-name" key="iz_dun05">Undersea Tunnel</word>
+    <word namespace="ragnarok-map-name" key="izlu2dun">Byalan Island</word>
+    <word namespace="ragnarok-map-name" key="izlude">Izlude Town</word>
+    <word namespace="ragnarok-map-name" key="izlude07">Izlude Town</word>
+    <word namespace="ragnarok-map-name" key="izlude_in">Inside Izlude</word>
+    <word namespace="ragnarok-map-name" key="izlude_x">Izlude Town</word>
+    <word namespace="ragnarok-map-name" key="jawaii">Jawaii, the Honeymoon Island</word>
+    <word namespace="ragnarok-map-name" key="jawaii_in">Inside Jawaii</word>
+    <word namespace="ragnarok-map-name" key="job3_arch01">Waiting room for Arch Bishop Job Change</word>
+    <word namespace="ragnarok-map-name" key="job3_arch02">Odin Temple</word>
+    <word namespace="ragnarok-map-name" key="job3_arch03">Waiting room for Arch Bishop Job Change</word>
+    <word namespace="ragnarok-map-name" key="job3_gen01">Geneticist Lab</word>
+    <word namespace="ragnarok-map-name" key="job3_guil01">Secret Tavern</word>
+    <word namespace="ragnarok-map-name" key="job3_guil02">Inside the Old Warehouse</word>
+    <word namespace="ragnarok-map-name" key="job3_guil03">An isolated mansion</word>
+    <word namespace="ragnarok-map-name" key="job3_rang01">Waiting room for Ranger Job Change</word>
+    <word namespace="ragnarok-map-name" key="job3_rang02">Test room for Ranger Job Change</word>
+    <word namespace="ragnarok-map-name" key="job3_rune01">Inside of Rune Knight Templar</word>
+    <word namespace="ragnarok-map-name" key="job3_rune02">Test room for Rune Knight Job Change</word>
+    <word namespace="ragnarok-map-name" key="job3_rune03">Test room for Rune Knight Job Change</word>
+    <word namespace="ragnarok-map-name" key="job3_war01">Test room for Warlock Job Change</word>
+    <word namespace="ragnarok-map-name" key="job3_war02">Test room for Warlock Job Change</word>
+    <word namespace="ragnarok-map-name" key="job_cru">Crusader Realm</word>
+    <word namespace="ragnarok-map-name" key="job_duncer">Comodo Theatre</word>
+    <word namespace="ragnarok-map-name" key="job_hunte">Hunter Job Change Place</word>
+    <word namespace="ragnarok-map-name" key="job_hunter">Hunter Guild</word>
+    <word namespace="ragnarok-map-name" key="job_knight">The Chivalry</word>
+    <word namespace="ragnarok-map-name" key="job_knt">Knight Realm</word>
+    <word namespace="ragnarok-map-name" key="job_ko">Hidden Place</word>
+    <word namespace="ragnarok-map-name" key="job_monk">Saint Capitolina Abbey</word>
+    <word namespace="ragnarok-map-name" key="job_priest">The Sanctum</word>
+    <word namespace="ragnarok-map-name" key="job_prist">Priest Realm</word>
+    <word namespace="ragnarok-map-name" key="job_sage">Sage Realm</word>
+    <word namespace="ragnarok-map-name" key="job_soul">Your Heart</word>
+    <word namespace="ragnarok-map-name" key="job_star">The Sun, the Moon and the Stars</word>
+    <word namespace="ragnarok-map-name" key="job_sword1">Swordman Test Hall</word>
+    <word namespace="ragnarok-map-name" key="job_thief1">Mushroom Farm</word>
+    <word namespace="ragnarok-map-name" key="job_wiz">Wizard Realm</word>
+    <word namespace="ragnarok-map-name" key="job_wizard">Wizard Academy</word>
+    <word namespace="ragnarok-map-name" key="jp_castle">Halloween Castle</word>
+    <word namespace="ragnarok-map-name" key="jp_dress_a">Back Stage A</word>
+    <word namespace="ragnarok-map-name" key="jp_dress_b">Back Stage B</word>
+    <word namespace="ragnarok-map-name" key="jp_event02">Japanese Event 2</word>
+    <word namespace="ragnarok-map-name" key="jp_event03">Japanese Event 3</word>
+    <word namespace="ragnarok-map-name" key="jp_event04">Japanese Event 4</word>
+    <word namespace="ragnarok-map-name" key="jp_event05">Japanese Event 5</word>
+    <word namespace="ragnarok-map-name" key="jp_event06">Japanese Event 6</word>
+    <word namespace="ragnarok-map-name" key="jp_magic">House of Magical</word>
+    <word namespace="ragnarok-map-name" key="jp_ruins">Sandy Beach of Ruins</word>
+    <word namespace="ragnarok-map-name" key="jp_stage_a">Stage A</word>
+    <word namespace="ragnarok-map-name" key="jp_stage_b">Stage B</word>
+    <word namespace="ragnarok-map-name" key="jupe_area1">Juperos, Restricted Zone</word>
+    <word namespace="ragnarok-map-name" key="jupe_area2">Juperos, Restricted Zone</word>
+    <word namespace="ragnarok-map-name" key="jupe_cave">Ruins of Juperos Entrance</word>
+    <word namespace="ragnarok-map-name" key="jupe_core">Center of Juperos</word>
+    <word namespace="ragnarok-map-name" key="jupe_core2">The center of Juperos</word>
+    <word namespace="ragnarok-map-name" key="jupe_ele">Juperos Elevator</word>
+    <word namespace="ragnarok-map-name" key="jupe_ele_r">Juperos Elevator</word>
+    <word namespace="ragnarok-map-name" key="jupe_gate">Juperos, Restricted Zone</word>
+    <word namespace="ragnarok-map-name" key="juperos_01">Ruins of Juperos</word>
+    <word namespace="ragnarok-map-name" key="juperos_02">Ruins of Juperos</word>
+    <word namespace="ragnarok-map-name" key="kh_dun01">Robot Factory level 1</word>
+    <word namespace="ragnarok-map-name" key="kh_dun02">Robot Factory level 2</word>
+    <word namespace="ragnarok-map-name" key="kh_kiehl01">Kiehl's Room</word>
+    <word namespace="ragnarok-map-name" key="kh_kiehl02">Kiehl's Room</word>
+    <word namespace="ragnarok-map-name" key="kh_mansion">Kiel Hyre's Mansion</word>
+    <word namespace="ragnarok-map-name" key="kh_rossi">The Rosimier's Mansion</word>
+    <word namespace="ragnarok-map-name" key="kh_school">Kiel Hyre Academy</word>
+    <word namespace="ragnarok-map-name" key="kh_vila">Kiel Hyre's Cottage</word>
+    <word namespace="ragnarok-map-name" key="knight_1-1">The Chivalry</word>
+    <word namespace="ragnarok-map-name" key="knight_2-1">The Chivalry</word>
+    <word namespace="ragnarok-map-name" key="knight_3-1">The Chivalry</word>
+    <word namespace="ragnarok-map-name" key="lhz_airport">Lighthalzen Airport</word>
+    <word namespace="ragnarok-map-name" key="lhz_cube">Cube Room</word>
+    <word namespace="ragnarok-map-name" key="lhz_dun01">Somatology Laboratory</word>
+    <word namespace="ragnarok-map-name" key="lhz_dun02">Somatology Laboratory</word>
+    <word namespace="ragnarok-map-name" key="lhz_dun03">Somatology Laboratory</word>
+    <word namespace="ragnarok-map-name" key="lhz_fild01">Lighthalzen Field</word>
+    <word namespace="ragnarok-map-name" key="lhz_fild02">Lighthalzen Field (Grim Reaper's Valley)</word>
+    <word namespace="ragnarok-map-name" key="lhz_fild03">Lighthalzen Field</word>
+    <word namespace="ragnarok-map-name" key="lhz_in01">Rekenber Corporation Headquarters</word>
+    <word namespace="ragnarok-map-name" key="lhz_in02">Inside Lighthalzen</word>
+    <word namespace="ragnarok-map-name" key="lhz_in03">Inside Lighthalzen</word>
+    <word namespace="ragnarok-map-name" key="lhz_que01">Inside Lighthalzen</word>
+    <word namespace="ragnarok-map-name" key="lighthalzen">Lightharlzen, the City-State of Prosperity</word>
+    <word namespace="ragnarok-map-name" key="lou_dun01">The Royal Tomb</word>
+    <word namespace="ragnarok-map-name" key="lou_dun02">Inside the Royal Tomb</word>
+    <word namespace="ragnarok-map-name" key="lou_dun03">Suei Long Gon</word>
+    <word namespace="ragnarok-map-name" key="lou_fild01">Louyang Field</word>
+    <word namespace="ragnarok-map-name" key="lou_in01">Inside Louyang</word>
+    <word namespace="ragnarok-map-name" key="lou_in02">Inside Louyang</word>
+    <word namespace="ragnarok-map-name" key="louyang">Louyang, the highland</word>
+    <word namespace="ragnarok-map-name" key="louyang_e">Louyang Excavation Site</word>
+    <word namespace="ragnarok-map-name" key="ma_dun01">Bangungot Hospital 1F</word>
+    <word namespace="ragnarok-map-name" key="ma_fild01">Baryo Mahiwaga</word>
+    <word namespace="ragnarok-map-name" key="ma_fild02">Forest</word>
+    <word namespace="ragnarok-map-name" key="ma_in01">Inside of Malaya</word>
+    <word namespace="ragnarok-map-name" key="ma_scene01">Bakonawa Lake</word>
+    <word namespace="ragnarok-map-name" key="ma_zif01">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif02">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif03">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif04">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif05">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif06">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif07">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif08">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="ma_zif09">Inside of Jeepney</word>
+    <word namespace="ragnarok-map-name" key="mag_dun01">Nogg Road</word>
+    <word namespace="ragnarok-map-name" key="mag_dun02">Nogg Road</word>
+    <word namespace="ragnarok-map-name" key="mal_dun01">Lagoon in the Stars</word>
+    <word namespace="ragnarok-map-name" key="mal_in01">Inside Malangdo Island</word>
+    <word namespace="ragnarok-map-name" key="mal_in02">Inside Ship</word>
+    <word namespace="ragnarok-map-name" key="malangdo">Malangdo Island</word>
+    <word namespace="ragnarok-map-name" key="malaya">Port Malaya</word>
+    <word namespace="ragnarok-map-name" key="man_fild01">Manuk Field</word>
+    <word namespace="ragnarok-map-name" key="man_fild02">Manuk Field</word>
+    <word namespace="ragnarok-map-name" key="man_fild03">Manuk Field</word>
+    <word namespace="ragnarok-map-name" key="man_in01">Inside Manuk</word>
+    <word namespace="ragnarok-map-name" key="manuk">Manuk</word>
+    <word namespace="ragnarok-map-name" key="mid_camp">Rune Midgard Allied Forces Post</word>
+    <word namespace="ragnarok-map-name" key="mid_campin">Inside of the Rune Midgard Allied Forces Post</word>
+    <word namespace="ragnarok-map-name" key="mjo_dun01">Mjolnir Dead Pit</word>
+    <word namespace="ragnarok-map-name" key="mjo_dun02">Mjolnir Dead Pit</word>
+    <word namespace="ragnarok-map-name" key="mjo_dun03">Mjolnir Dead Pit</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_01">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_02">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_03">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_04">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_05">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_06">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_07">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_08">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_09">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_10">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_11">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="mjolnir_12">Mt.Mjolnir</word>
+    <word namespace="ragnarok-map-name" key="moc_castle">Morroc Castle</word>
+    <word namespace="ragnarok-map-name" key="moc_dugn01">Morocc Dungeon</word>
+    <word namespace="ragnarok-map-name" key="moc_dugn02">Morocc Dungeon</word>
+    <word namespace="ragnarok-map-name" key="moc_fild01">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild02">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild03">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild04">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild05">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild06">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild07">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild08">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild09">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild10">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild11">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild12">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild13">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild14">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild15">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild16">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild17">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild18">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild19">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="moc_fild20">Sograt Desert - Continental Guard Quarantine</word>
+    <word namespace="ragnarok-map-name" key="moc_fild21">Dimensional Gorge</word>
+    <word namespace="ragnarok-map-name" key="moc_fild22">Dimensional Gorge</word>
+    <word namespace="ragnarok-map-name" key="moc_fild22b">Dimensional Gorge</word>
+    <word namespace="ragnarok-map-name" key="moc_intr00">Inside Morocc</word>
+    <word namespace="ragnarok-map-name" key="moc_intr01">Inside Morocc</word>
+    <word namespace="ragnarok-map-name" key="moc_intr02">Inside Morocc</word>
+    <word namespace="ragnarok-map-name" key="moc_intr04">Inside Morocc</word>
+    <word namespace="ragnarok-map-name" key="moc_para01">Inside of Paradise Group Building in Morroc</word>
+    <word namespace="ragnarok-map-name" key="moc_pryd01">Inside Pyramid</word>
+    <word namespace="ragnarok-map-name" key="moc_pryd02">Inside Pyramid</word>
+    <word namespace="ragnarok-map-name" key="moc_pryd03">Inside Pyramid</word>
+    <word namespace="ragnarok-map-name" key="moc_pryd04">Inside Pyramid</word>
+    <word namespace="ragnarok-map-name" key="moc_pryd05">Inside Pyramid</word>
+    <word namespace="ragnarok-map-name" key="moc_pryd06">Inside Pyramid</word>
+    <word namespace="ragnarok-map-name" key="moc_prydb1">Thief Guild</word>
+    <word namespace="ragnarok-map-name" key="moc_ruins">Morroc Ruins</word>
+    <word namespace="ragnarok-map-name" key="moc_vilg00">Morocc Village</word>
+    <word namespace="ragnarok-map-name" key="moc_vilg01">Morocc Village</word>
+    <word namespace="ragnarok-map-name" key="moc_vilg02">Morocc Village</word>
+    <word namespace="ragnarok-map-name" key="monk_in">Inside St. Abbey</word>
+    <word namespace="ragnarok-map-name" key="monk_test">Saint Capitolina Abbey</word>
+    <word namespace="ragnarok-map-name" key="moonlight_a">Moonlight A</word>
+    <word namespace="ragnarok-map-name" key="mora">Mora Village</word>
+    <word namespace="ragnarok-map-name" key="morocc">Morroc Town</word>
+    <word namespace="ragnarok-map-name" key="morocc_in">Inside Morroc</word>
+    <word namespace="ragnarok-map-name" key="morocc_mem">Memory of Morroc</word>
+    <word namespace="ragnarok-map-name" key="moscovia">Moscovia</word>
+    <word namespace="ragnarok-map-name" key="mosk_dun01">Les Forest</word>
+    <word namespace="ragnarok-map-name" key="mosk_dun02">Temny Forest</word>
+    <word namespace="ragnarok-map-name" key="mosk_dun03">Dremuci Forest</word>
+    <word namespace="ragnarok-map-name" key="mosk_fild01">somewhere in Moscovia</word>
+    <word namespace="ragnarok-map-name" key="mosk_fild02">Okrestnosti of Moscovia</word>
+    <word namespace="ragnarok-map-name" key="mosk_in">Inside Moscovia</word>
+    <word namespace="ragnarok-map-name" key="mosk_que">Marozka's Cave</word>
+    <word namespace="ragnarok-map-name" key="mosk_ship">Charabel</word>
+    <word namespace="ragnarok-map-name" key="nameless_i">Nameless Island</word>
+    <word namespace="ragnarok-map-name" key="nameless_in">Inside Nameless Island</word>
+    <word namespace="ragnarok-map-name" key="nameless_n">Nameless Island</word>
+    <word namespace="ragnarok-map-name" key="new_1-1">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_1-2">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_1-3">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_1-4">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_2-1">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_2-2">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_2-3">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_2-4">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_3-1">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_3-2">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_3-3">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_3-4">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_4-1">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_4-2">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_4-3">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_4-4">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_5-1">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_5-2">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_5-3">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_5-4">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_zone01">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_zone02">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_zone03">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="new_zone04">Training Ground</word>
+    <word namespace="ragnarok-map-name" key="nif_fild01">Skellington, a Solitary Village in Nifflheim</word>
+    <word namespace="ragnarok-map-name" key="nif_fild02">Vally of Gyoll</word>
+    <word namespace="ragnarok-map-name" key="nif_in">Inside Nifflheim</word>
+    <word namespace="ragnarok-map-name" key="niflheim">Nifflheim, Realm of the Dead</word>
+    <word namespace="ragnarok-map-name" key="nyd_dun01">Yggdrasil Root</word>
+    <word namespace="ragnarok-map-name" key="nyd_dun02">Yggdrasil Root</word>
+    <word namespace="ragnarok-map-name" key="odin_tem01">Odin Shirine</word>
+    <word namespace="ragnarok-map-name" key="odin_tem02">Odin Shirine</word>
+    <word namespace="ragnarok-map-name" key="odin_tem03">Odin Shirine</word>
+    <word namespace="ragnarok-map-name" key="oldpay_in01">Inside Old Payon</word>
+    <word namespace="ragnarok-map-name" key="oldpay_in02">Inside Old Payon</word>
+    <word namespace="ragnarok-map-name" key="oldpayon">Old Payon</word>
+    <word namespace="ragnarok-map-name" key="orcsdun01">Orc Dungeon</word>
+    <word namespace="ragnarok-map-name" key="orcsdun02">Orc Dungeon</word>
+    <word namespace="ragnarok-map-name" key="ordeal_1-1">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_1-2">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_1-3">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_1-4">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_2-1">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_2-2">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_2-3">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_2-4">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_3-1">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_3-2">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_3-3">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_3-4">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_a00">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="ordeal_a02">Battle Ordeal Mode</word>
+    <word namespace="ragnarok-map-name" key="p_track01">Monster Race Arena</word>
+    <word namespace="ragnarok-map-name" key="p_track02">Monster Race Arena</word>
+    <word namespace="ragnarok-map-name" key="pay_arche">Archer Village</word>
+    <word namespace="ragnarok-map-name" key="pay_arche_s">Archer Village</word>
+    <word namespace="ragnarok-map-name" key="pay_dun00">Payon Cave</word>
+    <word namespace="ragnarok-map-name" key="pay_dun01">Payon Cave</word>
+    <word namespace="ragnarok-map-name" key="pay_dun02">Payon Cave</word>
+    <word namespace="ragnarok-map-name" key="pay_dun03">Payon Cave</word>
+    <word namespace="ragnarok-map-name" key="pay_dun04">Payon Cave</word>
+    <word namespace="ragnarok-map-name" key="pay_fild01">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild02">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild03">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild04">Sograt Desert</word>
+    <word namespace="ragnarok-map-name" key="pay_fild05">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild06">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild07">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild08">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild09">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild10">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_fild11">Payon Forest</word>
+    <word namespace="ragnarok-map-name" key="pay_gld">Greenwood Lake</word>
+    <word namespace="ragnarok-map-name" key="payg_cas01">Greenwood Lake Guild</word>
+    <word namespace="ragnarok-map-name" key="payg_cas02">Greenwood Lake Guild</word>
+    <word namespace="ragnarok-map-name" key="payg_cas03">Greenwood Lake Guild</word>
+    <word namespace="ragnarok-map-name" key="payg_cas04">Greenwood Lake Guild</word>
+    <word namespace="ragnarok-map-name" key="payg_cas05">Greenwood Lake Guild</word>
+    <word namespace="ragnarok-map-name" key="payon">Payon Town</word>
+    <word namespace="ragnarok-map-name" key="payon_in01">Inside Payon</word>
+    <word namespace="ragnarok-map-name" key="payon_in02">Inside Payon</word>
+    <word namespace="ragnarok-map-name" key="payon_in03">Inside Payon </word>
+    <word namespace="ragnarok-map-name" key="payon_mem">Memory of Payon</word>
+    <word namespace="ragnarok-map-name" key="poring_c01">Poring Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="poring_c02">Poring Market</word>
+    <word namespace="ragnarok-map-name" key="poring_w01">Poring War - Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="poring_w02">Poring War</word>
+    <word namespace="ragnarok-map-name" key="priest_1-1">The Sanctum</word>
+    <word namespace="ragnarok-map-name" key="priest_2-1">The Sanctum</word>
+    <word namespace="ragnarok-map-name" key="priest_3-1">The Sanctum</word>
+    <word namespace="ragnarok-map-name" key="probemap">Probe Map 1</word>
+    <word namespace="ragnarok-map-name" key="probemap02">Probe Map 2</word>
+    <word namespace="ragnarok-map-name" key="prontera">Prontera City, Capitol of Rune-Midgart</word>
+    <word namespace="ragnarok-map-name" key="prontera_s">Prontera City, Capital of Rune Midgard</word>
+    <word namespace="ragnarok-map-name" key="prontera_x">Prontera City, Capital of Rune Midgard</word>
+    <word namespace="ragnarok-map-name" key="prt_are01">ARENA</word>
+    <word namespace="ragnarok-map-name" key="prt_are_in">Waiting room</word>
+    <word namespace="ragnarok-map-name" key="prt_arena01">ARENA</word>
+    <word namespace="ragnarok-map-name" key="prt_castle">Prontera Castle</word>
+    <word namespace="ragnarok-map-name" key="prt_church">the Sanctuary</word>
+    <word namespace="ragnarok-map-name" key="prt_church_x">The Sanctuary</word>
+    <word namespace="ragnarok-map-name" key="prt_cstl01">Prontera Castle</word>
+    <word namespace="ragnarok-map-name" key="prt_dugn00">Prontera Dungeon</word>
+    <word namespace="ragnarok-map-name" key="prt_dugn01">Prontera Dungeon</word>
+    <word namespace="ragnarok-map-name" key="prt_fild00">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild01">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild02">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild03">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild04">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild05">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild06">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild07">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild08">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild08a">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild08b">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild08c">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild08d">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild09">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild10">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_fild11">Prontera Field</word>
+    <word namespace="ragnarok-map-name" key="prt_gld">Valkyrie Realm</word>
+    <word namespace="ragnarok-map-name" key="prt_in">Inside Prontera</word>
+    <word namespace="ragnarok-map-name" key="prt_intr01">Inside Prontera</word>
+    <word namespace="ragnarok-map-name" key="prt_intr01_a">Inside Prontera</word>
+    <word namespace="ragnarok-map-name" key="prt_intr02">Inside Prontera</word>
+    <word namespace="ragnarok-map-name" key="prt_maze01">Labyrinth Forest</word>
+    <word namespace="ragnarok-map-name" key="prt_maze02">Labyrinth Forest</word>
+    <word namespace="ragnarok-map-name" key="prt_maze03">Labyrinth Forest</word>
+    <word namespace="ragnarok-map-name" key="prt_monk">St. Capitolina Abbey</word>
+    <word namespace="ragnarok-map-name" key="prt_sewb1">Prontera Culvert</word>
+    <word namespace="ragnarok-map-name" key="prt_sewb2">Prontera Culvert</word>
+    <word namespace="ragnarok-map-name" key="prt_sewb3">Prontera Culvert</word>
+    <word namespace="ragnarok-map-name" key="prt_sewb4">Prontera Culvert</word>
+    <word namespace="ragnarok-map-name" key="prt_vilg00">Prontera Village</word>
+    <word namespace="ragnarok-map-name" key="prt_vilg01">Prontera Village</word>
+    <word namespace="ragnarok-map-name" key="prt_vilg02">Prontera Village</word>
+    <word namespace="ragnarok-map-name" key="prtg_cas01">Valkyrie Realm Guild</word>
+    <word namespace="ragnarok-map-name" key="prtg_cas02">Valkyrie Realm Guild</word>
+    <word namespace="ragnarok-map-name" key="prtg_cas03">Valkyrie Realm Guild</word>
+    <word namespace="ragnarok-map-name" key="prtg_cas04">Valkyrie Realm Guild</word>
+    <word namespace="ragnarok-map-name" key="prtg_cas05">Valkyrie Realm Guild</word>
+    <word namespace="ragnarok-map-name" key="pvp_2vs2">PvP : Event Coliseum</word>
+    <word namespace="ragnarok-map-name" key="pvp_2vs2b">PvP : Event Coliseum</word>
+    <word namespace="ragnarok-map-name" key="pvp_2vs2c">PvP : Event Coliseum</word>
+    <word namespace="ragnarok-map-name" key="pvp_c_room">PvP : Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_1-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_1-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_1-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_1-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_1-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_2-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_2-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_2-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_2-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_2-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_3-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_3-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_3-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_3-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_3-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_4-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_4-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_4-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_4-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_4-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_5-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_5-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_5-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_5-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_5-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_6-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_6-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_6-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_6-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_6-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_7-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_7-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_7-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_7-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_7-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_8-1">PvP : Room Sandwich</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_8-2">PvP : Room Rock On</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_8-3">PvP : Four Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_8-4">PvP : Room Undercross</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_8-5">PvP : Room Copass</word>
+    <word namespace="ragnarok-map-name" key="pvp_n_room">PvP : Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_room">PvP : Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_1-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_1-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_1-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_1-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_1-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_2-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_2-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_2-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_2-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_2-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_3-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_3-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_3-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_3-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_3-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_4-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_4-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_4-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_4-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_4-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_5-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_5-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_5-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_5-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_5-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_6-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_6-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_6-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_6-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_6-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_7-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_7-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_7-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_7-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_7-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_8-1">PvP : Room Prontera</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_8-2">PvP : Room Izlude</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_8-3">PvP : Room Payon</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_8-4">PvP : Room Alberta</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_8-5">PvP : Room Morroc</word>
+    <word namespace="ragnarok-map-name" key="pvp_y_room">PvP : Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="que_ba">Unknown</word>
+    <word namespace="ragnarok-map-name" key="que_bingo">Bingo Game Room</word>
+    <word namespace="ragnarok-map-name" key="que_dan01">Hugel Field</word>
+    <word namespace="ragnarok-map-name" key="que_dan02">Inside of the Abandoned House in Juno</word>
+    <word namespace="ragnarok-map-name" key="que_god01">Quest Map</word>
+    <word namespace="ragnarok-map-name" key="que_god01t">Quest Map</word>
+    <word namespace="ragnarok-map-name" key="que_god02">Quest Map</word>
+    <word namespace="ragnarok-map-name" key="que_house_s">Strange House</word>
+    <word namespace="ragnarok-map-name" key="que_hugel">Odin Shrine's Underground</word>
+    <word namespace="ragnarok-map-name" key="que_job01">Private Pub</word>
+    <word namespace="ragnarok-map-name" key="que_job02">Job Quest 2</word>
+    <word namespace="ragnarok-map-name" key="que_job03">Job Quest 3</word>
+    <word namespace="ragnarok-map-name" key="que_moc_16">Moon Palace, Mob Area</word>
+    <word namespace="ragnarok-map-name" key="que_moon">Moon Palace</word>
+    <word namespace="ragnarok-map-name" key="que_new01">New Year Day Place</word>
+    <word namespace="ragnarok-map-name" key="que_new02">New Year Day Place</word>
+    <word namespace="ragnarok-map-name" key="que_ng">Ninja - Gunslinger map</word>
+    <word namespace="ragnarok-map-name" key="que_qaru01">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qaru02">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qaru03">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qaru04">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qaru05">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qsch01">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qsch02">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qsch03">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qsch04">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_qsch05">Fallacious Okolnir</word>
+    <word namespace="ragnarok-map-name" key="que_rachel">Inside Temple</word>
+    <word namespace="ragnarok-map-name" key="que_san04">Inside Freya's Temple</word>
+    <word namespace="ragnarok-map-name" key="que_sign02">Valley of Gyoll</word>
+    <word namespace="ragnarok-map-name" key="que_temsky">Pope's Office - The Garden of Heaven</word>
+    <word namespace="ragnarok-map-name" key="que_thor">Thor Volcano Dungeon</word>
+    <word namespace="ragnarok-map-name" key="quiz_00">Quiz Revolrution</word>
+    <word namespace="ragnarok-map-name" key="quiz_01">Quiz Revolrutiona</word>
+    <word namespace="ragnarok-map-name" key="quiz_02">Quiz Arena</word>
+    <word namespace="ragnarok-map-name" key="quiz_test">Quiz Hall</word>
+    <word namespace="ragnarok-map-name" key="ra_fild01">Audhumbla Grassland</word>
+    <word namespace="ragnarok-map-name" key="ra_fild02">Od Canyon</word>
+    <word namespace="ragnarok-map-name" key="ra_fild03">The Plain of Ida</word>
+    <word namespace="ragnarok-map-name" key="ra_fild04">Audhumbla Grassland</word>
+    <word namespace="ragnarok-map-name" key="ra_fild05">Audhumbla Grassland</word>
+    <word namespace="ragnarok-map-name" key="ra_fild06">Portus Luna</word>
+    <word namespace="ragnarok-map-name" key="ra_fild07">Od Canyon</word>
+    <word namespace="ragnarok-map-name" key="ra_fild08">The Plain of Ida</word>
+    <word namespace="ragnarok-map-name" key="ra_fild09">Audhumbla Grassland</word>
+    <word namespace="ragnarok-map-name" key="ra_fild10">Od Canyon</word>
+    <word namespace="ragnarok-map-name" key="ra_fild11">The Plain of Ida</word>
+    <word namespace="ragnarok-map-name" key="ra_fild12">The Plain of Ida</word>
+    <word namespace="ragnarok-map-name" key="ra_fild13">Shore of Tears</word>
+    <word namespace="ragnarok-map-name" key="ra_in01">Inside Rachel</word>
+    <word namespace="ragnarok-map-name" key="ra_san01">Holy Ground</word>
+    <word namespace="ragnarok-map-name" key="ra_san02">Holy Ground</word>
+    <word namespace="ragnarok-map-name" key="ra_san03">Holy Ground</word>
+    <word namespace="ragnarok-map-name" key="ra_san04">Holy Ground</word>
+    <word namespace="ragnarok-map-name" key="ra_san05">Holy Ground</word>
+    <word namespace="ragnarok-map-name" key="ra_temin">Inside Temple</word>
+    <word namespace="ragnarok-map-name" key="ra_temple">Freya Grand Temple - Cheshrumnir</word>
+    <word namespace="ragnarok-map-name" key="ra_temsky">Pope's Office - The Garden of Heaven</word>
+    <word namespace="ragnarok-map-name" key="rachel">Capital of Arunafeltz States, Rachel</word>
+    <word namespace="ragnarok-map-name" key="room_00">Room 0</word>
+    <word namespace="ragnarok-map-name" key="room_01">Room 1</word>
+    <word namespace="ragnarok-map-name" key="room_02">Room 2</word>
+    <word namespace="ragnarok-map-name" key="rwc01">Ragnarok World Championship Arena 1</word>
+    <word namespace="ragnarok-map-name" key="rwc02">Ragnarok World Championship Arena 2</word>
+    <word namespace="ragnarok-map-name" key="rwc03">Ragnarok World Championship Arena 3</word>
+    <word namespace="ragnarok-map-name" key="s_atelier">Shadow Workshop</word>
+    <word namespace="ragnarok-map-name" key="sch_gld">Nidhoggur</word>
+    <word namespace="ragnarok-map-name" key="schg_cas01">Nidhoggur Guild</word>
+    <word namespace="ragnarok-map-name" key="schg_cas02">Nidhoggur Guild</word>
+    <word namespace="ragnarok-map-name" key="schg_cas03">Nidhoggur Guild</word>
+    <word namespace="ragnarok-map-name" key="schg_cas04">Nidhoggur Guild</word>
+    <word namespace="ragnarok-map-name" key="schg_cas05">Nidhoggur Guild</word>
+    <word namespace="ragnarok-map-name" key="schg_dun01">Subterranean Guild Dungeon</word>
+    <word namespace="ragnarok-map-name" key="schg_que01">Morestone Prairie</word>
+    <word namespace="ragnarok-map-name" key="sec_in01">Inside Valhalla</word>
+    <word namespace="ragnarok-map-name" key="sec_in02">Inside Valhalla</word>
+    <word namespace="ragnarok-map-name" key="sec_pri">Room of Meditation (Valhalla Prison)</word>
+    <word namespace="ragnarok-map-name" key="spl_fild01">Splendide Field</word>
+    <word namespace="ragnarok-map-name" key="spl_fild02">Splendide Field</word>
+    <word namespace="ragnarok-map-name" key="spl_fild03">Splendide Field</word>
+    <word namespace="ragnarok-map-name" key="spl_in01">Inside Splendide</word>
+    <word namespace="ragnarok-map-name" key="spl_in02">Inside Splendide</word>
+    <word namespace="ragnarok-map-name" key="splendide">Splendide</word>
+    <word namespace="ragnarok-map-name" key="sword_1-1">Swordman Test Hall</word>
+    <word namespace="ragnarok-map-name" key="sword_2-1">Swordman Test Hall</word>
+    <word namespace="ragnarok-map-name" key="sword_3-1">Swordman Test Hall</word>
+    <word namespace="ragnarok-map-name" key="tank_test">Tank Test 1</word>
+    <word namespace="ragnarok-map-name" key="tank_test2">Tank Test 2</word>
+    <word namespace="ragnarok-map-name" key="test">Test Map</word>
+    <word namespace="ragnarok-map-name" key="tha_scene01">Thanatos Tower Entrance</word>
+    <word namespace="ragnarok-map-name" key="tha_t01">Thanatos Tower - Lower Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t02">Thanatos Tower - Lower Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t03">Thanatos Tower - Lower Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t04">Thanatos Tower - Lower Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t05">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t06">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t07">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t08">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t09">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t10">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t11">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="tha_t12">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="thana_boss">Thanatos Tower - Unknown Area</word>
+    <word namespace="ragnarok-map-name" key="thana_scene01">Thanatos Tower Entrance</word>
+    <word namespace="ragnarok-map-name" key="thana_step">Thanatos Tower - Upper Level</word>
+    <word namespace="ragnarok-map-name" key="thor_camp">Thor Volcano Camp</word>
+    <word namespace="ragnarok-map-name" key="thor_v01">Thor Volcano Dungeon</word>
+    <word namespace="ragnarok-map-name" key="thor_v02">Thor Volcano Dungeon</word>
+    <word namespace="ragnarok-map-name" key="thor_v03">Thor Volcano Dungeon</word>
+    <word namespace="ragnarok-map-name" key="tower_a0">Tower A0</word>
+    <word namespace="ragnarok-map-name" key="tower_a1">Tower A1</word>
+    <word namespace="ragnarok-map-name" key="tower_a10">Tower A10</word>
+    <word namespace="ragnarok-map-name" key="tower_a11">Tower A11</word>
+    <word namespace="ragnarok-map-name" key="tower_a12">Tower A12</word>
+    <word namespace="ragnarok-map-name" key="tower_a2">Tower A2</word>
+    <word namespace="ragnarok-map-name" key="tower_a3">Tower A3</word>
+    <word namespace="ragnarok-map-name" key="tower_a4">Tower A4</word>
+    <word namespace="ragnarok-map-name" key="tower_a5">Tower A5</word>
+    <word namespace="ragnarok-map-name" key="tower_a6">Tower A6</word>
+    <word namespace="ragnarok-map-name" key="tower_a7">Tower A7</word>
+    <word namespace="ragnarok-map-name" key="tower_a8">Tower A8</word>
+    <word namespace="ragnarok-map-name" key="tower_a9">Tower A9</word>
+    <word namespace="ragnarok-map-name" key="tower_b0">Tower B0</word>
+    <word namespace="ragnarok-map-name" key="tower_b1">Tower B1</word>
+    <word namespace="ragnarok-map-name" key="tower_b10">Tower B10</word>
+    <word namespace="ragnarok-map-name" key="tower_b11">Tower B11</word>
+    <word namespace="ragnarok-map-name" key="tower_b12">Tower B12</word>
+    <word namespace="ragnarok-map-name" key="tower_b2">Tower B2</word>
+    <word namespace="ragnarok-map-name" key="tower_b3">Tower B3</word>
+    <word namespace="ragnarok-map-name" key="tower_b4">Tower B4</word>
+    <word namespace="ragnarok-map-name" key="tower_b5">Tower B5</word>
+    <word namespace="ragnarok-map-name" key="tower_b6">Tower B6</word>
+    <word namespace="ragnarok-map-name" key="tower_b7">Tower B7</word>
+    <word namespace="ragnarok-map-name" key="tower_b8">Tower B8</word>
+    <word namespace="ragnarok-map-name" key="tower_b9">Tower B9</word>
+    <word namespace="ragnarok-map-name" key="tower_c0">Tower C0</word>
+    <word namespace="ragnarok-map-name" key="tower_c1">Tower C1</word>
+    <word namespace="ragnarok-map-name" key="tower_c10">Tower C10</word>
+    <word namespace="ragnarok-map-name" key="tower_c11">Tower C11</word>
+    <word namespace="ragnarok-map-name" key="tower_c12">Tower C12</word>
+    <word namespace="ragnarok-map-name" key="tower_c2">Tower C2</word>
+    <word namespace="ragnarok-map-name" key="tower_c3">Tower C3</word>
+    <word namespace="ragnarok-map-name" key="tower_c4">Tower C4</word>
+    <word namespace="ragnarok-map-name" key="tower_c5">Tower C5</word>
+    <word namespace="ragnarok-map-name" key="tower_c6">Tower C6</word>
+    <word namespace="ragnarok-map-name" key="tower_c7">Tower C7</word>
+    <word namespace="ragnarok-map-name" key="tower_c8">Tower C8</word>
+    <word namespace="ragnarok-map-name" key="tower_c9">Tower C9</word>
+    <word namespace="ragnarok-map-name" key="tower_d0">Tower D0</word>
+    <word namespace="ragnarok-map-name" key="tower_d1">Tower D1</word>
+    <word namespace="ragnarok-map-name" key="tower_d10">Tower D10</word>
+    <word namespace="ragnarok-map-name" key="tower_d11">Tower D11</word>
+    <word namespace="ragnarok-map-name" key="tower_d12">Tower D12</word>
+    <word namespace="ragnarok-map-name" key="tower_d2">Tower D2</word>
+    <word namespace="ragnarok-map-name" key="tower_d3">Tower D3</word>
+    <word namespace="ragnarok-map-name" key="tower_d4">Tower D4</word>
+    <word namespace="ragnarok-map-name" key="tower_d5">Tower D5</word>
+    <word namespace="ragnarok-map-name" key="tower_d6">Tower D6</word>
+    <word namespace="ragnarok-map-name" key="tower_d7">Tower D7</word>
+    <word namespace="ragnarok-map-name" key="tower_d8">Tower D8</word>
+    <word namespace="ragnarok-map-name" key="tower_d9">Tower D9</word>
+    <word namespace="ragnarok-map-name" key="treasure01">Sunken Ship</word>
+    <word namespace="ragnarok-map-name" key="treasure02">Sunken Ship</word>
+    <word namespace="ragnarok-map-name" key="tur_dun01">Turtle Island</word>
+    <word namespace="ragnarok-map-name" key="tur_dun02">Turtle Island Dungeon</word>
+    <word namespace="ragnarok-map-name" key="tur_dun03">Good Turtles Village</word>
+    <word namespace="ragnarok-map-name" key="tur_dun04">Turtle Palace</word>
+    <word namespace="ragnarok-map-name" key="tur_dun05">Underground swamp zone</word>
+    <word namespace="ragnarok-map-name" key="tur_dun06">Underground swamp zone</word>
+    <word namespace="ragnarok-map-name" key="turbo_e_16">Turbo Track Stadium</word>
+    <word namespace="ragnarok-map-name" key="turbo_e_4">Turbo Track Stadium</word>
+    <word namespace="ragnarok-map-name" key="turbo_e_8">Turbo Track Stadium</word>
+    <word namespace="ragnarok-map-name" key="turbo_n_1">Turbo Track Stadium</word>
+    <word namespace="ragnarok-map-name" key="turbo_n_16">Turbo Track Stadium</word>
+    <word namespace="ragnarok-map-name" key="turbo_n_4">Turbo Track Stadium</word>
+    <word namespace="ragnarok-map-name" key="turbo_n_8">Turbo Track Stadium</word>
+    <word namespace="ragnarok-map-name" key="turbo_room">Waiting Room</word>
+    <word namespace="ragnarok-map-name" key="um_dun01">Carpenter's Shop in the Tree</word>
+    <word namespace="ragnarok-map-name" key="um_dun02">Passage to a Foreign World</word>
+    <word namespace="ragnarok-map-name" key="um_fild01">Luluka Forest</word>
+    <word namespace="ragnarok-map-name" key="um_fild02">Hoomga Forest</word>
+    <word namespace="ragnarok-map-name" key="um_fild03">Kalala Swamp</word>
+    <word namespace="ragnarok-map-name" key="um_fild04">Hoomga Jungle</word>
+    <word namespace="ragnarok-map-name" key="um_in">Inside Umbala</word>
+    <word namespace="ragnarok-map-name" key="umbala">Wootan Tribe's Village, Umbala</word>
+    <word namespace="ragnarok-map-name" key="valkyrie">Valkyrie Hall, the Hall of Honor</word>
+    <word namespace="ragnarok-map-name" key="ve_fild01">Veins Field</word>
+    <word namespace="ragnarok-map-name" key="ve_fild02">Veins Field</word>
+    <word namespace="ragnarok-map-name" key="ve_fild03">Veins Field</word>
+    <word namespace="ragnarok-map-name" key="ve_fild04">Veins Field</word>
+    <word namespace="ragnarok-map-name" key="ve_fild05">Veins Field</word>
+    <word namespace="ragnarok-map-name" key="ve_fild06">Veins Field</word>
+    <word namespace="ragnarok-map-name" key="ve_fild07">Veins Field</word>
+    <word namespace="ragnarok-map-name" key="ve_in">Inside Veins</word>
+    <word namespace="ragnarok-map-name" key="ve_in02">Inside Veins</word>
+    <word namespace="ragnarok-map-name" key="veins">Veins, the Canyon Village</word>
+    <word namespace="ragnarok-map-name" key="wizard_1-1">Wizard Academy</word>
+    <word namespace="ragnarok-map-name" key="wizard_2-1">Wizard Academy</word>
+    <word namespace="ragnarok-map-name" key="wizard_3-1">Wizard Academy</word>
+    <word namespace="ragnarok-map-name" key="xmas">Lutie, Snow Village</word>
+    <word namespace="ragnarok-map-name" key="xmas_dun01">Toy Factory Warehouse</word>
+    <word namespace="ragnarok-map-name" key="xmas_dun02">Toy Monitoring Room</word>
+    <word namespace="ragnarok-map-name" key="xmas_fild01">Lutie Field</word>
+    <word namespace="ragnarok-map-name" key="xmas_in">Inside Lutie</word>
+    <word namespace="ragnarok-map-name" key="xmas_x">Lutie, the Snow Village</word>
+    <word namespace="ragnarok-map-name" key="y_airport">Juno Airport</word>
+    <word namespace="ragnarok-map-name" key="yggdrasil01">Hvergelmir's Fountain (Trunk of Yggdrasil)</word>
+    <word namespace="ragnarok-map-name" key="yuno">Juno, the capital of Schwarzwald Republic</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild01">Border Posts</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild02">Kiel Hyre's Cottage</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild03">El Mes Plateau</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild04">El Mes Plateau</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild05">El Mes Plateau</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild06">El Mes Plateau</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild07">El Mes Gorge (Valley of Abyss)</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild08">Kiel Hyre's Academy</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild09">Schwaltzwald Guards Camp</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild10">Juno Field</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild11">Juno Field</word>
+    <word namespace="ragnarok-map-name" key="yuno_fild12">Border Checkpoint</word>
+    <word namespace="ragnarok-map-name" key="yuno_in01">Inside Juno</word>
+    <word namespace="ragnarok-map-name" key="yuno_in02">Inside the Sage Castle</word>
+    <word namespace="ragnarok-map-name" key="yuno_in03">Inside Juno</word>
+    <word namespace="ragnarok-map-name" key="yuno_in04">Republic Library</word>
+    <word namespace="ragnarok-map-name" key="yuno_in05">Power Plant of Ymir's Heart</word>
+    <word namespace="ragnarok-map-name" key="yuno_pre">Schwaltzvalt Government Buildings</word>
+    <word namespace="ragnarok-map-name" key="z_agit">Z Gang's Hideout</word>
+  </wordgroup>
+</languageimport>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-weapon-type" key="0">Bare Fist</word>
+    <word namespace="ragnarok-weapon-type" key="1">Dagger</word>
+    <word namespace="ragnarok-weapon-type" key="2">One-Handed Sword</word>
+    <word namespace="ragnarok-weapon-type" key="3">Two-Handed Sword</word>
+    <word namespace="ragnarok-weapon-type" key="4">One-Handed Spear</word>
+    <word namespace="ragnarok-weapon-type" key="5">Two-Handed Spear</word>
+    <word namespace="ragnarok-weapon-type" key="6">One-Handed Axe</word>
+    <word namespace="ragnarok-weapon-type" key="7">Two-Handed Axe</word>
+    <word namespace="ragnarok-weapon-type" key="8">Mace</word>
+    <word namespace="ragnarok-weapon-type" key="9">Unknown</word>
+    <word namespace="ragnarok-weapon-type" key="10">Staff</word>
+    <word namespace="ragnarok-weapon-type" key="11">Bow</word>
+    <word namespace="ragnarok-weapon-type" key="12">Knuckle</word>
+    <word namespace="ragnarok-weapon-type" key="13">Musical Instrument</word>
+    <word namespace="ragnarok-weapon-type" key="14">Whip</word>
+    <word namespace="ragnarok-weapon-type" key="15">Book</word>
+    <word namespace="ragnarok-weapon-type" key="16">Katar</word>
+    <word namespace="ragnarok-weapon-type" key="17">Revolver</word>
+    <word namespace="ragnarok-weapon-type" key="18">Rifle</word>
+    <word namespace="ragnarok-weapon-type" key="19">Gatling Gun</word>
+    <word namespace="ragnarok-weapon-type" key="20">Shotgun</word>
+    <word namespace="ragnarok-weapon-type" key="21">Grenade Launcher</word>
+    <word namespace="ragnarok-weapon-type" key="22">Fuuma Shuriken</word>
+  </wordgroup>
+</languageimport>

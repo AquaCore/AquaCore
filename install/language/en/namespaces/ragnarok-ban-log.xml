@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-ban-log" key="id">ID</word>
+    <word namespace="ragnarok-ban-log" key="account">Banned account</word>
+    <word namespace="ragnarok-ban-log" key="banned-by">Banned by</word>
+    <word namespace="ragnarok-ban-log" key="type">Ban type</word>
+    <word namespace="ragnarok-ban-log" key="date">Ban date</word>
+    <word namespace="ragnarok-ban-log" key="unban-date">Unban date</word>
+  </wordgroup>
+</languageimport>

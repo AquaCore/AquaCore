@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-ammo-type" key="0">Unknown</word>
+    <word namespace="ragnarok-ammo-type" key="1">Arrow</word>
+    <word namespace="ragnarok-ammo-type" key="2">Throwing Dagger</word>
+    <word namespace="ragnarok-ammo-type" key="3">Bullet</word>
+    <word namespace="ragnarok-ammo-type" key="4">Shell</word>
+    <word namespace="ragnarok-ammo-type" key="5">Grenade</word>
+    <word namespace="ragnarok-ammo-type" key="6">Shuriken</word>
+    <word namespace="ragnarok-ammo-type" key="7">Kunai</word>
+  </wordgroup>
+</languageimport>

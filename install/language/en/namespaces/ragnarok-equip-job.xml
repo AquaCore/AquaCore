@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-equip-job" key="268435455">All jobs</word>
+    <word namespace="ragnarok-equip-job" key="268435454">Every job except novice</word>
+    <word namespace="ragnarok-equip-job" key="33554432">Ninja</word>
+    <word namespace="ragnarok-equip-job" key="16777216">Gunslinger</word>
+    <word namespace="ragnarok-equip-job" key="8388608">Soul Linker</word>
+    <word namespace="ragnarok-equip-job" key="4194304">Star Gladiator</word>
+    <word namespace="ragnarok-equip-job" key="2097152">Taekwon</word>
+    <word namespace="ragnarok-equip-job" key="524288">Bard/Dancer</word>
+    <word namespace="ragnarok-equip-job" key="262144">Alchemist</word>
+    <word namespace="ragnarok-equip-job" key="131072">Rogue</word>
+    <word namespace="ragnarok-equip-job" key="65536">Sage</word>
+    <word namespace="ragnarok-equip-job" key="32768">Monk</word>
+    <word namespace="ragnarok-equip-job" key="16384">Crusader</word>
+    <word namespace="ragnarok-equip-job" key="4096">Assassin</word>
+    <word namespace="ragnarok-equip-job" key="2048">Hunter</word>
+    <word namespace="ragnarok-equip-job" key="1024">Blacksmith</word>
+    <word namespace="ragnarok-equip-job" key="512">Wizard</word>
+    <word namespace="ragnarok-equip-job" key="256">Priest</word>
+    <word namespace="ragnarok-equip-job" key="128">Knight</word>
+    <word namespace="ragnarok-equip-job" key="64">Thief</word>
+    <word namespace="ragnarok-equip-job" key="32">Merchant</word>
+    <word namespace="ragnarok-equip-job" key="16">Acolyte</word>
+    <word namespace="ragnarok-equip-job" key="8">Archer</word>
+    <word namespace="ragnarok-equip-job" key="4">Mage</word>
+    <word namespace="ragnarok-equip-job" key="2">Swordsman</word>
+    <word namespace="ragnarok-equip-job" key="1">Novice</word>
+  </wordgroup>
+</languageimport>

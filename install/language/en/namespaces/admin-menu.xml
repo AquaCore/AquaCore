@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="admin-menu" key="dashboard">Dashboard</word>
+    <word namespace="admin-menu" key="pages">Pages</word>
+    <word namespace="admin-menu" key="new-page">New Page</word>
+    <word namespace="admin-menu" key="news">News</word>
+    <word namespace="admin-menu" key="news-posts">Posts</word>
+    <word namespace="admin-menu" key="news-new-post">New Post</word>
+    <word namespace="admin-menu" key="news-categories">Categories</word>
+    <word namespace="admin-menu" key="news-comments">Comments</word>
+    <word namespace="admin-menu" key="users">Users</word>
+    <word namespace="admin-menu" key="users-roles">Roles</word>
+    <word namespace="admin-menu" key="ragnarok">Ragnarök</word>
+    <word namespace="admin-menu" key="ragnarok-add-server">Add Server</word>
+    <word namespace="admin-menu" key="plugins">Plugins</word>
+    <word namespace="admin-menu" key="logs">Logs</word>
+    <word namespace="admin-menu" key="login-log">Login Log</word>
+    <word namespace="admin-menu" key="error-log">Error Log</word>
+    <word namespace="admin-menu" key="pp-log">PlayPal Transfer Log</word>
+    <word namespace="admin-menu" key="credit-log">Credit Transfer Log</word>
+    <word namespace="admin-menu" key="ban-log">Ban Log</word>
+    <word namespace="admin-menu" key="settings">Settings</word>
+  </wordgroup>
+</languageimport>
