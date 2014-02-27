@@ -181,12 +181,12 @@ function ac_build_query(array $options)
 	if(!$options['url_rewrite']) {
 		$q = array();
 		if($options['path']) {
-			$q['path'] = implode(\Aqua\URL_SEPARATOR, $options['path']);
+			$q['path'] = implode(\Aqua\URL_SEPARATOR, array_map('urlencode', $options['path']));
 		}
 		if($options['action'] !== 'index' || $options['arguments']) {
-			$q['action'] = $options['action'];
+			$q['action'] = urlencode($options['action']);
 			if($options['arguments']) {
-				$q['arg'] = implode(\Aqua\URL_SEPARATOR, $options['arguments']);
+				$q['arg'] = implode(\Aqua\URL_SEPARATOR, array_map('urlencode', $options['arguments']));
 			}
 		}
 		$options['query'] = $q + $options['query'];

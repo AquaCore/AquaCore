@@ -8,7 +8,7 @@ use Aqua\Core\App;
  */
 $datetime_format = App::settings()->get('datetime_format');
 $base_acc_url = ac_build_url(array(
-		'path' => array( 'ro', urlencode($page->server->key) ),
+		'path' => array( 'ro', $page->server->key ),
 		'action' => 'viewaccount',
 		'arguments' => array( '' )
 	));

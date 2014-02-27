@@ -70,7 +70,7 @@ class Server
 		$this->charmapCount = count($options['charmap']);
 		$this->uri          = new Uri;
 		if(self::$serverCount > 1) {
-			$this->uri->path = array( 'ro', urlencode($this->key) );
+			$this->uri->path = array( 'ro', $this->key );
 		} else {
 			$this->uri->path = array( 'ragnarok' );
 		}

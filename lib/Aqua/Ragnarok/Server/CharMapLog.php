@@ -203,9 +203,10 @@ class CharMapLog
 	public function parseCashShopLog(array $data)
 	{
 		$log = new CashShopLog;
+		$log->charmap = &$this;
 		$log->id = (int)$data['id'];
 		$log->accountId = (int)$data['account_id'];
-		$log-> = (int)$data['account_id'];
+		return $log;
 	}
 
 	/**

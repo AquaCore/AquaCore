@@ -51,7 +51,7 @@ extends Page
 			return;
 		}
 		$pgn = &$this;
-		$this->attach('call_action', function() use (&$pgn, $server, $charmap, $char) {
+		$this->attach('call_action', function() use (&$pgn, $server, $charmap, $char, $char_name_url) {
 			$pgn->theme->remove('navbar_alt');
 			$pgn->response->setHeader('Cache-Control', 'no-store, co-cache, must-revalidate, max-age=0');
 			$pgn->response->setHeader('Expires', time() - 1);
@@ -59,7 +59,7 @@ extends Page
 			$pgn->charmap = $charmap;
 			$pgn->char = $char;
 			$base_url = $pgn->server->charMapUri($pgn->charmap->key())->url(array(
-				'path' => array( 'c', ($char_name_url ? urlencode($pgn->char->name) : $pgn->char->id) ),
+				'path' => array( 'c', ($char_name_url ? $pgn->char->name : $pgn->char->id) ),
 				'action' => ''
 			));
 			$menu = new Menu;

@@ -114,7 +114,7 @@ class CharMap
 		$this->uri        = clone $this->server->uri;
 		if($server->charmapCount > 1) {
 			$this->uri->path[] = 's';
-			$this->uri->path[] = urlencode($this->key);
+			$this->uri->path[] = $this->key;
 		} else {
 			$this->uri->path[] = 'server';
 		}

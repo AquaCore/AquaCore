@@ -22,7 +22,7 @@ $page->theme->head->enqueueMeta('description')
 ?>
 <div class="ac-post-header">
 	<div class="ac-post-info">
-		<div class="ac-post-title"><a href="<?php echo ac_build_url(array( 'path' => array( 'news', urlencode($post->slug) ) )) ?>"><?php echo htmlspecialchars($post->title); ?></a></div>
+		<div class="ac-post-title"><a href="<?php echo ac_build_url(array( 'path' => array( 'news', $post->slug ) )) ?>"><?php echo htmlspecialchars($post->title); ?></a></div>
 		<?php if(isset($rating)) echo $rating->render('content/rating') ?>
 		<div class="ac-post-categories">
 			<?php foreach($post->categories() as $category) : ?>
@@ -38,7 +38,7 @@ $page->theme->head->enqueueMeta('description')
 	<?php if(!empty($tags)) : ?>
 	<div class="ac-post-tags">
 		<?php foreach($post->tags() as $tag) : ?>
-			<div class="ac-post-tag"><a href="<?php echo $base_tag_url . urlencode($tag) ?>"><?php echo $tag; ?></a></div>
+			<div class="ac-post-tag"><a href="<?php echo $base_tag_url . $tag ?>"><?php echo $tag; ?></a></div>
 		<?php endforeach; ?>
 	</div>
 	<?php endif; ?>

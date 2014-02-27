@@ -326,7 +326,7 @@ extends Page
 					->ttl($settings->get('ttl', 60))
 					->copyright($settings->get('copyright', null));
 				if($category) {
-					$link = ac_build_url(array( 'path' => array( 'news', 'category', urlencode($category->slug) ) ));
+					$link = ac_build_url(array( 'path' => array( 'news', 'category', $category->slug ) ));
 					$title .= ' - ' . $category->name;
 					$rss->title($title)
 						->link($link)
@@ -355,7 +355,7 @@ extends Page
 					->limit($settings->get('limit', 20))
 					->query();
 				foreach($search as $item) {
-					$rss->addItem($item, ac_build_url(array( 'path' => array( 'news', urlencode($item->slug) ) )));
+					$rss->addItem($item, ac_build_url(array( 'path' => array( 'news', $item->slug ) )));
 				}
 				$rss->save();
 			}

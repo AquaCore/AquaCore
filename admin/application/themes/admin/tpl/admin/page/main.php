@@ -57,7 +57,7 @@ $datetime_format = App::settings()->get('datetime_format');
 				    'arguments' => array( $p->uid )
 				)) ?>"><?php echo htmlspecialchars($p->title) ?></a></td>
 			<td><a href="<?php echo ac_build_url(array(
-					'path' => array( 'page', urlencode($p->slug) ),
+					'path' => array( 'page', $p->slug ),
 			        'base_dir' => \Aqua\DIR
 				)) ?>"><?php echo htmlspecialchars($p->slug) ?></a></td>
 			<?php if($parent = $p->parent()) : ?>

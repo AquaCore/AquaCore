@@ -296,7 +296,7 @@ class Character
 			$this->_uri = clone $this->charmap->uri;
 			$this->_uri->path[] = 'c';
 			if(App::settings()->get('ragnarok')->get('char_name_url', true)) {
-				$this->_uri->path[] = urlencode($this->name);
+				$this->_uri->path[] = $this->name;
 			} else {
 				$this->_uri->path[] = $this->id;
 			}

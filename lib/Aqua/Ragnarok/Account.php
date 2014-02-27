@@ -366,7 +366,7 @@ class Account
 			$this->_uri = clone $this->server->uri;
 			$this->_uri->path[] = 'a';
 			if(App::settings()->get('ragnarok')->get('acc_username_url', true)) {
-				$this->_uri->path[] = urlencode($this->username);
+				$this->_uri->path[] = $this->username;
 			} else {
 				$this->_uri->path[] = $this->id;
 			}

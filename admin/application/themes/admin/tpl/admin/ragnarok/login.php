@@ -12,7 +12,7 @@ $base_acc_url = ac_build_url(array(
 		'arguments' => array( '' )
 	));
 $base_ro_url = ac_build_url(array(
-		'path' => array( 'ro', urlencode($page->server->key) ),
+		'path' => array( 'ro', $page->server->key ),
 		'action' => 'view_account',
 		'arguments' => array( '' )
 	));
@@ -23,7 +23,7 @@ if($page->server->charmapCount === 0) {
 } else foreach($page->server->charmap as $key => $charmap) {
 	$servers[] = array(
 		'<a href="'. ac_build_url(array(
-				'path' => array( 'ro', urlencode($page->server->key), 's', urlencode($charmap->key) )
+				'path' => array( 'ro', $page->server->key, 's', $charmap->key )
 			)) .  '">' .htmlspecialchars($charmap->name) . '</a>',
 		((int)$charmap->getOption('base-exp', 100) / 100) . '<i>x</i>',
 		((int)$charmap->getOption('job-exp', 100) / 100) . '<i>x</i>',
@@ -64,7 +64,7 @@ $dash->get('server')->append('charmap', array(
 			__('ragnarok-login-dash', 'online'),
 		),
 		'footer' =>
-		'<a href="' . ac_build_url(array( 'path' => array( 'ro', urlencode($page->server->key), 'server' ) )) .
+		'<a href="' . ac_build_url(array( 'path' => array( 'ro', $page->server->key, 'server' ) )) .
 		'"><button class="ac-button">' . __('ragnarok-server', 'add-charmap') . '</button></a>',
 		'content' => $servers
 	))->append('accounts', array(

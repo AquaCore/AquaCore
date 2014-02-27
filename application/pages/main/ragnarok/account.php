@@ -322,7 +322,7 @@ extends Page
 							'key'          => $key,
 							'url'          => $this->server->uri->url(array(
 									'path' => array( 'a', (App::settings()->get('ragnarok')->get('acc_username_url', false) ?
-														   urlencode($this->account->username) : $this->account->id) ),
+														   $this->account->username : $this->account->id) ),
 									'action' => 'resetpass',
 									'arguments' => array( $key )
 								))

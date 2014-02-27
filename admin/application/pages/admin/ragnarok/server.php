@@ -31,7 +31,7 @@ extends Page
 		} else if($this->charmap) {
 			$nav = new Menu;
 			$base_url = ac_build_url(array(
-					'path' => array( 'ro', urlencode($this->server->key), 's', urlencode($this->charmap->key) ),
+					'path' => array( 'ro', $this->server->key, 's', $this->charmap->key ),
 					'action' => ''
 				));
 		} else if($this->request->uri->action !== 'index') {
@@ -105,7 +105,7 @@ extends Page
 			    ->setLabel(__('ragnarok-charmap-settings', 'db-password-label'));
 			$frm->input('sql-charset', true)
 				->type('text')
-				->value('UTF-8', false)
+				->value('UTF8', false)
 			    ->setLabel(__('ragnarok-charmap-settings', 'db-charset-label'));
 			$frm->input('sql-timezone', true)
 				->type('text')
@@ -134,7 +134,7 @@ extends Page
 			    ->setLabel(__('ragnarok-charmap-settings', 'db-password-label'));
 			$frm->input('log-charset', true)
 				->type('text')
-				->value('UTF-8', false)
+				->value('UTF8', false)
 			    ->setLabel(__('ragnarok-charmap-settings', 'db-charset-label'));
 			$frm->input('log-timezone', true)
 				->type('text')
@@ -192,8 +192,16 @@ extends Page
 							$error = true;
 						}
 					}
-					if(($tz = $frm->request->getString('timezone')) && !@timezone_open($tz)) {
-						$frm->field('timezone')->setWarning(__('exception', 'invalid-timezone'));
+					try {
+						$tz = trim($this->request->getString('timezone'));
+						if(!empty($tz)) {
+							new \DateTimeZone($tz);
+						}
+					} catch(\Exception $e) {
+						$frm->field('timezone')
+						    ->setWarning(__('settings',
+						                    'invalid-timezone',
+						                    htmlspecialchars($frm->request->getString('timezone'))));
 						$error = true;
 					}
 					try {
@@ -369,7 +377,7 @@ extends Page
 						'log_tables' => array()
 					));
 				$settings->export($file);
-				$this->response->status(302)->redirect(ac_build_url(array( 'path' => array( 'ro', urlencode($this->server->key), 's', urlencode($key) ) )));
+				$this->response->status(302)->redirect(ac_build_url(array( 'path' => array( 'ro', $this->server->key, 's', $key ) )));
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));

@@ -31,7 +31,7 @@ extends Page
 		if($this->server) {
 			$nav      = new Menu;
 			$base_url = ac_build_url(array(
-					'path'   => array('ro', urlencode($this->server->key)),
+					'path'   => array('ro', $this->server->key),
 					'action' => ''
 				));
 			$nav->append('server', array(
@@ -66,12 +66,12 @@ extends Page
 		if($this->server) {
 			if(empty($this->server->charmap)) {
 				$this->response->status(302)->redirect(ac_build_url(array(
-						'path' => array( 'ro', urlencode($this->server->key), 'server' )
+						'path' => array( 'ro', $this->server->key, 'server' )
 					)));
 			} else if($this->server->charmapCount === 1) {
 				$server = current($this->server->charmap);
 				$this->response->status(302)->redirect(ac_build_url(array(
-					'path' => array( 'ro', urlencode($this->server->key), urlencode($server->key) )
+					'path' => array( 'ro', $this->server->key, 's', $server->key )
 					)));
 			} else {
 				$this->server_index();
@@ -532,7 +532,7 @@ extends Page
 					'charmap'  => array()
 					));
 				$settings->export($file);
-				$this->response->status(302)->redirect(ac_build_url(array('path' => array('ro', urlencode($key)))));
+				$this->response->status(302)->redirect(ac_build_url(array('path' => array('ro', $key))));
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
@@ -832,7 +832,7 @@ extends Page
 					              null,
 					              __('ragnarok-server', 'updated', htmlspecialchars($this->server->name)));
 					$this->response->status(302)->redirect(ac_build_url(array(
-							'path'   => array('ro', urlencode($this->server->key)),
+							'path'   => array('ro', $this->server->key),
 							'action' => 'edit'
 						)));
 				}
@@ -840,7 +840,7 @@ extends Page
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				$this->response->status(302)->redirect(ac_build_url(array(
-						'path'   => array('ro', urlencode($this->server->key)),
+						'path'   => array('ro', $this->server->key),
 						'action' => 'edit'
 					)));
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));

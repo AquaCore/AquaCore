@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS ac_cash_shop (
   sold BIGINT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY ( item_id ),
   INDEX _ac_cash_shop__category_IN ( category ),
-  INDEX _ac_cash_shop__order_IN ( order )
+  INDEX _ac_cash_shop__order_IN ( `order` )
 ) ENGINE = MyIsam;

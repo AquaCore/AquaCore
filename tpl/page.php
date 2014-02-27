@@ -9,10 +9,10 @@ use Aqua\UI\Menu;
  */
 $title = '';
 if($parent = $content->parent()) {
-	$title.= '<a class="ac-page-parent" href="' . ac_build_url(array( 'path' => array( 'page', urlencode($parent->slug) ) ));
+	$title.= '<a class="ac-page-parent" href="' . ac_build_url(array( 'path' => array( 'page', $parent->slug ) ));
 	$title.='" style="float: left"><div class="ac-page-parent-icon"></div></a>';
 }
-$title.= '<a href="' . ac_build_url(array( 'path' => array( 'page', urlencode($content->slug) ) )) . '" style="float: left">';
+$title.= '<a href="' . ac_build_url(array( 'path' => array( 'page', $content->slug ) )) . '" style="float: left">';
 $title.= htmlspecialchars($content->title);
 $title.= '</a>';
 if(isset($rating)) {
@@ -28,7 +28,7 @@ if(!$content->forged) {
 		foreach($children as $child) {
 			$menu->append($child->id, array(
 					'title' => htmlspecialchars($child->title),
-					'url' => ac_build_url(array( 'path' => array( 'page', urlencode($child->slug) ) ))
+					'url' => ac_build_url(array( 'path' => array( 'page', $child->slug ) ))
 				));
 		}
 		$page->theme->set('menu', $menu);

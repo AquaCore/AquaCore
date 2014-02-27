@@ -116,7 +116,7 @@ $datetime_format = App::$settings->get('datetime_format', '');
 			<td colspan="7">
 				<?php if($account->owner !== 1 || App::user()->account->id === 1) : ?>
 				<a class="ac-edit-account" href="<?php echo ac_build_url(array(
-						'path' => array( 'ro', urlencode($account->server->key) ),
+						'path' => array( 'ro', $account->server->key ),
 						'action' => 'editaccount',
 						'arguments' => array( $account->id )
 					)) ?>"><button class="ac-button"><?php echo __('ragnarok', 'edit-account') ?></button></a>
