@@ -8,6 +8,10 @@ use Aqua\Ragnarok\Server\CharMap;
 class Character
 {
 	/**
+	 * @var \Aqua\Ragnarok\Server\CharMap
+	 */
+	public $charmap;
+	/**
 	 * @var int
 	 */
 	public $id;
@@ -16,38 +20,34 @@ class Character
 	 */
 	public $accountId;
 	/**
-	 * @var \Aqua\Ragnarok\Server\CharMap
-	 */
-	public $charmap;
-	/**
 	 * @var string
 	 */
-	public $name = '';
+	public $name;
 	/**
 	 * Slot position
 	 * @var int
 	 */
-	public $slot = 0;
+	public $slot;
 	/**
 	 * @var int
 	 */
-	public $class = 0;
+	public $class;
 	/**
 	 * @var int
 	 */
-	public $baseLevel = 0;
+	public $baseLevel;
 	/**
 	 * @var int
 	 */
-	public $jobLevel = 0;
+	public $jobLevel;
 	/**
 	 * @var int
 	 */
-	public $baseExp = 0;
+	public $baseExp;
 	/**
 	 * @var int
 	 */
-	public $jobExp = 0;
+	public $jobExp;
 	/**
 	 * @var bool
 	 */
@@ -55,39 +55,47 @@ class Character
 	/**
 	 * @var int
 	 */
-	public $zeny = 0;
+	public $zeny;
 	/**
 	 * @var int
 	 */
-	public $homunculusId = 0;
+	public $homunculusId;
 	/**
 	 * @var int
 	 */
-	public $partnerId = 0;
+	public $elementalId;
 	/**
 	 * @var int
 	 */
-	public $motherId = 0;
+	public $petId;
 	/**
 	 * @var int
 	 */
-	public $fatherId = 0;
+	public $partnerId;
 	/**
 	 * @var int
 	 */
-	public $childId = 0;
+	public $motherId;
 	/**
 	 * @var int
 	 */
-	public $partyId = 0;
+	public $fatherId;
 	/**
 	 * @var int
 	 */
-	public $guildId = 0;
+	public $childId;
+	/**
+	 * @var int
+	 */
+	public $partyId;
+	/**
+	 * @var int
+	 */
+	public $guildId;
 	/**
 	 * @var string
 	 */
-	public $guildName = '';
+	public $guildName;
 	/**
 	 * @var string
 	 */
@@ -95,11 +103,11 @@ class Character
 	/**
 	 * @var int
 	 */
-	public $lastX = 0;
+	public $lastX;
 	/**
 	 * @var int
 	 */
-	public $lastY = 0;
+	public $lastY;
 	/**
 	 * @var string
 	 */
@@ -107,27 +115,82 @@ class Character
 	/**
 	 * @var int
 	 */
-	public $saveX = 0;
+	public $saveX;
 	/**
 	 * @var int
 	 */
-	public $saveY = 0;
+	public $saveY;
 	/**
 	 * @var int
 	 */
-	public $fame = 0;
+	public $fame;
 	/**
 	 * @var int
 	 */
-	public $karma = 0;
+	public $karma;
 	/**
 	 * @var int
 	 */
-	public $manner = 0;
+	public $manner;
 	/**
 	 * @var int
 	 */
-	public $options = 0;
+	public $option;
+	/**
+	 * @var int
+	 */
+	public $CPOptions;
+	/**
+	 * @var int
+	 */
+	public $strength;
+	/**
+	 * @var int
+	 */
+	public $vitality;
+	/**
+	 * @var int
+	 */
+	public $dexterity;
+	/**
+	 * @var int
+	 */
+	public $intelligence;
+	/**
+	 * @var int
+	 */
+	public $luck;
+	/**
+	 * @var int
+	 */
+	public $hp;
+	/**
+	 * @var int
+	 */
+	public $sp;
+	/**
+	 * @var int
+	 */
+	public $maxHp;
+	/**
+	 * @var int
+	 */
+	public $maxSp;
+	/**
+	 * @var int
+	 */
+	public $statusPoints;
+	/**
+	 * @var int
+	 */
+	public $skillPoints;
+	/**
+	 * @var int
+	 */
+	public $deleteDate;
+	/**
+	 * @var array
+	 */
 	protected $_skills;
 	/**
 	 * @var

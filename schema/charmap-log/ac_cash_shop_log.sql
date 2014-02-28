@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS `ac_cash_shop_log` (
   ip_address VARCHAR(46) NOT NULL,
   account_id INT UNSIGNED NOT NULL,
   total INT UNSIGNED NOT NULL,
-  `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  items SMALLINT UNSIGNED NOT NULL,
+  `date` DATETIME NOT NULL,
   PRIMARY KEY ( id ),
   INDEX `_ac_cash_shop_log__account_id_IN` ( account_id )
 ) ENGINE = InnoDB

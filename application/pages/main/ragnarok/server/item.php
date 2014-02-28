@@ -3,14 +3,17 @@ namespace Page\Main\Ragnarok\Server;
 
 use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
+use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Ragnarok;
 use Aqua\Ragnarok\Server\Login;
 use Aqua\Site\Page;
+use Aqua\SQL\Query;
 use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
+use PHPMailer\POP3;
 
 class Item
 extends Page
@@ -20,8 +23,8 @@ extends Page
 	 */
 	public $charmap;
 
-	const DB_ITEMS_PER_PAGE = 10;
-	const SHOP_ITEMS_PER_PAGE = 8;
+	public static $dbItemsPerPage = 10;
+	public static $shopItemsPerPage = 8;
 
 	public function run()
 	{
@@ -37,15 +40,9 @@ extends Page
 			))
 		;
 		$this->theme->set('menu', $menu);
-		/*
 		if(App::user()->loggedIn()) {
-			$this->theme->set('cart', array(
-				'cart' => App::user()->cart($this->charmap),
-				'charmap' => $this->charmap,
-				'server' => $this->server
-			));
+			$this->theme->set('cart', App::user()->cart($this->charmap));
 		}
-		*/
 	}
 
 	public function index_action()
@@ -105,14 +102,14 @@ extends Page
 				}
 				$search
 					->order(array( 'id' => 'DESC' ))
-				    ->limit(($current_page - 1) * self::DB_ITEMS_PER_PAGE, self::DB_ITEMS_PER_PAGE)
+				    ->limit(($current_page - 1) * self::$dbItemsPerPage, self::$dbItemsPerPage)
 			        ->calcRows(true)
 					->order(array( 'id' => 'ASC' ))
 			        ->query();
 				$rows = $search->rowsFound;
 				$items = $search->results;
 			}
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::DB_ITEMS_PER_PAGE), $current_page);
+			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::$dbItemsPerPage), $current_page);
 			$tpl = new Template;
 			$tpl->set('items', $items)
 				->set('item_count', $rows)
@@ -160,67 +157,75 @@ extends Page
 		}
 	}
 
-	public function shop_action($category = null)
+	public function shop_action($slug = null)
 	{
 		$this->theme->head->section = $this->title = __('ragnarok', 'cash-shop');
 		try {
 			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$categories = $this->charmap->cashShopCategories();
-			$search = $this->charmap->itemShopSearch()
-				->limit(($current_page - 1) * self::SHOP_ITEMS_PER_PAGE, self::SHOP_ITEMS_PER_PAGE)
-				->calcRows(true)
-				->order(array(
-					'shop_category' => 'ASC',
-					'shop_order'    => 'ASC'
-				));
-			if($category !== null) {
-				if(!in_array($category, $categories)) {
+			$categories = $this->charmap->shopCategorySearch()
+				->order(array( 'order' => 'ASC' ))
+				->query()
+				->results;
+			if(!$slug) {
+				$search = $this->charmap->itemShopSearch();
+			} else {
+				do {
+					foreach($categories as $category) {
+						if(strcasecmp($category->slug, $slug) === 0) {
+							$search = $category->search();
+							break 2;
+						}
+					}
 					$this->error(404);
-				}
-				$search->where(array( 'shop_category' => $category ));
+					return;
+				} while(0);
 			}
-			$base_url = $this->charmap->url(array(
-				'path'      => array( 'item' ),
-				'action'    => 'shop',
-				'arguments' => array( '' )
-			));
-			foreach($categories as $id => &$category) {
-				$category['url'] = $base_url . $id;
-			}
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::SHOP_ITEMS_PER_PAGE), $current_page);
+			$search->calcRows(true)
+				->limit(($current_page - 1) * self::$shopItemsPerPage, self::$shopItemsPerPage)
+				->order(array( 'shop_order' => 'ASC' ))
+				->query();
+			$pgn = new Pagination(App::user()->request->uri, ceil($search->rowsFound / self::$shopItemsPerPage), $current_page);
 			$tpl = new Template;
-			$tpl->set('items', $items)
-				->set('item_count', $rows)
+			$tpl->set('items', $search->results)
+				->set('item_count', $search->rowsFound)
 				->set('categories', $categories)
 				->set('paginator', $pgn)
 				->set('page', $this);
 			echo $tpl->render('ragnarok/item/shop');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			$this->error(1, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 
 	public function cart_action()
 	{
 		$user = App::user();
-		$this->response->status(302)->redirect(App::request()->previousUrl());
+		$this->response->status(302);
+		if(($return = $this->request->uri->get('r')) &&
+		   ($return = @base64_decode($return)) &&
+		   parse_url($return, PHP_URL_HOST) === \Aqua\DOMAIN) {
+			$this->response->redirect($return);
+		} else {
+			$this->response->redirect(App::request()->previousUrl());
+		}
 		try {
+			$max    = App::settings()->get('ragnarok')->get('cash_shop_max_amount', 99);
 			$id     = $this->request->uri->getInt('id', false);
 			$action = $this->request->uri->getString('x', 'add');
-			$amount = $this->request->uri->getInt('a', 0, 0, Ragnarok::$shop_max_amount);
-			$cart   = &$user->cart($this->charmap);
+			$amount = $this->request->uri->getInt('a', 0, 0, $max);
+			$cart = $user->cart($this->charmap);
 			if($action === 'clear') {
 				$cart->clear();
-				$user->addFlash('success', null, __('application', 'cart-clear'));
+				$user->addFlash('success', null, __('ragnarok', 'cart-clear'));
 				return;
 			}
 			if(!$id || !($item = $this->charmap->item((int)$id)) || !$item->inCashShop) {
 				return;
 			}
 			if($action === 'set') {
-				$amount -= (isset($cart->items[$item->id]) ? $cart->items[$item->id]['amount'] : 0);
-				if($amount < 0) {
+				$amount -= $cart->count($item->id);
+				if($amount <= 0) {
 					$action = 'remove';
 					$amount = abs($amount);
 				} else {
@@ -229,23 +234,23 @@ extends Page
 			}
 			switch($action) {
 				case 'remove':
-					$cart->remove($item, $amount);
-					if(!isset($cart->items[$item->id])) {
-						$user->addFlash('success', null, __('application', 'cart-remove', htmlspecialchars($item->jpName)));
+					$cart->remove($item->id, $amount);
+					if(!$cart->hasItem($item->id)) {
+						$user->addFlash('success', null, __('ragnarok', 'cart-remove', htmlspecialchars($item->jpName)));
 					} else {
-						$user->addFlash('success', null, __('application', 'cart-remove-m', $amount, htmlspecialchars($item->jpName)));
+						$user->addFlash('success', null, __('ragnarok', 'cart-remove-m', $amount, htmlspecialchars($item->jpName)));
 					}
 					return;
 				case 'add':
-					if(isset($cart->items[$item->id])) {
-						$amount = min($cart->items[$item->id]['amount'] + $amount, Ragnarok::$shop_max_amount);
-						$amount -= $cart->items[$item->id]['amount'];
+					if($cart->hasItem($item->id)) {
+						$amount = min($cart->count($item->id) + $amount, $max);
+						$amount -= $cart->count($item->id);
 					}
 					if($amount === 0) {
 						return;
 					}
-					$cart->add($item, $amount);
-					$user->addFlash('success', null, __('application', 'cart-add-m', $amount, htmlspecialchars($item->jpName)));
+					$cart->add($item->id, $amount);
+					$user->addFlash('success', null, __('ragnarok', 'cart-add-m', $amount, htmlspecialchars($item->jpName)));
 					break;
 			}
 		} catch(\Exception $exception) {
@@ -258,31 +263,47 @@ extends Page
 	{
 		$user = App::user();
 		$cart = $user->cart($this->charmap);
-		if(!empty($cart->items) && ($account_id = $this->request->getInt('account_id', false)) !== false && ($key = $this->request->getString('cart_key')) && $key === $cart->key) {
-			$this->response->status(302)->redirect(App::request()->previousUrl());
-			$credits = $user->account->credits;
-			foreach($cart->items as $item) {
-				$credits -= $item['amount'] * $item['price'];
-			}
-			if($credits < 0) {
-				$user->addFlash('warning', null, __('ragnarok', 'not-enough-credits'));
-				return;
-			}
+		if(!empty($cart->items) && $this->request->method === 'POST' &&
+		   ($account_id = $this->request->getInt('account_id', false)) !== false) {
+			$this->response->status(302)->redirect(App::request()->uri->url());
+			$inTransaction = false;
 			try {
-				$account = $this->server->login->get($account_id);
+				$account = $this->charmap->server->login->get($account_id);
 				if(!$account || $account->owner !== $user->account->id) {
 					$user->addFlash('warning', null, __('ragnarok', 'invalid-account'));
 					return;
 				}
 				$dbh = App::connection();
 				$dbh->beginTransaction();
-				$user->account->update(array( 'credits' => $credits ));
-				$this->charmap->cashShopPurchase($account_id, $cart);
+				$inTransaction = true;
+				$credits = Query::select($dbh)
+					->columns(array( 'credits' => '_credits' ))
+					->setColumnType(array( 'credits' => 'integer' ))
+					->where(array( 'id' => $user->account->id ))
+					->from(ac_table('users'))
+					->forUpdate(true)
+					->query()
+					->results[0]['credits'];
+				if(($credits - $cart->total) < 0) {
+					$user->addFlash('warning', null, __('ragnarok', 'not-enough-credits'));
+					$dbh->rollBack();
+					return;
+				}
+				$tbl = ac_table('users');
+				$sth = $dbh->prepare("
+				UPDATE `$tbl`
+				SET _credits = _credits - ?
+				WHERE id = ?
+				");
+				$sth->bindValue(1, $cart->total, \PDO::PARAM_INT);
+				$sth->bindValue(2, $user->account->id, \PDO::PARAM_INT);
+				$sth->execute();
+				$cart->checkout($account);
 				$dbh->commit();
 				$cart->clear();
 				$user->addFlash('success', null, __('ragnarok', 'purchase-complete'));
 			} catch(\Exception $exception) {
-				if(isset($dbh) && $dbh->inTransaction()) {
+				if(isset($dbh) && $inTransaction) {
 					$dbh->rollBack();
 				}
 				ErrorLog::logSql($exception);
@@ -292,28 +313,17 @@ extends Page
 		}
 		$this->theme->head->section = $this->title = __('ragnarok', 'checkout');
 		try {
-			if(empty($cart->items)) {
-				$items = array();
-			} else {
-				$ids = array_keys($cart->items);
-				array_unshift($ids, Search::SEARCH_IN);
-				$items = $this->charmap->itemSearch()
-					->where(array( 'id' => $ids ))
-					->having(array( 'cash_shop' => 1 ))
-					->query()
-					->results;
-			}
-			$accounts = $this->server->login->getAccounts($user->account);
+			$cart->update();
+			$accounts = $this->charmap->server->login->getAccounts($user->account);
+			$tpl = new Template;
+			$tpl->set('accounts', $accounts)
+			    ->set('cart', $cart)
+			    ->set('page', $this);
+			echo $tpl->render('ragnarok/item/buy');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			$this->error(1, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 			return;
 		}
-		$tpl = new Template;
-		$tpl->set('items', $items)
-			->set('accounts', $accounts)
-			->set('cart', $cart)
-			->set('page', $this);
-		echo $tpl->render('ragnarok/item/buy');
 	}
 }

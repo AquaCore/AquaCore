@@ -45,7 +45,7 @@ use Aqua\Ragnarok\MapMarker;
 	</tr>
 <?php else: foreach($characters as $char) : ?>
 	<?php
-	$hide_pos = $char->options & Character::OPT_DISABLE_MAP_WHO_IS_ONLINE;
+	$hide_pos = $char->CPOptions & Character::OPT_DISABLE_MAP_WHO_IS_ONLINE;
 	?>
 	<tr class="ac-whois-online-char <?php echo $hide_pos ? 'ac-whois-online-position-hidden' : ''?>">
 		<td style="vertical-align: middle; text-align: center; width: 70px;"><img src="<?php echo ac_char_head($char)?>"></td>

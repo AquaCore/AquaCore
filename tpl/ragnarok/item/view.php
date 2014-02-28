@@ -145,9 +145,10 @@ if($item->type === 4) ++$rowspan;
 							'path' => array( 'item' ),
 							'action' => 'cart',
 							'query' => array(
-								'x' => 'add',
-								'a' => 1,
-								'id' => $item->id
+								'id' => $item->id,
+								'x'  => 'add',
+								'a'  => 1,
+								'r'  => base64_encode(App::request()->uri->url())
 							)
 						))?>">
 							<button class="ac-button"><?php echo __('ragnarok', 'add-to-cart')?> <small>(<?php echo __('donation', 'credit-points', number_format($item->shopPrice))?>)</small></button>

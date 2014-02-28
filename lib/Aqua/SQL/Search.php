@@ -104,4 +104,25 @@ extends Select
 			return "($query)";
 		}
 	}
+
+	public function parseOrder()
+	{
+		if(empty($this->order)) return '';
+		$order = array();
+		foreach($this->order as $column => $ord) {
+			if($ord === 'DESC' || $ord === 'ASC') {
+				if(array_key_exists($column, $this->columns)) {
+					$column = $this->columns[$column];
+				}
+				$order[] = "$column $ord";
+			} else {
+				if(array_key_exists($ord, $this->columns)) {
+					$ord = $this->columns[$ord];
+				}
+				$order[] = $ord;
+			}
+		}
+		if(empty($order)) return '';
+		else return 'ORDER BY ' . implode(', ', $order);
+	}
 }

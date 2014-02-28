@@ -119,31 +119,34 @@ class CharMapLog
 	}
 
 	/**
-	 * @param int     $account_id
+	 * @param int     $accountId
 	 * @param \Aqua\Ragnarok\Cart $cart
 	 * @return bool
 	 */
-	public function logCashShopPurchase($account_id, Cart $cart)
+	public function logCashShopPurchase($accountId, Cart $cart)
 	{
 		$sth = $this->connection()->prepare("
-		INSERT INTO {$this->table('ac_cash_shop_log')} (ip_address, account_id)
-		VALUES (?)
+		INSERT INTO {$this->table('ac_cash_shop_log')} (ip_address, account_id, total, items, `date`)
+		VALUES (?, ?, ?, ?, NOW())
 		");
 		$sth->bindValue(1, App::request()->ipString, \PDO::PARAM_STR);
-		$sth->bindValue(2, $account_id, \PDO::PARAM_INT);
+		$sth->bindValue(2, $accountId, \PDO::PARAM_INT);
+		$sth->bindValue(3, $cart->total, \PDO::PARAM_INT);
+		$sth->bindValue(4, $cart->itemCount, \PDO::PARAM_INT);
 		$sth->execute();
 		$id = $this->connection()->lastInsertId();
 		$sth = $this->connection()->prepare("
 		INSERT INTO {$this->table('ac_cash_shop_items')} (id, item_id, amount, item_price)
-		VALUES " . substr(str_repeat('(?, ?, ?, ?), ', count($cart->items)), 0, -2));
-		$i = 0;
-		foreach($cart->items as $item_id => $item) {
-			$sth->bindValue(++$i, $id, \PDO::PARAM_INT);
-			$sth->bindValue(++$i, $item_id, \PDO::PARAM_INT);
-			$sth->bindValue(++$i, $item['amount'], \PDO::PARAM_INT);
-			$sth->bindValue(++$i, $item['price'], \PDO::PARAM_INT);
+		VALUES (:id, :item, :amount, :price)
+		");
+		foreach($cart->items as $itemId => $item) {
+			$sth->bindValue(':id', $id, \PDO::PARAM_INT);
+			$sth->bindValue(':item', $itemId, \PDO::PARAM_INT);
+			$sth->bindValue(':amount', $item['amount'], \PDO::PARAM_INT);
+			$sth->bindValue(':price', $item['price'], \PDO::PARAM_INT);
+			$sth->execute();
+			$sth->closeCursor();
 		}
-		$sth->execute();
 		return true;
 	}
 

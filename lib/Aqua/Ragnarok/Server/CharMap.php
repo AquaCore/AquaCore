@@ -10,6 +10,7 @@ use Aqua\Ragnarok\Item;
 use Aqua\Ragnarok\ItemData;
 use Aqua\Ragnarok\Mob;
 use Aqua\Ragnarok\Server;
+use Aqua\Ragnarok\ShopCategory;
 use Aqua\SQL\Query;
 use Aqua\SQL\Search;
 use Aqua\User\Account as UserAccount;
@@ -64,6 +65,10 @@ class CharMap
 	/**
 	 * @var array
 	 */
+	public $woeCastles;
+	/**
+	 * @return \Aqua\Ragnarok\ShopCategory[]
+	 */
 	public $cashShopCategories;
 	/**
 	 * @var array
@@ -90,15 +95,10 @@ class CharMap
 	 */
 	public $homunculus = array();
 
-	const GET_ID   = 0;
-	const GET_NAME = 1;
-
 	const BASE_EXP  = 0;
 	const JOB_EXP   = 1;
 	const QUEST_EXP = 2;
 	const MVP_EXP   = 3;
-
-	const CACHE_AVG_PLAYERS_WEEKS = 2;
 
 	/**
 	 * @param string       $key
@@ -286,12 +286,12 @@ class CharMap
 		        ->columns(array(
 					'i.*',
 					'shop_price' => 'cs.`price`',
-					'shop_category' => 'cs.`category`',
+					'shop_category' => 'cs.`category_id`',
 					'cash_shop' => 'COUNT(cs.`item_id`)'
 				))
 		        ->whereOptions(array(
 					'shop_price' => 'cs.price',
-					'shop_category' => 'cs.category',
+					'shop_category' => 'cs.category_id',
 					'custom' => 'i.`custom`',
 				))
 		        ->havingOptions(array( 'cash_shop' => 'cash_shop' ))
@@ -355,6 +355,7 @@ class CharMap
 			'slots' => 'i.`slots`',
 			'job' => 'i.`equip_jobs`',
 			'upper' => 'i.`equip_upper`',
+			'gender' => 'i.`equip_genders`',
 			'location' => 'i.`equip_locations`',
 			'weapon_level' => 'i.`weapon_level`',
 			'custom' => 'i.`custom_item`',
@@ -370,6 +371,7 @@ class CharMap
 		$columns['script'] = 'i.`script`';
 		$columns['equip_script'] = 'i.`equip_script`';
 		$columns['unequip_script'] = 'i.`unequip_script`';
+		$columns['description'] = 'i.`description`';
 		$item_db2 = Query::search($this->connection())
 			->columns(array( 'custom' => '1' ) + $columns)
 			->whereOptions($where)
@@ -383,19 +385,19 @@ class CharMap
 			->columns(array(
 				'tmp_tbl.*',
 				'shop_price' => 'cs.price',
-				'shop_category' => 'cs.category',
+				'shop_category' => 'cs.category_id',
 				'shop_order' => 'cs.`order`',
 			))
 			->whereOptions(array(
 				'id' => 'cs.item_id',
 				'shop_price' => 'cs.price',
-				'shop_category' => 'cs.category',
+				'shop_category' => 'cs.category_id',
 				'shop_order' => 'cs.`order`',
 				'custom' => 'tmp_tbl.`custom`',
 			))
 			->from($this->table('ac_cash_shop'), 'cs')
 			->innerJoin($item_db, 'tmp_tbl.id = cs.item_id', 'tmp_tbl')
-			->groupBy('cs.id')
+			->groupBy('cs.item_id')
 			->parser(array( $this, 'parseItemDataSql' ));
 		$where = $columns = array();
 		switch($this->server->emulator) {
@@ -437,9 +439,27 @@ class CharMap
 		$item_db->whereOptions($where)->columns($columns);
 		$item_db2->where = &$search->where;
 		$item_db->where  = &$search->where;
-		$item_db2->order = &$search->order;
-		$item_db->order  = &$search->order;
 		return $search;
+	}
+
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public function shopCategorySearch()
+	{
+		$columns = array(
+			'id'          => 'sc.id',
+			'name'        => 'sc.`name`',
+			'slug'        => 'sc.slug',
+			'description' => 'sc.description',
+			'order'       => 'sc.order',
+		);
+		return Query::search($this->connection())
+			->columns($columns)
+			->whereOptions($columns)
+			->from($this->table('ac_cash_shop_categories'), 'sc')
+			->groupBy('sc.id')
+			->parser(array( $this, 'parseShopCategory' ));
 	}
 
 	/**
@@ -767,7 +787,7 @@ class CharMap
 		               ->columns(array(
 			                         'i.*',
 			                         'shop_price' => 'cs.`price`',
-			                         'shop_category' => 'cs.`category`',
+			                         'shop_category' => 'cs.`category_id`',
 			                         'cash_shop' => 'COUNT(cs.`item_id`)'
 		                         ))
 		               ->from($item_db, 'i')
@@ -818,6 +838,41 @@ class CharMap
 		}
 		$select->query();
 
+		return ($select->valid() ? $select->current() : null);
+	}
+
+	/**
+	 * @param int    $id
+	 * @param string $type
+	 * @return \Aqua\Ragnarok\ShopCategory
+	 */
+	public function shopCategory($id, $type = 'id')
+	{
+		if($type === 'id' && isset($this->cashShopCategories[$id])) {
+			return $this->cashShopCategories[$id];
+		}
+		$select = Query::select($this->connection())
+			->columns(array(
+				'id'          => 'id',
+				'name'        => '`name`',
+				'slug'        => 'slug',
+			    'order'       => '`order`',
+			    'description' => 'description'
+			))
+			->from($this->table('ac_cash_shop_categories'), 'c')
+			->limit(1)
+			->parser(array( $this, 'parseShopCategory' ));
+		switch($type) {
+			case 'id':
+				$select->where(array( 'id' => $id ));
+				break;
+			case 'slug':
+				$select->where(array( 'slug' => $id ));
+				break;
+			default:
+				return null;
+		}
+		$select->query();
 		return ($select->valid() ? $select->current() : null);
 	}
 
@@ -1210,15 +1265,6 @@ class CharMap
 	}
 
 	/**
-	 * @return array
-	 */
-	public function cashShopCategories()
-	{
-		$this->cashShopCategories !== null or $this->fetchCashShopCategories();
-		return $this->cashShopCategories;
-	}
-
-	/**
 	 * @param string $format
 	 * @return string
 	 */
@@ -1229,6 +1275,40 @@ class CharMap
 			$time->setTimeZone(new \DateTimeZone($timezone));
 		}
 		return gmstrftime($format, time() + $time->getOffset());
+	}
+
+	public function castles()
+	{
+		$this->woeCastles !== null or $this->fetchWoeSchedule();
+		return $this->woeCastles;
+	}
+
+	public function castleName($id)
+	{
+		$this->woeCastles !== null or $this->fetchWoeSchedule();
+		return (isset($this->woeCastles[$id]) ? $this->woeCastles[$id] : null);
+	}
+
+	public function addCastle($id, $name)
+	{
+		if($this->castleName($id) !== null) {
+			return false;
+		}
+		$sth = $this->connection()->prepare("
+		INSERT INTO {$this->table('ac_woe_castles')} ( id, `name` )
+		VALUES ( ?, ? )
+		");
+		$sth->bindValue(1, $id, \PDO::PARAM_INT);
+		$sth->bindValue(2, $name, \PDO::PARAM_STR);
+		$sth->execute();
+		if(!$sth->execute() || !$sth->rowCount()) {
+			return false;
+		}
+	}
+
+	public function removeCastle($id)
+	{
+
 	}
 
 	public function addWoeTime($name, array $castles, $end_day, $end_time, $start_day, $start_time)
@@ -1357,7 +1437,7 @@ class CharMap
 	}
 
 	/**
-	 * @param string   $type "online", "peak" or "average"
+	 * @param string   $type "online", "peak", "min", or "average"
 	 * @param int|null $start
 	 * @param int|null $end
 	 * @param string   $interval "time", "day", "week", "month" or "year"
@@ -1384,6 +1464,9 @@ class CharMap
 				break;
 			case 'peak':
 				$select->columns(array( 'count' => 'MAX(players)' ));
+				break;
+			case 'min':
+				$select->columns(array( 'count' => 'MIN(players)' ));
 				break;
 			case 'average':
 				$select->columns(array( 'count' => 'AVG(players)' ));
@@ -1448,11 +1531,6 @@ class CharMap
 			App::cache()->store($key, $stats, $cache);
 		}
 		return $stats;
-	}
-
-	public function playerPeak($start, $end = null, $cache = 600)
-	{
-
 	}
 
 	/**
@@ -1590,6 +1668,27 @@ class CharMap
 
 	/**
 	 * @param array $data
+	 * @return \Aqua\Ragnarok\ShopCategory
+	 */
+	public function parseShopCategory(array $data)
+	{
+		if(isset($this->cashShopCategories[$data['id']])) {
+			$cat = $this->cashShopCategories[$data['id']];
+		} else {
+			$cat = new ShopCategory;
+		}
+		$cat->charmap     = &$this;
+		$cat->id          = (int)$data['id'];
+		$cat->order       = (int)$data['order'];
+		$cat->name        = $data['name'];
+		$cat->slug        = $data['slug'];
+		$cat->description = $data['description'];
+
+		return $cat;
+	}
+
+	/**
+	 * @param array $data
 	 * @return \Aqua\Ragnarok\Mob
 	 */
 	public function parseMobSql(array $data)
@@ -1665,6 +1764,8 @@ class CharMap
 		$char->guildId      = (int)$data['guild_id'];
 		$char->guildName    = $data['guild_name'];
 		$char->homunculusId = (int)$data['homunculus_id'];
+		$char->elementalId  = (int)$data['elemental_id'];
+		$char->petId        = (int)$data['pet_id'];
 		$char->lastMap      = basename($data['last_map'], '.gat');
 		$char->lastX        = (int)$data['last_x'];
 		$char->lastY        = (int)$data['last_y'];
@@ -1677,7 +1778,20 @@ class CharMap
 		$char->childId      = (int)$data['child_id'];
 		$char->fame         = (int)$data['fame'];
 		$char->online       = (bool)$data['online'];
-		$char->options      = (int)$data['cp_options'];
+		$char->CPOptions    = (int)$data['cp_options'];
+		$char->option       = (int)$data['option'];
+		$char->strength     = (int)$data['str'];
+		$char->vitality     = (int)$data['vit'];
+		$char->dexterity    = (int)$data['dex'];
+		$char->intelligence = (int)$data['int'];
+		$char->luck         = (int)$data['luk'];
+		$char->hp           = (int)$data['hp'];
+		$char->sp           = (int)$data['sp'];
+		$char->maxHp        = (int)$data['max_hp'];
+		$char->maxSp        = (int)$data['max_sp'];
+		$char->statusPoints = (int)$data['status_point'];
+		$char->skillPoints  = (int)$data['skill_point'];
+		$char->deleteDate   = (int)$data['delete_date'];
 
 		return $char;
 	}
@@ -1689,7 +1803,7 @@ class CharMap
 	 * @access protected
 	 * @return \Aqua\Ragnarok\Guild
 	 */
-	protected function _parseGuildSql($data)
+	public function parseGuildSql($data)
 	{
 		if(isset($this->guilds[$data['id']])) {
 			$guild = $this->guilds[$data['id']];
@@ -1889,6 +2003,7 @@ class CharMap
 	{
 		if($rebuild || !($this->woeSchedule = App::cache()->fetch("ro.{$this->server->key}.{$this->key}.woe-schedule", false))) {
 			$this->woeSchedule = array();
+			$this->woeCastles  = array();
 			$sth = $this->connection()->query("
 			SELECT id,
 			       `name`,
@@ -1909,35 +2024,22 @@ class CharMap
 				$schedule['castles'] = array();
 				$this->woeSchedule[$data[0]] = $schedule;
 			}
-			$sth = App::connection()->query("SELECT schedule_id, castle FROM {$this->table('ac_woe_castles')}");
+			$sth = App::connection()->query("
+			SELECT id, `name`
+			FROM {$this->table('ac_woe_castles')}
+			ORDER BY id
+			");
+			while($data = $sth->fetch(\PDO::FETCH_NUM)) {
+				$this->woeCastles[$data[0]] = $data[1];
+			}
+			$sth = App::connection()->query("SELECT schedule_id, castle FROM {$this->table('ac_woe_schedule_castles')}");
 			while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 				if(!isset($this->woeSchedule[$data[0]])) continue;
 				$this->woeSchedule[$data[0]]['castles'][] = (int)$data[1];
 			}
-			App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
+			$this->updateCache('woe-schedule');
 		}
 		return $this->woeSchedule;
-	}
-
-	/**
-	 * @param bool $rebuild
-	 * @return array
-	 */
-	public function fetchCashShopCategories($rebuild = false)
-	{
-		if($rebuild || !($this->cashShopCategories = App::cache()->fetch("ro.{$this->server->key}.{$this->key}.shop-categories", false))) {
-			$sth = $this->connection()->query("
-			SELECT category, COUNT(1)
-			FROM {$this->table('ac_cash_shop')}
-			GROUP BY category
-			");
-			$this->cashShopCategories = array();
-			while($res = $sth->fetch(\PDO::FETCH_NUM)) {
-				$this->cashShopCategories[(string)$res[0]] = (int)$res[1];
-			}
-			App::cache()->store("ro.{$this->server->key}.{$this->key}.shop-categories", $this->cashShopCategories);
-		}
-		return $this->cashShopCategories;
 	}
 
 	/**
@@ -1969,7 +2071,7 @@ class CharMap
 			$this->cache['guild_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('guild')}")->fetch(\PDO::FETCH_COLUMN, 0);
 			$this->cache['homunculus_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('homunculus')}")->fetch(\PDO::FETCH_COLUMN, 0);
 			$this->cache['online'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('char')} WHERE online = 1")->fetch(\PDO::FETCH_COLUMN, 0);
-			App::cache()->store("ro.{$this->server->key}.{$this->key}.cache", $this->cache, 300);
+			$this->updateCache('cache');
 		}
 		if(!$name) {
 			return $this->cache;
@@ -1980,6 +2082,24 @@ class CharMap
 		}
 	}
 
+	public function updateCache($name)
+	{
+		switch($name) {
+			case 'settings':
+				App::cache()->store("ro.{$this->server->key}.{$this->key}.settings", $this->settings);
+				break;
+			case 'woe-schedule':
+				App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
+				break;
+			case 'shop-categories':
+				App::cache()->store("ro.{$this->server->key}.{$this->key}.shop-categories", $this->cashShopCategories);				break;
+				break;
+			case 'cache':
+				App::cache()->store("ro.{$this->server->key}.{$this->key}.cache", $this->cache, 300);
+				break;
+		}
+	}
+
 	/**
 	 * @param string|null $name
 	 */
@@ -1987,7 +2107,6 @@ class CharMap
 	{
 		if(!$name || $name === 'settings') App::cache()->delete("ro.{$this->server->key}.{$this->key}.settings");
 		if(!$name || $name === 'woe-schedule') App::cache()->delete("ro.{$this->server->key}.{$this->key}.woe-schedule");
-		if(!$name || $name === 'shop-categories') App::cache()->delete("ro.{$this->server->key}.{$this->key}.shop-categories");
 		if(!$name || $name === 'server-status') App::cache()->delete("ro.{$this->server->key}.{$this->key}.shop-categories");
 		if(!$name || $name === 'cache') App::cache()->delete("ro.{$this->server->key}.{$this->key}.cache");
 	}

@@ -217,7 +217,7 @@ extends Page
 		if($this->request->getInt('edit_char')) {
 			$this->response->status(302)->redirect(App::request()->uri->url());
 			try {
-				$opt = $this->char->options;
+				$opt = $this->char->CPOptions;
 				$options = array();
 				if($this->request->getInt('hide_online')) {
 					$opt |= Character::OPT_DISABLE_WHO_IS_ONLINE;
@@ -234,7 +234,7 @@ extends Page
 				} else {
 					$opt &= ~Character::OPT_DISABLE_ZENY_LADDER;
 				}
-				if($opt !== $this->char->options) {
+				if($opt !== $this->char->CPOptions) {
 					$options['cp_option'] = $opt;
 				}
 				if($this->request->getInt('reset_look')) {

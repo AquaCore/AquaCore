@@ -3,21 +3,22 @@ use Aqua\Core\App;
 /**
  * @var $items      \Aqua\Ragnarok\ItemData[]
  * @var $item_count int
- * @var $categories array
+ * @var $categories \Aqua\Ragnarok\ShopCategory[]
  * @var $paginator  \Aqua\UI\Pagination
  * @var $page       \Page\Main\Ragnarok\Server\Item
  */
 $i = 0;
-$base_cart_url = $page->server->charMapUri($page->charmap->key())->url(array(
+$base_cart_url = $page->charmap->url(array(
 	'path' => array( 'item' ),
 	'action' => 'cart',
 	'query' => array(
 		'x' => 'add',
 		'a' => 1,
+		'r' => base64_encode(App::request()->uri->url()),
 		'id' => ''
 	)
 ));
-$base_item_url = $page->server->charMapUri($page->charmap->key())->url(array(
+$base_item_url = $page->charmap->url(array(
 	'path' => array( 'item' ),
 	'action' => 'view',
 	'arguments' => array( '' )
@@ -28,21 +29,21 @@ $base_item_url = $page->server->charMapUri($page->charmap->key())->url(array(
 <?php endif; ?>
 <div class="ac-cash-shop-categories">
 <?php foreach($categories as $id => $category) : ?>
-<?php if((int)$page->request->uri->arg(0, null) === $id) : ?>
-		<a href="<?php echo $page->server->charMapUri($page->charmap->key())->url(array(
+<?php if(strcasecmp($page->request->uri->arg(0, null), $category->slug) === 0) : ?>
+		<a href="<?php echo $page->charmap->url(array(
 			'path'   => array( 'item' ),
 			'action' => 'shop'
 		))?>">
-			<button class="active"><?php echo $category['title']?></button>
+			<button class="active"><?php echo htmlspecialchars($category->name) ?></button>
 		</a>
 <?php else : ?>
-		<a href="<?php echo $category['url']?>">
-			<button><?php echo $category['title']?></button>
+		<a href="<?php echo $category->url()?>">
+			<button><?php echo htmlspecialchars($category->name)?></button>
 		</a>
 <?php endif; ?>
 <?php endforeach; ?>
 </div>
-<?php if(!$item_count) : ?>
+<?php if(empty($items)) : ?>
 	<div style="text-align: center"><?php echo __('ragnarok', '0-items')?></div>
 	<?php return; ?>
 <?php else : ?>
@@ -65,8 +66,11 @@ $base_item_url = $page->server->charMapUri($page->charmap->key())->url(array(
 					</thead>
 					<tbody>
 						<tr>
-							<td>Category</td>
-							<td><a href="<?php echo $categories[$items[$i]->shopCategoryId]['url']?>"><?php echo $items[$i]->shopCategory?></a></td>
+							<td colspan="2" style="font-size: .85em">
+								<a href="<?php echo $page->charmap->shopCategory($items[$i]->shopCategoryId)->url()?>">
+									<?php echo htmlspecialchars($page->charmap->shopCategory($items[$i]->shopCategoryId)->name)?>
+								</a>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="2" class="ac-cash-shop-item-image">

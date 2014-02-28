@@ -20,13 +20,13 @@ use Aqua\Ragnarok\Character;
 			</tr>
 			<tr>
 				<td style="width: 25%"><label for="hide_online"><?php echo __('ragnarok', 'hide-whos-online')?></label>:</td>
-				<td style="width: 25%"><input type="checkbox" name="hide_online" value="1" id="hide_online" <?php echo $page->char->options & Character::OPT_DISABLE_WHO_IS_ONLINE ? 'checked="checked"' : ''?>></td>
+				<td style="width: 25%"><input type="checkbox" name="hide_online" value="1" id="hide_online" <?php echo $page->char->CPOptions & Character::OPT_DISABLE_WHO_IS_ONLINE ? 'checked="checked"' : ''?>></td>
 				<td style="width: 25%"><label for="hide_map"><?php echo __('ragnarok', 'hide-map-whos-online')?></label>:</td>
-				<td style="width: 25%"><input type="checkbox" name="hide_map" value="1" id="hide_map" <?php echo $page->char->options & Character::OPT_DISABLE_MAP_WHO_IS_ONLINE ? 'checked="checked"' : ''?>></td>
+				<td style="width: 25%"><input type="checkbox" name="hide_map" value="1" id="hide_map" <?php echo $page->char->CPOptions & Character::OPT_DISABLE_MAP_WHO_IS_ONLINE ? 'checked="checked"' : ''?>></td>
 			</tr>
 			<tr>
 				<td><label for="hide_zeny"><?php echo __('ragnarok', 'hide-zeny')?></label>:</td>
-				<td><input type="checkbox" name="hide_zeny" value="1" id="hide_zeny" <?php echo $page->char->options & Character::OPT_DISABLE_ZENY_LADDER ? 'checked="checked"' : ''?>></td>
+				<td><input type="checkbox" name="hide_zeny" value="1" id="hide_zeny" <?php echo $page->char->CPOptions & Character::OPT_DISABLE_ZENY_LADDER ? 'checked="checked"' : ''?>></td>
 				<td></td>
 				<td></td>
 			</tr>

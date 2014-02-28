@@ -437,7 +437,7 @@ class L10n
 		       _key,
 		       _word
 		FROM `$tbl`
-		ORDER BY _language_id, _namespace, _key DESC
+		ORDER BY _language_id, _namespace, _key
 		");
 		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 			if(!isset($languages[$data[0]])) continue;
@@ -448,6 +448,7 @@ class L10n
 			$dir = \Aqua\ROOT . self::CACHE_DIR . "/{$lang->id}";
 			mkdir($dir, \Aqua\PRIVATE_DIRECTORY_PERMISSION);
 			foreach($lang->dictionary as $namespace => $words) {
+				krsort($words, SORT_NUMERIC);
 				file_put_contents("$dir/{$namespace}.cache", serialize($words));
 				chmod("$dir/{$namespace}.cache", \Aqua\PRIVATE_FILE_PERMISSION);
 			}

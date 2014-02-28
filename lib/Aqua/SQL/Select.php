@@ -84,6 +84,10 @@ implements \Iterator, \Countable
 	/**
 	 * @var bool
 	 */
+	public $forUpdate = false;
+	/**
+	 * @var bool
+	 */
 	public $bufferResult = null;
 	/**
 	 * @var bool
@@ -385,6 +389,17 @@ implements \Iterator, \Countable
 	}
 
 	/**
+	 * @param bool $val
+	 * @return static
+	 */
+	public function forUpdate($val = true)
+	{
+		$this->forUpdate = (bool)$val;
+
+		return $this;
+	}
+
+	/**
 	 * @param string|null $val
 	 * @return static
 	 */
@@ -514,6 +529,9 @@ implements \Iterator, \Countable
 		}
 		if($groupBy = $this->parseGroupBy()) {
 			$query .= "\r\n$groupBy";
+		}
+		if($this->forUpdate) {
+			$query .= "\r\nFOR UPDATE";
 		}
 		if($having = $this->parseSearch($this->having, $values, 'having')) {
 			$query .= "\r\nHAVING $having";

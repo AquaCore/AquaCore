@@ -20,11 +20,13 @@
     <word namespace="ragnarok" key="buy-price">Buying Price</word>
     <word namespace="ragnarok" key="card">Card</word>
     <word namespace="ragnarok" key="cart">Cart</word>
+    <word namespace="ragnarok" key="cart-name">Cart - %s</word>
     <word namespace="ragnarok" key="item-forger">%s's</word>
-    <word namespace="ragnarok" key="cart-add-m">%d %s added to cart.</word>
+    <word namespace="ragnarok" key="cart-add-m">%d %s added to your cart.</word>
     <word namespace="ragnarok" key="cart-clear">All items have been removed from your cart.</word>
-    <word namespace="ragnarok" key="cart-remove">%s removed from cart.</word>
-    <word namespace="ragnarok" key="cart-remove-m">%d %s removed from cart.</word>
+    <word namespace="ragnarok" key="cart-remove">%s removed from your cart.</word>
+    <word namespace="ragnarok" key="cart-remove-m">%d %s removed from your cart.</word>
+    <word namespace="ragnarok" key="cart-empty">Your cart is empty.</word>
     <word namespace="ragnarok" key="cash-shop">Cash Shop</word>
     <word namespace="ragnarok" key="castles">Castles</word>
     <word namespace="ragnarok" key="cells">%d cells</word>

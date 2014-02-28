@@ -3,22 +3,16 @@ namespace Aqua\Ragnarok;
 
 use Aqua\Core\L10n;
 
-/**
- * Class Mob
- *
- * @package Aqua\Ragnarok
- */
 class Mob
 {
-	/**
-	 * @var
-	 */
-	public $id;
-
 	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
+	/**
+	 * @var
+	 */
+	public $id;
 	/**
 	 * @var string
 	 */
@@ -205,10 +199,5 @@ class Mob
 	public function drops($precision = 3)
 	{
 		return $this->charmap->mobDrops($this->id, $precision);
-	}
-
-	public function skills()
-	{
-
 	}
 }

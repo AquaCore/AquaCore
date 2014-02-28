@@ -14,7 +14,6 @@ return array(
 	'ragnarok'           => array(
 		'pincode_min_len'      => 4,
 		'pincode_max_len'      => 4,
-		'cash_shop_min_amount' => 1,
 		'cash_shop_max_amount' => 99,
 		'acc_username_url'     => false,
 		'char_name_url'        => false,

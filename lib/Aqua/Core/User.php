@@ -7,6 +7,8 @@ use Aqua\Http\Request;
 use Aqua\Http\Response;
 use Aqua\Log\ErrorLog;
 use Aqua\Log\LoginLog;
+use Aqua\Ragnarok\Cart;
+use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Session\Session;
 use Aqua\User\Account;
 use Aqua\User\PersistentLogin;
@@ -187,6 +189,20 @@ implements SubjectInterface
 		$this->session->delete($key);
 
 		return $token;
+	}
+
+	/**
+	 * @param \Aqua\Ragnarok\Server\CharMap $charmap
+	 * @return \Aqua\Ragnarok\Cart
+	 */
+	public function cart(CharMap $charmap)
+	{
+		$key = "ragnarok-cart::{$charmap->server->key}.{$charmap->key}";
+		if(!($cart = $this->session->get($key)) || !($cart instanceof Cart)) {
+			$cart = new Cart($charmap);
+			$this->session->set($key, $cart);
+		}
+		return $cart;
 	}
 
 	/**

@@ -6,143 +6,124 @@ use Aqua\Core\L10n;
 class ItemData
 {
 	/**
-	 * @var int
-	 */
-	public $id;
-
-	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
-
+	/**
+	 * @var int
+	 */
+	public $id;
 	/**
 	 * @var string
 	 */
 	public $enName = '';
-
 	/**
 	 * @var string
 	 */
 	public $jpName = '';
-
 	/**
 	 * @var int
 	 */
 	public $type = 0;
-
 	/**
 	 * @var int
 	 */
 	public $buyingPrice;
-
 	/**
 	 * @var int
 	 */
 	public $sellingPrice;
-
 	/**
 	 * @var float
 	 */
 	public $weight = 0;
-
 	/**
 	 * @var int
 	 */
 	public $attack = 0;
-
 	/**
 	 * @var int
 	 */
 	public $mattack = 0;
-
 	/**
 	 * @var int
 	 */
 	public $defence = 0;
-
 	/**
 	 * @var int
 	 */
 	public $range = 0;
-
 	/**
 	 * @var int
 	 */
 	public $slots = 0;
-
 	/**
 	 * @var int
 	 */
 	public $equipJob;
-
 	/**
 	 * @var int
 	 */
 	public $equipUpper;
-
 	/**
 	 * @var int
 	 */
 	public $equipGender;
-
 	/**
 	 * @var int
 	 */
 	public $equipLocation;
-
 	/**
 	 * @var int
 	 */
 	public $equipLevelMin;
-
 	/**
 	 * @var int
 	 */
 	public $equipLevelMax;
-
 	/**
 	 * @var int
 	 */
 	public $weaponLevel;
-
 	/**
 	 * @var bool
 	 */
 	public $refineable;
-
 	/**
 	 * @var int
 	 */
 	public $look;
-
 	/**
 	 * @var string
 	 */
 	public $description;
-
 	/**
 	 * @var string
 	 */
 	public $scriptUse;
-
 	/**
 	 * @var string
 	 */
 	public $scriptEquip;
-
 	/**
 	 * @var string
 	 */
 	public $scriptUnequip;
-
 	/**
 	 * @var int
 	 */
-	public $shopPrice = 0;
-
-	public $shopCategory = '';
+	public $shopPrice;
+	/**
+	 * @var int
+	 */
 	public $shopCategoryId;
+	/**
+	 * @var bool
+	 */
 	public $inCashShop = false;
+	/**
+	 * @var bool
+	 */
 	public $custom = false;
 	public $url;
 

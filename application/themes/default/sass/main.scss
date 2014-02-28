@@ -350,41 +350,6 @@ iframe[src="about:blank"]{ display: none !important; }
 		}
 	}
 }
-.header-content,
-.footer-content {
-	position: relative;
-	width: 900px;
-	margin: 0 auto;
-	color: white;
-	@include text-shadow(-1px -1px 0 $mid-blue-1);
-	a {
-		color: white;
-	}
-}
-.ac-navigation-menu {
-	display: block;
-	height: 1em;
-	margin: 0 0 10px 0;
-	padding: 0;
-	list-style: none;
-	li {
-		float: left;
-		padding: 0 7px;
-		line-height: 1em;
-		border-left: 1px solid white;
-		border-right: 1px solid #aeb3be;
-		&:first-child { border-left: none }
-		&:last-child { border-right: none }
-		a {
-			color: #aeb3be;
-			font-weight: bold;
-			font-size: 0.8em;
-			&:hover {
-				color: #1391d9;
-			}
-		}
-	}
-}
 .ui-slider {
 	position: relative;
 	height: 7px;
@@ -502,6 +467,41 @@ iframe[src="about:blank"]{ display: none !important; }
 }
 .ui-helper-clearfix {
 	min-height: 0; /* support: IE7 */
+}
+.header-content,
+.footer-content {
+	position: relative;
+	width: 900px;
+	margin: 0 auto;
+	color: white;
+	@include text-shadow(-1px -1px 0 $mid-blue-1);
+	a {
+		color: white;
+	}
+}
+.ac-navigation-menu {
+	display: block;
+	height: 1em;
+	margin: 0 0 10px 0;
+	padding: 0;
+	list-style: none;
+	li {
+		float: left;
+		padding: 0 7px;
+		line-height: 1em;
+		border-left: 1px solid white;
+		border-right: 1px solid #aeb3be;
+		&:first-child { border-left: none }
+		&:last-child { border-right: none }
+		a {
+			color: #aeb3be;
+			font-weight: bold;
+			font-size: 0.8em;
+			&:hover {
+				color: #1391d9;
+			}
+		}
+	}
 }
 .ac-renewal-exp-info {
 	margin: 0 20px 10px;
@@ -977,10 +977,10 @@ iframe[src="about:blank"]{ display: none !important; }
 }
 .ac-ro-cardbmp {
 	padding: 0 !important;
-}
-.ac-ro-cardbmp, .ac-ro-cardbmp img {
-	width: 190px;
-	height: 254px;
+	.ac-ro-cardbmp img {
+		width: 190px;
+		height: 254px;
+	}
 }
 .ac-edit-options {
 	float: right;
@@ -991,18 +991,17 @@ iframe[src="about:blank"]{ display: none !important; }
 	font-size: 14px !important;
 }
 .ac-char-slot { width: 0; }
-
 .ac-char-head, .ac-char-guild-emblem, .ac-char-status {
 	text-align: center;
 }
+.ac-char-head { width: 75px; }
 .ac-char-status {
 	width: 25px;
 	background-position: center center !important;
 	background-repeat: no-repeat !important;
+	&.ac-char-online { background-image: url('../images/char-online.png') !important; }
+	&.ac-char-offline { background-image: url('../images/char-offline.png') !important; }
 }
-.ac-char-status.ac-char-online { background-image: url('../images/char-online.png') !important; }
-.ac-char-status.ac-char-offline { background-image: url('../images/char-offline.png') !important; }
-.ac-char-head { width: 75px; }
 .ac-char-guild-emblem { width: 40px; }
 .ac-char-blvl, .ac-char-jlvl { width: 80px; }
 .ac-card-slot {
@@ -1013,14 +1012,14 @@ iframe[src="about:blank"]{ display: none !important; }
 	background-position: center center !important;
 	background-repeat: no-repeat !important;
 	background-image: url('../../../../assets/images/icons/card.png') !important;
+	a {
+		display: block;
+		height: 1.3em;
+		width: 100%;
+	}
 }
 .ac-item-amount {
 	width: 100px;
-}
-.ac-card-slot a {
-	display: block;
-	height: 1.3em;
-	width: 100%;
 }
 .ac-slot-disabled {
 	background-image: url('../../../../assets/images/icons/disabled_card.png') !important;
@@ -1039,7 +1038,6 @@ iframe[src="about:blank"]{ display: none !important; }
 .ac-weapon-lvl, .ac-equip-upper, .ac-mob-mode {
 	font-size: 0.8em;
 }
-
 .ac-equip-upper, .ac-mob-mode {
 	margin: 0;
 	padding: 0;
@@ -1061,4 +1059,217 @@ iframe[src="about:blank"]{ display: none !important; }
 		white-space: -o-pre-wrap;
 		word-wrap: break-word;
 	}
+}
+.ac-cart {
+	float: right;
+	margin-right: 60px;
+	position: relative;
+	.ac-cart-link {
+		position: relative;
+		display: inline-block;
+		float:left;
+		width: 40px;
+	}
+	.ac-cart-count {
+		top: 25px;
+		right: -5px;
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		font-size: .75em;
+		width: 24px;
+		height: 24px;
+		line-height: 23px;
+		text-align: center;
+		border-top: 1px solid white;
+		border-bottom: 1px solid #959aa3;
+		color: #959aa3;
+		@include text-shadow(1px 1px 0 white);
+		@include border-radius(12px);
+		@include background(linear-gradient(#f7f9fc 0%, #d7dee8 100%));
+	}
+	.ac-cart-icon {
+		height: 50px;
+		width: 32px;
+		background: transparent url('../images/cart.png') center left no-repeat;
+		float: left;
+	}
+	.ac-cart-items {
+		position: absolute;
+		width: 150px;
+		top: 50px;
+		z-index: 1;
+		border-radius: 5px;
+		border: 1px solid #bbc1cc;
+		border-spacing: 0;
+		-webkit-box-shadow: #bbc1cc 0 1px 3px 0;
+		-moz-box-shadow: #bbc1cc 0 1px 3px 0;
+		box-shadow: #bbc1cc 0 1px 3px 0;
+
+	}
+	.ac-cart-items, .ac-cart-header, .ac-cart-body, .ac-cart-footer {
+		width: 180px;
+		right: -60px;
+	}
+	.ac-cart-body {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+		max-height: 200px;
+		overflow-y: auto;
+		a {
+			color: $mid-blue-1;
+		}
+		li {
+			@include text-shadow(1px 1px 0 white);
+			color: #959aa3;
+			line-height: 28px;
+			background: #e9eef4;
+			border-top: 1px solid white;
+			border-bottom: 1px solid #d9e1e9;
+			&:nth-child(odd) {
+				background: #f4f6f9;
+			}
+			img {
+				padding: 2px 7px;
+				float: left;
+			}
+			.ac-cart-item-name {
+				display: block;
+				float: left;
+				width: 90px;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+			.ac-cart-remove-item {
+				float: right;
+				display: block;
+				height: 28px;
+				width: 20px;
+				background: transparent url('../../../../assets/images/check-no.png') center left no-repeat;
+			}
+		}
+	}
+	.ac-cart-header {
+		text-align: center;
+		padding: 5px 0px;
+		height: 1em;
+		border-top: 1px solid white;
+		border-bottom: 1px solid #959aa3;
+		color: #959aa3;
+		font-weight: normal;
+		font-size: 0.9375em;
+		@include text-shadow(1px 1px 0 white);
+		@include border-radius(5px 5px 0 0);
+		@include background(linear-gradient(#f7f9fc 0%, #d7dee8 100%));
+	}
+	.ac-cart-header-tip {
+		top: -14px;
+		left: 50%;
+		margin-left: -15px;
+		position: absolute;
+		height: 14px;
+		width: 30px;
+		background: transparent url('../images/cart-tip.png') center center no-repeat;
+	}
+	.ac-cart-footer {
+		border-top: 1px solid #b7fcff;
+		border-bottom: 1px solid #4188b3;
+		font-size: .85em;
+		@include border-radius(0 0 5px 5px);
+		@include background(linear-gradient(#68e2f2 0%, #52aae0 100%));
+		a {
+			padding: 5px 0px;
+			color: #f4f7f9;
+			width: 100%;
+			height: 100%;
+			display: block;
+			text-align: center;
+			@include text-shadow(-1px -1px 0 #4188b3);
+		}
+	}
+}
+.ac-cash-shop-table {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.ac-cash-shop-table .ac-cash-shop-item {
+	width: 25%;
+	padding: 5px;
+}
+.ac-cash-shop-table .ac-table {
+	margin: 0;
+	td.ac-cash-shop-item-name {
+		text-align: justify;
+		vertical-align: middle;
+		img {
+			position: absolute;
+		}
+		a {
+			display: block;
+			line-height: 24px;
+			margin-left: 30px;
+			width: 135px;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+	}
+	td.ac-cash-shop-item-image {
+		padding: 20px 0;
+		vertical-align: middle;
+		text-align: center;
+		background-color: #fff;
+	}
+}
+.ac-cash-shop-item-button {
+	padding: 0 !important;
+	button {
+		display: block;
+		padding: 5px 0;
+		width: 100%;
+		border-top-left-radius: 0 !important;
+		border-top-right-radius: 0 !important;
+		border-bottom-left-radius: 5px !important;
+		border-bottom-right-radius: 5px !important;
+		margin: 0 !important;
+		border: 0 !important;
+	}
+}
+.ac-cash-shop-categories {
+	text-align: center;
+	button {
+		margin: 0 1px 10px;
+		&.active {
+			border: 1px solid #aeb3be;
+			color: #aeb3be;
+			@include text-shadow(1px 1px 0 white);
+			@include background(linear-gradient(#f7f9fc 0%, #ccd3dd 100%));
+			@include box-shadow(#f3faff 1px 1px 0 0 inset, #f3faff 0 0 4px 0 inset)
+		}
+	}
+}
+.ac-user-credits {
+	position: absolute;
+	top: 25px;
+	right: 10px;
+	padding: 3px 5px;
+	font-weight: bold;
+	border: 1px solid #4188b3;
+	font-size: .85em;
+	text-align: center;
+	color: #f4f7f9;
+	@include text-shadow(-1px -1px 0 #4188b3);
+	@include box-shadow(#f3faff 1px 1px 0 0 inset);
+	@include border-radius(5px);
+	@include background(linear-gradient(#68e2f2 0%, #52aae0 100%));
+}
+.ac-update-cart-submit {
+	font-size: .85em;
+}
+.ac-update-cart-submit,
+.ac-update-cart-num {
+	float: left;
+	margin-left: 10px;
 }
