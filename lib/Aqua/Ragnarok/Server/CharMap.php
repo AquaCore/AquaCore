@@ -187,7 +187,7 @@ class CharMap
 			'zeny'              => 'c.zeny',
 			'party_id'          => 'c.party_id',
 			'guild_id'          => 'c.guild_id',
-			'guild_name'        => 'g.guild_name',
+			'guild_name'        => 'g.name',
 			'online'            => 'c.online',
 			'last_map'          => 'c.last_map',
 			'last_x'            => 'c.last_x',
@@ -238,7 +238,7 @@ class CharMap
 			    'guild_emblem_data'  => 'g.emblem_data',
 			) + $columns)
 			->from($this->table('char'), 'c')
-			->leftJoin($this->table('guild'), 'g')
+			->leftJoin($this->table('guild'), 'g.guild_id = c.guild_id', 'g')
 			->groupBy('c.char_id')
 			->parser(array( $this, 'parseCharSql' ));
 	}
@@ -257,6 +257,7 @@ class CharMap
 			'slots' => 'i.`slots`',
 			'job' => 'i.`equip_jobs`',
 			'upper' => 'i.`equip_upper`',
+			'gender' => 'i.`equip_genders`',
 			'location' => 'i.`equip_locations`',
 			'weapon_level' => 'i.`weapon_level`',
 			'custom' => 'i.`custom_item`',
@@ -271,6 +272,7 @@ class CharMap
 		$columns['script'] = 'i.`script`';
 		$columns['equip_script'] = 'i.`equip_script`';
 		$columns['unequip_script'] = 'i.`unequip_script`';
+		$columns['description'] = 'i.`description`';
 		$item_db2 = Query::search($this->connection())
 		            ->columns(array( 'custom' => '1' ) + $columns)
 		            ->whereOptions($where)
@@ -301,7 +303,7 @@ class CharMap
 		switch($this->server->emulator) {
 			case Server::EMULATOR_HERCULES:
 				$where = $columns = array(
-					'attack' => 'i.`attack`',
+					'attack' => 'i.`atk`',
 					'mattack' => 'i.`matk`',
 					'equip_level_max' => 'i.`equip_level_max`',
 					'equip_level_min' => 'i.`equip_level_min`'
@@ -315,7 +317,7 @@ class CharMap
 						'equip_level_max' => 'i.`equip_level`',
 					);
 					$columns = array(
-							'attack:matk' => 'i.`attack:matk`',
+							'atk:matk' => 'i.`attack:matk`',
 							'equip_level_max' => 'i.`equip_level`',
 							'equip_level_min' => '0'
 						);
@@ -337,8 +339,6 @@ class CharMap
 		$item_db->whereOptions($where)->columns($columns);
 		$item_db2->where = &$search->where;
 		$item_db->where  = &$search->where;
-		$item_db2->order = &$search->order;
-		$item_db->order  = &$search->order;
 		return $search;
 	}
 
@@ -401,7 +401,7 @@ class CharMap
 		switch($this->server->emulator) {
 			case Server::EMULATOR_HERCULES:
 				$where = $columns = array(
-					'attack' => 'i.`attack`',
+					'attack' => 'i.`atk`',
 					'mattack' => 'i.`matk`',
 					'equip_level_max' => 'i.`equip_level_max`',
 					'equip_level_min' => 'i.`equip_level_min`'
@@ -729,7 +729,7 @@ class CharMap
 	{
 		if(!$id) {
 			return null;
-		} else if(isset($this->itemDb[$id])) {
+		} else if($type === 'id' && isset($this->itemDb[$id])) {
 			return $this->itemDb[$id];
 		}
 		$columns = array(
@@ -741,6 +741,7 @@ class CharMap
 			'slots' => 'i.`slots`',
 			'job' => 'i.`equip_jobs`',
 			'upper' => 'i.`equip_upper`',
+			'gender' => 'i.`equip_genders`',
 			'location' => 'i.`equip_locations`',
 			'weapon_level' => 'i.`weapon_level`',
 			'custom' => 'i.`custom_item`',
@@ -753,6 +754,7 @@ class CharMap
 			'script' => 'i.`script`',
 			'equip_script' => 'i.`equip_script`',
 			'unequip_script' => 'i.`unequip_script`',
+			'description' => 'i.`description`',
 		);
 		$item_db2 = Query::select($this->connection())
 		                 ->columns(array( 'custom' => '1' ) + $columns)
@@ -777,7 +779,7 @@ class CharMap
 		switch($this->server->emulator) {
 			case Server::EMULATOR_HERCULES:
 				$columns = array(
-					'attack' => 'i.`attack`',
+					'attack' => 'i.`atk`',
 					'mattack' => 'i.`matk`',
 					'equip_level_max' => 'i.`equip_level_max`',
 					'equip_level_min' => 'i.`equip_level_min`'
@@ -1355,6 +1357,15 @@ class CharMap
 	}
 
 	/**
+	 * @param int      $start
+	 * @param int|null $end
+	 * @param int|null $cache
+	 */
+	public function onlineStats($start, $end = null, $cache = null)
+	{
+	}
+
+	/**
 	 * @param array $options
 	 * @return string
 	 */
@@ -1408,10 +1419,10 @@ class CharMap
 		$item->defence       = (int)$data['defence'];
 		$item->range         = (int)$data['range'];
 		$item->slots         = (int)$data['slots'];
-		$item->equipJob      = (int)$data['equip_job'];
-		$item->equipUpper    = (int)$data['equip_upper'];
-		$item->equipGender   = (int)$data['equip_gender'];
-		$item->equipLocation = (int)$data['equip_location'];
+		$item->equipJob      = (int)$data['job'];
+		$item->equipUpper    = (int)$data['upper'];
+		$item->equipGender   = (int)$data['gender'];
+		$item->equipLocation = (int)$data['location'];
 		$item->equipLevelMin = (int)$data['equip_level_min'];
 		$item->equipLevelMax = (int)$data['equip_level_max'];
 		$item->weaponLevel   = (int)$data['weapon_level'];
@@ -1540,7 +1551,7 @@ class CharMap
 	 * @access protected
 	 * @return \Aqua\Ragnarok\Character
 	 */
-	protected function _parseCharSql($data)
+	public function parseCharSql($data)
 	{
 		if(isset($this->characters[$data['id']])) {
 			$char = $this->characters[$data['id']];
@@ -1552,32 +1563,28 @@ class CharMap
 		$char->accountId    = (int)$data['account_id'];
 		$char->slot         = (int)$data['slot'];
 		$char->name         = $data['name'];
-		$char->class        = (int)$data['job'];
+		$char->class        = (int)$data['class'];
 		$char->baseLevel    = (int)$data['base_level'];
 		$char->jobLevel     = (int)$data['job_level'];
-		$char->baseExp      = (int)$data['base_exp'];
-		$char->jobExp       = (int)$data['job_exp'];
+		$char->baseExp      = (int)$data['base_experience'];
+		$char->jobExp       = (int)$data['job_experience'];
 		$char->zeny         = (int)$data['zeny'];
 		$char->karma        = (int)$data['karma'];
 		$char->manner       = (int)$data['manner'];
 		$char->partyId      = (int)$data['party_id'];
 		$char->guildId      = (int)$data['guild_id'];
-		$char->homunculusId = (int)$data['homunculus'];
-		$char->hair         = (int)$data['hairstyle'];
-		$char->hairColor    = (int)$data['hair_color'];
-		$char->clothesColor = (int)$data['clothes_color'];
-		$char->headTop      = (int)$data['head_top'];
-		$char->headMid      = (int)$data['head_mid'];
-		$char->headBottom   = (int)$data['head_bottom'];
+		$char->guildName    = $data['guild_name'];
+		$char->homunculusId = (int)$data['homunculus_id'];
 		$char->lastMap      = basename($data['last_map'], '.gat');
 		$char->lastX        = (int)$data['last_x'];
 		$char->lastY        = (int)$data['last_y'];
-		$char->partnerId    = (int)$data['partner'];
-		$char->fatherId     = (int)$data['father'];
-		$char->motherId     = (int)$data['mother'];
-		$char->childId      = (int)$data['child'];
-		$char->guildId      = (int)$data['guild_id'];
-		$char->guildName    = $data['guild_name'];
+		$char->saveMap      = basename($data['save_map'], '.gat');
+		$char->saveX        = (int)$data['save_x'];
+		$char->saveY        = (int)$data['save_y'];
+		$char->partnerId    = (int)$data['partner_id'];
+		$char->fatherId     = (int)$data['father_id'];
+		$char->motherId     = (int)$data['mother_id'];
+		$char->childId      = (int)$data['child_id'];
 		$char->fame         = (int)$data['fame'];
 		$char->online       = (bool)$data['online'];
 		$char->options      = (int)$data['cp_options'];
@@ -1836,7 +1843,10 @@ class CharMap
 			");
 			$this->cashShopCategories = array();
 			while($res = $sth->fetch(\PDO::FETCH_NUM)) {
-				$this->cashShopCategories[(string)$res[0]] = (int)$res[1];
+				$this->cashShopCategories[(string)$res[0]] = array(
+					'name'  =>
+					'count' => (int)$res[1]
+				);
 			}
 			App::cache()->store("ro.{$this->server->key}.{$this->key}.shop-categories", $this->cashShopCategories);
 		}
@@ -1896,7 +1906,7 @@ class CharMap
 			    ->setColumnType(array( 'players' => 'integer', 'date' => 'integer' ))
 				->query();
 			foreach($select as $row) {
-				$this->cache[$row['key']] = $row['players'];
+				$this->cache[$row['key']] = array( 'count' => $row['players'], 'date' => $row['date'] );
 			}
 			$this->cache['char_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('char')}")->fetch(\PDO::FETCH_COLUMN, 0);
 			$this->cache['party_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('party')}")->fetch(\PDO::FETCH_COLUMN, 0);

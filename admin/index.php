@@ -22,17 +22,40 @@ try {
 		$role = App::user()->role();
 		App::autoloader('Page')->addDirectory(__DIR__ . '/application/pages');
 		Server::init();
-		if($role->hasPermission('edit-server-settings')) {
-			$ragnarok_submenu = array(array(
+		$viewRagnarokMenu = $role->hasPermission('edit-server-settings');
+		if($viewRagnarokMenu) {
+			$ragnarokSubmenu = array(array(
 				'title' => __('admin-menu', 'ragnarok-add-server'),
 				'url'   => ac_build_url(array( 'path' => array( 'ragnarok' ) ))
 			));
 		}
 		foreach(Server::$servers as $server) {
-			$ragnarok_submenu[] = array(
-				'title' => $server->name,
-				'url'   => ac_build_url(array( 'path' => array( 'ro', $server->key ) ))
-			);
+			$serverSubmenu = array();
+			if($server->charmapCount) {
+				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'ro', $server->key ) ));
+				$charmaps = array();
+				foreach($server->charmap as $charmap) {
+					$charmaps[] = array(
+						'title' => htmlspecialchars($charmap->name),
+						'url' => ac_build_url(array( 'path' => array( 'ro', $server->key, 's', $charmap->key ) )),
+						'submenu' => array(array(
+							'title' => 'x',
+							'url' => ac_build_url(array( 'path' => array( 'ro', $server->key, 's', $charmap->key ) ))
+						))
+					);
+				}
+				if($server->charmapCount === 1) {
+					$serverSubmenu['submenu'] = $charmaps[0]['submenu'];
+				} else {
+					$serverSubmenu['submenu'] = $charmaps;
+				}
+			} else if(!$viewRagnarokMenu) {
+				continue;
+			} else {
+				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'ro', $server->key ) ));
+			}
+			$serverSubmenu['title'] = htmlspecialchars($server->name);
+			$ragnarokSubmenu[] = $serverSubmenu;
 		}
 		$menu = new Menu;
 		$menu->append('dashboard', array(
@@ -96,12 +119,12 @@ try {
 				'url'     => ac_build_url(array( 'path' => array( 'user' ) )),
 				'submenu' => $submenu
 			));
-		if(!empty($ragnarok_submenu)) {
+		if(!empty($ragnarokSubmenu)) {
 			$menu->append('ragnarok', array(
 					'class'   => array( 'option-ragnarok' ),
 					'title'   => __('admin-menu', 'ragnarok'),
 					'url'     => '#',
-					'submenu' => $ragnarok_submenu
+					'submenu' => $ragnarokSubmenu
 				));
 		}
 		if($role->hasPermission('manage-plugins')) {

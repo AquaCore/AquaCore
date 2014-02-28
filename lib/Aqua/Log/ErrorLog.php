@@ -259,12 +259,13 @@ class ErrorLog
 			$trace   = $exception->getTrace();
 			if(!empty($trace)) {
 				$trace_tbl = ac_table('error_trace');
+				$i         = -1;
 				$sth       = $dbh->prepare("
 				INSERT INTO `$trace_tbl` (id, _error_id, _file, _line, _class, _method, _type)
 				VALUES (:id, :error, :file, :line, :class, :method, :type)
 				");
-				$i         = 0;
-				while($t = current($trace)) {
+				foreach($trace as $t) {
+					++$i;
 					$t += array(
 						'file'     => null,
 						'line'     => null,
@@ -303,11 +304,8 @@ class ErrorLog
 					}
 					$sth->execute();
 					$sth->closeCursor();
-					next($trace);
-					++$i;
 				}
 				$log->trace = array_reverse($log->trace, true);
-				$sth->execute();
 			}
 			if($exception->getPrevious() instanceof \Exception) {
 				$log->previous = self::logSql($exception->getPrevious(), $log);

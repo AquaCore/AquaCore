@@ -138,6 +138,4 @@ $dash->get('donation')
 		),
 		'content' => $transfers
 	));
-$feedback = array( $page, $dash );
-Event::fire('admin.render-dashboard', $feedback);
 echo '<div class="ac-dashboard">', $dash->render(), '</div>';

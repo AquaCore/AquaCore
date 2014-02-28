@@ -879,3 +879,129 @@ iframe[src="about:blank"]{ display: none !important; }
 	.ac-script { display: none; }
 	.ac-char-slot { width: 30px; }
 }
+.ac-server-status-wrapper {
+	float: right;
+	line-height: 16px;
+	margin-right: 10px;
+	.ac-server-status {
+		display: inline-block;
+		float: left;
+		margin-right: 5px;
+		height: 16px;
+		width: 16px;
+		background-color: transparent;
+		background-repeat: no-repeat;
+		&.on { background-image: url('../images/char-online.png'); }
+		&.off { background-image: url('../images/char-offline.png'); }
+	}
+}
+.ac-class-population td {
+	vertical-align: top !important;
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+	li {
+		list-style: none;
+		.ac-job-population-name {
+			float: left
+		}
+		.ac-job-population-count {
+			width: 7em;
+			float: right;
+		}
+	}
+}
+#ac-item-whodrops {
+	table-layout: fixed;
+	td {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-o-text-overflow: ellipsis;
+	}
+}
+.ac-item-collection {
+	padding: 5px 30px !important;
+	vertical-align: middle;
+	text-align: center;
+	background: #fff !important;
+}
+.ac-ro-cardbmp {
+	padding: 0 !important;
+}
+.ac-ro-cardbmp, .ac-ro-cardbmp img {
+	width: 190px;
+	height: 254px;
+}
+.ac-edit-options {
+	float: right;
+	color: #959aa3;
+	margin-top: 5px;
+	padding-right: 20px;
+	background: transparent url('../images/pencil.png') center right no-repeat;
+	font-size: 14px !important;
+}
+.ac-char-slot { width: 0; }
+
+.ac-char-head, .ac-char-guild-emblem, .ac-char-status {
+	text-align: center;
+}
+.ac-char-status {
+	width: 25px;
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+}
+.ac-char-status.ac-char-online { background-image: url('../images/char-online.png') !important; }
+.ac-char-status.ac-char-offline { background-image: url('../images/char-offline.png') !important; }
+.ac-char-head { width: 75px; }
+.ac-char-guild-emblem { width: 40px; }
+.ac-char-blvl, .ac-char-jlvl { width: 80px; }
+.ac-card-slot {
+	vertical-align: middle;
+	text-align: center;
+	height: 1.5em;
+	width: 40px;
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	background-image: url('../../../../assets/images/icons/card.png') !important;
+}
+.ac-item-amount {
+	width: 100px;
+}
+.ac-card-slot a {
+	display: block;
+	height: 1.3em;
+	width: 100%;
+}
+.ac-slot-disabled {
+	background-image: url('../../../../assets/images/icons/disabled_card.png') !important;
+}
+.ac-slot-empty {
+	background-image: url('../../../../assets/images/icons/empty_card.png') !important;
+}
+.ac-mob-sprite {
+	width: 260px;
+	text-align: center;
+	vertical-align: middle;
+}
+.ac-mob-mode {
+	float: left;
+}
+.ac-weapon-lvl, .ac-equip-upper, .ac-mob-mode {
+	font-size: 0.8em;
+}
+
+.ac-equip-upper, .ac-mob-mode {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.ac-equip-upper li, .ac-mob-mode li {
+	padding-left: 20px;
+	background: transparent url('../../../../assets/images/check-no.png') center left no-repeat;
+}
+.ac-equip-upper li.ac-upper-applicable,
+.ac-mob-mode li.ac-mode-applicable {
+	background-image: url('../images/check-ok.png');
+}

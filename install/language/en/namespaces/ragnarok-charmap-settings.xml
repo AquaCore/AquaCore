@@ -23,7 +23,7 @@
     <word namespace="ragnarok-charmap-settings" key="db-timezone-desc">Timezone or time offset (e.g.: GTM, -3:00)</word>
     <word namespace="ragnarok-charmap-settings" key="renewal-label">Renewal</word>
     <word namespace="ragnarok-charmap-settings" key="fame-label">Fame Ranking Places</word>
-    <word namespace="ragnarok-charmap-settings" key="online-stats-label">Online States Interval</word>
+    <word namespace="ragnarok-charmap-settings" key="online-stats-label">Online Stats Interval</word>
     <word namespace="ragnarok-charmap-settings" key="online-stats-desc"><![CDATA[Log online players every <i>x</i> minutes.<br/><a href="https://dev.mysql.com/doc/refman/5.1/en/events-configuration.html">MYSQL's Event Scheduler</a> must be enabled to log online players periodically, use "0" to disable this feature.]]></word>
     <word namespace="ragnarok-charmap-settings" key="default-map-label">Default Map</word>
     <word namespace="ragnarok-charmap-settings" key="default-map-desc">Default Map</word>

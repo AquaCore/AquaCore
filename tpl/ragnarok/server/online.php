@@ -21,20 +21,20 @@ $(".ac-whos-online-map").hover(function() {
 <table class="ac-table" id="ac-whos-online">
 	<thead>
 		<tr>
-			<td colspan="6">
-				<?php echo __('ragnarok', 'x-online', number_format($page->charmap->status('characters_online')))?>
+			<td colspan="6" style="text-align: justify">
+				<?php echo __('ragnarok', 'x-online', number_format($page->charmap->fetchCache('online')))?>
 				<form method="GET" style="float: right">
 				<?php echo ac_form_path()?>
 				<input
 					type="text"
 					name="c"
 					placeholder="<?php echo __('ragnarok', 'name')?>"
-					value="<?php echo $page->request->uri->getString('c')?>">
+					value="<?php echo htmlspecialchars($page->request->uri->getString('c')) ?>">
 				<input
 					type="text"
 					name="m"
 					placeholder="<?php echo __('ragnarok', 'map-eg')?>"
-					value="<?php echo $page->request->uri->getString('m')?>">
+					value="<?php echo htmlspecialchars($page->request->uri->getString('m')) ?>">
 				<input type="submit" value="<?php echo __('application', 'search')?>">
 				</form>
 			</td>
@@ -51,7 +51,7 @@ $(".ac-whos-online-map").hover(function() {
 	<tbody>
 <?php if(empty($characters)) : ?>
 	<tr>
-		<td colspan="6" class="ac-table-no-result"><?php echo __('ragnarok', '0-chars-found')?></td>
+		<td colspan="6" class="ac-table-no-result"><?php echo __('application', 'no-search-results')?></td>
 	</tr>
 <?php else: foreach($characters as $char) : ?>
 	<?php
@@ -64,7 +64,7 @@ $(".ac-whos-online-map").hover(function() {
 			<?php
 			if($hide_pos) {
 				echo __('ragnarok', 'Hidden');
-			} else if($map_name = __('ragnarok-map_name', preg_replace('/^[0-9]+@/', '@', $char->lastMap))) {
+			} else if($map_name = __('ragnarok-map-name', preg_replace('/^[0-9]+@/', '@', $char->lastMap))) {
 				echo $map_name, '<br><small><i>(', htmlspecialchars($char->lastMap), ')</i></small>';
 			} else {
 				echo htmlspecialchars($char->lastMap);

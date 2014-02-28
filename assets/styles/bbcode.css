@@ -1,0 +1,84 @@
+.bbc-quote {
+	background: transparent url('../images/quote.png') 10px 5px no-repeat;
+	padding: 0;
+	margin: 10px 0;
+	border-left: 5px solid #bbc1cc;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+}
+.bbc-quote-header {
+	padding: 5px 20px 5px 40px;
+	font-size: .75em;
+	font-weight: bold;
+	text-shadow: 1px 1px 0 0 white;
+	border-bottom: 1px solid #bbc1cc;
+}
+.bbc-quote-content {
+	padding: 3px 20px 3px 40px;
+}
+.bbc-spoiler {
+	position: relative;
+	padding: 5px 0;
+	width: 100%;
+	margin: 15px 0 5px;
+	border: 1px solid;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+}
+.bbc-spoiler-title {
+	z-index: 1;
+	position: absolute;
+	top: -13px;
+	width: auto;
+	padding: 3px 10px;
+	font-weight: bold;
+	font-size: .8em;
+	text-transform: uppercase;
+	cursor: pointer;
+	background: white;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+}
+.bbc-spoiler-content {
+	display: none;
+	padding: 5px 10px 0 10px;
+}
+.cke_editable .bbc-spoiler-content {
+	display: block !important;
+}
+.bbc-hide-text {
+	display: inline-block;
+	background: white;
+	color: white;
+}
+.bbc-hide-text * {
+	visibility: hidden;
+}
+.bbc-hide-text:hover {
+	background: none !important;
+	color: inherit !important;
+}
+.bbc-hide-text:hover * {
+	visibility: inherit;
+}
+ul.bbc-list-none { list-style-type: none; }
+ul.bbc-list-decimal { list-style-type: decimal; }
+ul.bbc-list-leading-zero { list-style-type: decimal-leading-zero; }
+ul.bbc-list-lower-alpha { list-style-type: lower-alpha; }
+ul.bbc-list-upper-alpha { list-style-type: upper-alpha; }
+ul.bbc-list-lower-roman { list-style-type: lower-roman; }
+ul.bbc-list-upper-roman { list-style-type: upper-roman; }
+ul.bbc-list-circle { list-style-type: circle; }
+ul.bbc-list-disc { list-style-type: disc; }
+ul.bbc-list-square { list-style-type: square; }

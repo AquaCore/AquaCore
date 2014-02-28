@@ -32,32 +32,45 @@ if(Server::$serverCount) {
 	$servers = array();
 	foreach(Server::$servers as $server) {
 		if(!$server->charmapCount) continue;
-		$servers[] = array(
-			'title' => $server->name,
+		$serverMenu = array(
+			'title' => htmlspecialchars($server->name),
 			'url' => $server->url(),
-			'submenu' => array(
-				array(
-					'title' => __('menu', 'whos-online'),
-					'url' => $server->url(array( 'action' => 'online' )),
-				),
-				array(
-					'title' => __('menu', 'mob-db'),
-					'url' => $server->url(array( 'path' => array( 'mob' ) )),
-				),
-				array(
-					'title' => __('menu', 'item-db'),
-					'url' => $server->url(array( 'path' => array( 'item' ) )),
-				),
-				array(
-					'title' => __('menu', 'item-shop'),
-					'url' => $server->url(array( 'path' => array( 'item' ), 'action' => 'shop' )),
-				),
-				array(
-					'title' => __('menu', 'rankings'),
-					'url' => $server->url(array( 'path' => array( 'ranking' ) )),
-				),
-			)
 		);
+		$charmaps = array();
+		foreach($server->charmap as $charmap) {
+			$charmaps[] = array(
+				'title' => htmlspecialchars($charmap->name),
+				'url' => $charmap->url(),
+				'submenu' => array(
+					array(
+						'title' => __('menu', 'whos-online'),
+						'url' => $charmap->url(array( 'action' => 'online' )),
+					),
+					array(
+						'title' => __('menu', 'mob-db'),
+						'url' => $charmap->url(array( 'path' => array( 'mob' ) )),
+					),
+					array(
+						'title' => __('menu', 'item-db'),
+						'url' => $charmap->url(array( 'path' => array( 'item' ) )),
+					),
+					array(
+						'title' => __('menu', 'item-shop'),
+						'url' => $charmap->url(array( 'path' => array( 'item' ), 'action' => 'shop' )),
+					),
+					array(
+						'title' => __('menu', 'rankings'),
+						'url' => $charmap->url(array( 'path' => array( 'ranking' ) )),
+					),
+				)
+			);
+			if($server->charmapCount === 1) {
+				$serverMenu['submenu'] = $charmaps[0]['submenu'];
+			} else {
+				$serverMenu['submenu'] = $charmaps;
+			}
+			$servers[] = $serverMenu;
+		}
 	}
 	reset(Server::$servers);
 	if(!empty($servers)) {

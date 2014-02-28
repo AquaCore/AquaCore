@@ -62,7 +62,7 @@ class Login
 	const FIELD_INVALID_CHARACTERS = 2;
 
 	const CACHE_RECENT_ACCOUNTS = 5;
-	const CACHE_TTL             = 0;
+	const CACHE_TTL             = 300;
 
 	/**
 	 * @param \Aqua\Ragnarok\Server $server

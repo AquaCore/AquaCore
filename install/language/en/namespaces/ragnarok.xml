@@ -219,5 +219,8 @@
     <word namespace="ragnarok" key="birthday">Birthday</word>
     <word namespace="ragnarok" key="email">Email</word>
     <word namespace="ragnarok" key="user-not-found">User not found, please insert an existing display name.</word>
+    <word namespace="ragnarok" key="map-server">Map Server</word>
+    <word namespace="ragnarok" key="login-server">Login Server</word>
+    <word namespace="ragnarok" key="char-server">Char Server</word>
   </wordgroup>
 </languageimport>

@@ -297,7 +297,7 @@ extends Page
 				$dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/ac_online_stats.sql'));
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db.description.sql')); } catch(\PDOException $e) { }
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db2.description.sql')); } catch(\PDOException $e) { }
-				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/char.class.sql')); } catch(\PDOException $e) { }
+				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/char.ac_options.sql')); } catch(\PDOException $e) { }
 				$ldbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap-log/ac_cash_shop_log.sql'));
 				$ldbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap-log/ac_cash_shop_items.sql'));
 				$ldbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap-log/ac_divorce_log.sql'));

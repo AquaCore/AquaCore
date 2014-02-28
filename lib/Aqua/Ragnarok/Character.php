@@ -11,168 +11,123 @@ class Character
 	 * @var int
 	 */
 	public $id;
-
 	/**
 	 * @var int
 	 */
 	public $accountId;
-
 	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
-
 	/**
 	 * @var string
 	 */
 	public $name = '';
-
 	/**
 	 * Slot position
 	 * @var int
 	 */
 	public $slot = 0;
-
 	/**
 	 * @var int
 	 */
 	public $class = 0;
-
 	/**
 	 * @var int
 	 */
 	public $baseLevel = 0;
-
 	/**
 	 * @var int
 	 */
 	public $jobLevel = 0;
-
 	/**
 	 * @var int
 	 */
 	public $baseExp = 0;
-
 	/**
 	 * @var int
 	 */
 	public $jobExp = 0;
-
 	/**
 	 * @var bool
 	 */
 	public $online = false;
-
 	/**
 	 * @var int
 	 */
 	public $zeny = 0;
-
 	/**
 	 * @var int
 	 */
 	public $homunculusId = 0;
-
 	/**
 	 * @var int
 	 */
 	public $partnerId = 0;
-
 	/**
 	 * @var int
 	 */
 	public $motherId = 0;
-
 	/**
 	 * @var int
 	 */
 	public $fatherId = 0;
-
 	/**
 	 * @var int
 	 */
 	public $childId = 0;
-
 	/**
 	 * @var int
 	 */
 	public $partyId = 0;
-
 	/**
 	 * @var int
 	 */
 	public $guildId = 0;
-
 	/**
 	 * @var string
 	 */
 	public $guildName = '';
-
-	/**
-	 * @var int
-	 */
-	public $hair = 0;
-
-	/**
-	 * @var int
-	 */
-	public $hairColor = 0;
-
-	/**
-	 * @var int
-	 */
-	public $clothesColor = 0;
-
-	/**
-	 * @var int
-	 */
-	public $headTop = 0;
-
-	/**
-	 * @var int
-	 */
-	public $headMid = 0;
-
-	/**
-	 * @var int
-	 */
-	public $headBottom = 0;
-
 	/**
 	 * @var string
 	 */
 	public $lastMap;
-
 	/**
 	 * @var int
 	 */
 	public $lastX = 0;
-
 	/**
 	 * @var int
 	 */
 	public $lastY = 0;
-
+	/**
+	 * @var string
+	 */
+	public $saveMap;
+	/**
+	 * @var int
+	 */
+	public $saveX = 0;
+	/**
+	 * @var int
+	 */
+	public $saveY = 0;
 	/**
 	 * @var int
 	 */
 	public $fame = 0;
-
 	/**
 	 * @var int
 	 */
 	public $karma = 0;
-
 	/**
 	 * @var int
 	 */
 	public $manner = 0;
-
 	/**
 	 * @var int
 	 */
 	public $options = 0;
-
 	protected $_skills;
 	/**
 	 * @var
