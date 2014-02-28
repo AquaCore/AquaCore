@@ -16,10 +16,6 @@ class Item
 extends Page
 {
 	/**
-	 * @var \Aqua\Ragnarok\Server
-	 */
-	public $server;
-	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
@@ -29,7 +25,6 @@ extends Page
 
 	public function run()
 	{
-		$this->server  = &App::$activeServer;
 		$this->charmap = &App::$activeCharMapServer;
 		$base_url = $this->charmap->url(array( 'path' => array( 'item' ), 'action' => '' ));
 		$menu = new Menu;
@@ -42,6 +37,7 @@ extends Page
 			))
 		;
 		$this->theme->set('menu', $menu);
+		/*
 		if(App::user()->loggedIn()) {
 			$this->theme->set('cart', array(
 				'cart' => App::user()->cart($this->charmap),
@@ -49,6 +45,7 @@ extends Page
 				'server' => $this->server
 			));
 		}
+		*/
 	}
 
 	public function index_action()
@@ -56,7 +53,6 @@ extends Page
 		$this->theme->head->section = $this->title = __('ragnarok', 'item-db');
 		try {
 			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$options = array();
 			if($x = $this->request->uri->getInt('id', false, 500)) {
 				if($items = $this->charmap->item($x)) {
 					$items = array( $items );
@@ -111,6 +107,7 @@ extends Page
 					->order(array( 'id' => 'DESC' ))
 				    ->limit(($current_page - 1) * self::DB_ITEMS_PER_PAGE, self::DB_ITEMS_PER_PAGE)
 			        ->calcRows(true)
+					->order(array( 'id' => 'ASC' ))
 			        ->query();
 				$rows = $search->rowsFound;
 				$items = $search->results;
@@ -124,7 +121,7 @@ extends Page
 			echo $tpl->render('ragnarok/item/database');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			$this->error(1, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 
@@ -141,7 +138,7 @@ extends Page
 				$this->error(404);
 				return;
 			} else {
-				$base_mob_url = $this->server->charMapUri($this->charmap->key())->url(array(
+				$base_mob_url = $this->charmap->url(array(
 					'path' => array( 'mob' ),
 					'action' => 'view',
 					'arguments' => array( '' )
@@ -159,7 +156,7 @@ extends Page
 			echo $tpl->render('ragnarok/item/view');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			echo __('application', 'unexpected-error');
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 
@@ -169,23 +166,20 @@ extends Page
 		try {
 			$current_page = $this->request->uri->getInt('page', 1, 1);
 			$categories = $this->charmap->cashShopCategories();
+			$search = $this->charmap->itemShopSearch()
+				->limit(($current_page - 1) * self::SHOP_ITEMS_PER_PAGE, self::SHOP_ITEMS_PER_PAGE)
+				->calcRows(true)
+				->order(array(
+					'shop_category' => 'ASC',
+					'shop_order'    => 'ASC'
+				));
 			if($category !== null) {
 				if(!in_array($category, $categories)) {
 					$this->error(404);
 				}
-				$options['shop_category_id'] = (int)$category;
+				$search->where(array( 'shop_category' => $category ));
 			}
-			$options = array( 'cash_shop' => 1 );
-			$items = $this->charmap->itemShopSearch(
-				$options,
-				array(
-					array( AC_ORDER_ASC, 'shop_category_id' ),
-					array( AC_ORDER_ASC, 'shop_order' )
-				),
-				array(($current_page - 1) * self::SHOP_ITEMS_PER_PAGE, self::SHOP_ITEMS_PER_PAGE),
-				$rows
-			);
-			$base_url = $this->server->charMapUri($this->charmap->key())->url(array(
+			$base_url = $this->charmap->url(array(
 				'path'      => array( 'item' ),
 				'action'    => 'shop',
 				'arguments' => array( '' )

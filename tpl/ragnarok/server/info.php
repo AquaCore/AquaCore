@@ -1,4 +1,5 @@
 <?php
+use Aqua\UI\ScriptManager;
 /**
  * @var $accounts              int
  * @var $guilds                int
@@ -8,10 +9,9 @@
  * @var $class_population      array
  * @var $homunculus_population array
  * @var $online                int
- * @var $all_time_peak         array
- * @var $this_month_peak         array
  * @var $page             \Page\Main\Ragnarok\Server
  */
+
 $class_population = array_replace(array_fill_keys(array_keys(\Aqua\Core\L10n::getDefault()->getNamespace('ragnarok-jobs')), 0), $class_population);
 $mkJobList = function($jobs) use ($class_population) {
 	$html = '<ul class="ac-job-population">';
@@ -73,6 +73,119 @@ $page->charmap->serverStatus($status['char'], $status['map']);
 		</tr>
 	</thead>
 	<tbody>
+	<?php if((int)$page->charmap->getOption('online-stats')) :
+		$stats = array();
+		$i = 0;
+		foreach($page->charmap->onlineStats(
+			'online',
+			strtotime('sunday 1 week ago'),
+			strtotime('last day of this week midnight'),
+			'day',
+			300
+		) as $timestamp => $count) {
+			$week = date('w', $timestamp);
+			$stats[$i][$week] = $count;
+			if((int)$week == 6) {
+				++$i;
+			}
+		}
+		for($j = 0; $j < 7; ++$j) {
+			if(!isset($stats[$i][$j])) {
+				$stats[$i][$j] = null;
+			}
+		}
+		$page->theme
+			->addWordGroup('week')
+			->addSettings('onlineStats', array_reverse($stats))
+			->addWordGroup('application', array( 'this-week', 'weeks-ago-s', 'weeks-ago-p' ))
+			->addWordGroup('ragnarok', array( 'online-stats' ));
+		$page->theme->footer->enqueueScript(ScriptManager::script('highsoft.highchart'));
+		$page->theme->footer->enqueueScript('ro-online-stats')
+			->type('text/javascript')
+			->append('
+(function($) {
+	var chartData,
+		colors,
+		i, zIndex;
+	colors = [ "#21A4EB", "#ED427E", "#31CC4D", "#E0BD31" ];
+	chartData = {
+		chart: {
+			height: 250
+		},
+		title: { text: AquaCore.l("ragnarok", "online-stats") },
+		xAxis: {
+			title: { enabled: false },
+			gridLineColor: "#000000",
+			labels: {
+				style: {
+					fontSize: "11px",
+					fontWeight: "bold",
+					color: "#8ba0ba"
+				}
+			},
+			categories: [
+				AquaCore.l("week", 0),
+				AquaCore.l("week", 1),
+				AquaCore.l("week", 2),
+				AquaCore.l("week", 3),
+				AquaCore.l("week", 4),
+				AquaCore.l("week", 5),
+				AquaCore.l("week", 6),
+			]
+		},
+		yAxis: {
+			min: 0,
+			title: { enabled: false },
+			labels: {
+				style: {
+					fontSize: "10px",
+					fontWeight: "bold",
+					color: "#8ba0ba"
+				}
+			}
+		},
+		legend: {
+			layout: "vertical",
+			align: "right",
+			verticalAlign: "top"
+		},
+		tooltip: {
+			shared: true
+		},
+		series: []
+	};
+	zIndex = AquaCore.settings["onlineStats"].length + 1;
+	for(i = 0; i < AquaCore.settings["onlineStats"].length; ++i) {
+		chartData.series[i] = {
+			name: AquaCore.l("application", i === 0 ? "this-week" : "weeks-ago-" + (i > 1 ? "p" : "s"), i),
+			data: AquaCore.settings["onlineStats"][i],
+			zIndex: --zIndex
+		};
+		if(colors[i]) {
+			chartData.series[i].color = colors[i];
+		}
+	}
+	$("#online-stats").highcharts(chartData);
+})(jQuery);
+');
+		?>
+		<tr>
+			<td colspan="<?php echo $colspan + 2 ?>">
+				<div id="online-stats"></div>
+			</td>
+		</tr>
+		<tr class="ac-table-header">
+			<td colspan="<?php echo $colspan + 2 ?>" style="text-align: right">
+				<?php echo __('ragnarok',
+				              'player-peak-all',
+				              number_format($page->charmap->onlineStats('peak'))); ?>
+				|
+				<?php echo __('ragnarok',
+				              'player-peak-this-month',
+				              number_format($page->charmap->onlineStats('peak', strtotime('first day of this month midnight')))); ?>
+			</td>
+		</tr>
+	<?php endif; ?>
 		<tr>
 			<td colspan="<?php echo $colspan ?>"><?php echo __('ragnarok', 'accounts-registered')?></td>
 			<td colspan="2"><?php echo number_format($accounts)?></td>

@@ -5,7 +5,7 @@
  * @var $paginator  \Aqua\UI\Pagination
  * @var $page       \Page\Main\Ragnarok\Server\Item
  */
-$base_url = $page->server->charMapUri($page->charmap->key())->url(array(
+$base_url = $page->charmap->url(array(
 	'path' => array( 'item' ),
 	'action' => 'view',
 	'arguments' => array( '' )
@@ -37,7 +37,7 @@ $base_url = $page->server->charMapUri($page->charmap->key())->url(array(
 	<tbody>
 <?php if(empty($items)) : ?>
 		<tr>
-			<td colspan="8" class="ac-table-no-result"><?php echo __('ragnarok', '0-items')?></td>
+			<td colspan="8" class="ac-table-no-result"><?php echo __('application', 'no-search-results')?></td>
 		</tr>
 <?php else : foreach($items as $item) : ?>
 		<tr>
@@ -58,4 +58,4 @@ $base_url = $page->server->charMapUri($page->charmap->key())->url(array(
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('ragnarok', 'x-items', number_format($item_count))?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($item_count === 1 ? 's' : 'p'), number_format($item_count))?></span>

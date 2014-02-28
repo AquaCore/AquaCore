@@ -583,6 +583,8 @@ implements \Iterator, \Countable
 		foreach($this->group as $column => $ord) {
 			if($ord === 'DESC' || $ord === 'ASC') {
 				$groupBy[] = "$column $ord";
+			} else if($ord === null) {
+				$groupBy[] = $column;
 			} else {
 				$groupBy[] = $ord;
 			}

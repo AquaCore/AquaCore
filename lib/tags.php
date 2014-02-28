@@ -26,7 +26,7 @@ ScriptManager::register('ckeditor-i18n')
 	->dependsOn(array( 'ckeditor' ));
 // jQuery v2.0.3
 ScriptManager::register('jquery')
-	->src(\Aqua\URL . '/assets/scripts/jquery/jquery-2.0.3.min.js');
+	->src(\Aqua\URL . '/assets/scripts/jquery/jquery-1.11.0.min.js');
 // jQuery UI v1.10.3
 ScriptManager::register('jquery-ui')
 	->src(\Aqua\URL . '/assets/scripts/jquery-ui/jquery-ui-1.10.3.min.js')

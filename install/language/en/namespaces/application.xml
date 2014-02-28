@@ -25,5 +25,8 @@
     <word namespace="application" key="unexpected-error">An unexpected error occurred, please try again later.</word>
     <word namespace="application" key="page-memory">Memory peak usage: %smb</word>
     <word namespace="application" key="page-time">Page generated in %ss</word>
+    <word namespace="application" key="this-week">This week</word>
+    <word namespace="application" key="weeks-ago-s">%d week ago</word>
+    <word namespace="application" key="weeks-ago-p">%d weeks ago</word>
   </wordgroup>
 </languageimport>

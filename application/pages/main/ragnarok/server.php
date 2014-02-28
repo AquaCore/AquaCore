@@ -86,6 +86,7 @@ extends Page
 			}
 			$current_page = $this->request->uri->getInt('page', 1, 1);
 			$search = $this->charmap->charSearch()
+				->calcRows(true)
 				->limit(($current_page - 1) * self::CHARS_PER_PAGE, self::CHARS_PER_PAGE)
 				->where(array(
 					'online' => 1,

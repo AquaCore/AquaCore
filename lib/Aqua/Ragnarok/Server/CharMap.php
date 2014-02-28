@@ -165,7 +165,7 @@ class CharMap
 	 */
 	public function getOption($key, $default = null)
 	{
-		$this->settings === null or $this->fetchSettings();
+		$this->settings !== null or $this->fetchSettings();
 		return (isset($this->settings[$key]) ? $this->settings[$key] : $default);
 	}
 
@@ -1215,7 +1215,7 @@ class CharMap
 	public function cashShopCategories()
 	{
 		$this->cashShopCategories !== null or $this->fetchCashShopCategories();
-		return $this->cashShopCategories();
+		return $this->cashShopCategories;
 	}
 
 	/**
@@ -1357,12 +1357,102 @@ class CharMap
 	}
 
 	/**
-	 * @param int      $start
+	 * @param string   $type "online", "peak" or "average"
+	 * @param int|null $start
 	 * @param int|null $end
+	 * @param string   $interval "time", "day", "week", "month" or "year"
 	 * @param int|null $cache
+	 * @return array|int
 	 */
-	public function onlineStats($start, $end = null, $cache = null)
+	public function onlineStats($type, $start = null, $end = null, $interval = null, $cache = 600)
 	{
+		$key = "ro.{$this->server->key}.{$this->key}.online.{$type}.";
+		$key.= ($interval ?: 'x') . '.';
+		$key.= ($start ?: 'x') . '.';
+		$key.= ($end ?: 'x');
+		if($stats = App::cache()->fetch($key, null)) {
+			return $stats;
+		}
+		$select = Query::select($this->connection())
+			->columns(array( 'timestamp' => 'UNIX_TIMESTAMP(`date`)' ))
+			->setColumnType(array( 'timestamp' => 'integer', 'count' => 'integer' ))
+			->from($this->table('ac_online_stats'));
+
+		switch($type) {
+			case 'online':
+				$select->columns(array( 'count' => 'players' ));
+				break;
+			case 'peak':
+				$select->columns(array( 'count' => 'MAX(players)' ));
+				break;
+			case 'average':
+				$select->columns(array( 'count' => 'AVG(players)' ));
+				break;
+			default:
+				return null;
+		}
+		switch($interval) {
+			case 'time':
+				$select->groupBy('_date');
+				break;
+			case 'day':
+				$select->groupBy('CAST(`date` AS DATE)');
+				break;
+			case 'week':
+				$select->groupBy('YEARWEEK(`date`)');
+				break;
+			case 'month':
+				$select->groupBy(array(
+					'YEAR(`date`)'  => null,
+				    'MONTH(`date`)' => 'DESC'
+				));
+				break;
+			case 'year':
+				$select->groupBy('YEAR(`date`)');
+				break;
+			case null:
+				break;
+			default:
+				return null;
+		}
+		if($start && $end) {
+			$select->where(array( '`date`' => array(
+				Search::SEARCH_BETWEEN,
+			    date('Y-m-d H:i:s', $start),
+			    date('Y-m-d H:i:s', $end)
+			)));
+		} else if($start) {
+			$select->where(array( '`date`' => array(
+				Search::SEARCH_HIGHER,
+				date('Y-m-d H:i:s', $start)
+			)));
+		} else if($end) {
+			$select->where(array( '`date`' => array(
+				Search::SEARCH_LOWER,
+				date('Y-m-d H:i:s', $end)
+			)));
+		}
+		$select->query();
+		if($interval !== null) {
+			$stats = array();
+			foreach($select as $row) {
+				$stats[$row['timestamp']] = $row['count'];
+			}
+		} else if($select->valid()) {
+			$stats = $select->current();
+			$stats = $stats['count'];
+		} else {
+			$stats = 0;
+		}
+		if($cache !== null) {
+			App::cache()->store($key, $stats, $cache);
+		}
+		return $stats;
+	}
+
+	public function playerPeak($start, $end = null, $cache = 600)
+	{
+
 	}
 
 	/**
@@ -1843,10 +1933,7 @@ class CharMap
 			");
 			$this->cashShopCategories = array();
 			while($res = $sth->fetch(\PDO::FETCH_NUM)) {
-				$this->cashShopCategories[(string)$res[0]] = array(
-					'name'  =>
-					'count' => (int)$res[1]
-				);
+				$this->cashShopCategories[(string)$res[0]] = (int)$res[1];
 			}
 			App::cache()->store("ro.{$this->server->key}.{$this->key}.shop-categories", $this->cashShopCategories);
 		}
@@ -1876,37 +1963,6 @@ class CharMap
 			$this->cache['homunculus_population'] = array();
 			foreach($select as $row) {
 				$this->cache['homunculus_population'][$row['class']] = $row['count'];
-			}
-			$select = Query::select($this->connection())
-				->columns(array(
-						'players' => 'MAX(players)',
-						'date' => 'UNIX_TIMESTAMP(`date`)',
-						'key' => "'all_time_player_peak'"
-					))
-				->from($this->table('ac_online_stats'));
-			$this_month = clone $select;
-			$last_month = clone $select;
-			$this_month
-				->columns(array( 'key' => "'this_month_player_peak'" ))
-				->where(array(
-					'date' => array( Search::SEARCH_HIGHER, date('Y:m:d H:i:s', strtotime('first day of this month midnight')) )
-				));
-			$last_month
-				->columns(array( 'key' => "'last_month_player_peak'" ))
-				->where(array(
-					'date' => array(
-						Search::SEARCH_BETWEEN,
-						date('Y:m:d H:i:s', strtotime('first day of this month midnight')),
-						date('Y:m:d H:i:s', strtotime('first day of last month midnight'))
-					)
-				));
-			$select
-				->union($this_month, true)
-				->union($last_month, true)
-			    ->setColumnType(array( 'players' => 'integer', 'date' => 'integer' ))
-				->query();
-			foreach($select as $row) {
-				$this->cache[$row['key']] = array( 'count' => $row['players'], 'date' => $row['date'] );
 			}
 			$this->cache['char_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('char')}")->fetch(\PDO::FETCH_COLUMN, 0);
 			$this->cache['party_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('party')}")->fetch(\PDO::FETCH_COLUMN, 0);

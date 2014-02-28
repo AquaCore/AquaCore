@@ -89,14 +89,14 @@ if($item->type === 4) ++$rowspan;
 			<?php endif; ?>
 			<tr>
 				<td><?php echo __('ragnarok', 'equip-locations')?></td>
-				<td colspan="4"><?php echo $item->location(', ')?></td>
+				<td style="text-align: justify" colspan="4"><?php echo $item->location(', ')?></td>
 			</tr>
 		<?php endif; ?>
 		<?php if($item->type !== 3 && $item->type !== 6 && $item->type !== 7 && $item->type !== 8) : ?>
 			<tr>
 				<td><?php echo __('ragnarok', 'applicable-jobs')?></td>
-				<td colspan="3"><?php echo $item->jobs(', ')?></td>
-				<td>
+				<td style="text-align: left" colspan="3"><?php echo $item->jobs(', ')?></td>
+				<td style="text-align: justify" >
 					<ul class="ac-equip-upper">
 						<li class="<?php echo (($item->equipUpper & 0x01) ? 'ac-upper-applicable' : '')?>">
 							<?php echo __('ragnarok-equip-upper', 0x01)?>
@@ -107,7 +107,7 @@ if($item->type === 4) ++$rowspan;
 						<li class="<?php echo (($item->equipUpper & 0x04) ? 'ac-upper-applicable' : '')?>">
 							<?php echo __('ragnarok-equip-upper', 0x04)?>
 						</li>
-						<?php if($page->charmap->renewal) : ?>
+						<?php if($page->charmap->getOption('renewal')) : ?>
 						<li class="<?php echo (($item->equipUpper & 0x08) ? 'ac-upper-applicable' : '')?>">
 							<?php echo __('ragnarok-equip-upper', 0x08)?>
 						</li>
@@ -124,15 +124,15 @@ if($item->type === 4) ++$rowspan;
 		<?php if(App::settings()->get('ragnarok')->get('display_item_script', false)) : ?>
 			<tr>
 				<td><?php echo __('ragnarok', 'use-script')?></td>
-				<td colspan="4" class="ac-script-code"><pre><code><?php echo $item->scriptUse?></code></pre></td>
+				<td style="text-align: justify" colspan="4" class="ac-script-code"><pre><code><?php echo $item->scriptUse?></code></pre></td>
 			</tr>
 			<tr>
 				<td><?php echo __('ragnarok', 'equip-script')?></td>
-				<td colspan="4" class="ac-script-code"><pre><code><?php echo $item->scriptEquip?></code></pre></td>
+				<td style="text-align: justify" colspan="4" class="ac-script-code"><pre><code><?php echo $item->scriptEquip?></code></pre></td>
 			</tr>
 			<tr>
 				<td><?php echo __('ragnarok', 'unequip-script')?></td>
-				<td colspan="4" class="ac-script-code"><pre><code><?php echo $item->scriptUnequip?></code></pre></td>
+				<td style="text-align: justify" colspan="4" class="ac-script-code"><pre><code><?php echo $item->scriptUnequip?></code></pre></td>
 			</tr>
 		<?php endif; ?>
 		</tbody>
@@ -141,7 +141,7 @@ if($item->type === 4) ++$rowspan;
 			<td colspan="5">
 				<?php if($item->inCashShop): ?>
 					<?php if(App::user()->loggedIn()) : ?>
-						<a href="<?php echo $page->server->charMapUri($page->charmap->key())->url(array(
+						<a href="<?php echo $page->charmap->url(array(
 							'path' => array( 'item' ),
 							'action' => 'cart',
 							'query' => array(
@@ -162,29 +162,34 @@ if($item->type === 4) ++$rowspan;
 	</table>
 </div>
 <div style="display: table-cell; vertical-align: top;">
-	<table class="ac-table" id="ac-item-whodrops" style="width: 250px;">
+	<table class="ac-table" id="ac-item-whodrops" style="width: 280px">
+		<colgroup>
+			<col>
+			<col style="width: 90px">
+			<col style="width: 80px">
+		</colgroup>
 		<thead>
 		<tr>
 			<td colspan="3"><?php echo __('ragnarok', 'who-drops', $item_name)?></td>
 		</tr>
-		<tr class="alt" style="display: block;">
-			<td style="width: 130px;"><?php echo __('ragnarok', 'monster')?></td>
-			<td style="width: 70px;"><?php echo __('ragnarok', 'rate')?></td>
-			<td style="width: 50px;"><?php echo __('ragnarok', 'amount')?></td>
+		<tr class="alt">
+			<td><?php echo __('ragnarok', 'monster')?></td>
+			<td><?php echo __('ragnarok', 'rate')?></td>
+			<td><?php echo __('ragnarok', 'amount')?></td>
 		</tr>
 		</thead>
-		<tbody style="display: block; width: 100%; max-height: 300px; overflow-y: auto">
+		<tbody>
 		<?php if(empty($who_drops)) : ?>
 			<tr>
-				<td colspan="3"  class="ac-table-no-result" style="width: 100%">
+				<td colspan="3"  class="ac-table-no-result" style="font-size: .9em">
 					<?php echo __('ragnarok', 'not-dropped')?>
 				</td>
 			</tr>
 		<?php else : foreach($who_drops as $drop) : ?>
 			<tr>
-				<td style="width: 130px;"><a href="<?php echo $drop['mob_url']?>"><?php echo $drop['name']?></a></td>
-				<td style="width: 70px;"><?php echo $drop['max_rate']?>%</td>
-				<td style="width: 50px;"><?php echo $drop['amount']?></td>
+				<td><a href="<?php echo $drop['mob_url']?>"><?php echo $drop['name']?></a></td>
+				<td><?php echo $drop['max_rate']?>%</td>
+				<td><?php echo $drop['amount']?></td>
 			</tr>
 		<?php endforeach; endif; ?>
 		</tbody>

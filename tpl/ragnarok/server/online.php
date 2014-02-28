@@ -1,6 +1,5 @@
 <?php
 use Aqua\Ragnarok\Character;
-use Aqua\UI\ScriptManager;
 use Aqua\Ragnarok\MapMarker;
 /**
  * @var $characters   \Aqua\Ragnarok\Character[]
@@ -8,15 +7,6 @@ use Aqua\Ragnarok\MapMarker;
  * @var $paginator    \Aqua\UI\Pagination
  * @var $page         \Page\Main\Ragnarok\Server
  */
-$page->theme->footer->enqueueScript('whos-online-map')
-	->type('text/javascript')
-	->append('
-$(".ac-whos-online-map").hover(function() {
-	$(this).find(".ac-map").stop(false, true).show("drop", {direction: "down", distance: "30px"}, 300);
-}, function() {
-	$(this).find(".ac-map").stop(false, true).hide("drop", {direction: "up", distance: "30px"}, 200);
-});
-');
 ?>
 <table class="ac-table" id="ac-whos-online">
 	<thead>
@@ -63,7 +53,7 @@ $(".ac-whos-online-map").hover(function() {
 		<td style="vertical-align: middle">
 			<?php
 			if($hide_pos) {
-				echo __('ragnarok', 'Hidden');
+				echo __('ragnarok', 'hidden');
 			} else if($map_name = __('ragnarok-map-name', preg_replace('/^[0-9]+@/', '@', $char->lastMap))) {
 				echo $map_name, '<br><small><i>(', htmlspecialchars($char->lastMap), ')</i></small>';
 			} else {
@@ -79,12 +69,14 @@ $(".ac-whos-online-map").hover(function() {
 		</td>
 		<td>
 			<?php if(!$hide_pos && MapMarker::hasMiniMap($char->lastMap)) : ?>
-			<div class="ac-script ac-whos-online-map">
-			<?php
-				$marker = new MapMarker($char->lastMap);
-				$marker->mark($char->lastX, $char->lastY);
-				echo $marker->render();
-			?>
+			<div class="ac-script ac-whos-online-wrapper">
+				<div class="ac-whos-online-marker" title=""></div>
+				<?php
+					$marker = new MapMarker($char->lastMap);
+					$marker->mark($char->lastX, $char->lastY);
+					echo $marker->render();
+				?>
+				</div>
 			</div>
 			<?php endif; ?>
 		</td>
@@ -100,3 +92,21 @@ $(".ac-whos-online-map").hover(function() {
 	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('ragnarok', 'x-chars-found', number_format($online_chars))?></span>
+<script type="text/javascript">
+	(function($){
+		$(".ac-whos-online-marker").tooltip({
+			position: {
+				my: "center+5 bottom-20",
+				at: "center top"
+			},
+			hide: null,
+			show: null,
+			content: function() {
+				return $("<span/>")
+					.append($("<div/>").addClass("ac-tooltip-top"))
+					.append($("<div/>").addClass("ac-tooltip-content").append($(this).parent().find(".ac-map").clone()))
+					.append($("<div/>").addClass("ac-tooltip-bottom"));
+			}
+		});
+	})(jQuery);
+</script>
