@@ -109,8 +109,7 @@ class Account
 		}
 		if(App::user()->account->avatar &&
 		   $this->request->uri->getString('token') === App::user()->getToken('account_remove_avatar') &&
-		   $this->request->uri->getString('x-action') === 'delete-avatar'
-		) {
+		   $this->request->uri->getString('x-action') === 'delete-avatar') {
 			$this->response->status(302)->redirect(App::request()->uri->url(array( 'query' => array() )));
 			try {
 				App::user()->account->removeAvatar(true);
@@ -259,60 +258,71 @@ class Account
 		try {
 			$updated  = 0;
 			$uploader = new ImageUploader;
-			$uploader
+			$uploader->maxSize(ac_size(App::settings()->get('account')->get('avatar')->get('max_size', "100KB")))
 				->dimension(App::settings()->get('account')->get('avatar')->get('max_width', 100),
-				            App::settings()->get('account')->get('avatar')->get('max_height', 100))
-				->maxSize(App::settings()->get('account')->get('avatar')->get('max_size', 2) * 1024 * 1024);
+				            App::settings()->get('account')->get('avatar')->get('max_height', 100));
 			$display  = trim($this->request->getString('display_name'));
-			$email    = trim($this->request->getString('display_name'));
+			$email    = trim($this->request->getString('email'));
 			$password = trim($this->request->getString('password'));
-			$birthday = strtotime(trim($this->request->getString('birthday')));
+			$birthday = \DateTime::createFromFormat('Y-m-d', trim($this->request->getString('birthday')));
 			if($display !== $account->displayName) {
-				if(!$account->updateDisplayName($display)) {
-					App::user()->addFlash('warning', null, __(
-						'profile',
-						'display-name-update-limit',
-						App::settings()->get('account')->get('display_name')->get('update_limit'),
-						App::settings()->get('account')->get('display_name')->get('update_days', 30)
-					));
-				} else {
-					++$updated;
+				switch($account->updateDisplayName($display)) {
+					case false:
+						App::user()->addFlash('warning', null, __(
+							'profile',
+							'display-name-update-limit',
+							App::settings()->get('account')->get('display_name')->get('update_limit', 3),
+							App::settings()->get('account')->get('display_name')->get('update_days', 30)
+						));
+						break;
+					case true:
+						++$updated;
+						break;
 				}
 			}
-			if($email !== $account->birthDate) {
-				if(!$account->updateEmail($email)) {
-					App::user()->addFlash('warning', null, __(
-						'profile',
-						'email-update-limit',
-						App::settings()->get('account')->get('email')->get('update_limit'),
-						App::settings()->get('account')->get('email')->get('update_days', 30)
-					));
-				} else {
-					++$updated;
+			if($email !== $account->email) {
+				switch($account->updateEmail($email)) {
+					case false:
+						App::user()->addFlash('warning', null, __(
+							'profile',
+							'email-update-limit',
+							App::settings()->get('account')->get('email')->get('update_limit', 3),
+							App::settings()->get('account')->get('email')->get('update_days', 30)
+						));
+						break;
+					case true:
+						++$updated;
+						break;
 				}
 			}
-			if($birthday !== $account->birthDate) {
-				if(!$account->updateDisplayName($birthday)) {
-					App::user()->addFlash('warning', null, __(
-						'profile',
-						'birthday-update-limit',
-						App::settings()->get('account')->get('birthday')->get('update_limit'),
-						App::settings()->get('account')->get('birthday')->get('update_days', 30)
-					));
-				} else {
-					++$updated;
+			if($birthday && $birthday->getTimestamp() !== $account->birthDate) {
+				switch($account->updateBirthday($birthday->getTimestamp())) {
+					case false:
+						App::user()->addFlash('warning', null, __(
+							'profile',
+							'birthday-update-limit',
+							App::settings()->get('account')->get('birthday')->get('update_limit', 3),
+							App::settings()->get('account')->get('birthday')->get('update_days', 30)
+						));
+						break;
+					case true:
+						++$updated;
+						break;
 				}
 			}
 			if(!empty($password)) {
-				if(!$account->updatePassword($password)) {
-					App::user()->addFlash('warning', null, __(
-						'profile',
-						'password-update-limit',
-						App::settings()->get('account')->get('password')->get('update_limit'),
-						App::settings()->get('account')->get('password')->get('update_days', 30)
-					));
-				} else {
-					++$updated;
+				switch($account->updatePassword($password)) {
+					case false:
+						App::user()->addFlash('warning', null, __(
+							'profile',
+							'password-update-limit',
+							App::settings()->get('account')->get('password')->get('update_limit', 3),
+							App::settings()->get('account')->get('password')->get('update_days', 30)
+						));
+						break;
+					case true:
+						++$updated;
+						break;
 				}
 			}
 			switch($this->request->getString('avatar_type')) {
@@ -326,7 +336,7 @@ class Account
 					} else {
 						break;
 					}
-					$path = '/uploads/avatar/' . uniqid($account->id . '-');
+					$path = uniqid($account->id . '-');
 					switch($uploader->mimeType) {
 						case 'IMAGE/GIF':
 							$path .= '.gif';
@@ -338,10 +348,11 @@ class Account
 							$path .= '.png';
 							break;
 					}
-					if($uploader->error !== ImageUploader::UPLOAD_OK || !$uploader->save(\Aqua\ROOT . $path)) {
+					if($uploader->error !== ImageUploader::UPLOAD_OK ||
+					   !$uploader->save(\Aqua\ROOT . '/uploads/avatar', $path)) {
 						App::user()->addFlash('error', null, $uploader->errorStr());
 					} else {
-						$account->setAvatar($path, $original);
+						$account->setAvatar("/uploads/avatar/$path", $original);
 						++$updated;
 					}
 					break;

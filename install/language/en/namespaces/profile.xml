@@ -5,11 +5,12 @@
     <word namespace="profile" key="id">ID</word>
     <word namespace="profile" key="username">Username</word>
     <word namespace="profile" key="x-account">%s's Account</word>
-    <word namespace="profile" key="display-name">Display mame</word>
+    <word namespace="profile" key="display-name">Display name</word>
     <word namespace="profile" key="email">Email</word>
     <word namespace="profile" key="avatar">Avatar</word>
     <word namespace="profile" key="birthday">Birthday</word>
     <word namespace="profile" key="password">Password</word>
+    <word namespace="profile" key="repeat-password">Repeat Password</word>
     <word namespace="profile" key="role">Role</word>
     <word namespace="profile" key="status">Status</word>
     <word namespace="profile" key="registration-date">Registration date</word>

@@ -62,13 +62,13 @@ class ProfileUpdateLog
 	{
 		switch($this->field) {
 			case self::FIELD_DISPLAY_NAME:
-				return __('account', 'display-name');
+				return __('profile', 'display-name');
 			case self::FIELD_EMAIL:
-				return __('account', 'email');
+				return __('profile', 'email');
 			case self::FIELD_PASSWORD:
-				return __('account', 'password');
+				return __('profile', 'password');
 			case self::FIELD_BIRTHDAY:
-				return __('account', 'birthday');
+				return __('profile', 'birthday');
 			default:
 				return '';
 		}
@@ -141,46 +141,16 @@ class ProfileUpdateLog
 	 * @param \Aqua\User\Account $account
 	 * @param string             $field
 	 * @param string             $value
+	 * @param string             $old
 	 * @return \Aqua\Log\ProfileUpdateLog|null
 	 */
-	public static function logSql(Account $account, $field, $value)
+	public static function logSql(Account $account, $field, $value, $old)
 	{
 		$tbl = ac_table('profile_update_log');
 		$sth = App::connection()->prepare("
 		INSERT INTO `$tbl` (_user_id, _ip_address, _field, _old_value, _new_value, _date)
 		VALUES (:id, :ip, :field, :old, :new, NOW())
 		");
-		switch($field) {
-			case self::FIELD_DISPLAY_NAME:
-			case 'display_name':
-				$old   = $account->displayName;
-				$field = 'display_name';
-				break;
-			case self::FIELD_EMAIL:
-			case 'email':
-				$old   = $account->email;
-				$field = 'email';
-				break;
-			case self::FIELD_BIRTHDAY:
-			case 'birthday':
-				$old   = date('Y-m-d', $account->birthDate);
-				$value = date('Y-m-d', $value);
-				$field = 'birthday';
-				break;
-			case self::FIELD_PASSWORD:
-			case 'password':
-				$result = Query::select(App::connection())
-					->columns(array( 'password' => 'u._password' ))
-					->where(array( 'u.id' => $account->id ))
-					->limit(1)
-					->query()
-					->results;
-				$old    = $result['password'];
-				$field  = 'birthday';
-				break;
-			default:
-				return false;
-		}
 		$sth->bindValue(':id', $account->id, \PDO::PARAM_INT);
 		$sth->bindValue(':ip', App::request()->ipString, \PDO::PARAM_STR);
 		$sth->bindValue(':field', $field, \PDO::PARAM_STR);
@@ -203,8 +173,8 @@ class ProfileUpdateLog
 		$log->date      = (int)$data['date'];
 		$log->field     = (int)$data['field'];
 		$log->ipAddress = $data['ip_address'];
-		$log->oldValue  = $data['old'];
-		$log->newValue  = $data['new'];
+		$log->oldValue  = $data['old_value'];
+		$log->newValue  = $data['new_value'];
 
 		return $log;
 	}

@@ -22,15 +22,14 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td class="ac-form-warning">
+		<tr class="ac-form-warning">
+			<td>
 			<td colspan="4">
 				<?php if(($warning = $form->field('avatar_type')->getWarning()) ||
 					($warning = $form->field('image')->getWarning()) ||
 					($warning = $form->field('gravatar')->getWarning())) {
 					echo $warning;
 				} ?>
-			<td colspan="4">
 			</td>
 		</tr>
 		<tr>
@@ -51,24 +50,26 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 					<img src="<?php echo $account->avatar() ?>">
 				</div>
 			</td>
-			<td colspan="3" style="vertical-align: middle">
-				<table style="width: 100%">
+			<td colspan="3" style="vertical-align: middle; padding: 0">
+				<table style="width: 100%; border-collapse: collapse">
 					<tr>
 						<td colspan="2" style="width: 50%">
-							<?php echo $form->field('avatar_type')->option('image')->bool('checked')->render() ?>
+							<?php echo $form->field('avatar_type')->label('image')->render(),
+									   $form->field('avatar_type')->option('image')->bool('checked')->render() ?>
 						</td>
 						<td colspan="2" style="width: 50%">
-							<?php echo $form->field('avatar_type')->option('gravatar')->render() ?>
+							<?php echo $form->field('avatar_type')->label('gravatar')->render(),
+									   $form->field('avatar_type')->option('gravatar')->render() ?>
 						</td>
 					</tr>
 					<tr>
-						<td><?php echo $form->field('image')->getLabel() ?></td>
+						<td><b><?php echo $form->field('image')->getLabel() ?></b></td>
 						<td><?php echo $form->field('image')->render() ?></td>
-						<td><?php echo $form->field('gravatar')->getLabel() ?></td>
+						<td><b><?php echo $form->field('gravatar')->getLabel() ?></b></td>
 						<td><?php echo $form->field('gravatar')->render() ?></td>
 					</tr>
 					<tr>
-						<td style="border-bottom: none"><?php echo $form->field('url')->getLabel() ?></td>
+						<td style="border-bottom: none"><b><?php echo $form->field('url')->getLabel() ?></b></td>
 						<td style="border-bottom: none"><?php echo $form->field('url')->render() ?></td>
 						<td style="border-bottom: none; font-size: 0.85em; text-align: center" colspan="2"><?php echo $form->field('gravatar')->getDescription() ?></td>
 					</tr>
@@ -80,9 +81,9 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 			<td colspan="2"><?php echo $form->field('repeat_password')->getWarning() ?></td>
 		</tr>
 		<tr>
-			<td style="width: 15%"><?php echo $form->field('password')->getLabel() ?>:</td>
+			<td style="width: 15%"><b><?php echo $form->field('password')->getLabel() ?></b></td>
 			<td style="width: 35%"><?php echo $form->field('password')->render() ?></td>
-			<td style="width: 15%"><?php echo $form->field('repeat_password')->getLabel() ?>:</td>
+			<td style="width: 15%"><b><?php echo $form->field('repeat_password')->getLabel() ?></b></td>
 			<td style="width: 35%"><?php echo $form->field('repeat_password')->render() ?></td>
 		</tr>
 		<tr class="ac-form-warning">
@@ -90,7 +91,7 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 			<td colspan="2"></td>
 		</tr>
 		<tr>
-			<td><?php echo $form->field('display_name')->getLabel() ?>:</td>
+			<td><b><?php echo $form->field('display_name')->getLabel() ?></b></td>
 			<td><?php echo $form->field('display_name')->render() ?></td>
 			<td colspan="2"></td>
 		</tr>
@@ -99,12 +100,12 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 			<td colspan="2"></td>
 		</tr>
 		<tr>
-			<td><?php echo $form->field('email')->getLabel() ?>:</td>
+			<td><b><?php echo $form->field('email')->getLabel() ?></b></td>
 			<td><?php echo $form->field('email')->render() ?></td>
 			<td colspan="2"></td>
 		</tr>
 		<tr>
-			<td><?php echo $form->field('birthday')->getLabel() ?>:</td>
+			<td><b><?php echo $form->field('birthday')->getLabel() ?></b></td>
 			<td><?php echo $form->field('birthday')->render() ?></td>
 			<td colspan="2"></td>
 		</tr>
@@ -115,9 +116,12 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 				<span style="float: right">
 					<?php
 					echo $form
-					     ->field('current_password')
-					     ->placeholder($form->field('current_password')->getLabel())
-					     ->render()
+							 ->field('account_preferences')
+							 ->render(),
+					     $form
+						     ->field('current_password')
+						     ->placeholder($form->field('current_password')->getLabel())
+						     ->render()
 					?>
 					<input type="submit" name="x-edit" value="<?php echo __('application', 'submit')?>">
 				</span>

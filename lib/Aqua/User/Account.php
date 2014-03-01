@@ -341,15 +341,39 @@ class Account
 			}
 		}
 		if($type === 'password') {
+			$old_value = Query::select(App::connection())
+				->columns(array( 'password' => '_password' ))
+				->from(ac_table('users'))
+				->where(array( 'id' => $this->id ))
+				->limit(1)
+				->query()
+				->results[0]['password'];
 			$password = self::hashPassword($new_value);
-			$this->update(array( 'password_hashed' => $password, 'password' => $new_value ));
+			if(!$this->update(array( 'password_hashed' => $password, 'password' => $new_value ))) {
+				return null;
+			}
 			$new_value = $password;
 		} else if($type === 'birthday') {
-			$this->update(array( 'birthday' => \DateTime::createFromFormat('Y-m-d', $new_value)->getTimestamp() ));
+			$old_value = date('Y-m-d', $this->birthDate);
+			if(!$this->update(array( 'birthday' => \DateTime::createFromFormat('Y-m-d', $new_value)->getTimestamp() ))) {
+				return null;
+			}
 		} else {
-			$this->update(array( $type => $new_value ));
+			switch($type) {
+				case 'display_name':
+					$old_value = $this->displayName;
+					break;
+				case 'email':
+					$old_value = $this->email;
+					break;
+				default:
+					return null;
+			}
+			if(!$this->update(array( $type => $new_value ))) {
+				return null;
+			}
 		}
-		ProfileUpdateLog::logSql($this, $type, $new_value);
+		ProfileUpdateLog::logSql($this, $type, $new_value, $old_value);
 
 		return true;
 	}

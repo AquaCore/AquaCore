@@ -96,7 +96,7 @@ return array(
 		'email'                   => array(),
 		'birthday'                => array(),
 		'avatar'                  => array(
-			'max_size'   => '4MB',
+			'max_size'   => '180KB',
 			'max_height' => 200,
 			'max_width'  => 200,
 		),
