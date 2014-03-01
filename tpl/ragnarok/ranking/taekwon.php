@@ -1,7 +1,8 @@
 <?php
 /**
+ * @var $count      int
  * @var $characters \Aqua\Ragnarok\Character[]
- * @var $page       \Page\Main\Ragnarok\Server\Ranking
+ * @var $page       \Page\Main\Ragnarok\Server\Ladder
  */
 ?>
 <table class="ac-table ac-ranking ac-fame-ranking">
@@ -18,7 +19,7 @@
 		</tr>
 	</thead>
 	<tbody>
-<?php for($i = 0; $i < 10; ++$i) : ?>
+<?php for($i = 0; $i < $count; ++$i) : ?>
 		<tr>
 			<td class="ac-rank-<?php echo $i+1?>"><?php echo $i+1?></td>
 			<?php if(isset($characters[$i])) : ?>
@@ -29,7 +30,11 @@
 			<td><?php echo $characters[$i]->jobLevel?></td>
 			<td><?php echo number_format($characters[$i]->fame)?></td>
 			<td style="text-align: center; width: 30px">
-				<img src="<?php echo ac_guild_emblem($characters[$i]->server, $characters[$i]->charmap, $characters[$i]->guildId)?>">
+				<img src="<?php echo ac_guild_emblem(
+					$characters[$i]->charmap->server->key,
+					$characters[$i]->charmap->key,
+					$characters[$i]->guildId
+				)?>">
 			</td>
 			<td><?php echo htmlspecialchars($characters[$i]->guildName)?></td>
 			<?php else : ?>

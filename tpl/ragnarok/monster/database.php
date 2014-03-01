@@ -6,13 +6,33 @@ use Aqua\UI\ScriptManager;
  * @var $paginator  \Aqua\UI\Pagination
  * @var $page       \Page\Main\Ragnarok\Server\Item
  */
-$page->theme->footer->enqueueScript(ScriptManager::script('cardbmp'));
-$base_card_url = $page->server->charMapUri($page->charmap->key())->url(array(
+$page->theme->footer->enqueueScript('cardbmp')
+	->type('text/javascript')
+	->append('
+(function($) {
+	$("[ac-ro-card]").tooltip({
+		tooltipClass: "ac-card-bmp",
+		position: {
+			my: "center bottom-7",
+			at: "center top"
+		},
+		hide: null,
+		show: null,
+		content: function() {
+			return $("<span/>")
+				.append($("<div/>").addClass("ac-tooltip-top"))
+				.append($("<div/>").addClass("ac-tooltip-content").append($("<img/>").attr("src", $(this).attr("ac-ro-card"))))
+				.append($("<div/>").addClass("ac-tooltip-bottom"));
+		}
+	});
+})(jQuery);
+');
+$base_card_url = $page->charmap->url(array(
 	'path' => array( 'item' ),
 	'action' => 'view',
 	'arguments' => array( '' )
 ));
-$base_mob_url = $page->server->charMapUri($page->charmap->key())->url(array(
+$base_mob_url = $page->charmap->url(array(
 	'path' => array( 'mob' ),
 	'action' => 'view',
 	'arguments' => array( '' )
@@ -24,8 +44,8 @@ $base_mob_url = $page->server->charMapUri($page->charmap->key())->url(array(
 			<td colspan="8">
 				<form method="GET" style="float: right">
 					<?php echo ac_form_path()?>
-					<input type="text" name="id" value="<?php echo $page->request->uri->getString('id')?>" placeholder="<?php echo __('ragnarok', 'mob-id') ?>" size="6">
-					<input type="text" name="n" value="<?php echo $page->request->uri->getString('n')?>" placeholder="<?php echo __('ragnarok', 'name') ?>">
+					<input type="text" name="id" value="<?php echo htmlspecialchars($page->request->uri->getString('id'))?>" placeholder="<?php echo __('ragnarok', 'mob-id') ?>" size="8">
+					<input type="text" name="n" value="<?php echo htmlspecialchars($page->request->uri->getString('n'))?>" placeholder="<?php echo __('ragnarok', 'name') ?>">
 					<input type="submit" value="<?php echo __('application', 'search')?>">
 				</form>
 			</td>
@@ -42,9 +62,9 @@ $base_mob_url = $page->server->charMapUri($page->charmap->key())->url(array(
 		</tr>
 	</thead>
 	<tbody>
-<?php if(!$mob_count) : ?>
+<?php if(empty($mobs)) : ?>
 		<tr>
-			<td colspan="8" class="ac-table-no-result"><?php echo __('ragnarok', '0-mobs')?></td>
+			<td colspan="8" class="ac-table-no-result"><?php echo __('application', 'no-search-results')?></td>
 		</tr>
 <?php else : foreach($mobs as $mob) : ?>
 		<tr>
@@ -55,7 +75,7 @@ $base_mob_url = $page->server->charMapUri($page->charmap->key())->url(array(
 			<td><?php echo $mob->race()?></td>
 			<td><?php echo $mob->element() . ' ' . $mob->elementLevel()?></td>
 			<?php if($mob->cardId) { ?>
-				<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($mob->cardId)?>">
+				<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($mob->cardId)?>" title="">
 					<a href="<?php echo $base_card_url . $mob->cardId?>"></a>
 				</td>
 			<?php } else { ?>
@@ -73,4 +93,4 @@ $base_mob_url = $page->server->charMapUri($page->charmap->key())->url(array(
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('ragnarok', 'x-monsters-found', number_format($mob_count))?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($mob_count === 1 ? 's' : 'p'), number_format($mob_count))?></span>

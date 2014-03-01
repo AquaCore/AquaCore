@@ -1,7 +1,8 @@
 <?php
 /**
+ * @var $count      int
  * @var $guilds \Aqua\Ragnarok\Guild[]
- * @var $page   \Page\Main\Ragnarok\Server\Ranking
+ * @var $page   \Page\Main\Ragnarok\Server\Ladder
  */
 ?>
 <table class="ac-table ac-ranking ac-fame-ranking">
@@ -19,7 +20,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php for($i = 0; $i < 10; ++$i) : ?>
+	<?php for($i = 0; $i < $count; ++$i) : ?>
 		<tr>
 			<td class="ac-rank-<?php echo $i+1?>"><?php echo $i+1?></td>
 			<?php if(isset($guilds[$i])) : ?>

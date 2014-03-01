@@ -1273,3 +1273,41 @@ iframe[src="about:blank"]{ display: none !important; }
 	float: left;
 	margin-left: 10px;
 }
+.ui-tooltip.ac-card-bmp {
+	padding: 5px;
+	img {
+		height: 200px;
+		width: auto;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+	}
+}
+.ac-renewal-exp {
+	float: right;
+	margin-right: 20px;
+}
+.ac-renewal-exp-info {
+	float: left;
+	margin-left: 20px;
+}
+.ac-renewal-exp-slider {
+	clear: both;
+	margin-bottom: 5px
+}
+.ac-ranking {
+	tbody tr td:first-child {
+		width: 30px;
+		text-align: center;
+		font-size: 1.3em;
+	}
+	tbody tr:first-child td {
+		font-size: 1.2em;
+		background: #fbfbde !important;
+		&:first-child {
+			font-size: 2em;
+			color: #c66324;
+			font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+		}
+	}
+}

@@ -11,6 +11,6 @@
     <word namespace="menu" key="mob-db">Monster DB</word>
     <word namespace="menu" key="whos-online">Who's Online</word>
     <word namespace="menu" key="item-shop">Item Shop</word>
-    <word namespace="menu" key="rankings">Rankings</word>
+    <word namespace="menu" key="rankings">Ladders</word>
   </wordgroup>
 </languageimport>

@@ -60,7 +60,7 @@ if(Server::$serverCount) {
 					),
 					array(
 						'title' => __('menu', 'rankings'),
-						'url' => $charmap->url(array( 'path' => array( 'ranking' ) )),
+						'url' => $charmap->url(array( 'path' => array( 'ladder' ) )),
 					),
 				)
 			);

@@ -26,15 +26,15 @@ class Guild
 	/**
 	 * @var int
 	 */
+	public $nextExperience;
+	/**
+	 * @var int
+	 */
 	public $averageLevel;
 	/**
 	 * @var int
 	 */
 	public $leaderId;
-	/**
-	 * @var string
-	 */
-	public $leaderName;
 	/**
 	 * @var int
 	 */
@@ -47,6 +47,18 @@ class Guild
 	 * @var int
 	 */
 	public $castleCount;
+	/**
+	 * @var int
+	 */
+	public $skillPoints;
+	/**
+	 * @var int
+	 */
+	public $online;
+	/**
+	 * @var int
+	 */
+	public $message = array( '', '' );
 	/**
 	 * @var \Aqua\Ragnarok\Character[]
 	 */

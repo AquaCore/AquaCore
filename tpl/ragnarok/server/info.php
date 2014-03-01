@@ -9,7 +9,7 @@ use Aqua\UI\ScriptManager;
  * @var $class_population      array
  * @var $homunculus_population array
  * @var $online                int
- * @var $page             \Page\Main\Ragnarok\Server
+ * @var $page               \Page\Main\Ragnarok\Server
  */
 
 $class_population = array_replace(array_fill_keys(array_keys(\Aqua\Core\L10n::getDefault()->getNamespace('ragnarok-jobs')), 0), $class_population);
@@ -75,19 +75,19 @@ $page->charmap->serverStatus($status['char'], $status['map']);
 	<tbody>
 	<?php if((int)$page->charmap->getOption('online-stats')) :
 		$stats = array();
-		$i = 0;
+		$i = -1;
 		foreach($page->charmap->onlineStats(
 			'online',
 			strtotime('sunday 1 week ago'),
-			strtotime('last day of this week midnight'),
+			strtotime('saturday this week'),
 			'day',
 			300
 		) as $timestamp => $count) {
 			$week = date('w', $timestamp);
-			$stats[$i][$week] = $count;
-			if((int)$week == 6) {
+			if((int)$week == 0) {
 				++$i;
 			}
+			$stats[$i][$week] = $count;
 		}
 		for($j = 0; $j < 7; ++$j) {
 			if(!isset($stats[$i][$j])) {

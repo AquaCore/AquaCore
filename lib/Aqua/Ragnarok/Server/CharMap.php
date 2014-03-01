@@ -6,6 +6,7 @@ use Aqua\Http\Uri;
 use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Character;
 use Aqua\Ragnarok\Guild;
+use Aqua\Ragnarok\Homunculus;
 use Aqua\Ragnarok\Item;
 use Aqua\Ragnarok\ItemData;
 use Aqua\Ragnarok\Mob;
@@ -201,6 +202,7 @@ class CharMap
 			'manner'            => 'c.manner',
 			'str'               => 'c.str',
 			'vit'               => 'c.vit',
+			'agi'               => 'c.agi',
 			'dex'               => 'c.dex',
 			'int'               => 'c.int',
 			'luk'               => 'c.luk',
@@ -223,7 +225,7 @@ class CharMap
 		return Query::search($this->connection())
 			->columns($columns)
 			->whereOptions(array(
-				'guild_master' => 'g.guild_master',
+				'guild_master' => 'g.master',
 			    'guild_level'  => 'g.guild_lv',
 			    'guild_max_members'  => 'g.max_member',
 			    'guild_online'  => 'g.connect_member',
@@ -241,6 +243,44 @@ class CharMap
 			->leftJoin($this->table('guild'), 'g.guild_id = c.guild_id', 'g')
 			->groupBy('c.char_id')
 			->parser(array( $this, 'parseCharSql' ));
+	}
+
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public function homunculusSearch()
+	{
+		$columns = array(
+			'id' => 'h.homun_id',
+			'char_id' => 'h.char_id',
+			'char_name' => 'c.`name`',
+			'name' => 'h.`name`',
+			'class' => 'h.`class`',
+			'previous_class' => 'h.prev_class',
+			'level' => 'h.level',
+			'experience' => 'h.exp',
+			'intimacy' => 'h.intimacy',
+			'hunger' => 'h.hunger',
+			'max_hp' => 'h.max_hp',
+			'max_sp' => 'h.max_sp',
+			'hp' => 'h.hp',
+			'sp' => 'h.sp',
+			'str' => 'h.str',
+			'vit' => 'h.vit',
+			'agi' => 'h.agi',
+			'dex' => 'h.dex',
+			'int' => 'h.int',
+			'luk' => 'h.luk',
+			'alive' => 'h.alive',
+			'vaporized' => 'h.vaporize',
+			'rename' => 'h.rename_flag',
+		);
+		return Query::search($this->connection())
+			->columns($columns)
+			->whereOptions($columns)
+			->from($this->table('homunculus'), 'h')
+			->innerJoin($this->table('char'), 'c.char_id = h.char_id', 'c')
+			->parser(array( $this, 'parseHomunculusSql' ));
 	}
 
 	/**
@@ -468,7 +508,7 @@ class CharMap
 	public function guildSearch()
 	{
 		$columns = array(
-			'master' => 'g.guild_master',
+			'master' => 'g.master',
 			'level'  => 'g.guild_lv',
 			'max_members'  => 'g.max_member',
 			'online'  => 'g.connect_member',
@@ -478,9 +518,6 @@ class CharMap
 			'skill_points'  => 'g.skill_point',
 			'message1'  => 'g.mes1',
 			'message2'  => 'g.mes2',
-			'emblem_length'  => 'g.emblem_len',
-			'emblem_id'  => 'g.emblem_id',
-			'emblem_data'  => 'g.emblem_data',
 		);
 		return Query::search($this->connection())
 			->columns(array(
@@ -489,9 +526,9 @@ class CharMap
 			) + $columns)
 			->whereOptions($columns)
 			->havingOptions(array(
-				                'member_count' => 'COUNT(gm.char_id)',
-				                'castle_count' => 'COUNT(gc.castle_id)',
-			                ))
+				'member_count' => 'COUNT(gm.char_id)',
+				'castle_count' => 'COUNT(gc.castle_id)',
+			))
 			->from($this->table('guild'), 'g')
 			->leftJoin($this->table('guild_castle'), 'g.guild_id = gc.guild_id', 'gc')
 			->leftJoin($this->table('guild_member'), 'g.guild_id = gm.guild_id', 'gm')
@@ -558,8 +595,6 @@ class CharMap
 			->parser(array( $this, 'parseMobSql' ));
 		$mob_db2->where = &$search->where;
 		$mob_db->where = &$search->where;
-		$mob_db2->order = &$search->order;
-		$mob_db->order = &$search->order;
 		return $search;
 	}
 
@@ -702,6 +737,7 @@ class CharMap
 				          'manner'            => 'c.manner',
 				          'str'               => 'c.str',
 				          'vit'               => 'c.vit',
+				          'agi'               => 'c.agi',
 				          'dex'               => 'c.dex',
 				          'int'               => 'c.int',
 				          'luk'               => 'c.luk',
@@ -955,6 +991,50 @@ class CharMap
 	public function guild($id, $type = 'id')
 	{
 
+	}
+
+	/**
+	 * @param int|string       $id
+	 * @return \Aqua\Ragnarok\Homunculus
+	 */
+	public function homunculus($id)
+	{
+		if(isset($this->homunculus[$id])) {
+			return $this->homunculus[$id];
+		}
+		$select = Query::select($this->connection())
+			->columns(array(
+				'id' => 'h.homun_id',
+				'char_id' => 'h.char_id',
+				'char_name' => 'c.`name`',
+				'name' => 'h.`name`',
+				'class' => 'h.`class`',
+				'previous_class' => 'h.prev_class',
+				'level' => 'h.level',
+				'experience' => 'h.exp',
+				'intimacy' => 'h.intimacy',
+				'hunger' => 'h.hunger',
+				'max_hp' => 'h.max_hp',
+				'max_sp' => 'h.max_sp',
+				'hp' => 'h.hp',
+				'sp' => 'h.sp',
+				'str' => 'h.str',
+				'vit' => 'h.vit',
+				'agi' => 'h.agi',
+				'dex' => 'h.dex',
+				'int' => 'h.int',
+				'luk' => 'h.luk',
+				'alive' => 'h.alive',
+				'vaporized' => 'h.vaporize',
+				'rename' => 'h.rename_flag',
+			))
+			->from($this->table('homunculus'), 'h')
+			->innerJoin($this->table('char'), 'c.char_id = h.char_id', 'c')
+			->where(array( 'id' => $id ))
+			->limit(1)
+			->parser(array( $this, 'parseHomunculusSql' ))
+			->query();
+		return ($select->valid() ? $select->current() : null);
 	}
 
 	/**
@@ -1782,6 +1862,7 @@ class CharMap
 		$char->option       = (int)$data['option'];
 		$char->strength     = (int)$data['str'];
 		$char->vitality     = (int)$data['vit'];
+		$char->agility      = (int)$data['agi'];
 		$char->dexterity    = (int)$data['dex'];
 		$char->intelligence = (int)$data['int'];
 		$char->luck         = (int)$data['luk'];
@@ -1794,6 +1875,40 @@ class CharMap
 		$char->deleteDate   = (int)$data['delete_date'];
 
 		return $char;
+	}
+
+	public function parseHomunculusSql(array $data)
+	{
+		if(isset($this->homunculus[$data['id']])) {
+			$hom = $this->homunculus[$data['id']];
+		} else {
+			$hom = new Homunculus;
+		}
+		$hom->charmap = &$this;
+		$hom->id      = $data['id'];
+		$hom->ownerId = $data['char_id'];
+		$hom->ownerName = $data['char_name'];
+		$hom->class = $data['class'];
+		$hom->previousClass = $data['previous_class'];
+		$hom->name = $data['name'];
+		$hom->level = $data['level'];
+		$hom->experience = $data['experience'];
+		$hom->maxHp = $data['max_hp'];
+		$hom->maxSp = $data['max_sp'];
+		$hom->hp = $data['hp'];
+		$hom->sp = $data['sp'];
+		$hom->strength = $data['str'];
+		$hom->vitality = $data['vit'];
+		$hom->agility = $data['agi'];
+		$hom->dexterity = $data['dex'];
+		$hom->intelligence = $data['int'];
+		$hom->luck = $data['luk'];
+		$hom->intimacy = $data['intimacy'];
+		$hom->hunger = $data['hunger'];
+		$hom->alive = (bool)$data['alive'];
+		$hom->vaporized = (bool)$data['vaporized'];
+		$hom->renamed = (bool)$data['rename'];
+		return $hom;
 	}
 
 	/**
@@ -1810,17 +1925,21 @@ class CharMap
 		} else {
 			$guild = new Guild;
 		}
-		$guild->charmap       = &$this;
-		$guild->id            = (int)$data['id'];
-		$guild->name          = $data['name'];
-		$guild->level         = (int)$data['level'];
-		$guild->experience    = (int)$data['experience'];
-		$guild->castleCount   = (int)$data['castle_count'];
-		$guild->leaderId      = (int)$data['master_id'];
-		$guild->leaderName    = $data['master_name'];
-		$guild->averageLevel  = (int)$data['average_level'];
-		$guild->memberCount   = (int)$data['member_count'];
-		$guild->memberLimit   = (int)$data['member_limit'];
+		$guild->charmap        = &$this;
+		$guild->id             = (int)$data['id'];
+		$guild->name           = $data['name'];
+		$guild->level          = (int)$data['level'];
+		$guild->experience     = (int)$data['experience'];
+		$guild->castleCount    = (int)$data['castle_count'];
+		$guild->leaderId       = (int)$data['master'];
+		$guild->averageLevel   = (int)$data['average_level'];
+		$guild->memberCount    = (int)$data['member_count'];
+		$guild->memberLimit    = (int)$data['member_limit'];
+		$guild->nextExperience = (int)$data['next_experience'];
+		$guild->skillPoints    = (int)$data['skill_points'];
+		$guild->online         = (int)$data['online'];
+		$guild->message[1]     = $data['message1'];
+		$guild->message[2]     = $data['message2'];
 		return $guild;
 	}
 

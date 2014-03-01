@@ -7,7 +7,8 @@
     <word namespace="ragnarok" key="accounts-registered">Accounts Registered</word>
     <word namespace="ragnarok" key="add-to-cart">Add to cart</word>
     <word namespace="ragnarok" key="agility">Agility</word>
-    <word namespace="ragnarok" key="alch-ranking">Alchemist Ranking</word>
+    <word namespace="ragnarok" key="homunculus-ranking">Homunculus Ladder</word>
+    <word namespace="ragnarok" key="alch-ranking">Alchemist Ladder</word>
     <word namespace="ragnarok" key="amount">Amount</word>
     <word namespace="ragnarok" key="applicable-jobs">Applicable Jobs</word>
     <word namespace="ragnarok" key="attack">Attack</word>
@@ -34,7 +35,7 @@
     <word namespace="ragnarok" key="changeslot-duplicate">Failed to change slots, duplicate slot number.</word>
     <word namespace="ragnarok" key="changeslot-missing-char">Failed to change slots, missing character %s.</word>
     <word namespace="ragnarok" key="char-preferences">Character Preferences</word>
-    <word namespace="ragnarok" key="char-ranking">Character Ranking</word>
+    <word namespace="ragnarok" key="char-ranking">Character Ladder</word>
     <word namespace="ragnarok" key="character">Character</word>
     <word namespace="ragnarok" key="characters">Characters</word>
     <word namespace="ragnarok" key="chars-registered">Characters Registered</word>
@@ -68,12 +69,12 @@
     <word namespace="ragnarok" key="group">Group</word>
     <word namespace="ragnarok" key="guild">Guild</word>
     <word namespace="ragnarok" key="guild-name">Guild Name</word>
-    <word namespace="ragnarok" key="guild-ranking">Guild Ranking</word>
+    <word namespace="ragnarok" key="guild-ranking">Guild Ladder</word>
     <word namespace="ragnarok" key="guilds">Guilds</word>
     <word namespace="ragnarok" key="hidden">Hidden</word>
     <word namespace="ragnarok" key="hide-map-whos-online">Hide map from who is online</word>
     <word namespace="ragnarok" key="hide-whos-online">Hide from who is online</word>
-    <word namespace="ragnarok" key="hide-zeny">Hide from zeny ranking</word>
+    <word namespace="ragnarok" key="hide-zeny">Hide from zeny ladder</word>
     <word namespace="ragnarok" key="hp">HP</word>
     <word namespace="ragnarok" key="identifier">Identifier</word>
     <word namespace="ragnarok" key="intelligence">Intelligence</word>
@@ -142,7 +143,7 @@
     <word namespace="ragnarok" key="pos-reset">Your character's position has been reset.</word>
     <word namespace="ragnarok" key="preferences">Preferences</word>
     <word namespace="ragnarok" key="purchase">Purchase</word>
-    <word namespace="ragnarok" key="purchase-complete">Your items have been added to your storage.</word>
+    <word namespace="ragnarok" key="purchase-complete">All items have been added to your account's storage.</word>
     <word namespace="ragnarok" key="race">Race</word>
     <word namespace="ragnarok" key="ragnarok">Ragnarök</word>
     <word namespace="ragnarok" key="range">Range</word>
@@ -174,13 +175,13 @@
     <word namespace="ragnarok" key="slot">Slot</word>
     <word namespace="ragnarok" key="slot-saved">Your characters' slot order has been updated.</word>
     <word namespace="ragnarok" key="slots">Slots</word>
-    <word namespace="ragnarok" key="smith-ranking">Blacksmith Ranking</word>
+    <word namespace="ragnarok" key="smith-ranking">Blacksmith Ladder</word>
     <word namespace="ragnarok" key="sp">SP</word>
     <word namespace="ragnarok" key="spell-range">Spell Range</word>
     <word namespace="ragnarok" key="state">State</word>
     <word namespace="ragnarok" key="storage">Storage</word>
     <word namespace="ragnarok" key="strength">Strength</word>
-    <word namespace="ragnarok" key="tk-ranking">Taekwon Ranking</word>
+    <word namespace="ragnarok" key="tk-ranking">Taekwon Ladder</word>
     <word namespace="ragnarok" key="type">Type</word>
     <word namespace="ragnarok" key="unequip-script">Unequip Script</word>
     <word namespace="ragnarok" key="unidentified">Unidentified</word>
@@ -215,7 +216,7 @@
     <word namespace="ragnarok" key="x-storage">%s's Storage</word>
     <word namespace="ragnarok" key="y-coord">Y Coordinate</word>
     <word namespace="ragnarok" key="zeny">Zeny</word>
-    <word namespace="ragnarok" key="zeny-ranking">Zeny Ranking</word>
+    <word namespace="ragnarok" key="zeny-ranking">Zeny Ladder</word>
     <word namespace="ragnarok" key="account-id">Account ID</word>
     <word namespace="ragnarok" key="unban-time">Unban Time</word>
     <word namespace="ragnarok" key="birthday">Birthday</word>

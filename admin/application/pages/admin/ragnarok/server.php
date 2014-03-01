@@ -316,6 +316,7 @@ extends Page
 				,('default-map-x', :x)
 				,('default-map-y', :y)
 				,('map-restriction', :restriction)
+				,('fame-ladder', :fame)
 				;
 				");
 				$sth->bindValue(':chost', $this->request->getString('char-host'));
@@ -327,6 +328,7 @@ extends Page
 				$sth->bindValue(':ttl', $this->request->getInt('status-cache'));
 				$sth->bindValue(':online', $this->request->getInt('online-stats'));
 				$sth->bindValue(':renewal', $this->request->getInt('renewal') ? '1' : '');
+				$sth->bindValue(':fame', $this->request->getInt('fame'));
 				$sth->bindValue(':map', $this->request->getString('default-map'));
 				$sth->bindValue(':x', $this->request->getInt('default-x'));
 				$sth->bindValue(':y', $this->request->getInt('default-y'));

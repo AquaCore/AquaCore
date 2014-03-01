@@ -10,16 +10,16 @@ var AquaCore = AquaCore || {};
 		this.info         = document.createElement("div");
 		this.min = Math.max(0, this.options.level - 11)
 		this.max = this.options.level + 31;
+		$(this.info)
+			.addClass("ac-renewal-exp-info")
+			.appendTo(this.element);
 		$(this.experience)
 			.addClass("ac-renewal-exp")
-			.appendTo(this.element);
-		$(this.info)
-			.addClass("ac-renewal-exp-slider")
 			.appendTo(this.element);
 		$(this.slider)
 			.addClass("ac-renewal-exp-slider")
 			.appendTo(this.element)
-			.slider(AquaCore.extend({}, this.options.slider, {
+			.slider($.extend({}, this.options.slider, {
 			min: Math.max(0, this.options.level - 11),
 			max: this.options.level + 31,
 			value: this.currentLevel,

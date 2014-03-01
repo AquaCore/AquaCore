@@ -5,11 +5,6 @@ use Aqua\UI\ScriptManager;
  * @var $drops  array
  * @var $page   \Page\Main\Ragnarok\Server\Mob
  */
-if(!$mob) {
-	echo '<div class="text-align:center">', __('ragnarok', 'mob-not-found'), '</div>';
-	return;
-}
-$page->theme->footer->enqueueScript(ScriptManager::script('cardbmp'));
 $mob_name = htmlspecialchars($mob->iName);
 $all_drops = array();
 if(isset($drops['card'])) {
@@ -54,7 +49,7 @@ if(isset($drops['mvp'])) {
 				<td><?php echo number_format($mob->sp)?></td>
 			</tr>
 			<tr>
-				<td><?php echo __('ragnarok', 'Llvel')?></td>
+				<td><?php echo __('ragnarok', 'level')?></td>
 				<td><?php echo $mob->level?></td>
 				<td><?php echo __('ragnarok', 'size')?></td>
 				<td><?php echo $mob->size()?></td>
@@ -96,7 +91,7 @@ if(isset($drops['mvp'])) {
 				<td><?php echo number_format($mob->mDefence)?></td>
 			</tr>
 			<tr>
-				<td rowspan="<?php echo 6 + ($page->charmap->renewal ? 1 : 0) + ($mob->mvpExp ? 1 : 0)?>" style="vertical-align: middle">
+				<td rowspan="<?php echo 6 + ($page->charmap->getOption('renewal') ? 1 : 0) + ($mob->mvpExp ? 1 : 0)?>" style="text-align: justify">
 					<ul class="ac-mob-mode">
 						<li class="<?php echo (($mob->mode & 0x0001) ? 'ac-mode-applicable' : '')?>">
 							<?php echo __('ragnarok-mob-mode', 0x0001)?>
@@ -175,19 +170,20 @@ if(isset($drops['mvp'])) {
 				<td colspan="2"><?php echo number_format($mob->mvpExp)?></td>
 			</tr>
 			<?php endif; ?>
-			<?php if($page->charmap->renewal) : ?>
+			<?php if($page->charmap->getOption('renewal')) : ?>
 			<tr>
 				<?php
-				$page->theme->footer->enqueueScript(ScriptManager::script('renewal-exp-slider'));
+				$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.experience-slider'));
 				$page->theme->footer->enqueueScript('renewal-exp-slider.init')
 					->append("
-jQuery(\".ac-renewal-exp\").renewalExpSlider({
-	mob_level: {$mob->level}
+new AquaCore.ExperienceSlider(jQuery(\".ac-renewal-exp-wrapper\").get(0), {
+	level: {$mob->level},
+	experience: {$mob->baseExp}
 });
 ");
 				?>
 				<td colspan="4">
-					<div class="ac-renewal-exp"></div>
+					<div class="ac-renewal-exp-wrapper"></div>
 				</td>
 			</tr>
 			<?php endif; ?>
@@ -201,38 +197,43 @@ jQuery(\".ac-renewal-exp\").renewalExpSlider({
 </div>
 <div style="display: table-cell; vertical-align: top;">
 	<table class="ac-table" id="ac-item-whodrops" style="width: 250px;">
+		<colgroup>
+			<col style="width: 45px">
+			<col>
+			<col style="width: 70px">
+		</colgroup>
 		<thead>
 		<tr>
 			<td colspan="3"><?php echo __('ragnarok', 'x-drops', $mob_name)?></td>
 		</tr>
-		<tr class="alt" style="display: block;">
-			<td style="width: 50px;"></td>
-			<td style="width: 130px;"><?php echo __('ragnarok', 'item')?></td>
-			<td style="width: 70px;"><?php echo __('ragnarok', 'rate')?></td>
+		<tr class="alt">
+			<td></td>
+			<td><?php echo __('ragnarok', 'item')?></td>
+			<td><?php echo __('ragnarok', 'rate')?></td>
 		</tr>
 		</thead>
-		<tbody style="display: block; width: 100%; max-height: 300px; overflow-y: auto">
+		<tbody>
 		<?php if(empty($all_drops)) : ?>
 			<tr>
-				<td colspan="3"  class="ac-table-no-result" style="width: 100%">
+				<td colspan="3"  class="ac-table-no-result">
 					<?php echo __('ragnarok', 'no-drops')?>
 				</td>
 			</tr>
 		<?php else : foreach($all_drops as $drop) : ?>
 			<tr>
 				<?php if($drop['type'] === 6) : ?>
-				<td style="width: 50px;" ac-ro-card="<?php echo ac_item_cardbmp($drop['id'])?>"><img src="<?php echo ac_item_icon($drop['id'])?>"></td>
+				<td ac-ro-card="<?php echo ac_item_cardbmp($drop['id'])?>"><img src="<?php echo ac_item_icon($drop['id'])?>"></td>
 				<?php else : ?>
-				<td style="width: 50px;"><img src="<?php echo ac_item_icon($drop['id'])?>"></td>
+				<td><img src="<?php echo ac_item_icon($drop['id'])?>"></td>
 				<?php endif; ?>
-				<td style="width: 130px;"><a href="<?php echo $drop['url']?>"><?php echo htmlspecialchars($drop['name'])?></a></td>
-				<td style="width: 70px;"><?php echo $drop['rate']?>%</td>
+				<td><a href="<?php echo $drop['url']?>"><?php echo htmlspecialchars($drop['name'])?></a></td>
+				<td><?php echo $drop['rate']?>%</td>
 			</tr>
 		<?php endforeach; endif; ?>
 		</tbody>
 		<tfoot>
 		<tr>
-			<td colspan="3" style="text-align: right"><?php echo __('ragnarok', 'x-items', count($all_drops))?></td>
+			<td style="text-align: right" colspan="3"><?php echo __('ragnarok', 'x-items', count($all_drops))?></td>
 		</tr>
 		</tfoot>
 	</table>

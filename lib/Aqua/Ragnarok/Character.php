@@ -151,6 +151,10 @@ class Character
 	/**
 	 * @var int
 	 */
+	public $agility;
+	/**
+	 * @var int
+	 */
 	public $dexterity;
 	/**
 	 * @var int
