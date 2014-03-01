@@ -9,6 +9,7 @@ use Aqua\Ragnarok\Item;
 use Aqua\Ragnarok\Server;
 use Aqua\Ragnarok\Server\Login;
 use Aqua\Ragnarok\Account as RagnarokAccount;
+use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
@@ -30,7 +31,10 @@ extends Page
 	 */
 	public $account;
 
-	const STORAGE_ITEMS_PER_PAGE = 10;
+	/**
+	 * @var int
+	 */
+	public static $storageItemsPerPage = 10;
 
 	public function run()
 	{
@@ -150,51 +154,57 @@ extends Page
 
 	public function storage_action($charmap_key = '')
 	{
-		if($this->server->charmapCount === 1 || !($charmap = $this->server->charmap($charmap_key))) {
-			$charmap = current($this->server->charmap);
-		}
-		$this->title = __('ragnarok', 'x-storage', htmlspecialchars($this->account->username));
-		$this->theme->head->section = __('ragnarok', 'storage');
-		$options = array( 'account_id' => $this->account->id );
-		if(($x = $this->request->uri->getString('s', false))) {
-			$x = addcslashes($x, '%_\\');
-			$options['name'] = array( AC_SEARCH_LIKE, "%$x%" );
-		}
-		if(($x = $this->request->uri->getString('t', false)) !== false) {
-			switch($x) {
-				case 'use':    $options['type'] = array( AC_SEARCH_IN, 1, 2, 11 ); break;
-				case 'misc':   $options['type'] = array( AC_SEARCH_IN, 3, 8, 12 ); break;
-				case 'weapon': $options['type'] = 4; break;
-				case 'armor':  $options['type'] = 5; break;
-				case 'egg':    $options['type'] = 7; break;
-				case 'card':   $options['type'] = 6; break;
-				case 'ammo':   $options['type'] = 10; break;
-			}
-		}
-		if(!empty($options)) $options['identify'] = 1;
-		$current_page = $this->request->uri->getInt('page', 1, 1);
 		try {
-			$storage = $charmap->storageSearch(
-				$options,
-				array( AC_ORDER_ASC, 'name' ),
-				array(($current_page - 1) * self::STORAGE_ITEMS_PER_PAGE, self::STORAGE_ITEMS_PER_PAGE),
-				$storage_size
-			);
+			if($this->server->charmapCount === 1) {
+				$charmap = current($this->server->charmap);
+			} else if(!($charmap = $this->server->charmap($charmap_key))) {
+				$this->error(404);
+				return;
+			}
+			$this->title = __('ragnarok', 'x-storage', htmlspecialchars($this->account->username));
+			$this->theme->head->section = __('ragnarok', 'storage');
+			$current_page = $this->request->uri->getInt('page', 1, 1);
+			$search = $charmap->storageSearch()
+				->calcRows(true)
+				->where(array( 'account_id' => $this->account->id ))
+				->limit(($current_page - 1) * self::$storageItemsPerPage, self::$storageItemsPerPage)
+				->order(array( 'name' => 'ASC' ));
+			if(($x = $this->request->uri->getString('s', false))) {
+				$search->where(array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' ));
+			}
+			if(($x = $this->request->uri->getString('t', false)) !== false) {
+				do {
+					switch($x) {
+						case 'use':    $type = array( Search::SEARCH_IN, 1, 2, 11 ); break;
+						case 'misc':   $type = array( Search::SEARCH_IN, 3, 8, 12 ); break;
+						case 'weapon': $type = 4; break;
+						case 'armor':  $type = 5; break;
+						case 'egg':    $type = 7; break;
+						case 'card':   $type = 6; break;
+						case 'ammo':   $type = 10; break;
+						default: break 2;
+					}
+					$search->where(array( 'type' => $type ));
+				} while(0);
+			}
+			if($x) {
+				$search->where(array( 'intentify' => 1 ));
+			}
+			$search->query();
+			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$storageItemsPerPage), $current_page, 'page');
+			$tpl = new Template;
+			$tpl->set('server',       $this->server);
+			$tpl->set('charmap',      $charmap);
+			$tpl->set('storage',      $search->results);
+			$tpl->set('storage_size', $search->rowsFound);
+			$tpl->set('paginator',    $pgn);
+			$tpl->set('page',         $this);
+			echo $tpl->render('ragnarok/account/storage');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			$this->error(1, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 			return;
 		}
-		$avail_pages = ceil($storage_size / self::STORAGE_ITEMS_PER_PAGE);
-		$pgn = new Pagination(App::request()->uri, $avail_pages, $current_page, 'page');
-		$tpl = new Template;
-		$tpl->set('server',       $this->server);
-		$tpl->set('charmap',      $charmap);
-		$tpl->set('storage',      $storage);
-		$tpl->set('storage_size', $storage_size);
-		$tpl->set('paginator',    $pgn);
-		$tpl->set('page',         $this);
-		echo $tpl->render('ragnarok/account/storage');
 	}
 
 	public function char_action($charmap_key = '')

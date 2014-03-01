@@ -9,12 +9,31 @@ use Aqua\Core\App;
  * @var $paginator    \Aqua\UI\Pagination
  * @var $page         \Page\Main\Ragnarok\Account
  */
-assert('isset($storage_size) && isset($storage) && isset($charmap) && isset($paginator) && isset($page)');
 
-$page->theme->footer->enqueueScript(ScriptManager::script('cardbmp'));
-$paginator->range = 7;
+$page->theme->footer->enqueueScript('cardbmp')
+                    ->type('text/javascript')
+                    ->append('
+(function($) {
+	$("[ac-ro-card]").tooltip({
+		tooltipClass: "ac-card-bmp",
+		position: {
+			my: "center+5 bottom-7",
+			at: "center-5 top"
+		},
+		hide: null,
+		show: null,
+		content: function() {
+			return $("<span/>")
+				.append($("<div/>").addClass("ac-tooltip-top"))
+				.append($("<div/>").addClass("ac-tooltip-content").append($("<img/>").attr("src", $(this).attr("ac-ro-card"))))
+				.append($("<div/>").addClass("ac-tooltip-bottom"));
+		}
+	});
+})(jQuery);
+');
+
 $search_type = $page->request->uri->getString('t');
-$base_url = $page->server->charMapUri($charmap->key())->url(array(
+$base_url = $charmap->url(array(
 	'path' => array( 'item' ),
 	'action' => 'view',
 	'arguments' => array( '' )
@@ -26,7 +45,7 @@ $base_url = $page->server->charMapUri($charmap->key())->url(array(
 			<td colspan="7">
 				<form method="GET">
 				<?php echo ac_form_path()?>
-				<div class="ac-storage-types">
+				<div class="ac-storage-types" style="float: left; line-height: 30px">
 					<input id="ac_storage-use" type="radio" name="t" value="use" <?php echo ($search_type == 'use' ? 'checked' : '')?>>
 					<label for="ac_storage-use"><?php echo __('ragnarok-item-type', '2')?></label>
 					<input id="ac_storage-misc" type="radio" name="t" value="misc" <?php echo ($search_type == 'misc' ? 'checked' : '')?>>
@@ -53,7 +72,7 @@ $base_url = $page->server->charMapUri($charmap->key())->url(array(
 							<?php endforeach; ?>
 						</select>
 					<?php endif; ?>
-					<input type="text" name="s" value="<?php echo $page->request->uri->getString('s')?>">
+					<input type="text" name="s" value="<?php echo htmlspecialchars($page->request->uri->getString('s'))?>">
 					<input type="submit" value="<?php echo __('application', 'search')?>">
 				</div>
 				</form>
@@ -67,9 +86,9 @@ $base_url = $page->server->charMapUri($charmap->key())->url(array(
 		</tr>
 	</thead>
 	<tbody>
-<?php if(!$storage_size) : ?>
+<?php if(empty($storage)) : ?>
 	<tr>
-		<td colspan="7" style="text-align: center; font-style: italic;"><?php echo __('ragnarok', '0-items')?></td>
+		<td colspan="7" style="text-align: center; font-style: italic;"><?php echo __('application', 'no-search-results')?></td>
 	</tr>
 <?php else : foreach($storage as $item) : ?>
 	<tr>
@@ -81,11 +100,13 @@ $base_url = $page->server->charMapUri($charmap->key())->url(array(
 		for($i = 0; $i < 4; ++$i) {
 			$item->card($i, $card_id, $enchanted);
 			if($enchanted) { ?>
-		<td class="ac-card-slot ac-slot-enchanted"><?php echo ac_item_icon($card_id)?></td>
+		<td class="ac-card-slot ac-slot-enchanted">
+			<a href="<?php echo $base_url . $card_id ?>"><img src="<?php echo ac_item_icon($card_id)?>"></a>
+		</td>
 		<?php } else if($item->slots < ($i + 1)) { ?>
 		<td class="ac-card-slot ac-slot-disabled"></td>
 		<?php } else if($card_id) { ?>
-		<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($card_id)?>">
+		<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($card_id)?>" title="">
 			<a href="<?php echo $base_url . $card_id?>"></a>
 		</td>
 		<?php } else { ?>
@@ -113,4 +134,4 @@ $base_url = $page->server->charMapUri($charmap->key())->url(array(
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('ragnarok', 'x-items', number_format($storage_size))?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($storage_size === 1 ? 's' : 'p'), number_format($storage_size))?></span>

@@ -24,6 +24,7 @@ class Item
 	public $uniqueId   = 0;
 	public $slots      = 0;
 	public $itemType   = 0;
+	public $bound      = 0;
 	public $data       = array();
 
 	const TYPE_INVENTORY = 0;
@@ -59,6 +60,7 @@ class Item
 			}
 		} else if(($this->itemType === 4 || $this->itemType === 5)) {
 			$cards = array_fill_keys($this->cards, 0);
+			unset($cards[0]);
 			$enchant = 0;
 			foreach($this->cards as $card) {
 				if($card > 4700 && $card < 4899) {
@@ -73,7 +75,7 @@ class Item
 			}
 			foreach($cards as $id => $count) {
 				if($count) {
-					$cnt = __('ragnarok-card-count', $count);
+					$cnt = __('ragnarok-card-count', $count - 1);
 					if(($card_name = __('ragnarok-card-prefix', $id)) !== $id) {
 						$prefix.= "$cnt $card_name ";
 					} else if($count > 1) {

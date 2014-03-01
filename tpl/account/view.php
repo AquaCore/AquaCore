@@ -43,7 +43,7 @@ $rows = 5 + min(1, Server::$serverCount);
 	<?php if(Server::$serverCount > 0) : ?>
 	<tr class="ac-table-header alt">
 		<td><?php echo __('ragnarok', 'username')?></td>
-		<td><?php echo __('ragnarok', 'gender')?></td>
+		<td><?php echo __('ragnarok', 'sex')?></td>
 		<td><?php echo __('ragnarok', 'group')?></td>
 		<td><?php echo __('ragnarok', 'state')?></td>
 		<td><?php echo __('ragnarok', 'last-login')?></td>

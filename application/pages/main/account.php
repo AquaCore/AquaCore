@@ -18,18 +18,16 @@ use Aqua\Util\ImageUploader;
 use PHPMailer\PHPMailerException;
 
 class Account
-	extends Page
+extends Page
 {
-	public $settings;
+	public static $usernameLoginAttemptsCaptcha = 10;
+	public static $usernameLoginInterval = 10;
+	public static $ipLoginAttemptsCaptcha = 3;
+	public static $ipLoginAttemptsLockout = 5;
+	public static $ipLoginInterval = 15;
 
 	const REGISTRATION_KEY = 'ac_registration_key';
 	const RESET_PASS_KEY   = 'ac_reset_cp_password_key';
-
-	const USERNAME_LOGIN_ATTEMPTS_CAPTCHA = 10;
-	const USERNAME_LOGIN_INTERVAL         = 10;
-	const IP_LOGIN_ATTEMPTS_CAPTCHA       = 3;
-	const IP_LOGIN_ATTEMPTS_LOCKOUT       = 5;
-	const IP_LOGIN_INTERVAL               = 15;
 
 	public function run()
 	{
@@ -56,7 +54,7 @@ class Account
 			}
 		} else {
 			$menu->append('account', array(
-				'title' => __('account', 'account'),
+				'title' => __('account', 'my-account'),
 				'url'   => "{$base_url}index"
 			))->append('editacc', array(
 				'title' => __('profile', 'preferences'),
@@ -940,16 +938,16 @@ class Account
 		try {
 			$username          = trim($this->request->getString('username'));
 			$password          = trim($this->request->getString('password'));
-			$ip_attempts       = LoginLog::attempts(App::request()->ipString, self::IP_LOGIN_INTERVAL, 'ip_address');
-			$username_attempts = LoginLog::attempts($username, self::USERNAME_LOGIN_INTERVAL, 'username');
-			if($ip_attempts >= self::IP_LOGIN_ATTEMPTS_LOCKOUT) {
+			$ip_attempts       = LoginLog::attempts(App::request()->ipString, self::$ipLoginInterval, 'ip_address');
+			$username_attempts = LoginLog::attempts($username, self::$usernameLoginInterval, 'username');
+			if($ip_attempts >= self::$ipLoginAttemptsLockout) {
 				App::user()->session
 					->delete('ac_login_captcha')
 					->flash('ac_login_warning', __('login', 'attempt-wait'));
 
 				return;
-			} else if($ip_attempts >= self::IP_LOGIN_ATTEMPTS_CAPTCHA ||
-			          $username_attempts >= self::USERNAME_LOGIN_ATTEMPTS_CAPTCHA) {
+			} else if($ip_attempts >= self::$ipLoginAttemptsCaptcha ||
+			          $username_attempts >= self::$usernameLoginAttemptsCaptcha) {
 				if(!App::user()->session->get('ac_login_captcha')) {
 					App::user()->session
 						->set('ac_login_captcha', true)

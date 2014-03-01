@@ -646,6 +646,8 @@ class CharMap
 					'id' => 'x.id',
 					'item_id' => 'x.nameid',
 					'identify' => 'x.identify',
+					'refine' => 'x.refine',
+					'bound' => 'x.bound',
 					'attribute' => 'x.attribute',
 					'equip' => 'x.equip',
 					'amount' => 'x.amount',
@@ -686,7 +688,7 @@ class CharMap
 							'slots' => 'i.`slots`',
 							'type'  => 'i.`type`',
 							'custom' => '0'
-						))->from($this->table('item_db2'), 'i')->union(Query::select($this->connection())->columns(array(
+						))->from($this->table('item_db'), 'i')->union(Query::select($this->connection())->columns(array(
 								'id' => 'i.id',
 								'identifier' => 'i.`name_english`',
 								'name' => 'i.`name_japanese`',
@@ -696,7 +698,7 @@ class CharMap
 						))->from($this->table('item_db2'), 'i'), true), 'idb.id = x.nameid', 'idb')
 			->leftJoin($this->table('char'), 'c.char_id = IF(x.card0 IN (254, 255), IF(x.card2 < 0, x.card2 + 65536, x.card2) | (x.card3 << 16), NULL)', 'c')
 			->groupBy('x.id')
-			->parser(array( $this, '_parseItemSql' ));
+			->parser(array( $this, 'parseItemSql' ));
 	}
 
 	/**
@@ -1720,11 +1722,12 @@ class CharMap
 		$item->refine     = (int)$data['refine'];
 		$item->equip      = (int)$data['equip'];
 		$item->amount     = (int)$data['amount'];
+		$item->bound      = (int)$data['bound'];
 		$item->identified = (bool)$data['identify'];
-		$item->cards[0]   = (int)$data['card0_id'];
-		$item->cards[1]   = (int)$data['card1_id'];
-		$item->cards[2]   = (int)$data['card2_id'];
-		$item->cards[3]   = (int)$data['card3_id'];
+		$item->cards[0]   = (int)$data['card0'];
+		$item->cards[1]   = (int)$data['card1'];
+		$item->cards[2]   = (int)$data['card2'];
+		$item->cards[3]   = (int)$data['card3'];
 		unset($data['id']);
 		unset($data['storage_type']);
 		unset($data['forger_name']);
@@ -1738,10 +1741,11 @@ class CharMap
 		unset($data['identify']);
 		unset($data['refine']);
 		unset($data['amount']);
-		unset($data['card0_id']);
-		unset($data['card1_id']);
-		unset($data['card2_id']);
-		unset($data['card3_id']);
+		unset($data['bound']);
+		unset($data['card0']);
+		unset($data['card1']);
+		unset($data['card2']);
+		unset($data['card3']);
 		$item->data = $data;
 		return $item;
 	}
