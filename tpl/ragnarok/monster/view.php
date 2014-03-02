@@ -167,7 +167,7 @@ if(isset($drops['mvp'])) {
 			<?php if($mob->mvpExp) : ?>
 			<tr>
 				<td colspan="2"><?php echo __('ragnarok', 'mvp-exp')?></td>
-				<td colspan="2"><?php echo number_format($mob->mvpExp)?></td>
+				<td colspan="2" ac-original-exp="<?php echo $mob->mvpExp?>"><?php echo number_format($mob->mvpExp)?></td>
 			</tr>
 			<?php endif; ?>
 			<?php if($page->charmap->getOption('renewal')) : ?>
@@ -178,7 +178,7 @@ if(isset($drops['mvp'])) {
 					->append("
 new AquaCore.ExperienceSlider(jQuery(\".ac-renewal-exp-wrapper\").get(0), {
 	level: {$mob->level},
-	experience: {$mob->baseExp}
+	experience: $(\"[ac-original-exp]\")
 });
 ");
 				?>

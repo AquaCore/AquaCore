@@ -5,22 +5,18 @@ var AquaCore = AquaCore || {};
 		this.option(options);
 		this.element      = slider;
 		this.currentLevel = this.options.level;
-		this.experience   = document.createElement("div");
 		this.slider       = document.createElement("div");
 		this.info         = document.createElement("div");
-		this.min = Math.max(0, this.options.level - 11)
+		this.min = Math.max(0, this.options.level - 11);
 		this.max = this.options.level + 31;
 		$(this.info)
 			.addClass("ac-renewal-exp-info")
-			.appendTo(this.element);
-		$(this.experience)
-			.addClass("ac-renewal-exp")
 			.appendTo(this.element);
 		$(this.slider)
 			.addClass("ac-renewal-exp-slider")
 			.appendTo(this.element)
 			.slider($.extend({}, this.options.slider, {
-			min: Math.max(0, this.options.level - 11),
+			min: Math.max(1, this.options.level - 11),
 			max: this.options.level + 31,
 			value: this.currentLevel,
 			change: function(e, ui) {
@@ -33,13 +29,12 @@ var AquaCore = AquaCore || {};
 	AquaCore.ExperienceSlider.prototype = $.extend({}, AquaCore.prototype, {
 		currentLevel: null,
 		element: null,
-		experience: null,
 		slider: null,
 		info: null,
 		options: {
 			format: "Level: :level (:rate%)",
 			level: 1,
-			experience: 1,
+			experience: [],
 			slider: {}
 		},
 		level: function(level) {
@@ -88,7 +83,10 @@ var AquaCore = AquaCore || {};
 				level = "&gt;" + (level - 1);
 				rate = 10;
 			}
-			$(this.experience).text(Math.floor((this.options.experience / 100) * rate).format());
+			$.each(this.options.experience, function() {
+				var element = $(this);
+				element.text(Math.floor((parseInt(element.attr("ac-original-exp")) / 100) * rate).format());
+			});
 			$(this.info).html(this.options.format.replace(":level", level).replace(":rate", rate));
 		}
 	});
