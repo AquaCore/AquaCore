@@ -14,6 +14,9 @@ ScriptManager::register('sprintf')
 // HighSoft
 ScriptManager::register('highsoft.highchart')
 	->src(\Aqua\URL . '/assets/scripts/highsoft/highcharts.js');
+ScriptManager::register('highsoft.highchart-more')
+	->src(\Aqua\URL . '/assets/scripts/highsoft/highcharts-more.js')
+	->dependsOn('highsoft.highchart');
 ScriptManager::register('highsoft.highstock')
 	->src(\Aqua\URL . '/assets/scripts/highsoft/highstock.js');
 // CKEditor

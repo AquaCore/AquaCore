@@ -137,8 +137,11 @@ class Account
 			$update.= 'userid = ?, ';
 		}
 		if(array_key_exists('password', $options)) {
-			$value['password'] = $account_data['password'] = ($this->server->login->getOption('use-md5') ? md5($options['password']) : substr($options['password'], 0, 32));
+			$value['password'] = $account_data['password'] = ($this->server->login->getOption('use-md5') ?
+			                                                  md5($options['password']) :
+				                                              substr($options['password'], 0, 32));
 			$plain_password = $options['password'];
+			$update.= 'user_pass = ?, ';
 		}
 		if(array_key_exists('sex', $options)) {
 			$options['sex'] = ($options['sex'] === 1 || $options['sex'] === 'F' ? 1 : 0);

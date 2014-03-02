@@ -130,7 +130,7 @@ extends Page
 				}
 				$password     = trim($frm->request->getString('password'));
 				$password_r   = trim($frm->request->getString('password_r'));
-				if($pgn->server->login->getOption('use-pincode')) {
+				if($pgn->server->login->getOption('use-pincode') && $frm->request->getString('pincode')) {
 					$pincode     = trim($frm->request->getString('pincode'));
 					$pincode_r   = trim($frm->request->getString('pincode_r'));
 					if($pgn->server->login->checkValidPincode($pincode, $message) !== Login::FIELD_OK) {
@@ -141,12 +141,14 @@ extends Page
 						return false;
 					}
 				}
-				if($pgn->server->login->checkValidPassword($password, $message) !== Login::FIELD_OK) {
-					$frm->field('password')->setWarning($message);
-					return false;
-				} else if($password !== $password_r) {
-					$frm->field('password_r')->setWarning(__('ragnarok', 'password-mismatch'));
-					return false;
+				if($password) {
+					if($pgn->server->login->checkValidPassword($password, $message) !== Login::FIELD_OK) {
+						$frm->field('password')->setWarning($message);
+						return false;
+					} else if($password !== $password_r) {
+						$frm->field('password_r')->setWarning(__('ragnarok', 'password-mismatch'));
+						return false;
+					}
 				}
 				return true;
 			});
@@ -165,6 +167,7 @@ extends Page
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 			return;
 		}
+		$this->response->status(302)->redirect(App::request()->uri->url());
 		try {
 			$update = array();
 			if($password = trim($this->request->getString('password'))) {
@@ -173,7 +176,7 @@ extends Page
 			if($pincode = trim($this->request->getString('pincode'))) {
 				$update['pincode'] = $pincode;
 			}
-			if($this->request->getSInt('locked') && !$this->account->isLocked()) {
+			if($this->request->getInt('locked') && !$this->account->isLocked()) {
 				$update['state'] = RagnarokAccount::STATE_LOCKED;
 			} else if(!$this->request->getInt('locked') && $this->account->isLocked()) {
 				$update['state'] = RagnarokAccount::STATE_NORMAL;
@@ -184,70 +187,6 @@ extends Page
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
-		}
-		if($password = $this->request->getString('confirm_password')) {
-			$user = App::user();
-			$this->response->status(302)->redirect(App::user()->request->uri->url());
-			try {
-				if($this->server->login->checkCredentials($this->account->username, $password, $this->request->getString('confirm_pincode', '')) === 0) {
-					if($this->server->login->getOption('use-pincode')) {
-						$user->addFlash('warning', null, __('ragnarok', 'pass-pin-incorrect'));
-					} else {
-						$user->addFlash('warning', null, __('ragnarok', 'password-incorrect'));
-					}
-					return;
-				}
-				$options = array();
-				if($this->server->login->getOption('use-pincode') &&
-				   ($new_pincode = $this->request->getString('pincode')) &&
-				   ($new_pincode_r = $this->request->getString('pincode_r')) &&
-				   $new_pincode !== $this->account->pinCode) {
-					$len = strlen($new_pincode);
-					if($len < App::settings()->get('ragnarok')->get('pincode_min_len') ||
-					   $len > App::settings()->get('ragnarok')->get('pincode_min_len')) {
-						$user->addFlash('warning', null, __(
-							'ragnarok',
-							(App::settings()->get('ragnarok')->get('pincode_max_len') !== App::settings()->get('ragnarok')->get('pincode_min_len') ? 'pincode-len' : 'pincode-len2'),
-							App::settings()->get('ragnarok')->get('pincode_min_len'),
-							App::settings()->get('ragnarok')->get('pincode_max_len')
-						));
-						return;
-					} else if($new_pincode !== $new_pincode_r) {
-						$user->addFlash('warning', null, __('ragnarok', 'pincode-mismatch'));
-						return;
-					} else if(!ctype_digit($new_pincode)) {
-						$user->addFlash('warning', null, __('ragnarok', 'pincode-digit'));
-						return;
-					}
-					$options['pincode'] = $new_pincode;
-				}
-				if(($new_pass = $this->request->getString('password')) && ($new_pass_r = $this->request->getString('password_r'))) {
-					if($new_pass !== $new_pass_r) {
-						$user->addFlash('warning', null, __('ragnarok', 'password-mismatch'));
-						return;
-					} else if($this->server->login->checkValidPassword($password, $message) !== Login::FIELD_OK) {
-						$user->addFlash('warning', null, $message);
-						return;
-					}
-					$options['password'] = $new_pass;
-				}
-				$lock = $this->request->getString('lockdown', false);
-				if($lock === 'on' && $this->account->state === RagnarokAccount::STATE_NORMAL) {
-					$options['state'] = RagnarokAccount::STATE_LOCKED;
-				} else if(!$lock && $this->account->state === RagnarokAccount::STATE_LOCKED) {
-					$options['state'] = RagnarokAccount::STATE_NORMAL;
-				}
-				if(empty($options)) {
-					return;
-				}
-				$this->account->update($options);
-				$user->addFlash('success', null, __('ragnarok', 'account-updated'));
-				return;
-			} catch(\Exception $exception) {
-				ErrorLog::logSql($exception);
-				$user->addFlash('error', null, __('application', 'unexpected-error'));
-				return;
-			}
 		}
 	}
 
@@ -412,7 +351,7 @@ extends Page
 		}
 		try {
 			$key = bin2hex(secure_random_bytes(32));
-			L10n::getDefault()->email('ragnarok-resetpw', array(
+			L10n::getDefault()->email('ragnarok-reset-pw', array(
 				'site-title'   => App::settings()->get('title'),
 				'site-url'     => \Aqua\URL,
 				'ro-username'  => htmlspecialchars($this->account->username),

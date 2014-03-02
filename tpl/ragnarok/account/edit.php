@@ -8,6 +8,10 @@ use Aqua\Ragnarok\Ragnarok;
  */
 ?>
 <form method="POST" autocomplete="off">
+	<?php if(($error = $form->message) ||
+	         ($error = $form->field('confirm_password')->getWarning())) : ?>
+		<div class="ac-form-error"><?php echo $error ?></div>
+	<?php endif; ?>
 	<table class="ac-table" style="table-layout: fixed">
 		<colgroup>
 			<col style="width: 25%">

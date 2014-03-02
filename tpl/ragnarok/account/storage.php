@@ -25,7 +25,7 @@ $page->theme->footer->enqueueScript('cardbmp')
 		content: function() {
 			return $("<span/>")
 				.append($("<div/>").addClass("ac-tooltip-top"))
-				.append($("<div/>").addClass("ac-tooltip-content").append($("<img/>").attr("src", $(this).attr("ac-ro-card"))))
+				.append($("<div/>").width(150).addClass("ac-tooltip-content").append($("<img/>").attr("src", $(this).attr("ac-ro-card"))))
 				.append($("<div/>").addClass("ac-tooltip-bottom"));
 		}
 	});

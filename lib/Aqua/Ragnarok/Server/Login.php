@@ -150,6 +150,9 @@ class Login
 	 */
 	public function checkCredentials($username, $password, $pincode = null)
 	{
+		if($this->getOption('use-md5')) {
+			$password = md5($password);
+		}
 		$select = Query::select($this->connection())
 			->columns(array( 'id' => 'account_id' ))
 			->setColumnType(array( 'id' => 'integer' ))
@@ -170,7 +173,6 @@ class Login
 			$select->having(array( 'BINARY userid' => $username ));
 		}
 		$select->query();
-
 		return $select->get('id');
 	}
 

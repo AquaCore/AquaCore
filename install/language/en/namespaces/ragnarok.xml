@@ -3,6 +3,7 @@
   <wordgroup language="en">
     <word namespace="ragnarok" key="account">Account</word>
     <word namespace="ragnarok" key="account-info">%s's Information</word>
+    <word namespace="ragnarok" key="stats-info">%s's Stats</word>
     <word namespace="ragnarok" key="account-updated">Your account has been updated.</word>
     <word namespace="ragnarok" key="accounts-registered">Accounts Registered</word>
     <word namespace="ragnarok" key="owner">Owner</word>

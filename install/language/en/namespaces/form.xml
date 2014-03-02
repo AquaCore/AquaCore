@@ -13,6 +13,7 @@
     <word namespace="form" key="invalid-date">The date you have entered is not valid.</word>
     <word namespace="form" key="invalid-url">The url you have entered is not valid.</word>
     <word namespace="form" key="invalid-captcha">The verification code you have entered is incorrect.</word>
+    <word namespace="form" key="invalid-token">Invalid token.</word>
     <word namespace="form" key="invalid-value-selected">The option you have chosen is not valid.</word>
   </wordgroup>
 </languageimport>

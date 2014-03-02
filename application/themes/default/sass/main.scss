@@ -977,7 +977,7 @@ iframe[src="about:blank"]{ display: none !important; }
 }
 .ac-ro-cardbmp {
 	padding: 0 !important;
-	.ac-ro-cardbmp img {
+	img {
 		width: 190px;
 		height: 254px;
 	}
@@ -1319,4 +1319,67 @@ iframe[src="about:blank"]{ display: none !important; }
 	border: 0;
 	width: 0;
 	display: none;
+}
+.ac-form-error {
+	display: block;
+	width: auto;
+	padding: 5px 10px;
+	margin-bottom: 10px;
+	background-color: #fad9d9;
+	color: #c25372;
+	border: 1px solid;
+	@include border-radius(5px);
+}
+.ac-char-hp, .ac-char-sp {
+	position: relative;
+	width: 100%;
+	text-align: center;
+	height: 3px;
+	border: 1px solid;
+	overflow: hidden;
+	.ac-char-fill {
+		z-index: 1;
+		position: absolute;
+		height: 100%;
+		top: 0;
+		background-color: #e9838b;
+	}
+}
+.ac-char-hp {
+	background-color: #facdd2;
+	color: #c25372;
+	margin-bottom: 2px;
+	.ac-char-fill {
+		background-color: #e9838b;
+	}
+}
+.ac-char-sp {
+	background-color: #c9e2fa;
+	color: #4852cf;
+	margin-bottom: 5px;
+	.ac-char-fill {
+		background-color: #6a83e9;
+	}
+}
+.ac-view-char {
+	display: table;
+	position: relative;
+	width: 100%;
+	margin-bottom: 10px;
+	.wrapper {
+		display: table-row;
+		width: 100%;
+		.ac-char-info, .ac-char-stats {
+			display: table-cell;
+			position: relative;
+			vertical-align: top;
+			padding: 0;
+		}
+		.ac-char-stats {
+			padding-left: 10px;
+		}
+	}
+	.ac-table {
+		margin: 0;
+	}
 }

@@ -725,7 +725,7 @@ class CharMap
 				          'zeny'              => 'c.zeny',
 				          'party_id'          => 'c.party_id',
 				          'guild_id'          => 'c.guild_id',
-				          'guild_name'        => 'g.guild_name',
+				          'guild_name'        => 'g.`name`',
 				          'online'            => 'c.online',
 				          'last_map'          => 'c.last_map',
 				          'last_x'            => 'c.last_x',
@@ -760,7 +760,7 @@ class CharMap
 				          'delete_date'       => 'c.delete_date'
 			          ))
 			->from($this->table('char'), 'c')
-			->leftJoin($this->table('guild'), 'g')
+			->leftJoin($this->table('guild'), 'g.guild_id = c.guild_id', 'g')
 			->limit(1)
 			->parser(array( $this, 'parseCharSql' ));
 		switch($type) {

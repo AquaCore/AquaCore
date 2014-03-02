@@ -15,11 +15,6 @@ class Char
 extends Page
 {
 	/**
-	 * @var \Aqua\Ragnarok\Server
-	 */
-	public $server;
-
-	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
@@ -33,69 +28,46 @@ extends Page
 
 	public function run()
 	{
-		$server = App::registryGet('ac_active_ragnarok_server');
-		$charmap = App::registryGet('ac_active_charmap_server');
-		$char_name_url = App::settings()->get('ragnarok')->get('char_name_url', false);
-		if(($server instanceof Server) && ($charmap instanceof CharMap) && ($name = $this->request->uri->getString('ac_ragnarok_character'))) {
-			if($char_name_url) {
-				$char = $charmap->character($name, 'name');
-			} else {
-				$char = $charmap->character((int)$name, 'id');
-			}
-			if(!$char) {
-				$this->dispatcher->triggerError(404);
-				return;
-			}
-		} else {
-			$this->dispatcher->triggerError(404);
+		$this->charmap = App::$activeCharMapServer;
+		$this->char = App::$activeRagnarokCharacter;
+		if(!$this->charmap || !$this->char) {
 			return;
 		}
-		$pgn = &$this;
-		$this->attach('call_action', function() use (&$pgn, $server, $charmap, $char, $char_name_url) {
-			$pgn->theme->remove('navbar_alt');
-			$pgn->response->setHeader('Cache-Control', 'no-store, co-cache, must-revalidate, max-age=0');
-			$pgn->response->setHeader('Expires', time() - 1);
-			$pgn->server = $server;
-			$pgn->charmap = $charmap;
-			$pgn->char = $char;
-			$base_url = $pgn->server->charMapUri($pgn->charmap->key())->url(array(
-				'path' => array( 'c', ($char_name_url ? $pgn->char->name : $pgn->char->id) ),
-				'action' => ''
-			));
-			$menu = new Menu;
-			$menu->append('char', array(
-				'title' => __('ragnarok', 'character'),
-				'url' => "{$base_url}index"
-				))->append('options', array(
-				'title' => __('application', 'preferences'),
-				'url' => "{$base_url}options"
-				))->append('inventory', array(
-				'title' => __('ragnarok', 'inventory'),
-				'url' => "{$base_url}inventory"
-				))
-			;
-			switch($pgn->char->class) {
-				case 5:
-				case 10:
-				case 18:
-				case 4011:
-				case 4019:
-				case 4028:
-				case 4033:
-				case 4041:
-				case 4058:
-				case 4064:
-				case 4071:
-				case 4078:
-				case 4100:
-				case 4107:
-					$menu->append('cart', array(
-						'title' => __('ragnarok', 'cart'),
-						'url'   => "{$base_url}cart"
-					));
-			}
-			$pgn->theme->set('menu', $menu);
-		});
+		$menu = new Menu;
+		$base_url = $this->char->url(array(
+			'action' => ''
+		));
+		$menu->append('char', array(
+			'title' => __('ragnarok', 'character'),
+			'url' => "{$base_url}index"
+		))->append('options', array(
+			'title' => __('application', 'preferences'),
+			'url' => "{$base_url}options"
+		))->append('inventory', array(
+			'title' => __('ragnarok', 'inventory'),
+			'url' => "{$base_url}inventory"
+		));
+		switch($this->char->class) {
+			case 5:
+			case 10:
+			case 18:
+			case 4011:
+			case 4019:
+			case 4028:
+			case 4033:
+			case 4041:
+			case 4058:
+			case 4064:
+			case 4071:
+			case 4078:
+			case 4100:
+			case 4107:
+				$menu->append('cart', array(
+					'title' => __('ragnarok', 'cart'),
+					'url'   => "{$base_url}cart"
+				));
+		}
+		$this->theme->set('menu', $menu);
 	}
 
 	public function index_action()
