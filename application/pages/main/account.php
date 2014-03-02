@@ -582,9 +582,9 @@ extends Page
 		try {
 			$account = App::user()->account;
 			if(!$username || !$key ||
-			   ((!$account || $account->username !== $username) &&
+			   ($account && $account->username !== $username) ||
 			   // Account doesn't exist
-			    !($account = UserAccount::get($username, 'username'))) ||
+			   !($account = UserAccount::get($username, 'username')) ||
 			   // Not awaiting validation
 			   $account->status !== UserAccount::STATUS_AWAITING_VALIDATION ||
 			   // Validation key expired
@@ -595,13 +595,11 @@ extends Page
 			   // Wrong validation key
 			   $account->getMeta(self::REGISTRATION_KEY) !== $key) {
 				$this->error(404);
-
 				return;
 			}
 			$account->deleteMeta(self::REGISTRATION_KEY);
 			$account->update(array( 'status' => UserAccount::STATUS_NORMAL ));
-			App::user()
-			   ->addFlash('success', null, __('registration', 'account-activated'));
+			App::user()->addFlash('success', null, __('registration', 'account-activated'));
 			$this->response->status(302)->redirect(\Aqua\URL);
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
@@ -660,8 +658,7 @@ extends Page
 					$account = UserAccount::get($username, 'username');
 				}
 				if(!$account || $account->status !== UserAccount::STATUS_AWAITING_VALIDATION ||
-				   $account->registrationDate < (time() - ((int)$settings->get('validation_time', 48) * 3600))
-				) {
+				   $account->registrationDate < (time() - ((int)$settings->get('validation_time', 48) * 3600))) {
 					$message = __('account', 'account-not-found');
 
 					return false;
@@ -693,7 +690,16 @@ extends Page
 			} else {
 				$account = UserAccount::get($username, 'username');
 			}
-			$this->sendValidationEmail($account, $account->getMeta(self::REGISTRATION_KEY));
+			if(!($key = $account->getMeta(self::REGISTRATION_KEY))) {
+				$key = bin2hex(secure_random_bytes(32));
+				$account->setMeta(self::REGISTRATION_KEY, $key);
+			}
+			$this->sendValidationEmail($account, $key);
+			$host = strrchr($account->email, '@');
+			$name = substr($account->email, 0, -strlen($host));
+			$count = ceil((strlen($name) / 100) * 25);
+			$name = substr($name, 0, $count) . str_repeat('*', max(0, strlen($name) - $count));
+			App::user()->addFlash('success', null, __('registration', 'email-resent', "$name$host"));
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
@@ -776,7 +782,7 @@ extends Page
 				$account = UserAccount::get($username, 'username');
 			}
 			$key = bin2hex(secure_random_bytes(64));
-			App::user()->session->tmp('password_reset', array( $account->id, $key ), 2 * 60 * 60);
+			App::user()->session->tmp('password_reset', array( $account->id, $key ), 3600 * 2);
 			L10n::getDefault()->email('reset-pw', array(
 				'site-title'   => htmlspecialchars(App::settings()->get('title')),
 				'site-url'     => \Aqua\URL,
@@ -1056,8 +1062,8 @@ extends Page
 			'username'     => htmlspecialchars($acc->username),
 			'display-name' => htmlspecialchars($acc->displayName),
 			'email'        => htmlspecialchars($acc->email),
-			'time-now'     => strftime(App::settings()->get('date-format')),
-			'time-left'    => $time_left,
+			'time-now'     => strftime(App::settings()->get('date_format', '')),
+			'hours-left'   => $time_left,
 			'key'          => $key,
 			'url'          => ac_build_url(array(
 					'path'      => array( 'account' ),

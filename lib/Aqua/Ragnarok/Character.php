@@ -236,31 +236,68 @@ class Character
 
 	public function update(array $options)
 	{
-		$columns = array(
-		);
-		$options = array_intersect_key($options, $columns);
-		if(empty($options)) return false;
+		$value = array();
 		$update = '';
-		foreach($options as $key => &$value) {
-			if(isset($columns[$key][2])) {
-				$args = array_slice($columns[$key], 2);
-				array_unshift($args, $value);
-				$value = call_user_func_array($columns[$key][2], $args);
-			}
-			$update.= " `{$columns[$key][1]}` = ?, ";
+		$char_data = array();
+		$columns = array(
+			'name', 'slot', 'class', 'fame', 'zeny', 'option',
+			'karma', 'manner', 'hair', 'hair_color', 'clothes_color',
+			'weapon', 'shield', 'robe', 'head_top', 'head_middle',
+			'head_bottom', 'cp_options'
+		);
+		$options = array_intersect_key($options, array_flip($columns));
+		if(empty($options)) {
+			return false;
 		}
-		$update = substr($update, 0, -1);
+		$options = array_map('trim', $options);
+		if(array_key_exists('name', $options) && $options['name'] !== $this->name) {
+			$value['name'] = $char_data['name'] = substr($options['name'], 0, 30);
+			$update.= 'name = ?, ';
+		}
+		foreach(array('slot' => 'char_num',
+		              'class' => 'class',
+		              'zeny'  => 'zeny',
+		              'karma' => 'karma',
+		              'manner' => 'manner',
+		              'fame' => 'fame') as $key => $col) {
+			if(array_key_exists($key, $options) && (int)$options[$key] !== $this->$key) {
+				$value[$key] = $char_data[$key] = (int)$options[$key];
+				$update.= "`$col` = ?, ";
+			}
+		}
+		foreach(array('hair', 'hair_color',
+		              'clothes_color', 'weapon',
+		              'shield', 'robe', 'head_top',
+		              'head_middle', 'head_bottom') as $key) {
+			if(array_key_exists($key, $options)) {
+				$value[$key] = (int)$options[$key];
+				$update.= "`$key` = ?, ";
+			}
+		}
+		if(array_key_exists('cp_options', $options) && $options['cp_options'] !== $this->CPOptions) {
+			$value['cp_options'] = $char_data['options'] = $options['cp_options'];
+			$update.= 'ac_options = ?, ';
+		}
+		if(empty($value)) {
+			return false;
+		}
+		$value[] = $this->id;
+		$update = substr($update, 0, -2);
 		$sth = $this->charmap->connection()->prepare("
 		UPDATE {$this->charmap->table('char')}
 		SET {$update}
 		WHERE char_id = ?
 		LIMIT 1
 		");
-		$options[] = $this->id;
-		$sth->execute(array_values($options));
+		if(!$sth->execute(array_values($value)) || !$sth->rowCount()) {
+			return false;
+		}
 		array_pop($options);
-		$feedback = array( $this, $options );
+		$feedback = array( $this, $value );
 		Event::fire('ragnarok.update-char', $feedback);
+		foreach($char_data as $key => $val) {
+			$this->$key = $val;
+		}
 		return true;
 	}
 
@@ -312,7 +349,7 @@ class Character
 		return $this->charmap->server->login->get($this->accountId);
 	}
 
-	public function url(array $options)
+	public function url(array $options = array())
 	{
 		if(!$this->_uri) {
 			$this->_uri = clone $this->charmap->uri;

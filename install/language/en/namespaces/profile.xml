@@ -3,6 +3,10 @@
   <wordgroup language="en">
     <word namespace="profile" key="preferences">Preferences</word>
     <word namespace="profile" key="id">ID</word>
+    <word namespace="profile" key="birthday-update-limit">You can only update your birthday %d times every %d days.</word>
+    <word namespace="profile" key="email-update-limit">You can only update your email %d times every %d days.</word>
+    <word namespace="profile" key="password-update-limit">You can only update your password %d times every %d days.</word>
+    <word namespace="profile" key="display-name-update-limit">You can only update your display name %d times every %d days.</word>
     <word namespace="profile" key="username">Username</word>
     <word namespace="profile" key="x-account">%s's Account</word>
     <word namespace="profile" key="display-name">Display name</word>

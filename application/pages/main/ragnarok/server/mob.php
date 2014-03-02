@@ -27,7 +27,6 @@ extends Page
 	{
 		$this->charmap = &App::$activeCharMapServer;
 		if(!$this->charmap) {
-			$this->error(404);
 			return;
 		}
 		$menu = new Menu;

@@ -14,6 +14,7 @@
     <word namespace="registration" key="registered">You account has been created and is ready to use! You have been automatically logged.</word>
     <word namespace="registration" key="email-not-sent">You account has been created but the activation code could not be sent to your email. Please enter your email or username again to resend the email.</word>
     <word namespace="registration" key="email-sent">You account has been created! An email has been sent to you with information on how to activate your account.</word>
+    <word namespace="registration" key="email-resent">An email has been sent to %s with information on how to activate your account.</word>
     <word namespace="registration" key="account-activated">Your account has been activated.</word>
   </wordgroup>
 </languageimport>

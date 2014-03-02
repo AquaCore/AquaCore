@@ -138,7 +138,7 @@ extends Page
 
 	public function guild_action()
 	{
-		$this->title = __('ragnarok', 'guild-ranking');
+		$this->theme->head->section = $this->title = __('ragnarok', 'guild-ranking');
 		$guilds = $this->charmap->guildSearch()
 			->limit(self::$maxGuildRanking)
 			->order(self::$guildRankingCriteria)

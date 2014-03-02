@@ -18,12 +18,14 @@ $filter_active_account = function (User $user)
 
 $filter_owned_account = function (User $user)
 {
-	return ($user->loggedIn() && App::$activeRagnarokAccount instanceof RagnarokAccount &&  App::$activeRagnarokAccount->owner === $user->account->id);
+	return ($user->loggedIn() && App::$activeRagnarokAccount instanceof RagnarokAccount &&
+	        App::$activeRagnarokAccount->owner === $user->account->id);
 };
 
 $filter_owned_character = function (User $user)
 {
-	return ($user->loggedIn() && App::$activeRagnarokCharacter instanceof Character &&  App::$activeRagnarokCharacter->account()->owner === $user->account->id);
+	return ($user->loggedIn() && App::$activeRagnarokCharacter instanceof Character &&
+	        App::$activeRagnarokCharacter->account()->owner === $user->account->id);
 };
 
 $permissions
@@ -34,7 +36,7 @@ $permissions
 	->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_ROLE_PERMISSION)
 	->denyRole(Role::get(Role::ROLE_GUEST));
 $permissions
-	->set('main/account/action/index')
+	->set('main/account/action/[index|activate]')
 	->allowAll();
 $permissions
 	->set('main/account/action/[login|register|recoverpw|resetpw|resetcode]')

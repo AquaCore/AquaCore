@@ -29,7 +29,7 @@
     <word namespace="ragnarok" key="cart-remove">%s removed from your cart.</word>
     <word namespace="ragnarok" key="cart-remove-m">%d %s removed from your cart.</word>
     <word namespace="ragnarok" key="cart-empty">Your cart is empty.</word>
-    <word namespace="ragnarok" key="cash-shop">Cash Shop</word>
+    <word namespace="ragnarok" key="cash-shop">Item Shop</word>
     <word namespace="ragnarok" key="castles">Castles</word>
     <word namespace="ragnarok" key="cells">%d cells</word>
     <word namespace="ragnarok" key="change-slot">Change Slots</word>
@@ -205,7 +205,6 @@
     <word namespace="ragnarok" key="whos-online">Who's Online</word>
     <word namespace="ragnarok" key="x-cart">%s's Cart</word>
     <word namespace="ragnarok" key="x-characters">%s's Characters</word>
-    <word namespace="ragnarok" key="x-characters-registered">%s characters registered.</word>
     <word namespace="ragnarok" key="x-chars-found">%s characters found.</word>
     <word namespace="ragnarok" key="x-coord">X Coordinate</word>
     <word namespace="ragnarok" key="x-drops">%s's Drops</word>

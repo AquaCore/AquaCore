@@ -17,5 +17,5 @@ $option['class'] = 'active';
 			</div>
 		</td>
 	</tr>
-	<?php echo $form->render(null, false, array( 'smtp', 'smtp_host', 'smtp_port', 'smtp_timeout', 'smtp_username', 'smtp_password' )) ?>
+	<?php echo $form->render(null, false, array( 'smtp', 'smtp_enc', 'smtp_host', 'smtp_port', 'smtp_timeout', 'smtp_username', 'smtp_password' )) ?>
 </table>

@@ -29,6 +29,9 @@ extends Page
 	public function run()
 	{
 		$this->charmap = &App::$activeCharMapServer;
+		if(!$this->charmap) {
+			return;
+		}
 		$base_url = $this->charmap->url(array( 'path' => array( 'item' ), 'action' => '' ));
 		$menu = new Menu;
 		$menu->append('item db', array(

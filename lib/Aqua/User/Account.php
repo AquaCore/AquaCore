@@ -219,7 +219,7 @@ class Account
 		$sth   = App::connection()->prepare("
 		INSERT INTO `$table` (_user_id, _key, _val)
 		VALUES (:id, :key, :value)
-		ON DUPLICATE KEY UPDATE _value = :value
+		ON DUPLICATE KEY UPDATE _val = :value
 		");
 		foreach($keys as $key => $val) {
 			$sth->bindValue(':id', $this->id, \PDO::PARAM_INT);
@@ -259,14 +259,14 @@ class Account
 		$this->meta = array();
 		$table      = ac_table('user_meta');
 		$sth        = App::connection()->prepare("
-		SELECT _key, _value
+		SELECT _key, _val
 		FROM `$table`
 		WHERE _user_id = ?
 		");
 		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
 		$sth->execute();
-		while($data = $sth->fetch(\PDO::FETCH_ASSOC)) {
-			$this->meta[$data[1]] = $data[0];
+		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
+			$this->meta[$data[0]] = $data[1];
 		}
 		$this->_metaLoaded = true;
 	}

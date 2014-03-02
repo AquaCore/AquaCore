@@ -73,10 +73,6 @@ implements SubjectInterface
 			}
 		} while(next($pages) !== false && !$this->_error);
 		$this->notify('dispatch_start');
-		while(($page = current($this->pages)) !== false) {
-			$page->run();
-			next($this->pages);
-		}
 		$status = $this->permissions->check($user, $request);
 		if($status & Permission::STATUS_AUTHENTICATE) {
 			$this->triggerError(401);

@@ -40,6 +40,9 @@ extends Page
 	{
 		$this->server = App::$activeServer;
 		$this->account = App::$activeRagnarokAccount;
+		if(!$this->server || !$this->account) {
+			return;
+		}
 		$this->response->setHeader('Cache-Control', 'no-store, co-cache, must-revalidate, max-age=0');
 		$this->response->setHeader('Expires', time() - 1);
 		$base_url = $this->account->url(array( 'action' => '' ));
@@ -80,8 +83,108 @@ extends Page
 			$this->response->status(301)->redirect(App::request()->uri->url(array( 'protocol' => 'https://' )));
 			return;
 		}
-		$this->title = __('ragnarok', 'edit-account', htmlspecialchars($this->account->username));
-		$this->theme->head->section = __('ragnarok', 'preferences');
+		try {
+			$frm = new Form($this->request);
+			$frm->input('confirm_password')
+			    ->type('password')
+				->required()
+			    ->setLabel(__('ragnarok', 'current-password'));
+			$frm->input('password')
+				->type('password')
+				->setLabel(__('ragnarok', 'password'));
+			$frm->input('password_r')
+				->type('password')
+				->setLabel(__('ragnarok', 'repeat-password'));
+			if($this->server->login->getOption('use-pincode')) {
+				$pincode_len = (int)App::settings()->get('ragnarok')->get('pincode_max_len', 4);
+				$frm->input('confirm_pincode')
+				    ->type('password')
+				    ->attr('maxlen', $pincode_len)
+				    ->attr('size', $pincode_len + 2)
+				    ->setLabel(__('ragnarok', 'current-pincode'));
+				$frm->input('pincode')
+				    ->type('password')
+				    ->attr('maxlen', $pincode_len)
+				    ->attr('size', $pincode_len + 2)
+				    ->setLabel(__('ragnarok', 'pincode'));
+				$frm->input('pincode_r')
+				    ->type('password')
+				    ->attr('maxlen', $pincode_len)
+				    ->attr('size', $pincode_len + 2)
+				    ->setLabel(__('ragnarok', 'pincode-repeat'));
+			}
+			$frm->checkbox('locked')
+				->value(array( '1' => ''))
+				->checked($this->account->isLocked() ? '1' : null)
+				->setLabel(__('ragnarok', 'locked'))
+				->setDescription(__('ragnarok', 'lockdown-desc'));
+			$frm->token('ragnarok_edit_account');
+			$frm->submit();
+			$pgn = $this;
+			$frm->validate(function(Form $frm, &$warning) use (&$pgn) {
+				if(!$pgn->server->login->checkCredentials($pgn->account->username,
+				                                         $frm->request->getString('confirm_password'),
+				                                         $frm->request->getString('confirm_pincode', null))) {
+					$warning = __('ragnarok', 'password-incorrect');
+					return false;
+				}
+				$password     = trim($frm->request->getString('password'));
+				$password_r   = trim($frm->request->getString('password_r'));
+				if($pgn->server->login->getOption('use-pincode')) {
+					$pincode     = trim($frm->request->getString('pincode'));
+					$pincode_r   = trim($frm->request->getString('pincode_r'));
+					if($pgn->server->login->checkValidPincode($pincode, $message) !== Login::FIELD_OK) {
+						$frm->field('pincode')->setWarning($pincode, $message);
+						return false;
+					} else if($pincode !== $pincode_r) {
+						$frm->field('pincode_r')->setWarning(__('ragnarok', 'pincode-mismatch'));
+						return false;
+					}
+				}
+				if($pgn->server->login->checkValidPassword($password, $message) !== Login::FIELD_OK) {
+					$frm->field('password')->setWarning($message);
+					return false;
+				} else if($password !== $password_r) {
+					$frm->field('password_r')->setWarning(__('ragnarok', 'password-mismatch'));
+					return false;
+				}
+				return true;
+			});
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = __('ragnarok', 'edit-account', htmlspecialchars($this->account->username));
+				$this->theme->head->section = __('ragnarok', 'preferences');
+				$tpl = new Template;
+				$tpl->set('account', $this->account)
+					->set('form', $frm)
+					->set('page', $this);
+				echo $tpl->render('ragnarok/account/edit');
+				return;
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			return;
+		}
+		try {
+			$update = array();
+			if($password = trim($this->request->getString('password'))) {
+				$update['password'] = $password;
+			}
+			if($pincode = trim($this->request->getString('pincode'))) {
+				$update['pincode'] = $pincode;
+			}
+			if($this->request->getSInt('locked') && !$this->account->isLocked()) {
+				$update['state'] = RagnarokAccount::STATE_LOCKED;
+			} else if(!$this->request->getInt('locked') && $this->account->isLocked()) {
+				$update['state'] = RagnarokAccount::STATE_NORMAL;
+			}
+			if(!empty($update) && $this->account->update($update)) {
+				App::user()->addFlash('success', null, __('ragnarok', 'account-updated'));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+		}
 		if($password = $this->request->getString('confirm_password')) {
 			$user = App::user();
 			$this->response->status(302)->redirect(App::user()->request->uri->url());
@@ -146,10 +249,6 @@ extends Page
 				return;
 			}
 		}
-		$tpl = new Template;
-		$tpl->set('account', $this->account);
-		$tpl->set('page',    $this);
-		echo $tpl->render('ragnarok/account/edit');
 	}
 
 	public function storage_action($charmap_key = '')
@@ -203,66 +302,68 @@ extends Page
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
-			return;
 		}
 	}
 
 	public function char_action($charmap_key = '')
 	{
 		$this->theme->head->section = $this->title = __('ragnarok', 'x-characters', $this->account->username);
-		if($this->request->getString('x-change-slot') && ($charmap = $this->server->charmap($this->request->getString('selected-server')))) {
-			$this->response->status(302)->redirect(App::request()->uri->url());
-			try {
-				$characters = $charmap->charSearch(
-					array( 'account_id' => $this->account->id ),
-					array( AC_ORDER_ASC, 'slot'),
-					false
-				);
-				$new_slots = array();
-				$max_slots = ($this->server->login->getOption('use-slots') ? $this->account->slots : $this->server->login->getOption('max-slots', 9));
-				foreach($characters as &$char) {
-					if(($slot = $this->request->getInt("{$char->id}-slot", false, 1, $max_slots)) === false) {
-						App::user()->addFlash('warning', null, __('ragnarok', 'changeslot-missing-char', htmlspecialchars($char->name)));
-						return;
-					}
-					if(isset($new_slots[$slot])) {
-						App::user()->addFlash('warning', null, __('ragnarok', 'changeslot-diplicate'));
-						return;
-					}
-					$new_slots[$slot] = &$char;
-				}
-				foreach($new_slots as $slot => &$char) {
-					if($slot !== $char->slot) {
-						$char->update(array( 'slot' => $slot ));
-					}
-				}
-				App::user()->addFlash('success', null, __('ragnarok', 'slot-saved'));
-			} catch(\Exception $exception) {
-				ErrorLog::logSql($exception);
-				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
-			}
-			return;
-		}
 		try {
-			if($this->server->charmapCount === 1 || !($charmap = $this->server->charmap($charmap_key))) {
-				$charmap = current($this->server->charmap);
+			if($this->request->getString('x-change-slot') && ($charmap = $this->server->charmap($this->request->getString('selected-server')))) {
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				try {
+					$characters = $charmap->charSearch()
+						->where(array( 'account_id' => $this->account->id ))
+						->order(array( 'slot' => 'ASC' ))
+						->query()
+						->results;
+					$new_slots = array();
+					$max_slots = ($this->server->login->getOption('use-slots') ? $this->account->slots : (int)$this->server->login->getOption('max-slots', 9));
+					foreach($characters as &$char) {
+						if(($slot = $this->request->getInt("{$char->id}-slot", false, 1, $max_slots)) === false) {
+							App::user()->addFlash('warning', null, __('ragnarok', 'changeslot-missing-char', htmlspecialchars($char->name)));
+							return;
+						}
+						if(isset($new_slots[$slot])) {
+							App::user()->addFlash('warning', null, __('ragnarok', 'changeslot-diplicate'));
+							return;
+						}
+						$new_slots[$slot] = &$char;
+					}
+					foreach($new_slots as $slot => &$char) {
+						if($slot !== $char->slot) {
+							$char->update(array( 'slot' => $slot ));
+						}
+					}
+					App::user()->addFlash('success', null, __('ragnarok', 'slot-saved'));
+				} catch(\Exception $exception) {
+					ErrorLog::logSql($exception);
+					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+				}
+				return;
 			}
-			$characters = $charmap->charSearch(
-				array( 'account_id' => $this->account->id ),
-				array( AC_ORDER_ASC, 'slot'),
-				false
-			);
+			if($this->server->charmapCount === 1) {
+				$charmap = current($this->server->charmap);
+			} else if(!($charmap = $this->server->charmap($charmap_key))) {
+				$this->error(404);
+				return;
+			}
+			$characters = $charmap->charSearch()
+				->where(array( 'account_id' => $this->account->id ))
+				->order(array( 'slot' => 'ASC' ))
+				->query()
+				->results;
+			$tpl = new Template;
+			$tpl->set('characters', $characters)
+				->set('server', $this->server)
+				->set('charmap', $charmap)
+				->set('page', $this);
+			echo $tpl->render('ragnarok/account/characters');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			$this->error(1, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 			return;
 		}
-		$tpl = new Template;
-		$tpl->set('characters', $characters)
-			->set('server', $this->server)
-			->set('charmap', $charmap)
-			->set('page', $this);
-		echo $tpl->render('ragnarok/account/characters');
 	}
 
 	public function recoverpw_action()
@@ -271,88 +372,73 @@ extends Page
 			$this->response->status(301)->redirect(App::request()->uri->url(array( 'protocol' => 'https://' )));
 			return;
 		}
-		$this->title = __('ragnarok', 'recover-x-password', htmlspecialchars($this->account->username));
-		$this->theme->head->section = __('ragnarok', 'ro-password-recovery');
 		$user  = App::user();
-		$frm = new Form($this->request);
-		$frm->input('token', false)
-			->type('hidden')
-			->value($user->setToken('ragnarok_pass_reset'));
-		$frm->input('password', false)
-			->type('password')
-			->setLabel(__('ragnarok', 'site-password'))
-			->setDescription('Your site account\'s password.');
-		if(App::settings()->get('captcha')->get('use_recaptcha', false)) {
-			$frm->reCaptcha();
-		} else {
-			$frm->captcha();
-		}
-		$frm->submit();
-		if($frm->message = $user->session->get('ragnarok_pass_reset_warning')) {
-			$frm->status = Form::VALIDATION_FAIL;
-		} else {
-			$frm->validate(function(Request $request, &$message) use($user) {
-				if($request->getString('token') !== $user->getToken('ragnarok_pass_reset')) {
+		try {
+			$frm = new Form($this->request);
+			$frm->input('password', false)
+				->type('password')
+				->setLabel(__('ragnarok', 'site-password'))
+				->setDescription('Your site account\'s password.');
+			$frm->token('ragnarok_reset_pass');
+			if(App::settings()->get('captcha')->get('use_recaptcha', false)) {
+				$frm->reCaptcha();
+			} else {
+				$frm->captcha();
+			}
+			$frm->submit();
+			if($frm->message = $user->session->get('ragnarok_pass_reset_warning')) {
+				$frm->status = Form::VALIDATION_FAIL;
+			} else $frm->validate(function(Form $frm) {
+				if(UserAccount::checkCredentials(App::$user->account->username,
+				                                 $this->request->getString('password'), $id) !== 0) {
+					$frm->field('password')->setWarning(__('ragnarok', 'password-incorrect'));
 					return false;
 				}
 				return true;
 			});
-		}
-		switch($frm->status) {
-			case Form::VALIDATION_FAIL:
-				if(!$frm->message) {
-					$frm->message.= __('form', 'validation-fail');
-				}
-			case Form::VALIDATION_INCOMPLETE:
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = __('ragnarok', 'recover-x-password', htmlspecialchars($this->account->username));
+				$this->theme->head->section = __('ragnarok', 'ro-password-recovery');
 				$tpl = new Template;
 				$tpl->set('form', $frm)
-					->set('page', $this);
+				    ->set('page', $this);
 				echo $tpl->render('ragnarok/account/recover_password');
 				return;
-			case Form::VALIDATION_SUCCESS:
-				$this->response->status(302);
-				try {
-					if(UserAccount::checkCredentials($user->account->username, $this->request->getString('password'), $id) !== 0) {
-						$user->session->flash(
-							'ragnarok_pass_reset_warning',
-							__('ragnarok', 'password-incorrect')
-						);
-						$this->response->redirect($user->request->uri->url());
-						return;
-					}
-					$key = bin2hex(secure_random_bytes(32));
-					L10n::getDefault()->email('ragnarok-resetpw', array(
-							'site-title'   => App::settings()->get('title'),
-							'site-url'     => \Aqua\URL,
-							'ro-username'  => htmlspecialchars($this->account->username),
-							'username'     => htmlspecialchars($user->account->username),
-							'display-name' => htmlspecialchars($user->account->displayName),
-							'email'        => htmlspecialchars($user->account->email),
-							'time-now'     => strftime(App::settings()->get('date-format')),
-							'key'          => $key,
-							'url'          => $this->server->uri->url(array(
-									'path' => array( 'a', (App::settings()->get('ragnarok')->get('acc_username_url', false) ?
-														   $this->account->username : $this->account->id) ),
-									'action' => 'resetpass',
-									'arguments' => array( $key )
-								))
-						), $title, $content);
-					$mailer = ac_mailer(true);
-					$mailer->AddAddress($user->account->email, $user->account->displayName);
-					$mailer->Body    = $content;
-					$mailer->Subject = $title;
-					$mailer->isHTML(true);
-					if(!$mailer->Send()) {
-						throw new PHPMailerException($mailer->ErrorInfo);
-					}
-					$user->addFlash('success', null, __('ragnarok', 'password-email-sent'));
-					$user->session->tmp('ragnarok_pass_reset::' . $this->account->id, $key, 3600);
-					$this->response->redirect($this->account->url());
-				} catch(\Exception $exception) {
-					ErrorLog::logSql($exception);
-					$user->addFlash('error', null, __('application', 'unexpected-error'));
-					$this->response->redirect($user->request->uri->url());
-				}
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			return;
+		}
+		try {
+			$key = bin2hex(secure_random_bytes(32));
+			L10n::getDefault()->email('ragnarok-resetpw', array(
+				'site-title'   => App::settings()->get('title'),
+				'site-url'     => \Aqua\URL,
+				'ro-username'  => htmlspecialchars($this->account->username),
+				'username'     => htmlspecialchars($user->account->username),
+				'display-name' => htmlspecialchars($user->account->displayName),
+				'email'        => htmlspecialchars($user->account->email),
+				'time-now'     => strftime(App::settings()->get('date_format'), ''),
+				'key'          => $key,
+				'url'          => $this->account->url(array( 'action' => 'resetpass', 'arguments' => array( $key ) ))
+			), $title, $content);
+			App::user()->session->tmp('ragnarok-pw-reset::' . $this->account->id, $key, 3600 * 2);
+			$mailer = ac_mailer(true);
+			$mailer->AddAddress($user->account->email, $user->account->displayName);
+			$mailer->Body    = $content;
+			$mailer->Subject = $title;
+			$mailer->isHTML(true);
+			if(!$mailer->Send()) {
+				throw new PHPMailerException($mailer->ErrorInfo);
+			}
+			$user->addFlash('success', null, __('ragnarok', 'password-email-sent'));
+			$user->session->tmp('ragnarok_pass_reset::' . $this->account->id, $key, 3600);
+			$this->response->redirect($this->account->url());
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$user->addFlash('error', null, __('application', 'unexpected-error'));
+			$this->response->redirect($user->request->uri->url());
 		}
 	}
 
@@ -363,107 +449,84 @@ extends Page
 			return;
 		}
 		$user = App::user();
-		if(!$code || $code !== $user->session->get('ragnarok_pass_reset::' . $this->account->id)) {
-			$this->response->redirect($this->account->url());
-			return;
-		}
-		$this->theme->head->section = $this->title = __('ragnarok', 'reset-x-password', htmlspecialchars($this->account->username));
-		$frm = new Form($this->request);
-		$frm->input('password')
-			->type('password')
-			->setLabel(__('ragnarok', 'password'));
-		$frm->input('password_r')
-			->type('password')
-			->setLabel(__('ragnarok', 'password-repeat'));
-		if($this->server->login->getOption('use-pincode')) {
-			$pincode_len = (int)App::settings()->get('ragnarok')->get('pincode_max_len', 4);
-			$frm->input('pincode')
+		try {
+			if(!$code || $code !== $user->session->get('ragnarok_pass_reset::' . $this->account->id)) {
+				$this->response->redirect($this->account->url());
+				return;
+			}
+			$frm = new Form($this->request);
+			$frm->input('password')
 				->type('password')
-				->attr('maxlen', $pincode_len)
-				->attr('size', $pincode_len)
-				->setLabel(__('ragnarok', 'pincode'));
-			$frm->input('pincode_r')
+				->setLabel(__('ragnarok', 'password'));
+			$frm->input('password_r')
 				->type('password')
-				->attr('maxlen', $pincode_len)
-				->attr('size', $pincode_len)
-				->setLabel(__('ragnarok', 'pincode-repeat'));
-		}
-		$frm->submit();
-		$pgn = $this;
-		$status = $frm->validate(function(Request $request, &$message, &$key) use (&$pgn) {
-			$password     = trim($request->getString('password'));
-			$password_r   = trim($request->getString('password_r'));
-			$password_len = strlen($password);
-			if($pgn->server->login->usePincode) {
-				$pincode     = trim($request->getString('pincode'));
-				$pincode_r   = trim($request->getString('pincode_r'));
-				$pincode_len = strlen($pincode);
-				if($pincode_len < Ragnarok::$pincode_min_length || $pincode_len > Ragnarok::$pincode_max_length) {
-					$message = __(
-						'ragnarok',
-						(Ragnarok::$pincode_max_length !== Ragnarok::$pincode_min_length ? 'pincode-len' : 'pincode-len2'),
-						Ragnarok::$pincode_min_length,
-						Ragnarok::$pincode_max_length
-					);
-					$key     = 'pincode';
+				->setLabel(__('ragnarok', 'password-repeat'));
+			if($this->server->login->getOption('use-pincode')) {
+				$pincode_len = (int)App::settings()->get('ragnarok')->get('pincode_max_len', 4);
+				$frm->input('pincode')
+					->type('password')
+					->attr('maxlen', $pincode_len)
+					->attr('size', $pincode_len)
+					->setLabel(__('ragnarok', 'pincode'));
+				$frm->input('pincode_r')
+					->type('password')
+					->attr('maxlen', $pincode_len)
+					->attr('size', $pincode_len)
+					->setLabel(__('ragnarok', 'pincode-repeat'));
+			}
+			$frm->submit();
+			$pgn = $this;
+			$frm->validate(function(Form $frm) use (&$pgn) {
+				$password     = trim($frm->request->getString('password'));
+				$password_r   = trim($frm->request->getString('password_r'));
+				if($pgn->server->login->getOption('use-pincode')) {
+					$pincode     = trim($frm->request->getString('pincode'));
+					$pincode_r   = trim($frm->request->getString('pincode_r'));
+					if($pgn->server->login->checkValidPincode($pincode, $message) !== Login::FIELD_OK) {
+						$frm->field('pincode')->setWarning($pincode, $message);
+						return false;
+					} else if($pincode !== $pincode_r) {
+						$frm->field('pincode_r')->setWarning(__('ragnarok', 'pincode-mismatch'));
+						return false;
+					}
+				}
+				if($pgn->server->login->checkValidPassword($password, $message) !== Login::FIELD_OK) {
+					$frm->field('password')->setWarning($message);
 					return false;
-				} else if($pincode !== $pincode_r) {
-					$message = __('ragnarok', 'pincode-mismatch');
-					$key     = 'pincode_r';
-					return false;
-				} else if(!ctype_digit($pincode)) {
-					$message = __('ragnarok', 'pincode-digit');
-					$key     = 'pincode';
+				} else if($password !== $password_r) {
+					$frm->field('password_r')->setWarning(__('ragnarok', 'password-mismatch'));
 					return false;
 				}
-			}
-			if($password_len < $pgn->server->login->passwordMinLen || $password_len > $pgn->server->login->passwordMaxLen) {
-				$message = __(
-					'ragnarok',
-					'password-len',
-					$this->server->login->passwordMinLen,
-					$this->server->login->passwordMaxLen
-				);
-				$key     = 'password';
-				return false;
-			} else if($password !== $password_r) {
-				$message = __('ragnarok', 'password-mismatch');
-				$key     = 'password_r';
-				return false;
-			} else if($this->server->login->passwordRegex && preg_match_all($this->server->login->passwordRegex, $password_len, $match)) {
-				$key     = 'password';
-				$match = implode(', ', array_unique($match[0]));
-				$message = __('ragnarok', 'password-character', $match);
-				return false;
-			}
-			return true;
-		});
-		switch($status) {
-			case Form::VALIDATION_FAIL:
-				if(!$frm->message) {
-					$frm->message.= __('form', 'validation-fail');
-				}
-			case Form::VALIDATION_INCOMPLETE:
+				return true;
+			});
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->theme->head->section = $this->title = __('ragnarok', 'reset-x-password', htmlspecialchars($this->account->username));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
-					->set('page', $this);
+				    ->set('page', $this);
 				echo $tpl->render('ragnarok/account/reset_password');
 				return;
-			case Form::VALIDATION_SUCCESS:
-				$this->response->status(302);
-				try {
-					$this->server->login->updateAccount($this->account->id, array(
-						'password' => trim($this->request->data('password')),
-						'pincode'  => trim($this->request->data('pincode')),
-					));
-					$user->addFlash('success', null, __('ragnarok', 'password-reset-success'));
-					$user->session->delete('ragnarok_pass_reset::' . $this->account->id);
-					$this->response->redirect($this->account->url());
-				} catch(\Exception $exception) {
-					ErrorLog::logSql($exception);
-					$user->addFlash('error', null, __('application', 'unexpected-error'));
-					$this->response->redirect($user->request->uri->url());
-				}
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			return;
+		}
+		try {
+			$this->response->status(302);
+			$update = array( 'password' => trim($this->request->getString('password')) );
+			if($this->server->login->getOption('use-pincode')) {
+				$update['pincode'] = trim($this->request->getString('pincode'));
+			}
+			if($this->account->update($update)) {
+				$user->addFlash('success', null, __('ragnarok', 'password-reset-success'));
+				$user->session->delete('ragnarok_pass_reset::' . $this->account->id);
+			}
+			$this->response->redirect($this->account->url());
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$user->addFlash('error', null, __('application', 'unexpected-error'));
+			$this->response->redirect(App::request()->uri->url());
 		}
 	}
 }

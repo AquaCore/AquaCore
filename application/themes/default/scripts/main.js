@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	$("body").addClass("script");
 	$(".ac-cart-items").slideUp(0);
 	$(".ac-cart-link").bind("click", function(e) {
 		$(this).parent().find(".ac-cart-items").stop(true, false).slideDown({

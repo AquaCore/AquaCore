@@ -28,7 +28,6 @@ extends Page
 	{
 		$this->charmap = &App::$activeCharMapServer;
 		if(!($this->charmap instanceof CharMap)) {
-			$this->dispatcher->triggerError(404);
 			return;
 		}
 		$pgn = &$this;

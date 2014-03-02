@@ -159,7 +159,6 @@ extends Page
 		$settings->set('time_format', trim($this->request->getString('time_format')));
 		$settings->set('datetime_format', trim($this->request->getString('datetime_format')));
 		$settings->set('output_compression', (bool)$this->request->getInt('ob'));
-		$settings->export(\Aqua\ROOT . '/settings/application.php');
 		if($settings->get('ssl', 0) >= 2) {
 			$settings->get('session')->set('secure', true);
 			$settings->get('account')->get('persistent_login')->set('secure', true);
@@ -167,6 +166,7 @@ extends Page
 			$settings->get('session')->set('secure', false);
 			$settings->get('account')->get('persistent_login')->set('secure', false);
 		}
+		App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 		App::user()->addFlash('success', null, __('settings', 'settings-saved'));
 	}
 
@@ -311,7 +311,7 @@ extends Page
 		$settings->get('session')->set('regenerate_id', $this->request->getInt('session_regenerate_id'));
 		$settings->get('session')->set('max_collision', $this->request->getInt('session_collision'));
 		$settings->get('session')->set('gc_probability', $this->request->getInt('session_gc'));
-		$settings->export(\Aqua\ROOT . '/settings/application.php');
+		App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 		App::user()->addFlash('success', null, __('settings', 'settings-saved'));
 	}
 
@@ -365,7 +365,7 @@ extends Page
 			->setLabel(__('settings', 'email-smtp-username-label'))
 			->setDescription(__('settings', 'email-smtp-username-desc'));
 		$frm->input('smtp_password', true)
-			->type('text')
+			->type('password')
 			->value($settings->get('smtp_password', ''), false)
 			->setLabel(__('settings', 'email-smtp-password-label'));
 		$frm->input('smtp_timeout', true)
@@ -384,6 +384,7 @@ extends Page
 			return;
 		}
 		$this->response->status(302)->redirect(App::request()->uri->url());
+		$settings = App::settings()->get('email');
 		$settings->set('from_address', trim($this->request->getString('from')));
 		$settings->set('from_name', trim($this->request->getString('name')));
 		$settings->set('use_smtp', (bool)$this->request->getInt('smtp'));
@@ -398,7 +399,7 @@ extends Page
 		} else {
 			$settings->set('smtp_authentication', true);
 		}
-		$settings->export(\Aqua\ROOT . '/settings/application.php');
+		App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 		App::user()->addFlash('success', null, __('settings', 'settings-saved'));
 	}
 
@@ -491,7 +492,7 @@ extends Page
 		$settings->get('donation')->set('exchange_rate', $this->request->getInt('exchange_rate'));
 		$settings->get('donation')->set('goal', $this->request->getInt('goal'));
 		$settings->get('donation')->set('goal_interval', $this->request->getString('goal_interval'));
-		$settings->export(\Aqua\ROOT . '/settings/application.php');
+		App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 		App::user()->addFlash('success', null, __('settings', 'settings-saved'));
 	}
 
@@ -648,7 +649,7 @@ extends Page
 				$settings->get('captcha')->set('font_file', $new_file);
 			}
 		}
-		$settings->export(\Aqua\ROOT . '/settings/application.php');
+		App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 		App::user()->addFlash('success', null, __('settings', 'settings-saved'));
 	}
 
@@ -790,7 +791,7 @@ extends Page
 		$settings->get('chargen')->get('sprite')->set('head_direction', $this->request->getInt('head_pos'));
 		$settings->get('chargen')->get('sprite')->set('body_direction', $this->request->getInt('body_pos'));
 		$settings->get('chargen')->get('sprite')->set('body_action', $this->request->getInt('body_act'));
-		$settings->export(\Aqua\ROOT . '/settings/application.php');
+		App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 		App::user()->addFlash('success', null, __('settings', 'settings-saved'));
 	}
 }
