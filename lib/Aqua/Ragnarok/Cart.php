@@ -101,7 +101,7 @@ class Cart
 				'id'    => 'cs.item_id',
 				'price' => 'cs.price',
 				'name' => 'tmp_tbl.`name`',
-			))
+			), false)
 			->setColumnType(array( 'price' => 'integer' ))
 			->where(array( 'id' => $in ))
 			->parser(null)

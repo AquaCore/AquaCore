@@ -8,6 +8,7 @@
     <word namespace="form" key="invalid-color">The color you have entered is not a valid hex color.</word>
     <word namespace="form" key="invalid-number">The number you have entered is not valid.</word>
     <word namespace="form" key="invalid-range">The number you have entered is out of range.</word>
+    <word namespace="form" key="invalid-date-range">The date you have entered is out of range.</word>
     <word namespace="form" key="invalid-email">The email you have entered is not valid.</word>
     <word namespace="form" key="invalid-date">The date you have entered is not valid.</word>
     <word namespace="form" key="invalid-url">The url you have entered is not valid.</word>

@@ -286,7 +286,7 @@ extends Page
 					->from(ac_table('users'))
 					->forUpdate(true)
 					->query()
-					->results[0]['credits'];
+					->get('credits', 0);
 				if(($credits - $cart->total) < 0) {
 					$user->addFlash('warning', null, __('ragnarok', 'not-enough-credits'));
 					$dbh->rollBack();

@@ -7,8 +7,10 @@ use Aqua\Core\L10n;
 use Aqua\Log\BanLog;
 use Aqua\Log\ErrorLog;
 use Aqua\Log\LoginLog;
+use Aqua\Log\ProfileUpdateLog;
 use Aqua\Ragnarok\Server;
 use Aqua\Site\Page;
+use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Template;
@@ -159,6 +161,7 @@ extends Page
 			    ->required()
 			    ->type('date')
 			    ->attr('autocomplete', 'off')
+				->attr('max', date('Y-m-d'))
 			    ->value(date('Y-m-d', $account->birthDate))
 			    ->placeholder('YYYY-MM-DD')
 			    ->setLabel(__('profile', 'birthday'));
@@ -173,7 +176,6 @@ extends Page
 			$frm->input('current_password')
 			    ->required()
 			    ->type('password')
-			    ->bool('required')
 			    ->attr('autocomplete', 'off')
 			    ->setLabel(__('profile', 'current-password'));
 			$frm->token('account_preferences');
@@ -263,6 +265,7 @@ extends Page
 			$email    = trim($this->request->getString('email'));
 			$password = trim($this->request->getString('password'));
 			$birthday = \DateTime::createFromFormat('Y-m-d', trim($this->request->getString('birthday')));
+			$birthday = strtotime('midnight', $birthday->getTimestamp());
 			if($display !== $account->displayName) {
 				switch($account->updateDisplayName($display)) {
 					case false:
@@ -293,8 +296,8 @@ extends Page
 						break;
 				}
 			}
-			if($birthday && $birthday->getTimestamp() !== $account->birthDate) {
-				switch($account->updateBirthday($birthday->getTimestamp())) {
+			if($birthday !== $account->birthDate) {
+				switch($account->updateBirthday($birthday)) {
 					case false:
 						App::user()->addFlash('warning', null, __(
 							'profile',

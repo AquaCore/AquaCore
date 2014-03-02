@@ -2,8 +2,6 @@
 namespace Aqua\User;
 
 use Aqua\Core\App;
-use Aqua\Core\L10n;
-use Aqua\Core\Settings;
 use Aqua\Log\BanLog;
 use Aqua\Log\ProfileUpdateLog;
 use Aqua\Log\TransferLog;
@@ -325,7 +323,8 @@ class Account
 	protected function _updateField($type, $new_value, $bypass)
 	{
 		$settings = App::settings()->get('account')->get($type);
-		if(!$bypass && ($limit = $settings->get('update_limit', 0)) && ($days = $settings->get('update_days', 0))) {
+		if(!$bypass && ($limit = $settings->get('update_limit', 0)) &&
+		   ($days = $settings->get('update_days', 0))) {
 			$search = ProfileUpdateLog::search()
 				->columns(array( 'count' => 'COUNT(1)' ), false)
 				->setColumnType(array( 'count' => 'integer' ))
@@ -335,6 +334,7 @@ class Account
 					'date'    => array( Search::SEARCH_HIGHER, date('Y-m-d H:i:s', strtotime("-{$days} days")) )
 				))
 				->parser(null)
+				->groupBy(array())
 				->query();
 			if($search->get('count', 0) >= $limit) {
 				return false;

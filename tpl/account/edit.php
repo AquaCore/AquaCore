@@ -104,6 +104,10 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 			<td><?php echo $form->field('email')->render() ?></td>
 			<td colspan="2"></td>
 		</tr>
+		<tr class="ac-form-warning">
+			<td colspan="2"><?php echo $form->field('birthday')->getWarning() ?></td>
+			<td colspan="2"></td>
+		</tr>
 		<tr>
 			<td><b><?php echo $form->field('birthday')->getLabel() ?></b></td>
 			<td><?php echo $form->field('birthday')->render() ?></td>

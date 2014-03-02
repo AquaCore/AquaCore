@@ -234,12 +234,19 @@ implements FieldInterface
 					$request->data[$this->attributes['name']] = "#$hex";
 					break;
 				case 'date':
-					if(!($date = \DateTime::createFromFormat('Y-m-d', $value))) {
+					do {
+						try {
+							$date  = \DateTime::createFromFormat('Y-m-d', $value);
+							$error = \DateTime::getLastErrors();
+							if($date && empty($error['warning_count'])) {
+								$timestamp = strtotime('midnight', $date->getTimestamp());
+								break;
+							}
+						} catch(\Exception $e) { }
 						$this->error = self::VALIDATION_INVALID_TYPE;
 						$error       = __('form', 'invalid-date');
-						break;
-					}
-					$timestamp = $date->getTimestamp();
+						break 2;
+					} while(0);
 					if(($this->getAttr('max') && $timestamp > strtotime($this->getAttr('max'))) ||
 					   ($this->getAttr('min') && $timestamp < strtotime($this->getAttr('min')))) {
 						$this->error = self::VALIDATION_INVALID_RANGE;
