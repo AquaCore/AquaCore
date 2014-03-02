@@ -1,21 +1,38 @@
 <?php
-use Aqua\UI\ScriptManager;
 /**
- * @var $cart_size  int
+ * @var $cart_size int
  * @var $cart      \Aqua\Ragnarok\Item[]
  * @var $paginator \Aqua\UI\Pagination
  * @var $page      \Page\Main\Ragnarok\Server\Char
  */
-assert('isset($cart_size) && isset($cart) && isset($paginator) && isset($page)');
 
-$page->theme->footer->enqueueScript(ScriptManager::script('cardbmp'));
-$paginator->range = 7;
+$page->theme->footer->enqueueScript('cardbmp')
+                    ->type('text/javascript')
+                    ->append('
+(function($) {
+	$("[ac-ro-card]").tooltip({
+		tooltipClass: "ac-card-bmp",
+		position: {
+			my: "center+5 bottom-7",
+			at: "center-5 top"
+		},
+		hide: null,
+		show: null,
+		content: function() {
+			return $("<span/>")
+				.append($("<div/>").addClass("ac-tooltip-top"))
+				.append($("<div/>").width(150).addClass("ac-tooltip-content").append($("<img/>").attr("src", $(this).attr("ac-ro-card"))))
+				.append($("<div/>").addClass("ac-tooltip-bottom"));
+		}
+	});
+})(jQuery);
+');
 $search_type = $page->request->uri->getString('t');
-$base_url = $page->server->charMapUri($page->charmap->key())->url(array(
-	'path' => array( 'item' ),
-	'action' => 'view',
-	'arguments' => array( '' )
-));
+$base_url = $page->charmap->url(array(
+	                                'path' => array( 'item' ),
+	                                'action' => 'view',
+	                                'arguments' => array( '' )
+                                ));
 ?>
 <table class="ac-table">
 	<thead>
@@ -23,7 +40,7 @@ $base_url = $page->server->charMapUri($page->charmap->key())->url(array(
 		<td colspan="7">
 			<form method="GET">
 				<?php echo ac_form_path()?>
-				<div class="ac-storage-types">
+				<div class="ac-storage-types" style="float: left; line-height: 30px">
 					<input id="ac_storage-use" type="radio" name="t" value="use" <?php echo ($search_type == 'use' ? 'checked' : '')?>>
 					<label for="ac_storage-use"><?php echo __('ragnarok-item-type', '2')?></label>
 					<input id="ac_storage-misc" type="radio" name="t" value="misc" <?php echo ($search_type == 'misc' ? 'checked' : '')?>>
@@ -42,7 +59,7 @@ $base_url = $page->server->charMapUri($page->charmap->key())->url(array(
 					<label for="ac_storage-all"><?php echo __('application', 'all')?></label>
 				</div>
 				<div style="float:right">
-					<input type="text" name="s" value="<?php echo $page->request->uri->getString('s')?>">
+					<input type="text" name="s" value="<?php echo htmlspecialchars($page->request->uri->getString('s'))?>">
 					<input type="submit" value="<?php echo __('application', 'search')?>">
 				</div>
 			</form>
@@ -56,41 +73,41 @@ $base_url = $page->server->charMapUri($page->charmap->key())->url(array(
 	</tr>
 	</thead>
 	<tbody>
-	<?php if(!$cart_size) : ?>
+	<?php if(empty($cart)) : ?>
 		<tr>
-			<td colspan="7" style="text-align: center; font-style: italic;"><?php echo __('ragnarok', '0-items')?></td>
+			<td colspan="7" style="text-align: center; font-style: italic;"><?php echo __('application', 'no-search-results')?></td>
 		</tr>
 	<?php else : foreach($cart as $item) : ?>
 		<tr>
-<?php if($item->identified) : ?>
-			<td class="ac-item-icon"><img src="<?php echo ac_item_icon($item->itemId)?>"></td>
-			<td class="ac-item-name"><a href="<?php echo $base_url . $item->itemId?>"><?php echo $item->name(false)?></a></td>
-			<td class="ac-item-amount"><?php echo number_format($item->amount)?></td>
-			<?php
-			for($i = 0; $i < 4; ++$i) {
-				$item->card($i, $card_id, $enchanted);
-				if($enchanted) { ?>
-					<td class="ac-card-slot ac-slot-enchanted"><?php echo ac_item_icon($card_id)?></td>
-				<?php } else if($item->slots < ($i + 1)) { ?>
-					<td class="ac-card-slot ac-slot-disabled"></td>
-				<?php } else if($card_id) { ?>
-					<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($card_id)?>">
-						<a href="<?php echo $base_url . $card_id?>"></a>
-					</td>
-				<?php } else { ?>
-					<td class="ac-card-slot ac-slot-empty"></td>
-				<?php }} ?>
-<?php else : ?>
-	<td class="ac-item-icon ac-item-unidentified">
-		<img src="<?php echo \Aqua\URL?>/assets/images/icons/unidentified.png">
-	</td>
-	<td class="ac-item-name"><i><?php echo __('ragnarok', 'unidentified')?></i></td>
-	<td class="ac-item-amount"><?php echo number_format($item->amount)?></td>
-	<td class="ac-card-slot ac-slot-disabled"></td>
-	<td class="ac-card-slot ac-slot-disabled"></td>
-	<td class="ac-card-slot ac-slot-disabled"></td>
-	<td class="ac-card-slot ac-slot-disabled"></td>
-<?php endif; ?>
+			<?php if($item->identified) : ?>
+				<td class="ac-item-icon"><img src="<?php echo ac_item_icon($item->itemId)?>"></td>
+				<td class="ac-item-name"><a href="<?php echo $base_url . $item->itemId?>"><?php echo $item->name(false)?></a></td>
+				<td class="ac-item-amount"><?php echo number_format($item->amount)?></td>
+				<?php
+				for($i = 0; $i < 4; ++$i) {
+					$item->card($i, $card_id, $enchanted);
+					if($enchanted) { ?>
+						<a href="<?php echo $base_url . $card_id ?>"><img src="<?php echo ac_item_icon($card_id)?>"></a>
+					<?php } else if($item->slots < ($i + 1)) { ?>
+						<td class="ac-card-slot ac-slot-disabled"></td>
+					<?php } else if($card_id) { ?>
+						<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($card_id)?>">
+							<a href="<?php echo $base_url . $card_id?>"></a>
+						</td>
+					<?php } else { ?>
+						<td class="ac-card-slot ac-slot-empty"></td>
+					<?php }} ?>
+			<?php else : ?>
+				<td class="ac-item-icon ac-item-unidentified">
+					<img src="<?php echo \Aqua\URL?>/assets/images/icons/unidentified.png">
+				</td>
+				<td class="ac-item-name"><i><?php echo __('ragnarok', 'unidentified')?></i></td>
+				<td class="ac-item-amount"><?php echo number_format($item->amount)?></td>
+				<td class="ac-card-slot ac-slot-disabled"></td>
+				<td class="ac-card-slot ac-slot-disabled"></td>
+				<td class="ac-card-slot ac-slot-disabled"></td>
+				<td class="ac-card-slot ac-slot-disabled"></td>
+			<?php endif; ?>
 		</tr>
 	<?php endforeach; endif; ?>
 	</tbody>
@@ -102,4 +119,4 @@ $base_url = $page->server->charMapUri($page->charmap->key())->url(array(
 	</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('ragnarok', 'x-items', number_format($cart_size))?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($cart_size === 1 ? 's' : 'p'), number_format($cart_size))?></span>

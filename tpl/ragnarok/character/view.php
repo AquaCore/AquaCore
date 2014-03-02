@@ -15,6 +15,7 @@ $page->theme->addSettings('charStats', array(
     'luk' => $char->luck,
 ));
 $page->theme->addWordGroup('ragnarok-stats');
+$page->theme->footer->enqueueScript(ScriptManager::script('jquery'));
 $page->theme->footer->enqueueScript(ScriptManager::script('highsoft.highchart-more'));
 $page->theme->footer->enqueueScript('char-stats')
 	->type('text/javascript')
@@ -71,8 +72,8 @@ $page->theme->footer->enqueueScript('char-stats')
 				0:   AquaCore.l("ragnarok-stats", "str"),
 				60:  AquaCore.l("ragnarok-stats", "vit"),
 				120: AquaCore.l("ragnarok-stats", "dex"),
-				180: AquaCore.l("ragnarok-stats", "agi"),
-				240: AquaCore.l("ragnarok-stats", "int"),
+				180: AquaCore.l("ragnarok-stats", "int"),
+				240: AquaCore.l("ragnarok-stats", "agi"),
 				300: AquaCore.l("ragnarok-stats", "luk")
 			}
 		},
@@ -98,8 +99,8 @@ $page->theme->footer->enqueueScript('char-stats')
 				AquaCore.settings["charStats"]["str"],
 				AquaCore.settings["charStats"]["vit"],
 				AquaCore.settings["charStats"]["dex"],
-				AquaCore.settings["charStats"]["agi"],
 				AquaCore.settings["charStats"]["int"],
+				AquaCore.settings["charStats"]["agi"],
 				AquaCore.settings["charStats"]["luk"],
 			]
 		}]

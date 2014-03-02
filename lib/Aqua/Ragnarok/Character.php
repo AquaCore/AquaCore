@@ -243,7 +243,7 @@ class Character
 			'name', 'slot', 'class', 'fame', 'zeny', 'option',
 			'karma', 'manner', 'hair', 'hair_color', 'clothes_color',
 			'weapon', 'shield', 'robe', 'head_top', 'head_middle',
-			'head_bottom', 'cp_options'
+			'head_bottom', 'cp_options', 'map', 'x', 'y'
 		);
 		$options = array_intersect_key($options, array_flip($columns));
 		if(empty($options)) {
@@ -277,6 +277,18 @@ class Character
 		if(array_key_exists('cp_options', $options) && $options['cp_options'] !== $this->CPOptions) {
 			$value['cp_options'] = $char_data['options'] = $options['cp_options'];
 			$update.= 'ac_options = ?, ';
+		}
+		if(array_key_exists('x', $options) && $options['x'] !== $this->lastX) {
+			$value['x'] = $char_data['lastX'] = $options['x'];
+			$update.= 'last_x = ?, ';
+		}
+		if(array_key_exists('y', $options) && $options['y'] !== $this->lastY) {
+			$value['y'] = $char_data['lastY'] = $options['y'];
+			$update.= 'last_y = ?, ';
+		}
+		if(array_key_exists('map', $options) && $options['map'] !== $this->lastMap) {
+			$value['map'] = $char_data['lastMap'] = $options['map'];
+			$update.= 'last_map = ?, ';
 		}
 		if(empty($value)) {
 			return false;

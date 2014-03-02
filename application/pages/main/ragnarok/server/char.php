@@ -4,8 +4,9 @@ namespace Page\Main\Ragnarok\Server;
 use Aqua\Core\App;
 use Aqua\Ragnarok\Character;
 use Aqua\Ragnarok\Server;
-use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Site\Page;
+use Aqua\SQL\Search;
+use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
@@ -18,13 +19,12 @@ extends Page
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
-
 	/**
 	 * @var \Aqua\Ragnarok\Character
 	 */
 	public $char;
 
-	const ITEMS_PER_PAGE = 10;
+	public static $itemsPerPage = 10;
 
 	public function run()
 	{
@@ -41,7 +41,7 @@ extends Page
 			'title' => __('ragnarok', 'character'),
 			'url' => "{$base_url}index"
 		))->append('options', array(
-			'title' => __('application', 'preferences'),
+			'title' => __('profile', 'preferences'),
 			'url' => "{$base_url}options"
 		))->append('inventory', array(
 			'title' => __('ragnarok', 'inventory'),
@@ -72,53 +72,62 @@ extends Page
 
 	public function index_action()
 	{
-		$this->title = __('ragnarok', 'viewing-x-character', htmlspecialchars($this->char->name));
-		$this->theme->head->section = __('ragnarok', 'character');
-		$tpl = new Template;
-		$tpl->set('char', $this->char)
-			->set('page', $this);
-		echo $tpl->render('ragnarok/character/view');
+		try {
+			$this->title = __('ragnarok', 'viewing-x-character', htmlspecialchars($this->char->name));
+			$this->theme->head->section = __('ragnarok', 'character');
+			$tpl = new Template;
+			$tpl->set('char', $this->char)
+				->set('page', $this);
+			echo $tpl->render('ragnarok/character/view');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
 	}
 
 	public function inventory_action()
 	{
-		$this->title = __('ragnarok', 'x-inventory', htmlspecialchars($this->char->name));
-		$this->theme->head->section = __('ragnarok', 'inventory');
 		try {
+			$this->title = __('ragnarok', 'x-inventory', htmlspecialchars($this->char->name));
+			$this->theme->head->section = __('ragnarok', 'inventory');
 			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$options = array( 'char_id' => $this->char->id );
+			$search = $this->charmap->inventorySearch()
+				->calcRows(true)
+				->where(array( 'char_id' => $this->char->id ))
+				->limit(($current_page - 1) * self::$itemsPerPage, self::$itemsPerPage)
+				->order(array( 'name' => 'ASC' ));
 			if(($x = $this->request->uri->getString('s', false))) {
-				$x = addcslashes($x, '%_\\');
-				$options['name'] = array( AC_SEARCH_LIKE, "%$x%" );
+				$search->where(array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' ));
 			}
 			if(($x = $this->request->uri->getString('t', false)) !== false) {
-				switch($x) {
-					case 'use':    $options['type'] = array( AC_SEARCH_IN, 1, 2, 11 ); break;
-					case 'misc':   $options['type'] = array( AC_SEARCH_IN, 3, 8, 12 ); break;
-					case 'weapon': $options['type'] = 4; break;
-					case 'armor':  $options['type'] = 5; break;
-					case 'egg':    $options['type'] = 7; break;
-					case 'card':   $options['type'] = 6; break;
-					case 'ammo':   $options['type'] = 10; break;
-				}
+				do {
+					switch($x) {
+						case 'use':    $type = array( Search::SEARCH_IN, 1, 2, 11 ); break;
+						case 'misc':   $type = array( Search::SEARCH_IN, 3, 8, 12 ); break;
+						case 'weapon': $type = 4; break;
+						case 'armor':  $type = 5; break;
+						case 'egg':    $type = 7; break;
+						case 'card':   $type = 6; break;
+						case 'ammo':   $type = 10; break;
+						default: break 2;
+					}
+					$search->where(array( 'type' => $type ));
+				} while(0);
 			}
-			if(!empty($options)) $options['identify'] = 1;
-			$inventory = $this->charmap->inventorySearch(
-				$options,
-				array( AC_ORDER_ASC, 'name' ),
-				array(($current_page - 1) * self::ITEMS_PER_PAGE, self::ITEMS_PER_PAGE),
-				$rows
-			);
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::ITEMS_PER_PAGE), $current_page);
+			if($x) {
+				$search->where(array( 'intentify' => 1 ));
+			}
+			$search->query();
+			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$itemsPerPage), $current_page, 'page');
 			$tpl = new Template;
-			$tpl->set('inventory_size', $rows)
-				->set('inventory', $inventory)
+			$tpl->set('inventory_size', $search->rowsFound)
+				->set('inventory', $search->results)
 				->set('paginator', $pgn)
 				->set('page', $this);
 			echo $tpl->render('ragnarok/character/inventory');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			$this->error(1, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 
@@ -141,56 +150,118 @@ extends Page
 			case 4107:
 				break;
 			default:
-				$this->response->status(302)->redirect(App::request()->previousUrl());
+				$this->error(404);
 				return;
 		}
 		$this->title = __('ragnarok', 'x-cart', htmlspecialchars($this->char->name));
 		$this->theme->head->section = __('ragnarok', 'cart');
 		try {
 			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$options = array( 'char_id' => $this->char->id );
+			$search = $this->charmap->cartSearch()
+				->calcRows(true)
+				->where(array( 'char_id' => $this->char->id ))
+				->limit(($current_page - 1) * self::$itemsPerPage, self::$itemsPerPage)
+				->order(array( 'name' => 'ASC' ));
 			if(($x = $this->request->uri->getString('s', false))) {
-				$x = addcslashes($x, '%_\\');
-				$options['name'] = array( AC_SEARCH_LIKE, "%$x%" );
+				$search->where(array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' ));
 			}
 			if(($x = $this->request->uri->getString('t', false)) !== false) {
-				switch($x) {
-					case 'use':    $options['type'] = array( AC_SEARCH_IN, 1, 2, 11 ); break;
-					case 'misc':   $options['type'] = array( AC_SEARCH_IN, 3, 8, 12 ); break;
-					case 'weapon': $options['type'] = 4; break;
-					case 'armor':  $options['type'] = 5; break;
-					case 'egg':    $options['type'] = 7; break;
-					case 'card':   $options['type'] = 6; break;
-					case 'ammo':   $options['type'] = 10; break;
-				}
+				do {
+					switch($x) {
+						case 'use':    $type = array( Search::SEARCH_IN, 1, 2, 11 ); break;
+						case 'misc':   $type = array( Search::SEARCH_IN, 3, 8, 12 ); break;
+						case 'weapon': $type = 4; break;
+						case 'armor':  $type = 5; break;
+						case 'egg':    $type = 7; break;
+						case 'card':   $type = 6; break;
+						case 'ammo':   $type = 10; break;
+						default: break 2;
+					}
+					$search->where(array( 'type' => $type ));
+				} while(0);
 			}
-			if(!empty($options)) $options['identify'] = 1;
-			$cart = $this->charmap->cartSearch(
-				$options,
-				array( AC_ORDER_ASC, 'name' ),
-				array(($current_page - 1) * self::ITEMS_PER_PAGE, self::ITEMS_PER_PAGE),
-				$rows
-			);
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::ITEMS_PER_PAGE), $current_page);
+			if($x) {
+				$search->where(array( 'intentify' => 1 ));
+			}
+			$search->query();
+			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$itemsPerPage), $current_page, 'page');
 			$tpl = new Template;
-			$tpl->set('cart_size', $rows)
-				->set('cart', $cart)
+			$tpl->set('cart_size', $search->rowsFound)
+				->set('cart', $search->results)
 				->set('paginator', $pgn)
 				->set('page', $this);
 			echo $tpl->render('ragnarok/character/cart');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			$this->error(1, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 
 	public function options_action()
 	{
-		if($this->request->getInt('edit_char')) {
-			$this->response->status(302)->redirect(App::request()->uri->url());
-			try {
+		try {
+			$frm = new Form($this->request);
+			$frm->checkbox('hide_online')
+				->value(array( '1' => '' ))
+				->checked($this->char->CPOptions & Character::OPT_DISABLE_WHO_IS_ONLINE ? '1' : null)
+				->setLabel(__('ragnarok', 'hide-whos-online'));
+			$frm->checkbox('hide_map')
+				->value(array( '1' => '' ))
+				->checked($this->char->CPOptions & Character::OPT_DISABLE_MAP_WHO_IS_ONLINE ? '1' : null)
+				->setLabel(__('ragnarok', 'hide-map-whos-online'));
+			$frm->checkbox('hide_zeny')
+				->value(array( '1' => '' ))
+				->checked($this->char->CPOptions & Character::OPT_DISABLE_ZENY_LADDER ? '1' : null)
+				->setLabel(__('ragnarok', 'hide-zeny'));
+			$frm->token('ragnarok_edit_char');
+			$frm->input('reset_look')
+				->type('submit')
+				->value(__('ragnarok', 'reset-look'));
+			$frm->input('reset_pos')
+				->type('submit')
+				->value(__('ragnarok', 'reset-position'));
+			$frm->submit();
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = __('ragnarok', 'edit-char', htmlspecialchars($this->char->name));
+				$this->theme->head->section = __('ragnarok', 'char-preferences');
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+					->set('page', $this);
+				echo $tpl->render('ragnarok/character/edit');
+				return;
+			}
+			if($this->request->getString('reset_pos')) {
+				if($this->char->online) {
+					App::user()->addFlash('warning', null, __('ragnarok', 'reset-pos-online'));
+				} else if(($pattern = $this->charmap->getOption('map-restriction')) &&
+				          preg_match($pattern, $this->char->lastMap)) {
+					App::user()->addFlash('warning', null, __('ragnarok', 'reset-map-restriction', htmlspecialchars($this->char->lastMap)));
+				} else if($this->char->update(array(
+						'map' => $this->charmap->getOption('default-map'),
+						'x' => $this->charmap->getOption('default-map-x'),
+						'y' => $this->charmap->getOption('default-map-y')
+					))) {
+					App::user()->addFlash('success', null, __('ragnarok', 'pos-reset'));
+				}
+			} else if($this->request->getString('reset_look')) {
+				if($this->char->online) {
+					App::user()->addFlash('warning', null, __('ragnarok', 'reset-look-online'));
+				} else if($this->char->update(array(
+						'hair' => 0,
+						'hair_color' => 0,
+						'clothes_color' => 0,
+						'weapon' => 0,
+						'shield' => 0,
+						'robe' => 0,
+						'head_top' => 0,
+						'head_mid' => 0,
+						'head_bottom' => 0
+					))) {
+					App::user()->addFlash('success', null, __('ragnarok', 'look-reset'));
+				}
+			} else {
 				$opt = $this->char->CPOptions;
-				$options = array();
 				if($this->request->getInt('hide_online')) {
 					$opt |= Character::OPT_DISABLE_WHO_IS_ONLINE;
 				} else {
@@ -206,56 +277,14 @@ extends Page
 				} else {
 					$opt &= ~Character::OPT_DISABLE_ZENY_LADDER;
 				}
-				if($opt !== $this->char->CPOptions) {
-					$options['cp_option'] = $opt;
+				if($opt !== $this->char->CPOptions &&
+				   $this->char->update(array( 'cp_options' => $opt ))) {
+					App::user()->addFlash('success', null, __('ragnarok', 'char-updated'));
 				}
-				if($this->request->getInt('reset_look')) {
-					if($this->char->online) {
-						App::user()->addFlash('warning', null, __('ragnarok', 'reset-look-online'));
-					} else {
-						$options+= array(
-							'hair' => 0,
-							'hair_color' => 0,
-							'clothes_color' => 0,
-							'weapon' => 0,
-							'shield' => 0,
-							'robe' => 0,
-							'head_top' => 0,
-							'head_mid' => 0,
-							'head_bottom' => 0
-						);
-						App::user()->addFlash('success', null, __('ragnarok', 'look-reset'));
-					}
-				}
-				if($this->request->getInt('reset_position')) do {
-					if($this->char->online) {
-						App::user()->addFlash('warning', null, __('ragnarok', 'reset-pos-online'));
-						break;
-					}
-					foreach($this->charmap->positionRestrictions as &$regex) {
-						if(preg_match($regex, $this->char->lastMap)) {
-							App::user()->addFlash('warning', null, __('ragnarok', 'reset-map-restriction', htmlspecialchars($this->char->lastMap)));
-							break;
-						}
-					}
-					$options['map'] = $this->charmap->positionMap;
-					$options['x_coordinate'] = $this->charmap->positionX;
-					$options['y_coordinate'] = $this->charmap->positionY;
-					App::user()->addFlash('success', null, __('ragnarok', 'pos-reset'));
-				} while(0);
-				if(!empty($options)) {
-					$this->charmap->updateChar($this->char->id, $options);
-				}
-			} catch(\Exception $exception) {
-				ErrorLog::logSql($exception);
-				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			}
-			return;
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
-		$this->title = __('ragnarok', 'edit-char', htmlspecialchars($this->char->name));
-		$this->theme->head->section = __('ragnarok', 'char-preferences');
-		$tpl = new Template;
-		$tpl->set('page', $this);
-		echo $tpl->render('ragnarok/character/edit');
 	}
 }

@@ -1,10 +1,13 @@
 <?php
-use Aqua\Ragnarok\Character;
 /**
- * @var $page    \Page\Main\Ragnarok\Server\Char
+ * @var $form \Aqua\UI\Form
+ * @var $page \Page\Main\Ragnarok\Server\Char
  */
 ?>
 <form method="POST">
+	<?php if(($error = $form->message)) : ?>
+		<div class="ac-form-error"><?php echo $error ?></div>
+	<?php endif; ?>
 	<table class="ac-table">
 		<thead>
 		<tr>
@@ -12,30 +15,37 @@ use Aqua\Ragnarok\Character;
 		</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td><label for="reset_look"><?php echo __('ragnarok', 'reset-look')?></label>:</td>
-				<td><input type="checkbox" name="reset_look" value="1" id="reset_look"></td>
-				<td><label for="reset_position"><?php echo __('ragnarok', 'reset-position')?></label>:</td>
-				<td><input type="checkbox" name="reset_position" value="1" id="reset_position"></td>
+			<tr class="ac-form-warning">
+				<td colspan="2"><?php echo $form->field('hide_online')->getWarning() ?></td>
+				<td colspan="2"><?php echo $form->field('hide_map')->getWarning() ?></td>
 			</tr>
 			<tr>
-				<td style="width: 25%"><label for="hide_online"><?php echo __('ragnarok', 'hide-whos-online')?></label>:</td>
-				<td style="width: 25%"><input type="checkbox" name="hide_online" value="1" id="hide_online" <?php echo $page->char->CPOptions & Character::OPT_DISABLE_WHO_IS_ONLINE ? 'checked="checked"' : ''?>></td>
-				<td style="width: 25%"><label for="hide_map"><?php echo __('ragnarok', 'hide-map-whos-online')?></label>:</td>
-				<td style="width: 25%"><input type="checkbox" name="hide_map" value="1" id="hide_map" <?php echo $page->char->CPOptions & Character::OPT_DISABLE_MAP_WHO_IS_ONLINE ? 'checked="checked"' : ''?>></td>
+				<td><b><?php echo $form->field('hide_online')->getLabel()?></b></td>
+				<td style="text-align: left"><?php echo $form->field('hide_online')->option('1')->render()?></td>
+				<td><b><?php echo $form->field('hide_map')->getLabel()?></b></td>
+				<td style="text-align: left"><?php echo $form->field('hide_map')->option('1')->render()?></td>
+			</tr>
+			<tr class="ac-form-warning">
+				<td colspan="2"><?php echo $form->field('hide_online')->getWarning() ?></td>
+				<td colspan="2"><?php echo $form->field('hide_map')->getWarning() ?></td>
 			</tr>
 			<tr>
-				<td><label for="hide_zeny"><?php echo __('ragnarok', 'hide-zeny')?></label>:</td>
-				<td><input type="checkbox" name="hide_zeny" value="1" id="hide_zeny" <?php echo $page->char->CPOptions & Character::OPT_DISABLE_ZENY_LADDER ? 'checked="checked"' : ''?>></td>
-				<td></td>
-				<td></td>
+				<td><b><?php echo $form->field('hide_zeny')->getLabel()?></b></td>
+				<td style="text-align: left"><?php echo $form->field('hide_zeny')->option('1')->render()?></td>
+				<td colspan="2"></td>
 			</tr>
 		</tbody>
 		<tfoot>
 		<tr>
 			<td colspan="4">
-				<input type="hidden" name="edit_char" value="1">
-				<input type="submit" value="<?php echo __('application', 'submit')?>" class="ac-button">
+				<span style="float: right">
+					<?php
+					echo $form->field('ragnarok_edit_char')->render(),
+						 $form->field('submit')->render(),
+						 $form->field('reset_look')->css('margin-left', '10px')->render(),
+						 $form->field('reset_pos')->css('margin-left', '10px')->render();
+					?>
+				</span>
 			</td>
 		</tr>
 		</tfoot>
