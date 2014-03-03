@@ -5,6 +5,7 @@
     <word namespace="ragnarok" key="account-info">%s's Information</word>
     <word namespace="ragnarok" key="stats-info">%s's Stats</word>
     <word namespace="ragnarok" key="account-updated">Your account has been updated.</word>
+    <word namespace="ragnarok" key="char-updated">Your character has been updated.</word>
     <word namespace="ragnarok" key="accounts-registered">Accounts Registered</word>
     <word namespace="ragnarok" key="owner">Owner</word>
     <word namespace="ragnarok" key="add-to-cart">Add to cart</word>
@@ -77,6 +78,8 @@
     <word namespace="ragnarok" key="hide-map-whos-online">Hide map from who is online</word>
     <word namespace="ragnarok" key="hide-whos-online">Hide from who is online</word>
     <word namespace="ragnarok" key="hide-zeny">Hide from zeny ladder</word>
+    <word namespace="ragnarok" key="max-hp">Maximum HP</word>
+    <word namespace="ragnarok" key="max-sp">Maximum SP</word>
     <word namespace="ragnarok" key="hp">HP</word>
     <word namespace="ragnarok" key="identifier">Identifier</word>
     <word namespace="ragnarok" key="intelligence">Intelligence</word>

@@ -164,12 +164,30 @@ class Request
 	public static function parseGlobals()
 	{
 		$request           = new self;
-		$request->cookies  = $_COOKIE;
-		$request->ipString = $_SERVER['REMOTE_ADDR'];
-		$request->ip       = inet_pton($_SERVER['REMOTE_ADDR']);
 		$request->method   = strtoupper($_SERVER['REQUEST_METHOD']);
 		$request->uri      = Uri::parseCurrentRequest();
+		$request->cookies  = $_COOKIE;
 		$request->data     = $_POST;
+		do {
+			foreach(array('X_FORWARDED_FOR',
+			              'FORWARDED_FOR',
+			              'FORWARDED_FOR_IP',
+			              'FORWARDED',
+			              'VIA',
+			              'CLIENT_IP'
+			        ) as $header) {
+				if(array_key_exists("HTTP_$header", $_SERVER)) {
+					$header = "HTTP_$header";
+				} else if(!array_key_exists($header, $_SERVER)) {
+					continue;
+				}
+				$request->ip       = inet_pton($_SERVER[$header]);
+				$request->ipString = $_SERVER[$header];
+				break 2;
+			}
+			$request->ip       = inet_pton($_SERVER['REMOTE_ADDR']);
+			$request->ipString = $_SERVER['REMOTE_ADDR'];
+		} while(0);
 		if(function_exists('getallheaders')) {
 			$request->headers = getallheaders();
 		} else {

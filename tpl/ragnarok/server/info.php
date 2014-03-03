@@ -110,7 +110,8 @@ $page->charmap->serverStatus($status['char'], $status['map']);
 	colors = [ "#21A4EB", "#ED427E", "#31CC4D", "#E0BD31" ];
 	chartData = {
 		chart: {
-			height: 250
+			height: 250,
+			ignoreHiddenSeries: false
 		},
 		title: { text: AquaCore.l("ragnarok", "online-stats") },
 		xAxis: {
@@ -158,9 +159,14 @@ $page->charmap->serverStatus($status['char'], $status['map']);
 	for(i = 0; i < AquaCore.settings["onlineStats"].length; ++i) {
 		chartData.series[i] = {
 			name: AquaCore.l("application", i === 0 ? "this-week" : "weeks-ago-" + (i > 1 ? "p" : "s"), i),
-			data: AquaCore.settings["onlineStats"][i],
+			data: [],
 			zIndex: --zIndex
 		};
+		for(var k in AquaCore.settings["onlineStats"][i]) {
+			if(AquaCore.settings["onlineStats"][i].hasOwnProperty(k)) {
+				chartData.series[i].data.push(AquaCore.settings["onlineStats"][i][k]);
+			}
+		}
 		if(colors[i]) {
 			chartData.series[i].color = colors[i];
 		}
