@@ -277,7 +277,7 @@ class Account
 	public function updateDisplayName($new_name, $bypass = false)
 	{
 		if(strcasecmp($new_name, $this->displayName) === 0) {
-			return $this->update(array( 'display_name' => $new_name ));
+			return ($this->update(array( 'display_name' => $new_name )) ? 1 : -1);
 		} else {
 			return $this->_updateField('display_name', $new_name, $bypass);
 		}
@@ -337,7 +337,7 @@ class Account
 				->groupBy(array())
 				->query();
 			if($search->get('count', 0) >= $limit) {
-				return false;
+				return 0;
 			}
 		}
 		if($type === 'password') {
@@ -350,13 +350,13 @@ class Account
 				->results[0]['password'];
 			$password = self::hashPassword($new_value);
 			if(!$this->update(array( 'password_hashed' => $password, 'password' => $new_value ))) {
-				return null;
+				return -1;
 			}
 			$new_value = $password;
 		} else if($type === 'birthday') {
 			$old_value = date('Y-m-d', $this->birthDate);
 			if(!$this->update(array( 'birthday' => \DateTime::createFromFormat('Y-m-d', $new_value)->getTimestamp() ))) {
-				return null;
+				return -1;
 			}
 		} else {
 			switch($type) {
@@ -367,10 +367,10 @@ class Account
 					$old_value = $this->email;
 					break;
 				default:
-					return null;
+					return -1;
 			}
 			if(!$this->update(array( $type => $new_value ))) {
-				return null;
+				return -1;
 			}
 		}
 		ProfileUpdateLog::logSql($this, $type, $new_value, $old_value);

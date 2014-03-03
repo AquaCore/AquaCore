@@ -266,7 +266,7 @@ extends Page
 			$birthday = strtotime('midnight', $birthday->getTimestamp());
 			if($display !== $account->displayName) {
 				switch($account->updateDisplayName($display)) {
-					case false:
+					case 0:
 						App::user()->addFlash('warning', null, __(
 							'profile',
 							'display-name-update-limit',
@@ -274,14 +274,14 @@ extends Page
 							App::settings()->get('account')->get('display_name')->get('update_days', 30)
 						));
 						break;
-					case true:
+					case 1:
 						++$updated;
 						break;
 				}
 			}
 			if($email !== $account->email) {
 				switch($account->updateEmail($email)) {
-					case false:
+					case 0:
 						App::user()->addFlash('warning', null, __(
 							'profile',
 							'email-update-limit',
@@ -289,14 +289,14 @@ extends Page
 							App::settings()->get('account')->get('email')->get('update_days', 30)
 						));
 						break;
-					case true:
+					case 1:
 						++$updated;
 						break;
 				}
 			}
-			if($birthday !== $account->birthDate) {
+			if(date('Y-m-d', $birthday) !== date('Y-m-d', $account->birthDate)) {
 				switch($account->updateBirthday($birthday)) {
-					case false:
+					case 0:
 						App::user()->addFlash('warning', null, __(
 							'profile',
 							'birthday-update-limit',
@@ -304,14 +304,14 @@ extends Page
 							App::settings()->get('account')->get('birthday')->get('update_days', 30)
 						));
 						break;
-					case true:
+					case 1:
 						++$updated;
 						break;
 				}
 			}
 			if(!empty($password)) {
 				switch($account->updatePassword($password)) {
-					case false:
+					case 0:
 						App::user()->addFlash('warning', null, __(
 							'profile',
 							'password-update-limit',
@@ -319,39 +319,27 @@ extends Page
 							App::settings()->get('account')->get('password')->get('update_days', 30)
 						));
 						break;
-					case true:
+					case 1:
 						++$updated;
 						break;
 				}
 			}
 			switch($this->request->getString('avatar_type')) {
 				case 'image':
-					if($url = $this->request->getString('url')) {
-						$original = $url;
-						$uploader->uploadRemote($url);
-					} else if(ac_file_uploaded('image')) {
+					if(ac_file_uploaded('image')) {
 						$original = $_FILES['image']['tmp_name'];
 						$uploader->uploadLocal($_FILES['image']['tmp_name'], $_FILES['image']['name']);
+					} else if($url = $this->request->getString('url')) {
+						$original = $url;
+						$uploader->uploadRemote($url);
 					} else {
 						break;
 					}
-					$path = uniqid($account->id . '-');
-					switch($uploader->mimeType) {
-						case 'IMAGE/GIF':
-							$path .= '.gif';
-							break;
-						case 'IMAGE/JPEG':
-							$path .= '.jpg';
-							break;
-						case 'IMAGE/PNG':
-							$path .= '.png';
-							break;
-					}
 					if($uploader->error !== ImageUploader::UPLOAD_OK ||
-					   !$uploader->save(\Aqua\ROOT . '/uploads/avatar', $path)) {
+					   !($path = $uploader->save('/uploads/avatar', uniqid($account->id . '-')))) {
 						App::user()->addFlash('error', null, $uploader->errorStr());
 					} else {
-						$account->setAvatar("/uploads/avatar/$path", $original);
+						$account->setAvatar($path, $original);
 						++$updated;
 					}
 					break;
