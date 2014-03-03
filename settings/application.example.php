@@ -45,15 +45,7 @@ return array(
 		'expire'                => 30,
 		'gc_probability'        => 5,
 	),
-	'cache'              => array(
-		'storage_adapter' => 'File',
-		'storage_options' => array(
-			'prefix'         => 'ac_',
-			'hash'           => null,
-			'directory'      => \Aqua\ROOT . '/tmp/cache/',
-			'gc_probability' => 1
-		),
-	),
+	'cache'              => array(),
 	'donation'           => array(
 		'pp_business_email' => isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : 'example@example.com',
 		'pp_receiver_email' => array(),

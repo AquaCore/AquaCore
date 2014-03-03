@@ -31,7 +31,7 @@ if(App::user()->loggedIn()) : ?>
 <?php else : ?>
 <div class="ac-header-login">
 	<form method="POST" action="<?php echo ac_build_url(array(
-		'protocol' => App::settings()->get('ssl', 0) >= 1 ? 'https://' : 'http://',
+		'protocol' => \Aqua\HTTPS || App::settings()->get('ssl', 0) >= 1 ? 'https://' : 'http://',
 		'path'     => array( 'account' ),
 		'action'   => 'login'
 	))?>">

@@ -45,7 +45,6 @@ final class Client
 		$local_path  = self::$path;
 		$local_path .= str_replace('\\', '/', $path );
 		$grf_path    = str_replace('/', '\\', $path );
-		$x = $local_path;
 		if(strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 			$local_path = utf8_encode($local_path);
 		}
