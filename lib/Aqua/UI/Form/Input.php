@@ -296,7 +296,7 @@ implements FieldInterface
 		if($pattern = $this->getAttr('pattern')) {
 			$delimiter = preg_quote($pattern[0], '%');
 			$modifiers = 'imsxeuADSUXJ';
-			$this->attr('pattern', preg_replace("%(^$delimiter)|($delimiter[$modifiers]*$)%", '', $pattern));
+			$this->attr('pattern', preg_replace("%(^{$delimiter})|({$delimiter}[{$modifiers}]*$)%", '', $pattern));
 		}
 		$html = parent::render();
 		$this->attr('pattern', $pattern);
