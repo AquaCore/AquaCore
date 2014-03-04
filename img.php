@@ -96,6 +96,7 @@ try {
 		CLient::$path        = \Aqua\ROOT . '/assets/client/';
 		Client::$data_ini    = 'data.ini';
 		Client::$AutoExtract = true;
+		Client::init();
 		$sth = $charmap->connection()->prepare("
 		SELECT account_id, `class`, hair, hair_color, clothes_color, head_top, head_mid, head_bottom
 		FROM {$charmap->table('char')}

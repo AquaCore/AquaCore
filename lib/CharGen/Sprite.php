@@ -50,7 +50,7 @@ class Sprite
 				throw new \Exception("SPR::open() - Can't read file '{$filename}'.");
 
 			$this->size = filesize($filename);
-	
+
 			if ( $this->size < 0x06 )
 				throw new \Exception("SPR::open() - Incorrect file size, shoulnot be a SPR file");
 		}
@@ -83,7 +83,7 @@ class Sprite
 
 		$this->rgba_index = $this->indexed_count;
 
-	
+
 		if ( $this->version < 2.1 ) {
 			$this->readIndexedImage();
 		}
@@ -105,7 +105,7 @@ class Sprite
 	 */
 	private function readIndexedImage()
 	{
-		for ( $i=0; $i < $this->indexed_count; ++$i ) {		
+		for ( $i=0; $i < $this->indexed_count; ++$i ) {
 			$this->frames[$i] = (object) (
 				unpack("vwidth/vheight", fread($this->fp, 0x04)) +
 				array(
@@ -200,7 +200,7 @@ class Sprite
 	/**
 	 * Return an image
 	 */
-	public function getImage( $index, $is_mirror = 0, $mult_color = array(1.0,1.0,1.0) )
+	public function getImage( $index, $is_mirror = 0, $mult_color = array(1.0,1.0,1.0), $bg_color = array(255,255,255,127) )
 	{
 		$frame  = $this->frames[$index];
 		$width  = $frame->width;
@@ -265,12 +265,12 @@ class Sprite
 				}
 			}
 			// Replace white with a hacked white
-			$index = imagecolorexact( $img, 255, 255, 255 );
+			$index = imagecolorexact( $img, $bg_color[0], $bg_color[1], $bg_color[2] );
 			if ( $index > -1 )
-				imagecolorset( $img, $index , 255, 254, 255 );
+				imagecolorset( $img, $index, $bg_color[0], ( $bg_color[1] >= 255 ? $bg_color[1] - 1 : $bg_color[1] + 1 ), $bg_color[2] );
 
 			// Set white as transparent
-			imagecolorset( $img, 0 , 255, 255, 255 );
+			imagecolorset( $img, 0 , $bg_color[0], $bg_color[1], $bg_color[2] );
 			imagecolortransparent( $img, 0 );
 		}
 
@@ -278,7 +278,7 @@ class Sprite
 		// TODO: Buggy RGBA image (lol PHP GD lol...)
 		else {
 			$img   = imagecreatetruecolor( $width, $height );
-			$white = imagecolorallocate( $img, 255, 255, 255 );
+			$white = imagecolorallocatealpha( $img, $bg_color[0], $bg_color[1], $bg_color[2], $bg_color[3] );
 			imagefill( $img, 0, 0, $white );
 			imagecolortransparent( $img, $white );
 
@@ -288,11 +288,11 @@ class Sprite
 					for( $x=$width-1; $x>-1; $x--, $i+=4 ) {
 						if( $pixels[$i+0] > 0 ) {
 							imagesetpixel( $img, $x, $y, $this->getColor(
-								$img,
-								$pixels[$i+3] * $mult_color[0],
-								$pixels[$i+2] * $mult_color[1],
-								$pixels[$i+1] * $mult_color[2],
-								127 - $pixels[$i+0]/2
+							                                  $img,
+							                                  $pixels[$i+3] * $mult_color[0],
+							                                  $pixels[$i+2] * $mult_color[1],
+							                                  $pixels[$i+1] * $mult_color[2],
+							                                  127 - $pixels[$i+0]/2
 							));
 						}
 					}
@@ -303,11 +303,11 @@ class Sprite
 					for( $x=0; $x<$width; $x++, $i+=4 ) {
 						if( $pixels[$i+0] > 0 ) {
 							imagesetpixel( $img, $x, $y, $this->getColor(
-								$img,
-								$pixels[$i+3] * $mult_color[0],
-								$pixels[$i+2] * $mult_color[1],
-								$pixels[$i+1] * $mult_color[2],
-								127 - $pixels[$i+0]/2
+							                                  $img,
+							                                  $pixels[$i+3] * $mult_color[0],
+							                                  $pixels[$i+2] * $mult_color[1],
+							                                  $pixels[$i+1] * $mult_color[2],
+							                                  127 - $pixels[$i+0]/2
 							));
 						}
 					}
@@ -320,5 +320,3 @@ class Sprite
 		return $img;
 	}
 }
-
-?>

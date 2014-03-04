@@ -129,5 +129,3 @@ class Grf
 		return $list;
 	}
 }
-
-?>

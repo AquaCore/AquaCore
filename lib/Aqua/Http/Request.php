@@ -174,8 +174,7 @@ class Request
 			              'FORWARDED_FOR_IP',
 			              'FORWARDED',
 			              'VIA',
-			              'CLIENT_IP'
-			        ) as $header) {
+			              'CLIENT_IP') as $header) {
 				if(array_key_exists("HTTP_$header", $_SERVER)) {
 					$header = "HTTP_$header";
 				} else if(!array_key_exists($header, $_SERVER)) {

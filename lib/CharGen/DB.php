@@ -33,7 +33,7 @@ final class DB
 
 	// Return Entity path
 	static public function get_entity_path($id) {
-		     if( $id < 45 )   return false; // character, don't render
+		if( $id < 45 )   return false; // character, don't render
 		else if( $id < 46 )   return false; // warp
 		else if( $id < 1000 ) return self::get_npc_path($id);
 		else if( $id < 4000 ) return self::get_monster_path($id);
@@ -90,7 +90,7 @@ final class DB
 
 	// Return body path
 	static public function get_body_path($id,$sex)
-	{		
+	{
 		$sex = self::$ascii_sex[$sex];
 
 		// Load only if used
@@ -118,7 +118,7 @@ final class DB
 	}
 
 	// Return head path
-	static public function get_head_path($id,$sex)  
+	static public function get_head_path($id,$sex)
 	{
 		$_sex = self::$ascii_sex[$sex];
 
@@ -148,6 +148,7 @@ final class DB
 		if( empty(self::$hats) ) {
 			self::$hats    = require_once( self::$path . 'hats.php');
 		}
+
 		return isset(self::$hats[$id]) ? "data/sprite/\xbe\xc7\xbc\xbc\xbb\xe7\xb8\xae/{$sex}/{$sex}_" . self::$hats[$id] : false;
 	}
 
@@ -181,7 +182,8 @@ final class DB
 		$sex  = self::$ascii_sex[$sex];
 
 		if( empty(self::$robes['list']) ) {
-			self::$robes['list'] = require_once( self::$path . 'robe.php');
+			self::$robes['list']    = require_once( self::$path . 'robe.php');
+			self::$robes['inherit'] = require_once( self::$path . 'inherit.robe.php');
 		}
 
 		if ( empty(self::$robes['list'][$robe_id]) || !isset(self::$body[$job_id]) ) {
@@ -212,7 +214,10 @@ final class DB
 			self::$robes[$size][$sex] = require_once( self::$path . $size . '_'. $_sex .'.robe.php');
 		}
 
-		$table = self::$robes[$size][$sex];
+		$table  = self::$robes[$size][$sex];
+
+		if( !empty(self::$robes['inherit'][$job_id]) )
+			$job_id = self::$robes['inherit'][$job_id];
 
 		if ( empty($table[$job_id]) || empty($table[$job_id][$action]) ) return true;
 		if ( in_array( $animation, $table[$job_id][$action] ) ) return false;
@@ -220,4 +225,3 @@ final class DB
 		return true;
 	}
 }
-?>

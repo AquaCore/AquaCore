@@ -33,15 +33,15 @@ class Action
 		if ( substr( $filename, 0, 7 ) !== "data://" )
 		{
 			if ( ! file_exists($filename) )
-				throw new Exception("ACT::open() - Can't find file '{$filename}'.");
-	
+				throw new \Exception("ACT::open() - Can't find file '{$filename}'.");
+
 			if ( ! is_readable($filename) )
-				throw new Exception("ACT::open() - Can't read file '{$filename}'.");
+				throw new \Exception("ACT::open() - Can't read file '{$filename}'.");
 
 			$this->size = filesize($filename);
-	
+
 			if ( $this->size < 0x08 )
-				throw new Exception("ACT::open() - Incorrect file size, shoulnot be a ACT file");
+				throw new \Exception("ACT::open() - Incorrect file size, shoulnot be a ACT file");
 		}
 
 		$this->fp = fopen($filename,'r');
@@ -49,7 +49,7 @@ class Action
 		extract( unpack( "a2head/C2ver", fread($this->fp, 0x4 ) ) );
 
 		if ( $head !== 'AC' )
-			throw new Exception("ACT::load() - Incorrect act header, is '{$head}' - should be 'AC'");
+			throw new \Exception("ACT::load() - Incorrect act header, is '{$head}' - should be 'AC'");
 
 		$this->version = $ver1/10 + $ver2;
 		//$this->load();
@@ -64,10 +64,11 @@ class Action
 		fseek( $this->fp, 0x4, SEEK_SET);
 
 		// Pre-calculate layer size
-		     if( $this->version <   2.0 ) $layer_size   = 16;
+		if( $this->version <   2.0 ) $layer_size   = 16;
 		else if( $this->version <   2.4 ) $layer_size   = 32;
 		else if( $this->version === 2.4 ) $layer_size   = 36;
 		else                              $layer_size   = 44;
+
 
 		// read actions
 		extract( unpack("vaction_count/x10", fread( $this->fp, 12 ) ) );
@@ -87,7 +88,7 @@ class Action
 				}
 
 				// Cap
-				$animation   = min( $animation, $animation_count - 1 ); 
+				$animation   = min( $animation, $animation_count - 1 );
 				$animation   = max( $animation, 0 );
 			}
 
@@ -112,7 +113,7 @@ class Action
 			}
 		}
 
-		 throw new Exception('Action not found ?');
+		throw new \Exception('Action not found ?');
 	}
 
 
@@ -160,12 +161,12 @@ class Action
 	{
 		extract( unpack("Vcount", fread( $this->fp, 0x04 ) ) );
 		$animations = array();
-	
+
 		for ( $i=0; $i<$count; ++$i ) {
 			fseek( $this->fp, 32, SEEK_CUR );
 			$animations[$i] = $this->readLayers();
 		}
-	
+
 		return $animations;
 	}
 
@@ -311,10 +312,10 @@ class Action
 							$layer->spr_type
 						);
 
-					else 
+					else
 						$result .= pack(
 							'C4f2V4',
-							$layer->color[0]*255, 
+							$layer->color[0]*255,
 							$layer->color[1]*255,
 							$layer->color[2]*255,
 							$layer->color[3]*255,
@@ -346,7 +347,7 @@ class Action
 			}
 		}
 
-		
+
 		if ( $this->version >= 2.1 )
 		{
 			// Comple sounds
@@ -369,5 +370,3 @@ class Action
 		return $result;
 	}
 }
-
-?>

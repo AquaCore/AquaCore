@@ -27,7 +27,7 @@ class CharacterRender extends RORender
 	const ACTION_ATTACK3    = 11;
 	const ACTION_SKILL      = 12;
 
-	
+
 	/**
 	 * Character options
 	 */
@@ -35,7 +35,7 @@ class CharacterRender extends RORender
 		"sex"           => "M",
 		"class"         =>  0 ,
 		"clothes_color" =>  0 ,
-		"hair"          =>  0 ,
+		"hair"          =>  2 ,
 		"hair_color"    =>  0 ,
 		"head_top"      =>  0 ,
 		"head_mid"      =>  0 ,
@@ -71,14 +71,11 @@ class CharacterRender extends RORender
 	 */
 	public function render()
 	{
+		// Add mount, in future add falcon/cart
+		$this->checkoption();
 
 		// Initialised the image
-		$img = imagecreatetruecolor( $this->image_size[0], $this->image_size[1] );
-		imagealphablending( $img, false);
-		imagesavealpha( $img, true);
-		imagefill( $img, 0, 0, imagecolorallocatealpha($img, 0xff, 0xff, 0xff, 0x7f) );
-
-		$this->checkoption();
+		$img  = $this->createImage();
 		$view = $this->param;
 
 		// Secure doridori clamp( $this->doridori, 0, 2 );
@@ -94,27 +91,28 @@ class CharacterRender extends RORender
 		/*
 		// Falcon test
 		$this->renderImage( $img, array(
-			"path" => "data/sprite/����Ʈ/��2", 
+			"path" => "data/sprite/ÀÌÆÑÆ®/¸Å2",
 			"pos"  => (object)array( 'x' => -10, 'y' => -140)
 		));
 
 		// Cart test
 		$this->renderImage( $img, array(
-			"path" => "data/sprite/����Ʈ/�ռ���3",
+			"path" => "data/sprite/ÀÌÆÑÆ®/¼Õ¼ö·¹3",
 			"pos"  => (object)array( 'x' => -35, 'y' => 0)
 		));
 		*/
 
 		// Draw body, get head position
 		$pos = $this->renderImage( $img, array(
-			"path" => DB::get_body_path( $view['class'], $view['sex'], $view['option'] ), 
-			"pal"  => DB::get_body_pal_path( $view['class'], $view['sex'], $view['clothes_color'] )
+			"path" => DB::get_body_path( $view['class'], $view['sex'], $view['option'] ),
+			"pal"  => DB::get_body_pal_path( $view['class'], $view['sex'], $view['clothes_color'] ),
+			"body" => true
 		));
 
 		// Draw Robe
 		if ( !empty($view['robe']) )
-			 $this->renderImage( $img, array(
-			 	"path"  => DB::get_robe_path( $view['class'], $view['sex'], $view['robe'] ),
+			$this->renderImage( $img, array(
+				"path"  => DB::get_robe_path( $view['class'], $view['sex'], $view['robe'] ),
 				"pos"   => $pos,
 				"robe"  => $view['robe']
 			));
@@ -129,8 +127,8 @@ class CharacterRender extends RORender
 
 		// Draw head top
 		if ( !empty($view['head_top']) )
-			 $this->renderImage( $img, array(
-			 	"path"  => DB::get_hat_path( $view['head_top'], $view['sex'] ),
+			$this->renderImage( $img, array(
+				"path"  => DB::get_hat_path( $view['head_top'], $view['sex'] ),
 				"pos"   => $pos,
 				"head"  => true
 			));
@@ -138,7 +136,7 @@ class CharacterRender extends RORender
 		// Draw head mid
 		if ( !empty($view['head_mid']) && $view['head_mid'] !== $view['head_top'] ) // Don't render the same sprite twice
 			$this->renderImage( $img, array(
-			 	"path" => DB::get_hat_path( $view['head_mid'], $view['sex'] ),
+				"path" => DB::get_hat_path( $view['head_mid'], $view['sex'] ),
 				"pos"  => $pos,
 				"head" => true
 			));
@@ -146,27 +144,28 @@ class CharacterRender extends RORender
 		// Draw head bot
 		if ( !empty($view['head_bottom']) && $view['head_bottom'] !== $view['head_mid'] ) // Don't render the same sprite twice
 			$this->renderImage( $img, array(
-			 	"path"  => DB::get_hat_path( $view['head_bottom'], $view['sex'] ),
+				"path"  => DB::get_hat_path( $view['head_bottom'], $view['sex'] ),
 				"pos"   => $pos,
 				"head"  => true
 			));
-			
+
 		// Draw Weapon
 		if ( !empty($view['weapon']) )
 			$this->renderImage( $img, array(
-			 	"path" => DB::get_weapon_path( $view['class'], $view['sex'], $view['weapon'] )
+				"path" => DB::get_weapon_path( $view['class'], $view['sex'], $view['weapon'] )
 			));
 
 		// Draw Shield
 		if ( !empty($view['shield']) )
 			$this->renderImage( $img, array(
-			 	"path"   => DB::get_shield_path( $view['class'], $view['sex'], $view['shield'] ),
+				"path"   => DB::get_shield_path( $view['class'], $view['sex'], $view['shield'] ),
 				"shield" => true
 			));
+
 		// Return image
 		return $img;
 	}
-	
+
 
 	/**
 	 * Modify class base on option
@@ -247,5 +246,3 @@ class CharacterRender extends RORender
 		}
 	}
 }
-
-?>
