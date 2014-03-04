@@ -990,20 +990,12 @@ iframe[src="about:blank"]{ display: none !important; }
 	background: transparent url('../images/pencil.png') center right no-repeat;
 	font-size: 14px !important;
 }
-.ac-char-slot { width: 0; }
-.ac-char-head, .ac-char-guild-emblem, .ac-char-status {
-	text-align: center;
-}
-.ac-char-head { width: 75px; }
 .ac-char-status {
-	width: 25px;
 	background-position: center center !important;
 	background-repeat: no-repeat !important;
 	&.ac-char-online { background-image: url('../images/char-online.png') !important; }
 	&.ac-char-offline { background-image: url('../images/char-offline.png') !important; }
 }
-.ac-char-guild-emblem { width: 40px; }
-.ac-char-blvl, .ac-char-jlvl { width: 80px; }
 .ac-card-slot {
 	vertical-align: middle;
 	text-align: center;
@@ -1312,13 +1304,6 @@ iframe[src="about:blank"]{ display: none !important; }
 	border: 0 !important;
 	font-weight: bold;
 	color: #c25372;
-}
-.script .ac-char-slot {
-	padding: 0;
-	margin: 0;
-	border: 0;
-	width: 0;
-	display: none;
 }
 .ac-form-error {
 	display: block;
