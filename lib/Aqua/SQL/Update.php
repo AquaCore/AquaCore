@@ -76,11 +76,16 @@ extends AbstractSearch
 
 	/**
 	 * @param array $tables
+	 * @param bool  $merge
 	 * @return static
 	 */
-	public function tables(array $tables)
+	public function tables(array $tables, $merge = true)
 	{
-		$this->tables = $tables;
+		if($merge) {
+			$this->tables = array_merge($this->tables, $tables);
+		} else {
+			$this->tables = $tables;
+		}
 		return $this;
 	}
 
@@ -106,13 +111,14 @@ extends AbstractSearch
 		$query = 'UPDATE';
 		if($this->ignore) $query.= ' IGNORE';
 		if($this->lowPriority) $query.= ' LOW_PRIORITY';
-		foreach($this->tables as $name => $alias) {
-			if(ctype_digit($name)) {
-				$query.= " `$alias`";
+		foreach($this->tables as $alias => $name) {
+			if(ctype_digit($alias)) {
+				$query.= " $name, ";
 			} else {
-				$query.= " `$name` AS $alias";
+				$query.= " $name AS $alias, ";
 			}
 		}
+		$query = substr($query, 0, -2);
 		$query.= "\r\nSET " . $this->parseSet($values);
 		if($where = $this->parseSearch($this->where, $values)) {
 			$query.= "\r\nWHERE $where";

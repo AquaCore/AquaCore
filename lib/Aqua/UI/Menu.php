@@ -104,10 +104,8 @@ implements \Iterator, \Countable
 			'submenu'  => null,
 			'warnings' => 0
 		);
-		if(!empty($options['class'])) {
+		if(is_array($options['class'])) {
 			$options['class'] = implode(' ', $options['class']);
-		} else {
-			$options['class'] = '';
 		}
 		$options['depth'] = $this->depth;
 		if($options['submenu']) {

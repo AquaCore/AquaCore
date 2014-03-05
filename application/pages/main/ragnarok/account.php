@@ -3,12 +3,11 @@ namespace Page\Main\Ragnarok;
 
 use Aqua\Core\App;
 use Aqua\Core\L10n;
-use Aqua\Http\Request;
 use Aqua\Site\Page;
-use Aqua\Ragnarok\Item;
 use Aqua\Ragnarok\Server;
 use Aqua\Ragnarok\Server\Login;
 use Aqua\Ragnarok\Account as RagnarokAccount;
+use Aqua\SQL\Query;
 use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
@@ -25,7 +24,6 @@ extends Page
 	 * @var \Aqua\Ragnarok\Server
 	 */
 	public $server;
-
 	/**
 	 * @var \Aqua\Ragnarok\Account
 	 */
@@ -246,48 +244,34 @@ extends Page
 
 	public function char_action($charmap_key = '')
 	{
-		$this->theme->head->section = $this->title = __('ragnarok', 'x-characters', $this->account->username);
-		try {
-			if($this->request->getString('x-change-slot') && ($charmap = $this->server->charmap($this->request->getString('selected-server')))) {
-				$this->response->status(302)->redirect(App::request()->uri->url());
-				try {
-					$characters = $charmap->charSearch()
-						->where(array( 'account_id' => $this->account->id ))
-						->order(array( 'slot' => 'ASC' ))
-						->query()
-						->results;
-					$new_slots = array();
-					$max_slots = ($this->server->login->getOption('use-slots') ? $this->account->slots : (int)$this->server->login->getOption('max-slots', 9));
-					foreach($characters as &$char) {
-						if(($slot = $this->request->getInt("{$char->id}-slot", false, 1, $max_slots)) === false) {
-							App::user()->addFlash('warning', null, __('ragnarok', 'changeslot-missing-char', htmlspecialchars($char->name)));
-							return;
-						}
-						if(isset($new_slots[$slot])) {
-							App::user()->addFlash('warning', null, __('ragnarok', 'changeslot-diplicate'));
-							return;
-						}
-						$new_slots[$slot] = &$char;
-					}
-					foreach($new_slots as $slot => &$char) {
-						if($slot !== $char->slot) {
-							$char->update(array( 'slot' => $slot ));
-						}
-					}
-					App::user()->addFlash('success', null, __('ragnarok', 'slot-saved'));
-				} catch(\Exception $exception) {
-					ErrorLog::logSql($exception);
-					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+		if($this->request->method === 'POST' && $this->request->getString('x-change-slot') &&
+		   ($charMap = $this->server->charmap($this->request->getString('selected-server')))) {
+			$this->response->status(302)->redirect(App::request()->uri->url());
+			try {
+				$order = array();
+				$i     = 0;
+				foreach($this->request->getArray('slots') as $id) {
+					$order[$id] = ++$i;
 				}
-				return;
+				var_dump($order);
+				if($this->account->setOrder($charMap, $order)) {
+					App::user()->addFlash('success', null, __('ragnarok', 'slot-saved'));
+				}
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			}
+			return;
+		}
+		try {
 			if($this->server->charmapCount === 1) {
-				$charmap = current($this->server->charmap);
-			} else if(!($charmap = $this->server->charmap($charmap_key))) {
+				$charMap = current($this->server->charmap);
+			} else if(!($charMap = $this->server->charmap($charmap_key))) {
 				$this->error(404);
 				return;
 			}
-			$characters = $charmap->charSearch()
+			$this->theme->head->section = $this->title = __('ragnarok', 'x-characters', $this->account->username);
+			$characters = $charMap->charSearch()
 				->where(array( 'account_id' => $this->account->id ))
 				->order(array( 'slot' => 'ASC' ))
 				->query()
@@ -295,7 +279,7 @@ extends Page
 			$tpl = new Template;
 			$tpl->set('characters', $characters)
 				->set('server', $this->server)
-				->set('charmap', $charmap)
+				->set('charmap', $charMap)
 				->set('page', $this);
 			echo $tpl->render('ragnarok/account/characters');
 		} catch(\Exception $exception) {

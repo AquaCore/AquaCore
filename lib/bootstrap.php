@@ -33,7 +33,7 @@ if(!defined('PREG_BAD_UTF8_OFFSET_ERROR')) {
 }
 define('AQUACORE', 1);
 
-if($_SERVER['REQUEST_URI'] === '/favicon.ico') {
+if(isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] === '/favicon.ico') {
 	header('Content-Type: image/vnd.microsoft.icon');
 	header('Content-Length: 0');
 	die;
@@ -97,13 +97,24 @@ try {
 		App::response()->status(302)->redirect($url)->send();
 		die;
 	} else {
-		die('AquaCore is not installed.');
+		die("AquaCore is not installed.\r\n");
 	}
 	include __DIR__ . '/Aqua/Core/L10n.php';
 	App::defineConstants();
 	App::registrySet('ac_time', $time);
 	L10n::init(App::settings()->get('language', 'en'));
 	switch(\Aqua\ENVIRONMENT) {
+		case 'CLI':
+			$args = array();
+			foreach($argv as $arg) {
+				if(preg_match('/([^\s]+)\s*=\s*(.*)\/', $arg, $match)) {
+					$args[$match[1]] = $match[2];
+				} else {
+					$args[] = $arg;
+				}
+			}
+			$_GLOBALS['argl'] = $args;
+			break;
 		case 'MINIMAL':
 			break;
 		case 'DEVELOPMENT':
@@ -129,6 +140,9 @@ try {
 	}
 	try {
 		$error = ErrorLog::logText($exception);
+		if(\Aqua\ENVIRONMENT === 'CLI') {
+			die($exception->getMessage() . "\r\n");
+		}
 		$tpl = new \Aqua\UI\Template;
 		$tpl->set('error', $error);
 		echo $tpl->render('exception/layout');

@@ -359,36 +359,18 @@ implements \Serializable, SubjectInterface
 			$title = __('application', 'untitled');
 		}
 		$slug = ac_slug($title, 250);
-		$tbl  = ac_table('content');
-		$sth  = App::connection()->prepare("
-		SELECT _slug
-		FROM `$tbl`
-		WHERE _type = ?
-		AND _slug LIKE ?
-		" . ($id !== null ? 'AND _uid != ?' : ''));
-		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
-		$sth->bindValue(2, addcslashes($slug, '%_\\') . '%', \PDO::PARAM_STR);
-		if($id !== null) {
-			$sth->bindValue(3, $id, \PDO::PARAM_INT);
+		$select = Query::select(App::connection())
+			->columns(array( 'slug' => '_slug' ))
+			->where(array(
+				'_type' => $this->id,
+				'_slug' => array( Search::SEARCH_LIKE, addcslashes($slug, '%_\\') . '%' )
+			))
+			->from(ac_table('content'));
+		if($id) {
+			$select->where(array( '_uid' => array( Search::SEARCH_DIFFERENT, $id ) ));
 		}
-		$sth->execute();
-		$num   = 0;
-		$regex = '/' . preg_quote($slug, '/') . '-[0-9]+/i';
-		while($pl = $sth->fetch(\PDO::FETCH_COLUMN, 0)) {
-			if($pl === $slug && $num === 0) {
-				$num = 2;
-			} else if(preg_match($regex, $pl, $matches)) {
-				$n = intval($matches[1]) + 1;
-				if($num < $n) {
-					$num = $n;
-				}
-			}
-		}
-		if($num) {
-			$slug .= "-$num";
-		}
-
-		return $slug;
+		$select->query();
+		return ac_slug_available($slug, $select->column('slug'));
 	}
 
 	public function attach($event, \Closure $listener)

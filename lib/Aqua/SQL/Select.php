@@ -154,6 +154,14 @@ implements \Iterator, \Countable
 		}
 	}
 
+	public function getColumn($column, $key = null)
+	{
+		if(empty($this->results) || !array_key_exists($column, $this->current())) {
+			return array();
+		}
+		return array_column($this->results, $column, $key);
+	}
+
 	/**
 	 * @param array $columns
 	 * @param bool  $merge

@@ -55,7 +55,7 @@ $page->theme->head->enqueueScript(ScriptManager::script('jquery-ui'));
 			<?php $name = htmlspecialchars($char->name); ?>
 			<tr class="ac-character">
 				<td class="ac-char-status ac-char-<?php echo ($char->online ? 'online' : 'offline')?>">
-					<input type="hidden" class="slot" name="<?php echo $char->id?>-slot" value="<?php echo $char->slot?>">
+					<input type="hidden" class="slot" name="slots[]" value="<?php echo $char->id?>">
 				</td>
 				<td><img src="<?php echo ac_char_head($char, true)?>"></td>
 				<td><a href="<?php echo $char->url()?>"><?php echo htmlspecialchars($name)?></a></td>
@@ -95,7 +95,12 @@ $page->theme->head->enqueueScript(ScriptManager::script('jquery-ui'));
 <?php if (!empty($characters)) : ?>
 <script>
 (function($) {
-	$("#sort-characters tbody").sortable({
+	$.widget("aquacore.sortableEx", $.ui.sortable, {
+		refreshContainment: function() {
+			this._setContainment();
+		}
+	});
+	$("#sort-characters tbody").sortableEx({
 		helper: function(e, ui) {
 			var element = ui.clone(),
 				children = ui.children();
@@ -104,10 +109,9 @@ $page->theme->head->enqueueScript(ScriptManager::script('jquery-ui'));
 			});
 			return element;
 		},
-		update: function() {
-			$("tr.ac-character", this).each(function(i) {
-				$(this).find('input.slot').attr('value', i + 1);
-			});
+		start: function(e, ui) {
+			ui.placeholder.height(ui.item.height());
+			$(this).sortableEx("refreshContainment");
 		},
 		containment: "parent",
 		tolerance: "pointer",

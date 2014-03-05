@@ -3,7 +3,9 @@ namespace Aqua\Ragnarok;
 
 use Aqua\Core\App;
 use Aqua\Event\Event;
+use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Ragnarok\Server\Login;
+use Aqua\SQL\Query;
 use Aqua\User\Account as UserAccount;
 
 class Account
@@ -13,88 +15,71 @@ class Account
 	 * @var int
 	 */
 	public $id;
-
 	/**
 	 * Aquacore account id
 	 * @var
 	 */
 	public $owner;
-
 	/**
 	 * @var \Aqua\Ragnarok\Server
 	 */
 	public $server;
-
 	/**
 	 * @var string
 	 */
 	public $username = '';
-
 	/**
 	 * @var int
 	 */
 	public $gender = 0;
-
 	/**
 	 * @var string
 	 */
 	public $email = '';
-
 	/**
 	 * @var int
 	 */
 	public $birthday = 0;
-
 	/**
 	 * @var int
 	 */
 	public $state = 0;
-
 	/**
 	 * @var int
 	 */
 	public $groupId = 0;
-
 	/**
 	 * @var int
 	 */
 	public $unbanTime = 0;
-
 	/**
 	 * @var string
 	 */
 	public $pinCode = '';
-
 	/**
 	 * @var int
 	 */
 	public $pinCodeChange = 0;
-
 	/**
 	 * @var string
 	 */
 	public $password = '';
-
 	/**
 	 * @var int
 	 */
 	public $lastLogin = 0;
-
 	/**
 	 * @var int
 	 */
 	public $loginCount = 0;
-
 	/**
 	 * @var string
 	 */
 	public $lastIp = '';
-
 	/**
 	 * @var int
 	 */
 	public $slots = 0;
-
 	/**
 	 * @var int
 	 */
@@ -111,6 +96,10 @@ class Account
 	const STATE_BANNED_PERMANENTLY = 10;
 	const STATE_LOCKED             = 14;
 
+	/**
+	 * @param array $options
+	 * @return bool
+	 */
 	public function update(array $options)
 	{
 		$value = array();
@@ -224,6 +213,52 @@ class Account
 			$this->$key = $val;
 		}
 		return true;
+	}
+
+	/**
+	 * Reset character order
+	 *
+	 * @param \Aqua\Ragnarok\Server\CharMap $charMap The char server to update
+	 * @param array                         $newOrder Associative array of the new character order: id => order
+	 * @return bool Returns false when there is nothing to update or if there is a missing id
+	 */
+	public function setOrder(CharMap $charMap, array $newOrder)
+	{
+		$newOrder = array_unique($newOrder);
+		$oldOrder = Query::select($charMap->connection())
+			->columns(array( 'id' => 'char_id', 'order' => 'char_num' ))
+			->setColumnType(array( 'id' => 'integer' , 'order' => 'integer'))
+			->from($charMap->table('char'))
+			->where(array( 'account_id' => $this->id ))
+			->query()
+			->getColumn('order', 'id');
+		if(empty($oldOrder)) {
+			return false;
+		}
+		$update = Query::update($charMap->connection());
+		$table  = $charMap->table('char');
+		foreach($newOrder as $id => $slot) {
+			if(!array_key_exists($id, $oldOrder)) {
+				return false;
+			}
+			if($oldOrder[$id] === $slot) {
+				continue;
+			}
+			$update->tables(array( "t$id" => $table ))
+			       ->set(array( "t$id.char_num" => $slot ))
+			       ->where(array( "t$id.char_id" => $id ));
+			if(($otherId = array_search($slot, $oldOrder)) !== false &&
+			   !array_key_exists($otherId, $newOrder)) {
+				$update->tables(array( "t$otherId" => $table ))
+				       ->set(array( "t$otherId.char_num" => $oldOrder[$id] ))
+				       ->where(array( "t$otherId.char_id" => $otherId ));
+			}
+		}
+		if(empty($update->set)) {
+			return false;
+		}
+		$update->query();
+		return (bool)$update->rowCount;
 	}
 
 	/**

@@ -1291,59 +1291,36 @@ class CharMap
 		return $drops;
 	}
 
-	/**
-	 * @param int                 $account_id
-	 * @param \Aqua\Ragnarok\Cart $cart
-	 * @return bool
-	 */
-	public function cashShopPurchase($account_id, Cart $cart)
+	public function addShopCategory($name, $description)
 	{
-		$count = count($cart->items);
-		if(!$count) {
+		$sth = $this->connection()->prepare("
+		INSERT INTO {$this->table('ac_cash_shop_categories')} (`name`, description, slug, `order`)
+		SELECT :name, :desc, :slug, (MAX(`order`) + 1) FROM {$this->table('ac_cash_shop_categories')}
+		");
+		$sth->bindValue(':name', $name, \PDO::PARAM_STR);
+		$sth->bindValue(':desc', $description, \PDO::PARAM_STR);
+		$sth->bindValue(':slug', $this->shopCategorySlug($name), \PDO::PARAM_STR);
+		if(!$sth->execute() || !$sth->rowCount()) {
 			return false;
 		}
-		$ids = array_keys($cart->items);
-		array_unshift($ids, AC_SEARCH_IN);
-		$items = $this->itemShopSearch(array( 'id' => $ids ));
-		$sth = $this->connection()->prepare("
-		INSERT INTO {$this->table('storage')} (account_id, nameid, amount, identify)
-		VALUES (:account, :id, :amount, 1)
-		");
-		$sth2 = $this->connection()->prepare("
-		UPDATE {$this->table('ac_cash_shop')}
-		SET sold = sold + :amount
-		WHERE item_id = :id
-		");
-		$total = 0;
-		foreach($items as $item) {
-			$cart->items['price'] = $item->shopPrice;
-			$amount = $cart->items[$item->id]['amount'];
-			$sth2->bindValue(':amount', $amount, \PDO::PARAM_INT);
-			$sth2->bindValue(':id', $item->id, \PDO::PARAM_INT);
-			$sth2->execute();
-			$sth->bindValue(':account', $account_id, \PDO::PARAM_INT);
-			$sth->bindValue(':id', $item->id, \PDO::PARAM_INT);
-			switch($item->type) {
-				case 4:
-				case 5:
-				case 7:
-				case 8:
-					$sth->bindValue(':amount', 1, \PDO::PARAM_INT);
-					for($i = 0; $i < $amount; ++$i) {
-						$sth->execute();
-						$sth->closeCursor();
-					}
-					break;
-				default:
-					$sth->bindValue(':amount', $amount, \PDO::PARAM_INT);
-					$sth->execute();
-					$sth->closeCursor();
-					break;
-			}
-			$total+= $amount * $item->shopPrice;
+		return $this->shopCategory($this->connection()->lastInsertId(), 'id');
+	}
+
+	public function shopCategorySlug($name, $id = null)
+	{
+		if(!$name) {
+			$name = __('applcation', 'untitled');
 		}
-		$this->log->logCashShopPurchase($account_id, $cart);
-		return true;
+		$slug = ac_slug($name, 250);
+		$select = Query::select($this->connection())
+			->columns(array( 'slug' => 'slug' ))
+			->where(array( 'slug' => array( Search::SEARCH_LIKE, addcslashes($slug, '%_\\') . '%' ) ))
+			->from($this->table('ac_cash_shop_categories'));
+		if($id) {
+			$select->where(array( 'id' => array( Search::SEARCH_DIFFERENT, $id ) ));
+		}
+		$select->query();
+		return ac_slug_available($slug, $select->column('slug'));
 	}
 
 	/**
