@@ -5,8 +5,10 @@ use Aqua\Core\App;
 use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
 use Aqua\Site\Page;
+use Aqua\SQL\Query;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
+use Aqua\UI\Pagination;
 use Aqua\UI\Template;
 
 class Server
@@ -21,6 +23,10 @@ extends Page
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
+	public static $categoriesPerPage = 20;
+	public static $itemsPerPage = 20;
+	public static $charactersPerPage = 20;
+	public static $logsPerPage = 20;
 
 	public function run()
 	{
@@ -550,6 +556,93 @@ extends Page
 
 	}
 
+	public function category_action()
+	{
+		if($this->request->method === 'POST' && $this->request->data('x-bulk')) {
+			$this->response->status(302)->redirect(App::request()->uri->url());
+			try {
+				switch($this->request->getString('action')) {
+					case 'delete':
+						$deleted = array();
+						foreach($this->request->getArray('categories') as $id) {
+							if(($category = $this->charmap->shopCategory($id)) && $category->delete()) {
+								$deleted[] = htmlspecialchars($category->name);
+							}
+						}
+						$count = count($deleted);
+						if($count === 1) {
+							App::user()->addFlash('success', null, __('ragnarok-shop',
+							                                          'category-deleted-s',
+							                                          $deleted[0]));
+						} else if($count) {
+							App::user()->addFlash('success', null, __('ragnarok-shop',
+							                                          'category-deleted-p',
+							                                          $count));
+						}
+						break;
+					case 'order':
+						$order = array_flip(array_map('intval', $this->request->getArray('order')));
+						if($this->charmap->setShopCategoryOrder($order)) {
+							App::user()->addFlash('success', null, __('ragnarok-shop', 'order-saved'));
+						}
+						break;
+				}
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
+			return;
+		}
+		try {
+			$frm = new Form($this->request);
+			$frm->input('name')
+				->type('text')
+				->required()
+				->setLabel(__('ragnarok-shop', 'category-name'));
+			$frm->textarea('description')
+				->setLabel(__('ragnarok-shop', 'category-desc'));
+			$frm->submit();
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('ragnarok-shop', 'categories');
+				$currentPage = $this->request->uri->getInt('page', 1, 1);
+				$search = $this->charmap->shopCategorySearch()
+					->calcRows(true)
+					->order(array( 'order' => 'ASC' ))
+					->limit(($currentPage - 1) * self::$categoriesPerPage, self::$categoriesPerPage)
+					->query();
+				$pgn = new Pagination(App::request()->uri,
+				                      ceil($search->rowsFound / self::$categoriesPerPage),
+				                      $currentPage);
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+					->set('categories', $search->results)
+					->set('category_count', $search->rowsFound)
+					->set('paginator', $pgn)
+					->set('page', $this);
+				echo $tpl->render('admin/ragnarok/shop-category');
+				return;
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+
+			return;
+		}
+		$this->response->status(302)->redirect(App::request()->uri->url());
+		try {
+			if($category = $this->charmap->addShopCategory($this->request->getString('name'),
+			                                            $this->request->getString('description'))) {
+				App::user()->addFlash('success', null, __('ragnarok-shop',
+				                                          'category-created',
+				                                          htmlspecialchars($category->name)));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+		}
+	}
+
 	public function shop_action()
 	{
 		try {
@@ -645,7 +738,6 @@ extends Page
 			default: $this->error(404); return;
 		}
 	}
-
 
 	public function pcreErrorStr($id)
 	{

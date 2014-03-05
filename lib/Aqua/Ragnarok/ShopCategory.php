@@ -63,6 +63,7 @@ class ShopCategory
 	public function url()
 	{
 		return $this->charmap->url(array(
+			'base_dir'  => \Aqua\DIR,
 			'path'      => array( 'item' ),
 		    'action'    => 'shop',
 		    'arguments' => array( $this->slug )

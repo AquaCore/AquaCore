@@ -77,7 +77,7 @@ $page->charmap->serverStatus($status['char'], $status['map']);
 		$stats = array();
 		$i = -1;
 		foreach($page->charmap->onlineStats(
-			'online',
+			'peak',
 			strtotime('sunday 1 week ago'),
 			strtotime('saturday this week'),
 			'day',

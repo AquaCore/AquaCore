@@ -251,7 +251,7 @@ extends Page
 				$order = array();
 				$i     = 0;
 				foreach($this->request->getArray('slots') as $id) {
-					$order[$id] = ++$i;
+					$order[intval($id)] = ++$i;
 				}
 				var_dump($order);
 				if($this->account->setOrder($charMap, $order)) {

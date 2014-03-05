@@ -21,9 +21,9 @@ extends Page
 	 * @var \Aqua\Ragnarok\Server
 	 */
 	public $server;
-
-	const ACCOUNTS_PER_PAGE = 15;
-	const LOGS_PER_PAGE     = 20;
+	public static $accountsPerPage = 20;
+	public static $itemsPerPage    = 20;
+	public static $logsPerPage     = 20;
 
 	public function run()
 	{
@@ -880,10 +880,10 @@ extends Page
 				->calcRows()
 				->where($where)
 				->order(array('id' => 'ASC'))
-				->limit(($current_page - 1) * self::ACCOUNTS_PER_PAGE, self::ACCOUNTS_PER_PAGE)
+				->limit(($current_page - 1) * self::$accountsPerPage, self::$accountsPerPage)
 				->query();
 			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::ACCOUNTS_PER_PAGE),
+			                               ceil($search->rowsFound / self::$accountsPerPage),
 			                               $current_page);
 			$tpl          = new Template;
 			$tpl->set('accounts', $search->results)
@@ -903,11 +903,11 @@ extends Page
 			$current_page = $this->request->uri->getInt('page', 1, 1);
 			$search       = $this->server->login->log->searchLogin()
 				->calcRows()
-				->limit(($current_page - 1) * self::LOGS_PER_PAGE, self::LOGS_PER_PAGE)
+				->limit(($current_page - 1) * self::$logsPerPage, self::$logsPerPage)
 				->order(array('date' => 'DESC'))
 				->query();
 			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::LOGS_PER_PAGE),
+			                               ceil($search->rowsFound / self::$logsPerPage),
 			                               $current_page);
 			$this->title  = $this->theme->head->section = __('ragnarok-server', 'login-log');
 			$tpl          = new Template;
@@ -928,11 +928,11 @@ extends Page
 			$current_page = $this->request->uri->getInt('page', 1, 1);
 			$search       = $this->server->login->log->searchBan()
 				->calcRows()
-				->limit(($current_page - 1) * self::LOGS_PER_PAGE, self::LOGS_PER_PAGE)
+				->limit(($current_page - 1) * self::$logsPerPage, self::$logsPerPage)
 				->order(array('ban_date' => 'DESC'))
 				->query();
 			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::LOGS_PER_PAGE),
+			                               ceil($search->rowsFound / self::$logsPerPage),
 			                               $current_page);
 			$this->title  = $this->theme->head->section = __('ragnarok-server', 'ban-log');
 			$tpl          = new Template;
@@ -953,11 +953,11 @@ extends Page
 			$current_page = $this->request->uri->getInt('page', 1, 1);
 			$search       = $this->server->login->log->searchPasswordReset()
 				->calcRows()
-				->limit(($current_page - 1) * self::LOGS_PER_PAGE, self::LOGS_PER_PAGE)
+				->limit(($current_page - 1) * self::$logsPerPage, self::$logsPerPage)
 				->order(array('request_date' => 'DESC'))
 				->query();
 			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::LOGS_PER_PAGE),
+			                               ceil($search->rowsFound / self::$logsPerPage),
 			                               $current_page);
 			$this->title  = $this->theme->head->section = __('ragnarok-server', 'ban-log');
 			$tpl          = new Template;
@@ -1010,7 +1010,16 @@ extends Page
 
 				return;
 			}
+			if(!($account = $this->server->login->get($id, 'id'))) {
+				$this->error(404);
 
+				return;
+			}
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $charmap->storageSearch()
+				->calcRows(true)
+				->limit(($currentPage - 1) * self::$itemsPerPage, self::$itemsPerPage)
+				->where(array( 'account_id' => $account->id ));
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

@@ -70,7 +70,7 @@ class CharMap
 	/**
 	 * @return \Aqua\Ragnarok\ShopCategory[]
 	 */
-	public $cashShopCategories;
+	public $shopCategories;
 	/**
 	 * @var array
 	 */
@@ -313,15 +313,15 @@ class CharMap
 		$columns['equip_script'] = 'i.`equip_script`';
 		$columns['unequip_script'] = 'i.`unequip_script`';
 		$columns['description'] = 'i.`description`';
-		$item_db2 = Query::search($this->connection())
+		$itemDb2 = Query::search($this->connection())
 		            ->columns(array( 'custom' => '1' ) + $columns)
 		            ->whereOptions($where)
 		            ->from($this->table('item_db2'), 'i');
-		$item_db = Query::search($this->connection())
+		$itemDb = Query::search($this->connection())
 		           ->columns(array( 'custom' => '0' ) + $columns)
 		           ->whereOptions($where)
 			->from($this->table('item_db'), 'i')
-			       ->union($item_db2, true);
+			       ->union($itemDb2, true);
 		$search = Query::search($this->connection())
 		        ->columns(array(
 					'i.*',
@@ -335,7 +335,7 @@ class CharMap
 					'custom' => 'i.`custom`',
 				))
 		        ->havingOptions(array( 'cash_shop' => 'cash_shop' ))
-				->from($item_db, 'i')
+				->from($itemDb, 'i')
 				->leftJoin($this->table('ac_cash_shop'), 'cs.item_id = i.id', 'cs')
 				->groupBy('i.id')
 				->parser(array( $this, 'parseItemDataSql' ));
@@ -375,10 +375,10 @@ class CharMap
 				}
 				break;
 		}
-		$item_db2->whereOptions($where)->columns($columns);
-		$item_db->whereOptions($where)->columns($columns);
-		$item_db2->where = &$search->where;
-		$item_db->where  = &$search->where;
+		$itemDb2->whereOptions($where)->columns($columns);
+		$itemDb->whereOptions($where)->columns($columns);
+		$itemDb2->where = &$search->where;
+		$itemDb->where  = &$search->where;
 		return $search;
 	}
 
@@ -412,15 +412,15 @@ class CharMap
 		$columns['equip_script'] = 'i.`equip_script`';
 		$columns['unequip_script'] = 'i.`unequip_script`';
 		$columns['description'] = 'i.`description`';
-		$item_db2 = Query::search($this->connection())
+		$itemDb2 = Query::search($this->connection())
 			->columns(array( 'custom' => '1' ) + $columns)
 			->whereOptions($where)
 			->from($this->table('item_db2'), 'i');
-		$item_db = Query::search($this->connection())
+		$itemDb = Query::search($this->connection())
 			->columns(array( 'custom' => '0' ) + $columns)
 			->whereOptions($where)
 			->from($this->table('item_db'), 'i')
-			->union($item_db2, true);
+			->union($itemDb2, true);
 		$search = Query::search($this->connection())
 			->columns(array(
 				'tmp_tbl.*',
@@ -436,7 +436,7 @@ class CharMap
 				'custom' => 'tmp_tbl.`custom`',
 			))
 			->from($this->table('ac_cash_shop'), 'cs')
-			->innerJoin($item_db, 'tmp_tbl.id = cs.item_id', 'tmp_tbl')
+			->innerJoin($itemDb, 'tmp_tbl.id = cs.item_id', 'tmp_tbl')
 			->groupBy('cs.item_id')
 			->parser(array( $this, 'parseItemDataSql' ));
 		$where = $columns = array();
@@ -475,10 +475,10 @@ class CharMap
 				}
 				break;
 		}
-		$item_db2->whereOptions($where)->columns($columns);
-		$item_db->whereOptions($where)->columns($columns);
-		$item_db2->where = &$search->where;
-		$item_db->where  = &$search->where;
+		$itemDb2->whereOptions($where)->columns($columns);
+		$itemDb->whereOptions($where)->columns($columns);
+		$itemDb2->where = &$search->where;
+		$itemDb->where  = &$search->where;
 		return $search;
 	}
 
@@ -578,23 +578,23 @@ class CharMap
 		$where = $columns;
 		$where['element'] = '(m.Element % 10)';
 		$where['element_level'] = 'FLOOR(m.Element / 20)';
-		$mob_db2 = Query::search($this->connection())
+		$mobDb2 = Query::search($this->connection())
 			->columns(array( 'custom' => '1' ) + $columns)
 			->whereOptions($where)
 			->from($this->table('mob_db2'), 'm');
-		$mob_db = Query::search($this->connection())
+		$mobDb = Query::search($this->connection())
 			->columns(array( 'custom' => '0' ) + $columns)
 			->whereOptions($where)
 			->from($this->table('mob_db'), 'm')
-			->union($mob_db2, true);
+			->union($mobDb2, true);
 		$search = Query::search($this->connection())
 			->columns(array( 'm.*' ))
 			->whereOptions(array( 'custom' => 'm.custom' ))
-			->from($mob_db, 'm')
+			->from($mobDb, 'm')
 			->groupBy('m.id')
 			->parser(array( $this, 'parseMobSql' ));
-		$mob_db2->where = &$search->where;
-		$mob_db->where = &$search->where;
+		$mobDb2->where = &$search->where;
+		$mobDb->where = &$search->where;
 		return $search;
 	}
 
@@ -814,13 +814,13 @@ class CharMap
 			'unequip_script' => 'i.`unequip_script`',
 			'description' => 'i.`description`',
 		);
-		$item_db2 = Query::select($this->connection())
+		$itemDb2 = Query::select($this->connection())
 		                 ->columns(array( 'custom' => '1' ) + $columns)
 		                 ->from($this->table('item_db2'), 'i');
-		$item_db = Query::select($this->connection())
+		$itemDb = Query::select($this->connection())
 		                ->columns(array( 'custom' => '0' ) + $columns)
 		                ->from($this->table('item_db'), 'i')
-		                ->union($item_db2, true);
+		                ->union($itemDb2, true);
 		$select = Query::select($this->connection())
 		               ->columns(array(
 			                         'i.*',
@@ -828,7 +828,7 @@ class CharMap
 			                         'shop_category' => 'cs.`category_id`',
 			                         'cash_shop' => 'COUNT(cs.`item_id`)'
 		                         ))
-		               ->from($item_db, 'i')
+		               ->from($itemDb, 'i')
 		               ->leftJoin($this->table('ac_cash_shop'), 'cs.item_id = i.id', 'cs')
 		               ->groupBy('i.id')
 						->limit(1)
@@ -860,16 +860,16 @@ class CharMap
 				}
 				break;
 		}
-		$item_db2->columns($columns);
-		$item_db->columns($columns);
+		$itemDb2->columns($columns);
+		$itemDb->columns($columns);
 		switch($type) {
 			case 'id':
-				$item_db->where(array( 'i.id' => $id ));
-				$item_db2->where(array( 'i.id' => $id ));
+				$itemDb->where(array( 'i.id' => $id ));
+				$itemDb2->where(array( 'i.id' => $id ));
 				break;
 			case 'identifier':
-				$item_db->where(array( 'i.name_english' => $id ));
-				$item_db2->where(array( 'i.name_english' => $id ));
+				$itemDb->where(array( 'i.name_english' => $id ));
+				$itemDb2->where(array( 'i.name_english' => $id ));
 				break;
 			default:
 				return null;
@@ -886,8 +886,8 @@ class CharMap
 	 */
 	public function shopCategory($id, $type = 'id')
 	{
-		if($type === 'id' && isset($this->cashShopCategories[$id])) {
-			return $this->cashShopCategories[$id];
+		if($type === 'id' && isset($this->shopCategories[$id])) {
+			return $this->shopCategories[$id];
 		}
 		$select = Query::select($this->connection())
 			->columns(array(
@@ -960,30 +960,30 @@ class CharMap
 			'card_id' => 'm.DropCardid',
 			'card_rate' => 'm.DropCardper',
 		);
-		$mob_db2 = Query::select($this->connection())
+		$mobDb2 = Query::select($this->connection())
 			->columns(array( 'custom' => '1' ) + $columns)
 			->from($this->table('mob_db2'), 'm');
-		$mob_db = Query::select($this->connection())
+		$mobDb = Query::select($this->connection())
 			->columns(array( 'custom' => '0' ) + $columns)
 			->from($this->table('mob_db'), 'm')
-			->union($mob_db2, true)
+			->union($mobDb2, true)
 			->parser(array( $this, 'parseMobSql' ))
 			->limit(1);
 		switch($type) {
 			case 'id':
-				$mob_db2->where(array( 'm.ID' => $id ));
-				$mob_db->where(array( 'm.ID' => $id ));
+				$mobDb2->where(array( 'm.ID' => $id ));
+				$mobDb->where(array( 'm.ID' => $id ));
 				break;
 			case 'identifier':
-				$mob_db2->where(array( 'm.kName' => $id ));
-				$mob_db->where(array( 'm.kName' => $id ));
+				$mobDb2->where(array( 'm.kName' => $id ));
+				$mobDb->where(array( 'm.kName' => $id ));
 				break;
 			default:
 				return null;
 		}
-		$mob_db->query();
+		$mobDb->query();
 
-		return ($mob_db->valid() ? $mob_db->current() : null);
+		return ($mobDb->valid() ? $mobDb->current() : null);
 	}
 
 	/**
@@ -1054,9 +1054,9 @@ class CharMap
 		");
 		$sth->bindValue(1, $id, \PDO::PARAM_INT);
 		$sth->execute();
-		if($emblem_data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$len  = $emblem_data[0];
-			$data = $emblem_data[1];
+		if($emblemData = $sth->fetch(\PDO::FETCH_NUM)) {
+			$len  = $emblemData[0];
+			$data = $emblemData[1];
 			return true;
 		}
 		return false;
@@ -1083,13 +1083,13 @@ class CharMap
 	 *          );
 	 * </code>
 	 *
-	 * @param int $item_id ID of the item
+	 * @param int $itemId ID of the item
 	 * @param int $precision Number of decimal places
 	 * @return array List of mobs found
 	 */
-	public function whoDrops($item_id, $precision = 3)
+	public function whoDrops($itemId, $precision = 3)
 	{
-		if(!($item = $this->item($item_id))) {
+		if(!($item = $this->item($itemId))) {
 			return array();
 		}
 		$sth = $this->connection()->prepare("
@@ -1151,12 +1151,12 @@ class CharMap
 		      MVP2id     = :id OR
 		      MVP3id     = :id
 		");
-		$sth->bindValue(':id', $item_id, \PDO::PARAM_INT);
+		$sth->bindValue(':id', $itemId, \PDO::PARAM_INT);
 		$sth->execute();
 		$drops = array();
 		while($res = $sth->fetch(\PDO::FETCH_NUM)) {
 			$isBoss = (int)$res[3] & 32;
-			$mob_data = array(
+			$mobData = array(
 				'id' => (int)$res[0],
 				'name' => $res[1],
 				'max_rate' => 0,
@@ -1165,8 +1165,8 @@ class CharMap
 			$mvp = false;
 			$rate = 0;
 			for($i = 3; $i < 29; $i += 2) {
-				if((int)$res[$i] === $item_id) {
-					++$mob_data['amount'];
+				if((int)$res[$i] === $itemId) {
+					++$mobData['amount'];
 					if((int)$res[$i + 1] > $rate) {
 						$rate = (int)$res[$i + 1];
 						$mvp = ($i > 20);
@@ -1174,13 +1174,13 @@ class CharMap
 				}
 			}
 			if($mvp) {
-				$mob_data['max_rate'] = $this->calcMvpDropRate($rate, $precision);
+				$mobData['max_rate'] = $this->calcMvpDropRate($rate, $precision);
 			} else if($isBoss) {
-				$mob_data['max_rate'] = $this->calcBossDropRate($rate, $item->type, $precision);
+				$mobData['max_rate'] = $this->calcBossDropRate($rate, $item->type, $precision);
 			} else {
-				$mob_data['max_rate'] = $this->calcDropRate($rate, $item->type, $precision);
+				$mobData['max_rate'] = $this->calcDropRate($rate, $item->type, $precision);
 			}
-			$drops[] = $mob_data;
+			$drops[] = $mobData;
 		}
 		return $drops;
 	}
@@ -1304,6 +1304,44 @@ class CharMap
 			return false;
 		}
 		return $this->shopCategory($this->connection()->lastInsertId(), 'id');
+	}
+
+	public function setShopCategoryOrder(array $newOrder)
+	{
+		$newOrder = array_unique($newOrder);
+		$oldOrder = Query::select($this->connection())
+			->columns(array( 'id' => 'id', 'order' => '`order`' ))
+			->setColumnType(array( 'id' => 'integer' , 'order' => 'integer'))
+			->from($this->table('ac_cash_shop_categories'))
+			->query()
+			->getColumn('order', 'id');
+		if(empty($oldOrder)) {
+			return false;
+		}
+		$update = Query::update($this->connection());
+		$table  = $this->table('ac_cash_shop_categories');
+		foreach($newOrder as $id => $slot) {
+			if(!array_key_exists($id, $oldOrder)) {
+				return false;
+			}
+			if($oldOrder[$id] === $slot) {
+				continue;
+			}
+			$update->tables(array( "t$id" => $table ))
+			       ->set(array( "t$id.`order`" => $slot ))
+			       ->where(array( "t$id.id" => $id ));
+			if(($otherId = array_search($slot, $oldOrder)) !== false &&
+			   !array_key_exists($otherId, $newOrder)) {
+				$update->tables(array( "t$otherId" => $table ))
+				       ->set(array( "t$otherId.`order`" => $oldOrder[$id] ))
+				       ->where(array( "t$otherId.id" => $otherId ));
+			}
+		}
+		if(empty($update->set)) {
+			return false;
+		}
+		$update->query();
+		return (bool)$update->rowCount;
 	}
 
 	public function shopCategorySlug($name, $id = null)
@@ -1733,8 +1771,8 @@ class CharMap
 	 */
 	public function parseShopCategory(array $data)
 	{
-		if(isset($this->cashShopCategories[$data['id']])) {
-			$cat = $this->cashShopCategories[$data['id']];
+		if(isset($this->shopCategories[$data['id']])) {
+			$cat = $this->shopCategories[$data['id']];
 		} else {
 			$cat = new ShopCategory;
 		}
@@ -2137,7 +2175,7 @@ class CharMap
 				if(!isset($this->woeSchedule[$data[0]])) continue;
 				$this->woeSchedule[$data[0]]['castles'][] = (int)$data[1];
 			}
-			$this->updateCache('woe-schedule');
+			App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
 		}
 		return $this->woeSchedule;
 	}
@@ -2171,7 +2209,7 @@ class CharMap
 			$this->cache['guild_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('guild')}")->fetch(\PDO::FETCH_COLUMN, 0);
 			$this->cache['homunculus_count'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('homunculus')}")->fetch(\PDO::FETCH_COLUMN, 0);
 			$this->cache['online'] = (int)$this->connection()->query("SELECT COUNT(1) FROM {$this->table('char')} WHERE online = 1")->fetch(\PDO::FETCH_COLUMN, 0);
-			$this->updateCache('cache');
+			App::cache()->store("ro.{$this->server->key}.{$this->key}.cache", $this->cache, 300);
 		}
 		if(!$name) {
 			return $this->cache;
@@ -2179,24 +2217,6 @@ class CharMap
 			return $this->cache[$name];
 		} else {
 			return null;
-		}
-	}
-
-	public function updateCache($name)
-	{
-		switch($name) {
-			case 'settings':
-				App::cache()->store("ro.{$this->server->key}.{$this->key}.settings", $this->settings);
-				break;
-			case 'woe-schedule':
-				App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
-				break;
-			case 'shop-categories':
-				App::cache()->store("ro.{$this->server->key}.{$this->key}.shop-categories", $this->cashShopCategories);				break;
-				break;
-			case 'cache':
-				App::cache()->store("ro.{$this->server->key}.{$this->key}.cache", $this->cache, 300);
-				break;
 		}
 	}
 
