@@ -5,10 +5,10 @@ use Aqua\UI\Tag;
 use Aqua\User\Account;
 use Aqua\User\Role;
 /**
- * @var $users      \Aqua\User\Account[]
- * @var $user_count int
- * @var $paginator  \Aqua\UI\Pagination
- * @var $page       \Page\Main\Ragnarok\Server\Item
+ * @var $users     \Aqua\User\Account[]
+ * @var $userCount int
+ * @var $paginator \Aqua\UI\Pagination
+ * @var $page      \Page\Main\Ragnarok\Server\Item
  */
 $base_url = ac_build_url(array(
 	'path' => array( 'user' ),
@@ -72,7 +72,7 @@ $page->theme->set('sidebar', $sidebar);
 	</tr>
 	</thead>
 	<tbody>
-	<?php if($user_count < 1) : ?>
+	<?php if($userCount < 1) : ?>
 		<tr><td colspan="9" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($users as $user) : ?>
 		<tr>
@@ -92,4 +92,6 @@ $page->theme->set('sidebar', $sidebar);
 	</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($user_count === 1 ? 's' : 'p'), number_format($user_count)) ?></span>
+<span class="ac-search-result"><?php echo __('application',
+                                             'search-results-' . ($userCount === 1 ? 's' : 'p'),
+                                             number_format($userCount)) ?></span>

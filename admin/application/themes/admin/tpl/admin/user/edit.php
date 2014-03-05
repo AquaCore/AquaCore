@@ -32,15 +32,15 @@
 		</tr>
 		<tr>
 			<td>
-				<input type="radio" name="avatar_type" value="image" id="avatar-type-image">
-				<label for="avatar-type-image"><?php echo __('account', 'use-custom-pic') ?></label><br>
+				<input type="radio" name="avatar_type" value="image" id="avatar-type-image" checked="checked">
+				<label for="avatar-type-image"><?php echo __('profile', 'use-custom-pic') ?></label><br>
 				<?php echo $form->field('image')->render() ?>
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<input type="radio" name="avatar_type" value="gravatar" id="avatar-type-gravatar">
-				<label for="avatar-type-gravatar"><?php echo __('account', 'use-gravatar') ?></label><br>
+				<label for="avatar-type-gravatar"><?php echo __('profile', 'use-gravatar') ?></label><br>
 				<?php echo $form->field('gravatar')->render() ?>
 			</td>
 		</tr>

@@ -21,14 +21,14 @@ use Aqua\Util\ImageUploader;
 class User
 extends Page
 {
-	const USERS_PER_PAGE = 20;
-	const LOGS_PER_PAGE  = 20;
+	public static $usersPerPage = 20;
+	public static $logsPerPage  = 20;
 
 	public function index_action()
 	{
 		$this->theme->head->section = $this->title = __('account', 'users');
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			if($x = $this->request->uri->getInt('id', false, 1)) {
 				if($users = Account::get($x)) {
 					$users = array( $users );
@@ -64,16 +64,16 @@ extends Page
 				$search = Account::search()
 					->where($where)
 					->order(array( 'id' => 'ASC' ))
-					->limit(($current_page - 1) * self::USERS_PER_PAGE, self::USERS_PER_PAGE)
+					->limit(($currentPage - 1) * self::$usersPerPage, self::$usersPerPage)
 					->calcRows(true)
 					->query();
 				$rows   = $search->rowsFound;
 				$users  = $search->results;
 			}
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::USERS_PER_PAGE), $current_page);
+			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::$usersPerPage), $currentPage);
 			$tpl = new Template;
 			$tpl->set('users', $users)
-				->set('user_count', $rows)
+				->set('userCount', $rows)
 				->set('paginator', $pgn)
 				->set('page', $this);
 			echo $tpl->render('admin/user/search');
@@ -96,13 +96,13 @@ extends Page
 			foreach(Server::$servers as $server) {
 				$ragnarok_accounts = array_merge($ragnarok_accounts, $server->login->getAccounts($account));
 			}
-			$profile_history  = ProfileUpdateLog::search()
+			$profileHistory  = ProfileUpdateLog::search()
 				->where(array( 'user_id' => $account->id ))
 				->order(array( 'date' => 'DESC' ))
 				->limit(5)
 				->query()
 				->results;
-			$donation_history = PayPalLog::search()
+			$donationHistory = PayPalLog::search()
 				->where(array( 'user_id' => $account->id ))
 				->order(array( 'process_date' => 'ASC' ))
 				->limit(5)
@@ -110,9 +110,9 @@ extends Page
 				->results;
 			$tpl = new Template;
 			$tpl->set('account', $account)
-				->set('ragnarok_accounts', $ragnarok_accounts)
-				->set('profile_history', $profile_history)
-				->set('donation_history', $donation_history)
+				->set('ragnarokAccounts', $ragnarok_accounts)
+				->set('profileHistory', $profileHistory)
+				->set('donationHistory', $donationHistory)
 				->set('page', $this);
 			echo $tpl->render('admin/user/view');
 		} catch(\Exception $exception) {
@@ -162,22 +162,22 @@ extends Page
 			$frm = new Form($this->request);
 			$frm->radio('avatar_type')
 				->value(array(
-					'image'    => __('account', 'use-custom-pic'),
-					'gravatar' => __('account', 'use-gravatar')
+					'image'    => __('profile', 'use-custom-pic'),
+					'gravatar' => __('profile', 'use-gravatar')
 				))
 				->checked('image');
 			$frm->file('image')
 				->attr('accept', 'image/jpeg, image/png, image/gif')
 				->maxSize(ac_size($avatarSettings->get('max_size', '2MB')) ?: null)
-				->setLabel(__('account', 'avatar'));
+				->setLabel(__('profile', 'avatar'));
 			$frm->input('gravatar')
 				->type('text')
-				->setLabel(__('account', 'gravatar'));
+				->setLabel(__('profile', 'gravatar'));
 			$frm->input('username')
 				->type('text')
 				->required()
 				->value(htmlspecialchars($account->username))
-				->setLabel(__('account', 'username'));
+				->setLabel(__('profile', 'username'));
 			$frm->input('display_name')
 				->type('text')
 				->required()
@@ -187,13 +187,14 @@ extends Page
 				->type('email')
 				->required()
 				->value(htmlspecialchars($account->email))
-				->setLabel(__('account', 'email'));
+				->setLabel(__('profile', 'email'));
 			$frm->input('birthday')
 				->type('date')
 				->required()
+				->attr('max', date('Y-m-d'))
 				->value(date('Y-m-d', $account->birthDate))
 				->placeholder('YYYY-MM-DD')
-				->setLabel(__('account', 'birthday'));
+				->setLabel(__('profile', 'birthday'));
 			$frm->input('credits')
 				->type('number')
 				->attr('min', 0)
@@ -208,12 +209,12 @@ extends Page
 				$frm->select('role')
 					->value($roles)
 					->selected($account->roleId)
-					->setLabel(__('account', 'role'));
+					->setLabel(__('profile', 'role'));
 			}
 			if($account->id !== 1 || App::user()->account->id === 1) {
 				$frm->input('password')
 					->type('password')
-					->setLabel(__('account', 'password'));
+					->setLabel(__('profile', 'password'));
 			}
 			$frm->submit();
 			$frm->validate(function(Form $form) use (&$account) {
@@ -276,7 +277,7 @@ extends Page
 			$error   = false;
 			try {
 				$update         = array();
-				$avatar_updated = false;
+				$avatarUpdated = false;
 				if(!$frm->field('username')->getWarning()) {
 					$update['username'] = trim($this->request->getString('username'));
 				}
@@ -318,10 +319,10 @@ extends Page
 						break;
 					case 'gravatar':
 						$account->setGravatar($this->request->getString('gravatar'));
-						$avatar_updated = true;
+						$avatarUpdated = true;
 						break;
 				}
-				if((!empty($update) && $account->update($update)) || $avatar_updated) {
+				if((!empty($update) && $account->update($update)) || $avatarUpdated) {
 					$message = __('account', 'admin-account-updated');
 				}
 			} catch(\Exception $exception) {
@@ -339,7 +340,7 @@ extends Page
 					}
 				}
 				$response['data'] = array(
-					'avatar'             => $account->avatar,
+					'avatar'             => $account->avatar(),
 					'username'           => htmlspecialchars($account->username),
 					'display_name'       => htmlspecialchars($account->displayName),
 					'display'            => $account->display()->render(),
@@ -509,7 +510,7 @@ extends Page
 		}
 	}
 
-	public function profile_history_action($id = null)
+	public function history_action($id = null)
 	{
 		try {
 			if(!$id || !($account = Account::get($id))) {
@@ -518,19 +519,21 @@ extends Page
 				return;
 			}
 			$this->theme->head->section = $this->title = __('profile-history', 'x-profile-history', htmlspecialchars($account->displayName));
-			$current_page = $this->request->uri->getInt('page', 1, 1);
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$search = ProfileUpdateLog::search()
+				->calcRows(true)
 				->where(array( 'user_id' => $account->id ))
 				->order(array( 'date' => 'DESC' ))
-				->limit(($current_page - 1) * self::LOGS_PER_PAGE, self::LOGS_PER_PAGE);
-			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::LOGS_PER_PAGE), $current_page);
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
+				->query();
+			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$logsPerPage), $currentPage);
 			$tpl = new Template;
 			$tpl->set('account', $account)
 				->set('history', $search->results)
-				->set('record_count', $search->rowsFound)
+				->set('recordCount', $search->rowsFound)
 				->set('paginator', $pgn)
 				->set('page', $this);
-			echo $tpl->render('admin/user/profile_history');
+			echo $tpl->render('admin/user/profile-history');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

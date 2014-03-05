@@ -28,6 +28,8 @@
 		},
 		yAxis: {
 			min: 0,
+			allowDecimals: false,
+			minTickInterval: 1,
 			title: { enabled: false },
 			labels: {
 				style: {

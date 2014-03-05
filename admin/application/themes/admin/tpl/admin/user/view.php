@@ -1,14 +1,13 @@
 <?php
 /**
- * @var $account           \Aqua\User\Account
- * @var $ragnarok_accounts \Aqua\Ragnarok\Account[]
- * @var $profile_history   \Aqua\Log\ProfileUpdateLog[]
- * @var $donation_history  \Aqua\Log\PayPalLog[]
- * @var $page              \Page\Admin\User
+ * @var $account          \Aqua\User\Account
+ * @var $ragnarokAccounts \Aqua\Ragnarok\Account[]
+ * @var $profileHistory   \Aqua\Log\ProfileUpdateLog[]
+ * @var $donationHistory  \Aqua\Log\PayPalLog[]
+ * @var $page             \Page\Admin\User
  */
 
 use Aqua\Core\App;
-use Aqua\Core\L10n;
 use Aqua\User\Role;
 use Aqua\User\Account;
 use Aqua\UI\ScriptManager;
@@ -131,13 +130,13 @@ $ban_user_url = ac_build_url(array(
 			<td><?php echo __('ragnarok-account', 'last-login') ?></td>
 			<td><?php echo __('ragnarok-account', 'server') ?></td>
 		</tr>
-	<?php if(empty($ragnarok_accounts)) : ?>
+	<?php if(empty($ragnarokAccounts)) : ?>
 		<tr>
 			<td colspan="6" class="ac-table-no-result">
 				<?php echo __('application', 'no-search-results') ?>
 			</td>
 		</tr>
-	<?php else : foreach($ragnarok_accounts as $acc) : ?>
+	<?php else : foreach($ragnarokAccounts as $acc) : ?>
 		<tr>
 			<td><a href="<?php echo ac_build_url(array(
 				                                     'path'      => array( 'ro', $acc->server->key ),
@@ -162,7 +161,7 @@ $ban_user_url = ac_build_url(array(
 			<a style="float: right"
 			   href="<?php echo ac_build_url(array(
 				                                 'path'      => array( 'user' ),
-				                                 'action'    => 'profile_history',
+				                                 'action'    => 'history',
 				                                 'arguments' => array( $account->id )
 			                                 )) ?>"><?php echo __('application', 'more') ?></a>
 		</td>
@@ -175,13 +174,13 @@ $ban_user_url = ac_build_url(array(
 		<td><?php echo __('profile-history', 'new-value') ?></td>
 		<td><?php echo __('profile-history', 'date') ?></td>
 	</tr>
-	<?php if(empty($profile_history)) : ?>
+	<?php if(empty($profileHistory)) : ?>
 		<tr>
 			<td colspan="6" class="ac-table-no-result">
 				<?php echo __('application', 'no-search-results') ?>
 			</td>
 		</tr>
-	<?php else : foreach($profile_history as $log) : ?>
+	<?php else : foreach($profileHistory as $log) : ?>
 		<tr>
 			<td>#<?php echo $log->id ?></td>
 			<td><?php echo $log->ipAddress ?></td>
@@ -194,12 +193,6 @@ $ban_user_url = ac_build_url(array(
 	<tr class="ac-table-header">
 		<td colspan="6" style="text-align: left">
 			<?php echo __('donation', 'donation-history') ?>
-			<a style="float: right"
-			   href="<?php echo ac_build_url(array(
-				                                 'path'      => array( 'user' ),
-				                                 'action'    => 'donation_history',
-				                                 'arguments' => array( $account->id )
-			                                 )) ?>"><?php echo __('application', 'more') ?></a>
 		</td>
 	</tr>
 	<tr class="ac-table-header alt">
@@ -210,13 +203,13 @@ $ban_user_url = ac_build_url(array(
 		<td><?php echo __('donation', 'process-date') ?></td>
 		<td><?php echo __('donation', 'payment-date') ?></td>
 	</tr>
-	<?php if(empty($donation_history)) : ?>
+	<?php if(empty($donationHistory)) : ?>
 		<tr>
 			<td colspan="6" class="ac-table-no-result">
 				<?php echo __('application', 'no-search-results') ?>
 			</td>
 		</tr>
-	<?php else : foreach($donation_history as $log) : ?>
+	<?php else : foreach($donationHistory as $log) : ?>
 		<tr>
 			<td><?php echo number_format($log->deposited, 2) ?>
 				<small><?php echo $log->currency ?></small>

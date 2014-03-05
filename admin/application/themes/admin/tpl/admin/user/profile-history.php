@@ -1,11 +1,11 @@
 <?php
 use Aqua\Core\App;
 /**
- * @var $account      \Aqua\User\Account
- * @var $history      \Aqua\Log\ProfileUpdateLog[]
- * @var $record_count int
- * @var $paginator    \Aqua\UI\Pagination
- * @var $page         \Page\Admin\User
+ * @var $account     \Aqua\User\Account
+ * @var $history     \Aqua\Log\ProfileUpdateLog[]
+ * @var $recordCount int
+ * @var $paginator   \Aqua\UI\Pagination
+ * @var $page        \Page\Admin\User
  */
 $datetime_format = App::settings()->get('datetime_format');
 ?>
@@ -25,22 +25,22 @@ $datetime_format = App::settings()->get('datetime_format');
 	<?php if(empty($history)) : ?>
 	<tr>
 		<td colspan="7" class="ac-table-no-result">
-			<?php echo __('profile-history', 'no-records-found') ?>
+			<?php echo __('application', 'no-search-results') ?>
 		</td>
 	</tr>
 	<?php else : foreach($history as $r) : ?>
 	<tr>
-		<td>#<?php echo $r->id ?></td>
+		<td><?php echo $r->id ?></td>
 		<td><a href="<?php echo ac_build_url(array(
 					'path' => array( 'user' ),
 					'action' => 'view',
 					'arguments' => array( $r->userId )
-				)) ?>"><?php echo htmlspecialchars($r->account()->displayName) ?></a>
+				)) ?>"><?php echo $r->account()->display() ?></a>
 		</td>
 		<td><?php echo $r->ipAddress ?></td>
 		<td><?php echo $r->field() ?></td>
-		<td><?php echo htmlspecialchars($r->oldValue) ?></td>
-		<td><?php echo htmlspecialchars($r->newValue) ?></td>
+		<td><?php echo $r->type === 'password' ? '--' : htmlspecialchars($r->oldValue) ?></td>
+		<td><?php echo $r->type === 'password' ? '--' : htmlspecialchars($r->newValue) ?></td>
 		<td><?php echo $r->date($datetime_format) ?></td>
 	</tr>
 	<?php endforeach; endif; ?>
@@ -49,21 +49,12 @@ $datetime_format = App::settings()->get('datetime_format');
 		<tr>
 			<td colspan="7">
 				<div style="position: relative;">
-					<div style="text-align: center">
-						<?php echo $paginator->render() ?>
-					</div>
-					<a href="<?php echo ac_build_url(array(
-							'path' => array( 'user' ),
-							'action' => 'view',
-							'arguments' => array( $account->id )
-						)) ?>">
-						<button type="button" class="ac-button" style="position: absolute; top: 0; right: 0;">
-							<?php echo __('account', 'return-to-profile', htmlspecialchars($account->displayName)) ?>
-						</button>
-					</a>
+					<?php echo $paginator->render() ?>
 				</div>
 			</td>
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('profile-history', 'x-records-found', number_format($record_count))?></span>
+<span class="ac-search-result"><?php echo __('application',
+                                             'search-results-' . ($recordCount === 1 ? 's' : 'p'),
+                                             number_format($recordCount)) ?></span>
