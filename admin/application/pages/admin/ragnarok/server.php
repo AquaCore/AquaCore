@@ -57,135 +57,135 @@ extends Page
 		        ->type('text')
 		        ->attr('maxlength', 255)
 		        ->required()
-		        ->setLabel(__('ragnarok-charmap-settings', 'name-label'));
+		        ->setLabel(__('ragnarok-charmap', 'name-label'));
 			$frm->input('key', true)
 		        ->type('text')
 		        ->attr('maxlength', 255)
 		        ->required()
-		        ->setLabel(__('ragnarok-charmap-settings', 'key-label'))
-				->setDescription(__('ragnarok-charmap-settings', 'key-desc'));
+		        ->setLabel(__('ragnarok-charmap', 'key-label'))
+				->setDescription(__('ragnarok-charmap', 'key-desc'));
 			$frm->input('timezone', true)
 		        ->type('text')
-		        ->setLabel(__('ragnarok-charmap-settings', 'timezone-label'))
-				->setDescription(__('ragnarok-charmap-settings', 'timezone-desc'));
+		        ->setLabel(__('ragnarok-charmap', 'timezone-label'))
+				->setDescription(__('ragnarok-charmap', 'timezone-desc'));
 			$frm->input('char-host', true)
 		        ->type('text')
 		        ->required()
-		        ->setLabel(__('ragnarok-charmap-settings', 'char-host-label'));
+		        ->setLabel(__('ragnarok-charmap', 'char-host-label'));
 			$frm->input('char-port', true)
 		        ->type('number')
 				->attr('min', 0)
 		        ->required()
 				->value(6121, false)
-		        ->setLabel(__('ragnarok-charmap-settings', 'char-port-label'));
+		        ->setLabel(__('ragnarok-charmap', 'char-port-label'));
 			$frm->input('map-host', true)
 		        ->type('text')
 		        ->required()
-		        ->setLabel(__('ragnarok-charmap-settings', 'map-host-label'));
+		        ->setLabel(__('ragnarok-charmap', 'map-host-label'));
 			$frm->input('map-port', true)
 		        ->type('number')
 				->attr('min', 0)
 		        ->required()
 				->value(5121, false)
-		        ->setLabel(__('ragnarok-charmap-settings', 'map-port-label'));
+		        ->setLabel(__('ragnarok-charmap', 'map-port-label'));
 			$frm->input('sql-host', true)
 				->type('text')
 			    ->required()
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-host-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-host-label'));
 			$frm->input('sql-port', true)
 				->type('number')
 				->attr('min', 0)
 			    ->required()
 				->value(3306, false)
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-port-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-port-label'));
 			$frm->input('sql-database', true)
 				->type('text')
 			    ->required()
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-database-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-database-label'));
 			$frm->input('sql-username', true)
 				->type('text')
 				->required()
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-username-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-username-label'));
 			$frm->input('sql-password', true)
 				->type('password')
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-password-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-password-label'));
 			$frm->input('sql-charset', true)
 				->type('text')
 				->value('UTF8', false)
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-charset-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-charset-label'));
 			$frm->input('sql-timezone', true)
 				->type('text')
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-timezone-label'))
+			    ->setLabel(__('ragnarok-charmap', 'db-timezone-label'))
 			    ->setDescription(__('ragnaork-charmap-settings', 'db-timezone-desc'));
 			$frm->input('log-host', true)
 				->type('text')
 			    ->required()
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-host-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-host-label'));
 			$frm->input('log-port', true)
 				->type('number')
 				->attr('min', 0)
 			    ->required()
 				->value(3306, false)
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-port-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-port-label'));
 			$frm->input('log-database', true)
 				->type('text')
 			    ->required()
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-database-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-database-label'));
 			$frm->input('log-username', true)
 				->type('text')
 				->required()
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-username-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-username-label'));
 			$frm->input('log-password', true)
 				->type('password')
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-password-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-password-label'));
 			$frm->input('log-charset', true)
 				->type('text')
 				->value('UTF8', false)
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-charset-label'));
+			    ->setLabel(__('ragnarok-charmap', 'db-charset-label'));
 			$frm->input('log-timezone', true)
 				->type('text')
-			    ->setLabel(__('ragnarok-charmap-settings', 'db-timezone-label'))
+			    ->setLabel(__('ragnarok-charmap', 'db-timezone-label'))
 			    ->setDescription(__('ragnaork-charmap-settings', 'db-timezone-desc'));
 			$frm->checkbox('renewal', true)
 		        ->value(array( '1' => '' ))
 				->checked(1, false)
-		        ->setLabel(__('ragnarok-charmap-settings', 'renewal-label'));
+		        ->setLabel(__('ragnarok-charmap', 'renewal-label'));
 			$frm->input('online-stats', true)
 				->type('number')
 				->attr('min', 0)
 				->value(30, false)
-		        ->setLabel(__('ragnarok-charmap-settings', 'online-stats-label'))
-		        ->setDescription(__('ragnarok-charmap-settings', 'online-stats-desc'));
-			$frm->input('fame')
+		        ->setLabel(__('ragnarok-charmap', 'online-stats-label'))
+		        ->setDescription(__('ragnarok-charmap', 'online-stats-desc'));
+			$frm->input('fame', true)
 				->type('number')
 				->attr('min', 0)
 				->required()
 				->value(10, false)
-				->setLabel(__('ragnarok-charmap-settings', 'fame-label'))
-				->setLabel(__('ragnarok-charmap-settings', 'fame-desc'));
-			$frm->input('default-map')
+				->setLabel(__('ragnarok-charmap', 'fame-label'))
+				->setLabel(__('ragnarok-charmap', 'fame-desc'));
+			$frm->input('default-map', true)
 		        ->type('text')
 		        ->value('prontera', false)
 				->required()
-		        ->setLabel(__('ragnarok-charmap-settings', 'default-map-label'))
-		        ->setDescription(__('ragnarok-charmap-settings', 'default-map-desc'));
-			$frm->input('default-x')
+		        ->setLabel(__('ragnarok-charmap', 'default-map-label'))
+		        ->setDescription(__('ragnarok-charmap', 'default-map-desc'));
+			$frm->input('default-x', true)
 		        ->type('number')
 				->attr('min', 0)
 				->required()
 		        ->value(156, false)
-		        ->setLabel(__('ragnarok-charmap-settings', 'default-x-label'));
-			$frm->input('default-y')
+		        ->setLabel(__('ragnarok-charmap', 'default-x-label'));
+			$frm->input('default-y', true)
 		        ->type('number')
 				->attr('min', 0)
 				->required()
 		        ->value(191, false)
-		        ->setLabel(__('ragnarok-charmap-settings', 'default-y-label'));
-			$frm->input('map-restrictions')
+		        ->setLabel(__('ragnarok-charmap', 'default-y-label'));
+			$frm->input('map-restrictions', true)
 				->type('text')
 				->value('/^(sec_pri|[^@]+@[0-9]+)(\.gat)?$/i', false)
-				->setLabel(__('ragnarok-charmap-settings', 'map-restriction-label'))
-				->setDescription(__('ragnarok-charmap-settings', 'map-restriction-desc'));
+				->setLabel(__('ragnarok-charmap', 'map-restriction-label'))
+				->setDescription(__('ragnarok-charmap', 'map-restriction-desc'));
 			$frm->submit();
 			$self = $this;
 			$dbh = $ldbh = null;
@@ -285,7 +285,7 @@ extends Page
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$dbh = null;
 				$ldbh = null;
-				$this->title = $this->theme->head->section = __('ragnarok-charmap-settings', 'new-server', htmlspecialchars($this->server->name));
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'new-server', htmlspecialchars($this->server->name));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 			        ->set('page', $this);
@@ -405,155 +405,200 @@ extends Page
 
 	public function rates_action()
 	{
-		$frm = new Form($this->request);
-		$frm->checkbox('logarithmic-drops', true)
-			->value(array( '1' => '' ))
-			->setLabel(__('ragnarok-charmap-settings', 'logarithmic-drops-label'));
-		$frm->input('base-exp', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'base-exp-label'));
-		$frm->input('job-exp', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'job-exp-label'));
-		$frm->input('quest-exp', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'quest-exp-label'));
-		$frm->input('mvp-exp', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'mvp-exp-label'));
-		$frm->input('common_rate', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'rate-common-label'));
-		$frm->input('common_boss', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'boss-common-label'));
-		$frm->input('common_min', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'min-common-label'));
-		$frm->input('common_max', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'max-common-label'));
-		$frm->input('heal_rate', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'rate-heal-label'));
-		$frm->input('heal_boss', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'boss-heal-label'));
-		$frm->input('heal_min', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'min-heal-label'));
-		$frm->input('heal_max', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'max-heal-label'));
-		$frm->input('equip_rate', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'rate-equip-label'));
-		$frm->input('equip_boss', true)
-			->type('number')
-			->required()
-			->attr('min', 0)
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'boss-equip-label'));
-		$frm->input('equip_min', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'min-equip-label'));
-		$frm->input('equip_max', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'max-equip-label'));
-		$frm->input('card_rate', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'rate-card-label'));
-		$frm->input('card_boss', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'boss-card-label'));
-		$frm->input('card_min', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'min-card-label'));
-		$frm->input('card_max', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'max-card-label'));
-		$frm->input('mvp_rate', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'rate-mvp-label'));
-		$frm->input('mvp_boss', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(100, false)
-			->setLabel(__('ragnarok-charmap-settings', 'boss-mvp-label'));
-		$frm->input('mvp_min', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'min-mvp-label'));
-		$frm->input('mvp_max', true)
-			->type('number')
-			->attr('min', 0)
-			->required()
-			->value(1, false)
-			->setLabel(__('ragnarok-charmap-settings', 'max-mvp-label'));
+		try {
+			$frm = new Form($this->request);
+			$frm->checkbox('logarithmic_drops', true)
+				->value(array( '1' => '' ))
+				->checked($this->charmap->getOption('logarithmic-drops') ? '1' : null, false)
+				->setLabel(__('ragnarok-charmap', 'logarithmic-drops-label'));
+			$frm->input('base_exp', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.base-exp', 100), false)
+				->setLabel(__('ragnarok-charmap', 'base-exp-label'));
+			$frm->input('job_exp', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.job-exp', 100), false)
+				->setLabel(__('ragnarok-charmap', 'job-exp-label'));
+			$frm->input('quest_exp', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.quest-exp', 100), false)
+				->setLabel(__('ragnarok-charmap', 'quest-exp-label'));
+			$frm->input('mvp_exp', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.mvp-exp', 100), false)
+				->setLabel(__('ragnarok-charmap', 'mvp-exp-label'));
+			$frm->input('common_rate', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-common', 100), false)
+				->setLabel(__('ragnarok-charmap', 'rate-common-label'));
+			$frm->input('common_boss', true)
+				->type('number')
+				->attr('min', 1)
+				->value($this->charmap->getOption('rate.item-common-boss', 100), false)
+				->required()
+				->value(100, false)
+				->setLabel(__('ragnarok-charmap', 'boss-common-label'));
+			$frm->input('common_min', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-common-min', 1), false)
+				->setLabel(__('ragnarok-charmap', 'min-common-label'));
+			$frm->input('common_max', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-common-max', 1000), false)
+				->setLabel(__('ragnarok-charmap', 'max-common-label'));
+			$frm->input('heal_rate', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-heal', 100), false)
+				->setLabel(__('ragnarok-charmap', 'rate-heal-label'));
+			$frm->input('heal_boss', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-heal-boss', 100), false)
+				->setLabel(__('ragnarok-charmap', 'boss-heal-label'));
+			$frm->input('heal_min', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-heal-min', 1), false)
+				->setLabel(__('ragnarok-charmap', 'min-heal-label'));
+			$frm->input('heal_max', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-common-max', 1000), false)
+				->setLabel(__('ragnarok-charmap', 'max-heal-label'));
+			$frm->input('equip_rate', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-equip', 100), false)
+				->setLabel(__('ragnarok-charmap', 'rate-equip-label'));
+			$frm->input('equip_boss', true)
+				->type('number')
+				->required()
+				->attr('min', 1)
+				->value($this->charmap->getOption('rate.item-equip-boss', 100), false)
+				->setLabel(__('ragnarok-charmap', 'boss-equip-label'));
+			$frm->input('equip_min', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-equip-min', 1), false)
+				->setLabel(__('ragnarok-charmap', 'min-equip-label'));
+			$frm->input('equip_max', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-equip-max', 1000), false)
+				->setLabel(__('ragnarok-charmap', 'max-equip-label'));
+			$frm->input('card_rate', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-card', 100), false)
+				->setLabel(__('ragnarok-charmap', 'rate-card-label'));
+			$frm->input('card_boss', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-card-boss', 100), false)
+				->setLabel(__('ragnarok-charmap', 'boss-card-label'));
+			$frm->input('card_min', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-card-min', 1), false)
+				->setLabel(__('ragnarok-charmap', 'min-card-label'));
+			$frm->input('card_max', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-card-max', 1000), false)
+				->setLabel(__('ragnarok-charmap', 'max-card-label'));
+			$frm->input('mvp_rate', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-mvp', 100), false)
+				->setLabel(__('ragnarok-charmap', 'rate-mvp-label'));
+			$frm->input('mvp_min', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-mvp-min', 1), false)
+				->setLabel(__('ragnarok-charmap', 'min-mvp-label'));
+			$frm->input('mvp_max', true)
+				->type('number')
+				->attr('min', 1)
+				->required()
+				->value($this->charmap->getOption('rate.item-mvp-max', 1000), false)
+				->setLabel(__('ragnarok-charmap', 'max-mvp-label'));
+			$frm->submit();
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'rates');
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+					->set('page', $this);
+				echo $tpl->render('admin/ragnarok/rates');
+				return;
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 
+			return;
+		}
+		$this->response->status(302)->redirect(App::request()->uri->url());
+		try {
+			if($this->charmap->setOption(array(
+					'logarithmic-drops' => $this->request->getInt('logarithmic_drops') ? '1' : '',
+					'rate.base-exp' => $this->request->getInt('base_exp'),
+					'rate.job-exp' => $this->request->getInt('job_exp'),
+					'rate.quest-exp' => $this->request->getInt('quest_exp'),
+					'rate.mvp-exp' => $this->request->getInt('mvp_exp'),
+					'rate.item-common' => $this->request->getInt('common_rate'),
+					'rate.item-common-boss' => $this->request->getInt('common_boss'),
+					'rate.item-common-min' => $this->request->getInt('common_min'),
+					'rate.item-common-max' => $this->request->getInt('common_max'),
+					'rate.item-heal' => $this->request->getInt('heal_rate'),
+					'rate.item-heal-boss' => $this->request->getInt('heal_boss'),
+					'rate.item-heal-min' => $this->request->getInt('heal_min'),
+					'rate.item-heal-max' => $this->request->getInt('heal_max'),
+					'rate.item-equip' => $this->request->getInt('equip_rate'),
+					'rate.item-equip-boss' => $this->request->getInt('equip_boss'),
+					'rate.item-equip-min' => $this->request->getInt('equip_min'),
+					'rate.item-card' => $this->request->getInt('card_rate'),
+					'rate.item-card-boss' => $this->request->getInt('card_boss'),
+					'rate.item-card-min' => $this->request->getInt('card_min'),
+					'rate.item-card-max' => $this->request->getInt('card_max'),
+					'rate.item-mvp' => $this->request->getInt('mvp_rate'),
+					'rate.item-mvp-min' => $this->request->getInt('mvp_min'),
+					'rate.item-mvp-max' => $this->request->getInt('mvp_max'),
+				))) {
+				App::user()->addFlash('success', null, '');
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+		}
 	}
 
 	public function category_action()
@@ -640,6 +685,23 @@ extends Page
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+		}
+	}
+
+	public function editcategory_action($id = null)
+	{
+		try {
+			if(!$id || !($category = $this->charmap->shopCategory($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$frm = new Form($this->request);
+			$frm->input('name', true);
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+
+			return;
 		}
 	}
 

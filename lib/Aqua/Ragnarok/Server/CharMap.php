@@ -780,7 +780,7 @@ class CharMap
 
 	/**
 	 * @param int|string $id
-	 * @param string $type "id" or "identifier"
+	 * @param string     $type "id" or "identifier"
 	 * @return \Aqua\Ragnarok\ItemData|null
 	 */
 	public function item($id, $type = 'id')
@@ -880,8 +880,8 @@ class CharMap
 	}
 
 	/**
-	 * @param int    $id
-	 * @param string $type
+	 * @param int|string $id
+	 * @param string     $type "id" or "slug"
 	 * @return \Aqua\Ragnarok\ShopCategory
 	 */
 	public function shopCategory($id, $type = 'id')
@@ -916,7 +916,7 @@ class CharMap
 
 	/**
 	 * @param int|string $id
-	 * @param string $type "id" or "identifier"
+	 * @param string     $type "id" or "identifier"
 	 * @return \Aqua\Ragnarok\Mob|null
 	 */
 	public function mob($id, $type = 'id')
@@ -987,8 +987,8 @@ class CharMap
 	}
 
 	/**
-	 * @param int|string       $id
-	 * @param string $type "id" or "name"
+	 * @param int|string $id
+	 * @param string     $type "id" or "name"
 	 */
 	public function guild($id, $type = 'id')
 	{
@@ -996,7 +996,7 @@ class CharMap
 	}
 
 	/**
-	 * @param int|string       $id
+	 * @param int $id
 	 * @return \Aqua\Ragnarok\Homunculus
 	 */
 	public function homunculus($id)
@@ -1063,7 +1063,7 @@ class CharMap
 	}
 
 	/**
-	 * Search monsters who drops the given item
+	 * Search monsters who drops the given item.
 	 * Example:
 	 * <code>
 	 * $charMap->whoDrops(12262, 1) // Who drops "Greatest Badge"
@@ -1186,13 +1186,13 @@ class CharMap
 	}
 
 	/**
-	 * Get all drops form a monster
+	 * Get all drops form a monster.
 	 *
-	 * @param int $mob_id
-	 * @param int $precision
+	 * @param int $mobId ID of the monster
+	 * @param int $precision Number of decimal places
 	 * @return array
 	 */
-	public function mobDrops($mob_id, $precision = 3)
+	public function mobDrops($mobId, $precision = 3)
 	{
 		$sth = $this->connection()->prepare("
 		SELECT m.Mode,
@@ -1230,7 +1230,7 @@ class CharMap
 		WHERE m.ID = :id
 		LIMIT 1
 		");
-		$sth->bindValue(':id', $mob_id, \PDO::PARAM_INT);
+		$sth->bindValue(':id', $mobId, \PDO::PARAM_INT);
 		$sth->execute();
 		$data = $sth->fetch(\PDO::FETCH_NUM);
 		if(empty($data)) {
@@ -1256,34 +1256,36 @@ class CharMap
 		}
 		$sth->execute();
 		$drops = array();
-		$item_data = array();
+		$itemData = array();
 		foreach($sth->fetchAll(\PDO::FETCH_NUM) as $i) {
-			$item_data[$i[0]] = array( $i[1], $i[2] );
+			$itemData[$i[0]] = array( $i[1], $i[2] );
 		}
 		$boss = (int)$data[0] & 32;
 		for($i = 1; $i < 26; $i += 2) {
 			if($data[$i]) {
 				if($i > 21) {
-					if(!isset($item_data[$data[$i]])) continue;
+					if(!isset($itemData[$data[$i]])) {
+						continue;
+					}
 					$drops['mvp'][] = array(
 						'id'   => (int)$data[$i],
-						'name' => $item_data[$data[$i]][0],
-						'type' => (int)$item_data[$data[$i]][1],
+						'name' => $itemData[$data[$i]][0],
+						'type' => (int)$itemData[$data[$i]][1],
 						'rate' => $this->calcMvpDropRate( (int)$data[($i + 1)], $precision )
 					);
 				} else {
-					$d = array(
+					$drop = array(
 						'id'   => (int)$data[$i],
-						'name' => $item_data[$data[$i]][0],
-						'type' => (int)$item_data[$data[$i]][1],
+						'name' => $itemData[$data[$i]][0],
+						'type' => (int)$itemData[$data[$i]][1],
 						'rate' => ($boss ?
-							$this->calcBossDropRate((int)$data[($i + 1)], (int)$item_data[$data[$i]][1], $precision ) :
-							$this->calcDropRate((int)$data[($i + 1)], (int)$item_data[$data[$i]][1], $precision ))
+							$this->calcBossDropRate((int)$data[($i + 1)], (int)$itemData[$data[$i]][1], $precision ) :
+							$this->calcDropRate((int)$data[($i + 1)], (int)$itemData[$data[$i]][1], $precision ))
 					);
 					if($i === 1) {
-						$drops['card'] = $d;
+						$drops['card'] = $drop;
 					} else {
-						$drops['normal'][] = $d;
+						$drops['normal'][] = $drop;
 					}
 				}
 			}
@@ -1291,6 +1293,13 @@ class CharMap
 		return $drops;
 	}
 
+	/**
+	 * Create a new shop category.
+	 *
+	 * @param string $name
+	 * @param string $description
+	 * @return \Aqua\Ragnarok\ShopCategory|bool Returns the new category or false on failure
+	 */
 	public function addShopCategory($name, $description)
 	{
 		$sth = $this->connection()->prepare("
@@ -1306,6 +1315,12 @@ class CharMap
 		return $this->shopCategory($this->connection()->lastInsertId(), 'id');
 	}
 
+	/**
+	 * Reset shop categories order.
+	 *
+	 * @param array $newOrder Associative array of id => order.
+	 * @return bool
+	 */
 	public function setShopCategoryOrder(array $newOrder)
 	{
 		$newOrder = array_unique($newOrder);
@@ -1344,6 +1359,13 @@ class CharMap
 		return (bool)$update->rowCount;
 	}
 
+	/**
+	 * Generate a valid shop category slug from a name.
+	 *
+	 * @param string   $name
+	 * @param int|null $id ID excluded from search
+	 * @return string
+	 */
 	public function shopCategorySlug($name, $id = null)
 	{
 		if(!$name) {

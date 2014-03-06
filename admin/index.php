@@ -32,15 +32,15 @@ try {
 		foreach(Server::$servers as $server) {
 			$serverSubmenu = array();
 			if($server->charmapCount) {
-				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'ro', $server->key ) ));
+				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'r', $server->key ) ));
 				$charmaps = array();
 				foreach($server->charmap as $charmap) {
 					$charmaps[] = array(
 						'title' => htmlspecialchars($charmap->name),
-						'url' => ac_build_url(array( 'path' => array( 'ro', $server->key, 's', $charmap->key ) )),
+						'url' => ac_build_url(array( 'path' => array( 'r', $server->key, $charmap->key ) )),
 						'submenu' => array(array(
 							'title' => 'x',
-							'url' => ac_build_url(array( 'path' => array( 'ro', $server->key, 's', $charmap->key ) ))
+							'url' => ac_build_url(array( 'path' => array( 'r', $server->key, $charmap->key ) ))
 						))
 					);
 				}
@@ -52,7 +52,7 @@ try {
 			} else if(!$viewRagnarokMenu) {
 				continue;
 			} else {
-				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'ro', $server->key ) ));
+				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'r', $server->key ) ));
 			}
 			$serverSubmenu['title'] = htmlspecialchars($server->name);
 			$ragnarokSubmenu[] = $serverSubmenu;

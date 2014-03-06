@@ -71,7 +71,6 @@ class Setup
 				'mbstring-ext'  => extension_loaded('mbstring'),
 				'gd2-ext'       => extension_loaded('gd'),
 				'simplexml-ext' => extension_loaded('simplexml'),
-				'json-ext'      => extension_loaded('json'),
 				'ctype-ext'     => extension_loaded('ctype'),
 				'zlib-ext'      => extension_loaded('zlib'),
 			),

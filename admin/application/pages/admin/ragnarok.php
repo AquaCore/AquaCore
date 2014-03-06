@@ -31,7 +31,7 @@ extends Page
 		if($this->server) {
 			$nav      = new Menu;
 			$base_url = ac_build_url(array(
-					'path'   => array('ro', $this->server->key),
+					'path'   => array('r', $this->server->key),
 					'action' => ''
 				));
 			$nav->append('server', array(
@@ -66,12 +66,12 @@ extends Page
 		if($this->server) {
 			if(empty($this->server->charmap)) {
 				$this->response->status(302)->redirect(ac_build_url(array(
-						'path' => array( 'ro', $this->server->key, 'server' )
+						'path' => array( 'r', $this->server->key, 'server' )
 					)));
 			} else if($this->server->charmapCount === 1) {
 				$server = current($this->server->charmap);
 				$this->response->status(302)->redirect(ac_build_url(array(
-					'path' => array( 'ro', $this->server->key, 's', $server->key )
+					'path' => array( 'r', $this->server->key, $server->key )
 					)));
 			} else {
 				$this->server_index();

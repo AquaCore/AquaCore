@@ -1,20 +1,20 @@
 <?php
 use Aqua\UI\ScriptManager;
 /**
- * @var $mob    \Aqua\Ragnarok\Mob
- * @var $drops  array
- * @var $page   \Page\Main\Ragnarok\Server\Mob
+ * @var $mob   \Aqua\Ragnarok\Mob
+ * @var $drops array
+ * @var $page  \Page\Main\Ragnarok\Server\Mob
  */
-$mob_name = htmlspecialchars($mob->iName);
-$all_drops = array();
+$mobName = htmlspecialchars($mob->iName);
+$allDrops = array();
 if(isset($drops['card'])) {
-	$all_drops = array_merge($all_drops, array($drops['card']));
+	$allDrops = array_merge($allDrops, array($drops['card']));
 }
 if(isset($drops['normal'])) {
-	$all_drops = array_merge($all_drops, $drops['normal']);
+	$allDrops = array_merge($allDrops, $drops['normal']);
 }
 if(isset($drops['mvp'])) {
-	$all_drops = array_merge($all_drops, $drops['mvp']);
+	$allDrops = array_merge($allDrops, $drops['mvp']);
 }
 ?>
 <div style="display:table-cell; vertical-align: top; width: 100%; padding-right: 15px">
@@ -22,7 +22,7 @@ if(isset($drops['mvp'])) {
 		<thead>
 		<tr>
 			<td colspan="5">
-				<?php echo $mob_name?> (#<?php echo $mob->id?>)
+				<?php echo $mobName?> (#<?php echo $mob->id?>)
 			</td>
 		</tr>
 		</thead>
@@ -40,7 +40,7 @@ if(isset($drops['mvp'])) {
 				<td><?php echo __('ragnarok', 'kro-name')?></td>
 				<td><?php echo htmlspecialchars($mob->kName)?></td>
 				<td><?php echo __('ragnarok', 'iro-name')?></td>
-				<td><?php echo $mob_name?></td>
+				<td><?php echo $mobName?></td>
 			</tr>
 			<tr>
 				<td><?php echo __('ragnarok', 'hp')?></td>
@@ -204,7 +204,7 @@ new AquaCore.ExperienceSlider(jQuery(\".ac-renewal-exp-wrapper\").get(0), {
 		</colgroup>
 		<thead>
 		<tr>
-			<td colspan="3"><?php echo __('ragnarok', 'x-drops', $mob_name)?></td>
+			<td colspan="3"><?php echo __('ragnarok', 'x-drops', $mobName)?></td>
 		</tr>
 		<tr class="alt">
 			<td></td>
@@ -213,13 +213,13 @@ new AquaCore.ExperienceSlider(jQuery(\".ac-renewal-exp-wrapper\").get(0), {
 		</tr>
 		</thead>
 		<tbody>
-		<?php if(empty($all_drops)) : ?>
+		<?php if(empty($allDrops)) : ?>
 			<tr>
 				<td colspan="3"  class="ac-table-no-result">
 					<?php echo __('ragnarok', 'no-drops')?>
 				</td>
 			</tr>
-		<?php else : foreach($all_drops as $drop) : ?>
+		<?php else : foreach($allDrops as $drop) : ?>
 			<tr>
 				<?php if($drop['type'] === 6) : ?>
 				<td ac-ro-card="<?php echo ac_item_cardbmp($drop['id'])?>"><img src="<?php echo ac_item_icon($drop['id'])?>"></td>
@@ -233,7 +233,7 @@ new AquaCore.ExperienceSlider(jQuery(\".ac-renewal-exp-wrapper\").get(0), {
 		</tbody>
 		<tfoot>
 		<tr>
-			<td style="text-align: right" colspan="3"><?php echo __('ragnarok', 'x-items', count($all_drops))?></td>
+			<td style="text-align: right" colspan="3"><?php echo __('ragnarok', 'x-items', count($allDrops))?></td>
 		</tr>
 		</tfoot>
 	</table>

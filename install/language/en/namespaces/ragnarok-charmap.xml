@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-charmap" key="new-server">Add Char/Map Server</word>
+    <word namespace="ragnarok-charmap" key="new-server-name">Add Char/Map Server - %s</word>
+    <word namespace="ragnarok-charmap" key="edit-server">Edit Char/Map Server</word>
+    <word namespace="ragnarok-charmap" key="edit-server-name">Edit Char/Map Server - %s</word>
+    <word namespace="ragnarok-charmap" key="name-label">Name</word>
+    <word namespace="ragnarok-charmap" key="key-label">Key</word>
+    <word namespace="ragnarok-charmap" key="key-desc">Server's unique identifier, used in URLs.</word>
+    <word namespace="ragnarok-charmap" key="timezone-label">Timezone</word>
+    <word namespace="ragnarok-charmap" key="char-host-label">Char Server IP</word>
+    <word namespace="ragnarok-charmap" key="char-port-label">Char Server Port</word>
+    <word namespace="ragnarok-charmap" key="map-host-label">Map Server IP</word>
+    <word namespace="ragnarok-charmap" key="map-port-label">Map Server Port</word>
+    <word namespace="ragnarok-charmap" key="db-host-label">Host</word>
+    <word namespace="ragnarok-charmap" key="db-port-label">Port</word>
+    <word namespace="ragnarok-charmap" key="db-database-label">Database Name</word>
+    <word namespace="ragnarok-charmap" key="db-username-label">Username</word>
+    <word namespace="ragnarok-charmap" key="db-password-label">Password</word>
+    <word namespace="ragnarok-charmap" key="db-charset-label">Charset</word>
+    <word namespace="ragnarok-charmap" key="db-timezone-label">Timezone</word>
+    <word namespace="ragnarok-charmap" key="db-timezone-desc">Timezone or time offset (e.g.: GTM, -3:00)</word>
+    <word namespace="ragnarok-charmap" key="renewal-label">Renewal</word>
+    <word namespace="ragnarok-charmap" key="fame-label">Fame Ranking Places</word>
+    <word namespace="ragnarok-charmap" key="online-stats-label">Online Stats Interval</word>
+    <word namespace="ragnarok-charmap" key="online-stats-desc"><![CDATA[Log online players every <i>x</i> minutes.<br/><a href="https://dev.mysql.com/doc/refman/5.1/en/events-configuration.html">MYSQL's Event Scheduler</a> must be enabled to log online players periodically, use "0" to disable this feature.]]></word>
+    <word namespace="ragnarok-charmap" key="default-map-label">Default Map</word>
+    <word namespace="ragnarok-charmap" key="default-map-desc">Default Map</word>
+    <word namespace="ragnarok-charmap" key="section-sql-connection">Char/Map Database</word>
+    <word namespace="ragnarok-charmap" key="section-log-connection">Log Database</word>
+    <word namespace="ragnarok-charmap" key="section-settings">Settings</word>
+    <word namespace="ragnarok-charmap" key="section-map-reset">Map Reset</word>
+    <word namespace="ragnarok-charmap" key="logarithmic-drops-label">Logarithmic Drops</word>
+    <word namespace="ragnarok-charmap" key="base-exp-label">Base Experience</word>
+    <word namespace="ragnarok-charmap" key="job-exp-label">Job Experience</word>
+    <word namespace="ragnarok-charmap" key="quest-exp-label">Quest Experience</word>
+    <word namespace="ragnarok-charmap" key="mvp-exp-label">MVP Experience</word>
+    <word namespace="ragnarok-charmap" key="rate-common-label">Drop Rate</word>
+    <word namespace="ragnarok-charmap" key="boss-common-label">Boss Rate</word>
+    <word namespace="ragnarok-charmap" key="min-common-label">Minimum Rate</word>
+    <word namespace="ragnarok-charmap" key="max-common-label">Maximum Rate</word>
+    <word namespace="ragnarok-charmap" key="rate-heal-label">Drop Rate</word>
+    <word namespace="ragnarok-charmap" key="boss-heal-label">Boss Rate</word>
+    <word namespace="ragnarok-charmap" key="min-heal-label">Minimum Rate</word>
+    <word namespace="ragnarok-charmap" key="max-heal-label">Maximum Rate</word>
+    <word namespace="ragnarok-charmap" key="rate-equip-label">Drop Rate</word>
+    <word namespace="ragnarok-charmap" key="boss-equip-label">Boss Rate</word>
+    <word namespace="ragnarok-charmap" key="min-equip-label">Minimum Rate</word>
+    <word namespace="ragnarok-charmap" key="max-equip-label">Maximum Rate</word>
+    <word namespace="ragnarok-charmap" key="rate-card-label">Drop Rate</word>
+    <word namespace="ragnarok-charmap" key="boss-card-label">Boss Rate</word>
+    <word namespace="ragnarok-charmap" key="min-card-label">Minimum Rate</word>
+    <word namespace="ragnarok-charmap" key="max-card-label">Maximum Rate</word>
+    <word namespace="ragnarok-charmap" key="rate-mvp-label">Drop Rate</word>
+    <word namespace="ragnarok-charmap" key="min-mvp-label">Minimum Rate</word>
+    <word namespace="ragnarok-charmap" key="max-mvp-label">Maximum Rate</word>
+    <word namespace="ragnarok-charmap" key="section-experience">Experience</word>
+    <word namespace="ragnarok-charmap" key="section-common-rate">Common Items</word>
+    <word namespace="ragnarok-charmap" key="section-heal-rate">Healing Items</word>
+    <word namespace="ragnarok-charmap" key="section-equip-rate">Equipments</word>
+    <word namespace="ragnarok-charmap" key="section-card-rate">Cards</word>
+    <word namespace="ragnarok-charmap" key="section-mvp-rate">MVP Items</word>
+    <word namespace="ragnarok-charmap" key="rates">Rates</word>
+  </wordgroup>
+</languageimport>

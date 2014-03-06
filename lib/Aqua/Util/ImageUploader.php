@@ -1,29 +1,72 @@
 <?php
 namespace Aqua\Util;
 
-use Aqua\Core\App;
-
 class ImageUploader
 {
+	/**
+	 * @var array
+	 */
 	public $mimeTypes = array(
 		'PNG'  => 'IMAGE/PNG',
 		'JPG'  => 'IMAGE/JPEG',
 		'JPEG' => 'IMAGE/JPEG',
 		'GIF'  => 'IMAGE/GIF',
 	);
+	/**
+	 * @var int
+	 */
 	public $connectionTimeout = 3;
+	/**
+	 * @var int
+	 */
 	public $timeout = 5;
+	/**
+	 * @var int
+	 */
 	public $maxSize = 0;
+	/**
+	 * @var int
+	 */
 	public $maxX = 0;
+	/**
+	 * @var int
+	 */
 	public $maxY = 0;
+	/**
+	 * @var resource
+	 */
 	public $source;
+	/**
+	 * @var string
+	 */
 	public $mimeType;
+	/**
+	 * @var int
+	 */
 	public $size;
+	/**
+	 * @var int
+	 */
 	public $x;
+	/**
+	 * @var int
+	 */
 	public $y;
+	/**
+	 * @var string
+	 */
 	public $path;
+	/**
+	 * @var string
+	 */
 	public $content;
+	/**
+	 * @var bool
+	 */
 	public $isLocal;
+	/**
+	 * @var int
+	 */
 	public $error;
 
 	const UPLOAD_OK                 = 0;
@@ -91,16 +134,16 @@ class ImageUploader
 
 	public function uploadRemote($url)
 	{
-		if(!($_url = parse_url($url)) || !isset($_url['host'])) {
+		if(!($urlParts = parse_url($url)) || !isset($urlParts['host'])) {
 			$this->error = self::UPLOAD_INVALID_PATH;
 			return false;
 		}
-		$host = $_url['host'];
-		if(isset($_url['port'])) $port = (int)$_url['port'];
-		else $port = (isset($_url['scheme']) && $_url['shceme'] === 'https' ? 443 : 80);
+		$host = $urlParts['host'];
+		if(isset($urlParts['port'])) $port = (int)$urlParts['port'];
+		else $port = (isset($urlParts['scheme']) && $urlParts['shceme'] === 'https' ? 443 : 80);
 		$target = '/';
-		if(isset($_url['path'])) $target = $_url['path'];
-		if(isset($_url['query'])) $target.= '?' . $_url['query'];
+		if(isset($urlParts['path'])) $target = $urlParts['path'];
+		if(isset($urlParts['query'])) $target.= '?' . $urlParts['query'];
 		$request = "GET $target HTTP/1.1\r\n";
 		$request.= "Host: $host\r\n";
 		$request.= "Accept: image/png, image/jpeg, image/gif\r\n";
@@ -151,7 +194,8 @@ class ImageUploader
 			$this->error = self::UPLOAD_INVALID_DIMENSIONS;
 			return false;
 		}
-		if(!in_array($mime, $this->mimeTypes) || !preg_match('/Content-Type: (image\/(?:gif|png|jpeg))/m', $response[0], $match)) {
+		if(!in_array($mime, $this->mimeTypes) ||
+		   !preg_match('/Content-Type: (image\/(?:gif|png|jpeg))/m', $response[0], $match)) {
 			$this->error = self::UPLOAD_INVALID_MIME;
 			return false;
 		}

@@ -18,7 +18,6 @@ implements SubjectInterface
 	 * @var \Aqua\Router\Router
 	 */
 	public $router;
-
 	/**
 	 * @var \Aqua\Permission\PermissionSet
 	 */
@@ -27,7 +26,9 @@ implements SubjectInterface
 	 * @var \Aqua\Site\Page[]
 	 */
 	public $pages = array();
-
+	/**
+	 * @var bool
+	 */
 	public $dispatchStarted = false;
 	/**
 	 * @var \Aqua\Event\EventDispatcher
