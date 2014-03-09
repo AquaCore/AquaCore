@@ -110,7 +110,7 @@ class App
 			 * Whether the current request is over SSL
 			 * @name \Aqua\HTTPS
 			 */
-			define('Aqua\HTTPS', isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === '1'));
+			define('Aqua\HTTPS', ($https = getenv('HTTPS')) && ($https === 'on' || $https === '1'));
 		}
 		$protocol = 'http';
 		if(\Aqua\HTTPS) {
@@ -135,7 +135,7 @@ class App
 			 * The current directory
 			 * @name \Aqua\WORKING_DIR
 			 */
-			define('Aqua\WORKING_DIR', str_replace('\\', '/', trim(substr(dirname($_SERVER['SCRIPT_FILENAME']), strlen($_SERVER['DOCUMENT_ROOT'])), '/\\')));
+			define('Aqua\WORKING_DIR', str_replace('\\', '/', trim(substr(dirname(getenv('SCRIPT_FILENAME')), strlen(getenv('DOCUMENT_ROOT'))), '/\\')));
 		}
 		if(!defined('Aqua\TABLE_PREFIX')) {
 			/**
@@ -214,9 +214,8 @@ class App
 			 * @name \Aqua\REWRITE
 			 */
 			define('Aqua\REWRITE', $settings->exists('rewrite_url') ?
-				(bool)$settings->get('rewrite_url', false) : (isset($_SERVER['APACHE_MOD_REWRITE']) &&
-				                                              $_SERVER['APACHE_MOD_REWRITE'] === 'On') ||
-				                                             isset($_SERVER['IIS_UrlRewriteModule']));
+				(bool)$settings->get('rewrite_url', false) : (getenv('APACHE_MOD_REWRITE') === 'On') ||
+				                                              getenv('IIS_UrlRewriteModule'));
 		}
 	}
 
@@ -275,8 +274,7 @@ class App
 			    'datetime_format' => '%x %X',
 			    'rewrite_url' => false,
 			    'language' => 'en',
-			    'domain' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] :
-					        isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '',
+			    'domain' => getenv('HTTP_HOST') ?: getenv('SERVER_NAME') ?: getenv('SERVER_NAME') ?: '',
 			    'base_dir' => '',
 				'cache' => array(
 					'storage_adapter' => 'File',

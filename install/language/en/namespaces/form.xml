@@ -15,5 +15,6 @@
     <word namespace="form" key="invalid-captcha">The verification code you have entered is incorrect.</word>
     <word namespace="form" key="invalid-token">Invalid token.</word>
     <word namespace="form" key="invalid-value-selected">The option you have chosen is not valid.</word>
+    <word namespace="form" key="invalid-storage-size"><![CDATA[Invalid storage size. Valid units are "B", "KB", "MB", "GB", "TB" and "PB"]]></word>
   </wordgroup>
 </languageimport>

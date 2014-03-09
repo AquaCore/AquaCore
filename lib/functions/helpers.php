@@ -5,26 +5,6 @@ use PHPMailer\PHPMailer;
 use Aqua\Ragnarok\Character;
 use Aqua\Http\Uri;
 
-if(!function_exists('array_column')) {
-	function array_column($array, $column, $index = null)
-	{
-		$ret = array();
-		if($index === null) {
-			if($column === null) {
-				return array_values($array);
-			} else foreach($array as $row) {
-				$ret[] = $row[$column];
-			}
-		} else {
-			if($index === null) foreach($array as $row) {
-				$ret[$row[$index]] = $row;
-			} else foreach($array as $row) {
-				$ret[$row[$index]] = $row[$column];
-			}
-		}
-		return $ret;
-	}
-}
 /**
  * @param string $namespace
  * @param string|int $key
@@ -237,6 +217,12 @@ function ac_build_query(array $options)
 	return $query;
 }
 
+/**
+ * Returns true depending on the given probability
+ *
+ * @param array|string|integer|float $probability array(10, 200) = Ten out of 200 times, same as 20%. 20.0 and 20 = 20%
+ * @return bool
+ */
 function ac_probability($probability)
 {
 	if(is_string($probability)) {
@@ -284,10 +270,10 @@ function ac_mailer($throw = true)
  * Creates a safe url name from the given string
  *
  * @param string $title
- * @param int    $max_size
+ * @param int    $maxSize
  * @return string
  */
-function ac_slug($title, $max_size = 255)
+function ac_slug($title, $maxSize = 255)
 {
 	$cyrylicFrom = array('А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й',
 	                     'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф',
@@ -330,7 +316,7 @@ function ac_slug($title, $max_size = 255)
 	if(empty($slug)) {
 		$slug = '_';
 	}
-	return substr($slug, 0, $max_size);
+	return substr($slug, 0, $maxSize);
 }
 
 function ac_slug_available($slug, $taken)
@@ -390,14 +376,14 @@ function ac_mysql_connection(array $options)
  * Delete a directory and it's contents recursively
  *
  * @param string $dir
- * @param bool   $delete_self
+ * @param bool   $deleteSelf
  */
-function ac_delete_dir($dir, $delete_self = false)
+function ac_delete_dir($dir, $deleteSelf = false)
 {
 	foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
 		$path->isFile() ? unlink($path->getPathname()) : rmdir($path->getPathname());
 	}
-	if($delete_self) {
+	if($deleteSelf) {
 		rmdir($dir);
 	}
 }
@@ -405,8 +391,8 @@ function ac_delete_dir($dir, $delete_self = false)
 /**
  * Checks whether a file have been successfully uploaded
  *
- * @param string $key The $_FILES key
- * @param bool   $multiple Whether multiple files are expected
+ * @param string       $key The $_FILES key
+ * @param bool         $multiple Whether multiple files are expected
  * @param int|null     $error The error ID, if any
  * @param string|null  $error_str The error message, if any
  * @param int|null     $index For multiple file uploads, the index number of the file with errors
@@ -476,8 +462,8 @@ function ac_file_uploaded($key, $multiple = false, &$error = null, &$error_str =
 /**
  * Get metadata from a TTF font
  *
- * @param string     $font Path to a TTF font file
- * @param null $info
+ * @param string $font Path to a TTF font file
+ * @param null   $info
  * @return array|bool|null|string Returns false if the file is not of a valid TTF font
  */
 function ac_font_info($font, $info = null)
@@ -587,6 +573,13 @@ function ac_between($x, $y)
 	}
 }
 
+/**
+ * Convert storage sizes
+ *
+ * @param string $size A number followed by the unit, e.g.: "10MB"
+ * @param string $convert Size to be converted to. "B", "KB", "MB", "GB", "TB" or "PB"
+ * @return bool|int Returns false on failure
+ */
 function ac_size($size, $convert = 'B')
 {
 	if(is_int($size) || ctype_digit($size)) {
@@ -607,5 +600,32 @@ function ac_size($size, $convert = 'B')
 		return false;
 	} else {
 		return ($size * pow(1024, ($unit - $convert)));
+	}
+}
+
+/**
+ * Returns the PCRE error message corresponding to the given error ID
+ *
+ * @param int|null $errorId The error ID, the last error ID is used in case this is null
+ * @return null|string
+ */
+function ac_pcre_error_str($errorId = null)
+{
+	if($errorId === null) {
+		$errorId = preg_last_error();
+	}
+	switch($errorId) {
+		default:
+			return null;
+		case PREG_INTERNAL_ERROR:
+			return __('exception', 'internal-pcre-error');
+		case PREG_BACKTRACK_LIMIT_ERROR:
+			return __('exception', 'pcre-backtrack-limit');
+		case PREG_RECURSION_LIMIT_ERROR:
+			return __('exception', 'pcre-recursion-limit');
+		case PREG_BAD_UTF8_ERROR:
+			return __('exception', 'pcre-bad-utf8');
+		case PREG_BAD_UTF8_OFFSET_ERROR:
+			return __('exception', 'pcre-bad-utf8-offset');
 	}
 }

@@ -60,6 +60,12 @@ implements FieldInterface
 		$this->closeTag = false;
 	}
 
+	public function multiple($val = true)
+	{
+		$this->bool('multiple', $val);
+		return $this;
+	}
+
 	public function maxFiles($num)
 	{
 		$this->maxFiles = (int)$num;

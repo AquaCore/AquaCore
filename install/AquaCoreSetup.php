@@ -100,27 +100,27 @@ class AquaCoreSetup
 	public function defineConstants()
 	{
 		if(!defined('Aqua\DOMAIN')) {
-			define('Aqua\DOMAIN', $_SERVER['HTTP_HOST']);
+			define('Aqua\DOMAIN', getenv('HTTP_HOST'));
 		}
 		if(!defined('Aqua\HTTPS')) {
-			define('Aqua\HTTPS', isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === '1'));
+			define('Aqua\HTTPS', ($https = getenv('HTTPS')) && ($https === 'on' || $https === '1'));
 		}
 		if(!defined('Aqua\WORKING_DIR')) {
-			define('Aqua\WORKING_DIR', trim(substr(dirname($_SERVER['SCRIPT_FILENAME']),
-			                                       strlen($_SERVER['DOCUMENT_ROOT'])),
+			define('Aqua\WORKING_DIR', trim(substr(dirname(getenv('SCRIPT_FILENAME')),
+			                                       strlen(getenv('DOCUMENT_ROOT'))),
 			                                '/\\'));
 		}
 		if(!defined('Aqua\WORKING_URL')) {
 			define('Aqua\WORKING_URL',
 				'http' . (\Aqua\HTTPS ? 's' : '') . '://' .
-				$_SERVER['HTTP_HOST'] .
-				rtrim(dirname($_SERVER['PHP_SELF']), '/'));
+				getenv('HTTP_HOST') .
+				rtrim(dirname(getenv('PHP_SELF')), '/'));
 		}
 		if(!defined('Aqua\URL')) {
 			define('Aqua\URL',
 				'http' . (\Aqua\HTTPS ? 's' : '') . '://' .
 				$_SERVER['HTTP_HOST'] .
-				rtrim(dirname(dirname($_SERVER['PHP_SELF'])), '/'));
+				rtrim(dirname(dirname(getenv('PHP_SELF'))), '/'));
 		}
 	}
 
@@ -128,11 +128,7 @@ class AquaCoreSetup
 	{
 		$lang = utf8_encode($lang);
 		if(isset($this->languagesAvailable[$lang])) {
-			$this->response->setCookie(self::LANGUAGE_KEY,
-			                           array(
-				                           'value'     => $lang,
-				                           'http_only' => true
-			                           ));
+			$this->response->setCookie(self::LANGUAGE_KEY, array( 'value' => $lang, 'http_only' => true ));
 		}
 
 		return $this;

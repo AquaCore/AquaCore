@@ -30,10 +30,10 @@ class Captcha
 	 * Replace a captcha code with a new random one
 	 *
 	 * @param string $key
-	 * @param string $ip_address
+	 * @param string $ipAddress
 	 * @return bool
 	 */
-	public function refresh($key, $ip_address)
+	public function refresh($key, $ipAddress)
 	{
 		if(!$this->checkValidKey($key)) {
 			return false;
@@ -47,7 +47,7 @@ class Captcha
 		LIMIT 1
 		");
 		$sth->bindValue(':id', $key, \PDO::PARAM_STR);
-		$sth->bindValue(':ip', $ip_address, \PDO::PARAM_LOB);
+		$sth->bindValue(':ip', $ipAddress, \PDO::PARAM_LOB);
 		$sth->bindValue(':code', $this->generateCode(), \PDO::PARAM_STR);
 
 		return ($sth->execute() && $sth->rowCount());
@@ -56,10 +56,10 @@ class Captcha
 	/**
 	 * Create a new captcha key
 	 *
-	 * @param string $ip_address
+	 * @param string $ipAddress
 	 * @return string The captcha key
 	 */
-	public function create($ip_address)
+	public function create($ipAddress)
 	{
 		$tbl = ac_table('captcha');
 		$sth = App::connection()->prepare("
@@ -69,7 +69,7 @@ class Captcha
 		");
 		$key = bin2hex(secure_random_bytes(16));
 		$sth->bindValue(':id', $key, \PDO::PARAM_STR);
-		$sth->bindValue(':ip', $ip_address, \PDO::PARAM_LOB);
+		$sth->bindValue(':ip', $ipAddress, \PDO::PARAM_LOB);
 		$sth->bindValue(':code', $this->generateCode(), \PDO::PARAM_STR);
 		$sth->execute();
 
@@ -110,21 +110,21 @@ class Captcha
 	 * stored in the database and deletes it.
 	 *
 	 * @param string $key
-	 * @param string $ip_address
+	 * @param string $ipAddress
 	 * @param string $input
 	 * @return int Error ID
 	 * @see \Aqua\Captcha\Captcha::CAPTCHA_*
 	 */
-	public function validate($key, $ip_address, $input)
+	public function validate($key, $ipAddress, $input)
 	{
-		if(!($code = $this->getCode($key, $ip_address))) {
+		if(!($code = $this->getCode($key, $ipAddress))) {
 			return self::CAPTCHA_INCOMPLETE;
 		}
 		if(!$this->settings->get('case_sensitive', false)) {
 			$code  = strtolower($code);
 			$input = strtolower($input);
 		}
-		$this->delete($key, $ip_address);
+		$this->delete($key, $ipAddress);
 		if($input !== $code) {
 			return self::CAPTCHA_INCORRECT_ANSWER;
 		} else {
@@ -169,11 +169,11 @@ class Captcha
 	public function generateCode()
 	{
 		$code       = '';
-		$char_len   = mt_rand($this->settings->get('min_length', 4), $this->settings->get('max_length', 7));
+		$charLen    = mt_rand($this->settings->get('min_length', 4), $this->settings->get('max_length', 7));
 		$characters = $this->settings->get('characters', '');
 		$range      = strlen($characters);
 		$len        = (int)(log($range, 2) / 8) + 1;
-		for($i = 0; $i < $char_len; ++$i) {
+		for($i = 0; $i < $charLen; ++$i) {
 			$code .= $characters[hexdec(bin2hex(secure_random_bytes($len))) % $range];
 		}
 
@@ -191,13 +191,13 @@ class Captcha
 
 	/**
 	 * @param string $key
-	 * @param string $ip_address
+	 * @param string $ipAddress
 	 * @param int    $quality
 	 * @return bool
 	 */
-	public function render($key, $ip_address, $quality = 9)
+	public function render($key, $ipAddress, $quality = 9)
 	{
-		if(!($captcha_code = $this->getCode($key, $ip_address))) {
+		if(!($captcha_code = $this->getCode($key, $ipAddress))) {
 			return false;
 		}
 		$width  = $this->settings->get('width', 1);
@@ -218,27 +218,30 @@ class Captcha
 	 */
 	public function drawBackground(&$img)
 	{
-		$bg_color = $this->settings->get('background_color', 0xFFFFFF);
-		$bg_image = $this->settings->get('background_image', null);
-		$width    = $this->settings->get('width', 1);
-		$height   = $this->settings->get('height', 1);
-		$this->rgb($bg_color, $r, $g, $b);
+		$bgColor = $this->settings->get('background_color', 0xFFFFFF);
+		$bgImage = $this->settings->get('background_image', null);
+		$width   = $this->settings->get('width', 1);
+		$height  = $this->settings->get('height', 1);
+		$this->rgb($bgColor, $r, $g, $b);
 		imagefilledrectangle($img, 0, 0, $width, $height, imagecolorallocate($img, $r, $g, $b));
-		if(is_array($bg_image)) {
-			$bg_image = $bg_image[array_rand($bg_image)];
+		if(is_array($bgImage)) {
+			$bgImage = $bgImage[array_rand($bgImage)];
 		}
-		if($bg_image && is_readable($bg_image)) {
+		if(substr($bgImage, 0, 9) === '/uploads/') {
+			$bgImage = \Aqua\ROOT . $bgImage;
+		}
+		if($bgImage && is_readable($bgImage)) {
 			$bg = null;
-			switch(pathinfo($bg_image, PATHINFO_EXTENSION)) {
+			switch(pathinfo($bgImage, PATHINFO_EXTENSION)) {
 				case 'jpg':
 				case 'jpeg':
-					$bg = @imagecreatefromjpeg($bg_image);
+					$bg = @imagecreatefromjpeg($bgImage);
 					break;
 				case 'png':
-					$bg = @imagecreatefrompng($bg_image);
+					$bg = @imagecreatefrompng($bgImage);
 					break;
 				case 'gif':
-					$bg = @imagecreatefromgif($bg_image);
+					$bg = @imagecreatefromgif($bgImage);
 					break;
 			}
 			if(is_resource($bg)) {
@@ -271,13 +274,13 @@ class Captcha
 		if($this->settings->get('noise_level', 0) > 0) {
 			$noise = min($this->settings->get('noise_level'), 10) / 14;
 			$this->rgb($this->settings->get('noise_color', 0x707070), $r, $g, $b);
-			$noise_color[0] = imagecolorallocatealpha($img, $r, $g, $b, 60);
+			$noiseColor[0] = imagecolorallocatealpha($img, $r, $g, $b, 60);
 			$this->rgb($this->settings->get('noise_color_alt', 0xA6A6A6), $r, $g, $b);
-			$noise_color[1] = imagecolorallocatealpha($img, $r, $g, $b, 60);
+			$noiseColor[1] = imagecolorallocatealpha($img, $r, $g, $b, 60);
 			for($i = 0; $i < $width; ++$i) {
 				for($j = 0; $j < $height; ++$j) {
 					if((mt_rand() / mt_getrandmax()) < $noise) {
-						imagesetpixel($img, $i, $j, $noise_color[mt_rand(0, 1)]);
+						imagesetpixel($img, $i, $j, $noiseColor[mt_rand(0, 1)]);
 					}
 				}
 			}
@@ -286,37 +289,44 @@ class Captcha
 
 	/**
 	 * @param resource $img
-	 * @param string   $captcha_code
+	 * @param string   $captchaCode
 	 */
-	public function drawText(&$img, $captcha_code)
+	public function drawText(&$img, $captchaCode)
 	{
 		$width     = $this->settings->get('width', 1);
 		$height    = $this->settings->get('height', 1);
 		$size      = $this->settings->get('font_size', 15);
 		$color     = $this->settings->get('font_color', 0x000000);
 		$variation = $this->settings->get('font_color_variation', 0x848484);
-		if(!($font_file = $this->settings->get('font_file')) || !is_readable($font_file)) {
+		$fontFile  = $this->settings->get('font_file');
+		if(is_array($fontFile)) {
+			$fontFile = $fontFile[array_rand($fontFile)];
+		}
+		if(substr($fontFile, 0, 9) === '/uploads/') {
+			$fontFile = \Aqua\ROOT . $fontFile;
+		}
+		if(!$fontFile || !is_readable($fontFile)) {
 			$os_name = php_uname('s');
 			if(strtoupper(substr($os_name, 0, 3)) === 'WIN') {
-				$font_file = 'C:/Windows/Fonts';
+				$fontFile = 'C:/Windows/Fonts';
 			} else if(strtoupper(substr($os_name, 0, 5)) === 'LINUX') {
-				$font_file = '/usr/share/fonts/truetype';
+				$fontFile = '/usr/share/fonts/truetype';
 			} else {
 				if(strtoupper(substr($os_name, 0, 7)) === 'FREEBSD') {
-					$font_file = '/usr/local/lib/X11/fonts/TrueType';
+					$fontFile = '/usr/local/lib/X11/fonts/TrueType';
 				}
 			}
-			$font_file .= '/arial.ttf';
+			$fontFile .= '/arial.ttf';
 		}
 		$tmp          = imagecreatetruecolor($width, $height);
 		$transparency = imagecolorallocatealpha($tmp, 0, 0, 0, 127);
 		imagefill($tmp, 0, 0, $transparency);
 		imagesavealpha($tmp, true);
-		$len        = strlen($captcha_code);
+		$len        = strlen($captchaCode);
 		$w          = 20;
 		$h          = 20;
-		$bbox       = imagettfbbox($size, 0, $font_file, $captcha_code);
-		$max_height = abs(
+		$bbox       = imagettfbbox($size, 0, $fontFile, $captchaCode);
+		$maxHeight = abs(
 				max(array( $bbox[1], $bbox[3], $bbox[5], $bbox[7] )) -
 				min(array( $bbox[1], $bbox[3], $bbox[5], $bbox[7] ))
 			) + ($size / 2);
@@ -324,7 +334,7 @@ class Captcha
 			$this->mix($color, $variation, mt_rand(0, 100) / 100, $r, $g, $b);
 			$c          = imagecolorallocate($tmp, $r, $g, $b);
 			$angle      = mt_rand(-35, 35);
-			$bbox       = imagettftext($tmp, $size * (mt_rand(90, 160) / 100), $angle, $w, $max_height, $c, $font_file, $captcha_code[$i]);
+			$bbox       = imagettftext($tmp, $size * (mt_rand(90, 160) / 100), $angle, $w, $maxHeight, $c, $fontFile, $captchaCode[$i]);
 			$bbox_width = ($bbox[2] - $bbox[0]);
 			$w += $bbox_width;
 			$h = max($h, $bbox[5] - $bbox[1]);

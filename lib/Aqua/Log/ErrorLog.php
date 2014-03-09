@@ -325,12 +325,12 @@ class ErrorLog
 	 */
 	public static function logText(\Exception $exception)
 	{
-		if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === '1')) {
+		if(($https = getenv('HTTPS')) && ($https === 'on' || $https === '1')) {
 			$url = 'https://';
 		} else {
 			$url = 'http://';
 		}
-		$url .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+		$url .= getenv('SERVER_NAME') . getenv('REQUEST_URI');
 		$ip   = $_SERVER['REMOTE_ADDR'];
 		$_err = $err = new self;
 		$next = null;

@@ -1324,13 +1324,17 @@ button.ac-delete-button {
 	border: 1px solid;
 	@include border-radius(6px);
 }
-.ac-captcha-background-preview {
+.ac-captcha-bg-preview {
 	display: block !important;
+	padding: 0;
 	text-align: center;
-	background: #e8ebef;
 	color: $mid-blue-1;
 	border: 1px solid;
 	@include border-radius(6px);
+	img {
+		height: 100px;
+		width: auto;
+	}
 }
 .ac-rss-image-preview-wrapper {
 	display: block !important;

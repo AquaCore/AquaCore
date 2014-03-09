@@ -5,7 +5,6 @@ use Aqua\Core\App;
 use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
 use Aqua\Site\Page;
-use Aqua\SQL\Query;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
@@ -193,7 +192,7 @@ extends Page
 					$error = false;
 					if($regex = $frm->request->getString('map-restrictions')) {
 						@preg_match($regex, '');
-						if($mes = $self->pcreErrorStr(preg_last_error())) {
+						if($mes = ac_pcre_error_str()) {
 							$frm->field('username-regex')->setWarning($mes);
 							$error = true;
 						}
@@ -798,23 +797,6 @@ extends Page
 			case 'chat':
 				break;
 			default: $this->error(404); return;
-		}
-	}
-
-	public function pcreErrorStr($id)
-	{
-		switch($id) {
-			default: return false;
-			case PREG_INTERNAL_ERROR:
-				return __('exception', 'internal-pcre-error');
-			case PREG_BACKTRACK_LIMIT_ERROR:
-				return __('exception', 'pcre-backtrack-limit');
-			case PREG_RECURSION_LIMIT_ERROR:
-				return __('exception', 'pcre-recursion-limit');
-			case PREG_BAD_UTF8_ERROR:
-				return __('exception', 'pcre-bad-utf8');
-			case PREG_BAD_UTF8_OFFSET_ERROR:
-				return __('exception', 'pcre-bad-utf8-offset');
 		}
 	}
 }

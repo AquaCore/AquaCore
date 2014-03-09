@@ -33,7 +33,7 @@ if(!defined('PREG_BAD_UTF8_OFFSET_ERROR')) {
 }
 define('AQUACORE', 1);
 
-if(isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] === '/favicon.ico') {
+if(getenv('REQUEST_URI') === '/favicon.ico') {
 	header('Content-Type: image/vnd.microsoft.icon');
 	header('Content-Length: 0');
 	die;
@@ -49,6 +49,7 @@ if(ini_get('register_globals')) {
 
 include __DIR__ . '/functions/image_trim.php';
 include __DIR__ . '/functions/secure_random_bytes.php';
+include __DIR__ . '/functions/array_column.php';
 include __DIR__ . '/functions/helpers.php';
 include __DIR__ . '/Aqua/Event/SubjectInterface.php';
 include __DIR__ . '/Aqua/Event/EventDispatcher.php';
@@ -91,8 +92,8 @@ try {
 	} else if(\Aqua\PROFILE === 'INSTALLER') {
 		return;
 	} else if(\Aqua\PROFILE === 'MAIN') {
-		$url = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === '1') ? 'https://' : 'http://') .
-		       $_SERVER['HTTP_HOST'] . trim(substr(dirname($_SERVER['SCRIPT_FILENAME']), strlen($_SERVER['DOCUMENT_ROOT'])), '/\\') .
+		$url = (($https = getenv('HTTPS')) && ($https === 'on' || $https === '1') ? 'https://' : 'http://') .
+		       getenv('HTTP_HOST') . trim(substr(dirname(getenv('SCRIPT_FILENAME')), strlen(getenv('DOCUMENT_ROOT'))), '/\\') .
 		       '/install';
 		App::response()->status(302)->redirect($url)->send();
 		die;

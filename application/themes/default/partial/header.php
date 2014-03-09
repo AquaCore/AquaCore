@@ -39,7 +39,7 @@ if(App::user()->loggedIn()) : ?>
 			<input type="text" name="username" placeholder="<?php echo __('profile', 'username') ?>">
 			<input type="password" name="password" placeholder="<?php echo __('profile', 'password') ?>">
 		</div>
-		<input type="hidden" name="return_url" value="<?php echo \Aqua\WORKING_URL . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '') ?>">
+		<input type="hidden" name="return_url" value="<?php echo App::request()->uri->url() ?>">
 		<input type="hidden" name="account_login" value="<?php echo App::user()->setToken('account_login')?>">
 		<input type="submit" value="OK" class="ac-login-submit">
 	</form>

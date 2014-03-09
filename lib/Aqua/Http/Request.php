@@ -164,28 +164,27 @@ class Request
 	public static function parseGlobals()
 	{
 		$request           = new self;
-		$request->method   = strtoupper($_SERVER['REQUEST_METHOD']);
+		$request->method   = strtoupper(getenv('REQUEST_METHOD'));
 		$request->uri      = Uri::parseCurrentRequest();
 		$request->cookies  = $_COOKIE;
 		$request->data     = $_POST;
 		do {
-			foreach(array('X_FORWARDED_FOR',
+			foreach(array('CLIENT_IP',
 			              'FORWARDED_FOR',
+			              'X_FORWARDED_FOR',
 			              'FORWARDED_FOR_IP',
 			              'FORWARDED',
-			              'VIA',
-			              'CLIENT_IP') as $header) {
-				if(array_key_exists("HTTP_$header", $_SERVER)) {
-					$header = "HTTP_$header";
-				} else if(!array_key_exists($header, $_SERVER)) {
+			              'VIA') as $header) {
+				if(!($ipAddress = getenv("HTTP_$header")) &&
+				   !($ipAddress = getenv($header))) {
 					continue;
 				}
-				$request->ip       = inet_pton($_SERVER[$header]);
-				$request->ipString = $_SERVER[$header];
+				$request->ip       = inet_pton($ipAddress);
+				$request->ipString = $ipAddress;
 				break 2;
 			}
-			$request->ip       = inet_pton($_SERVER['REMOTE_ADDR']);
-			$request->ipString = $_SERVER['REMOTE_ADDR'];
+			$request->ip       = inet_pton(getenv('REMOTE_ADDR'));
+			$request->ipString = getenv('REMOTE_ADDR');
 		} while(0);
 		if(function_exists('getallheaders')) {
 			$request->headers = getallheaders();
@@ -196,13 +195,12 @@ class Request
 				}
 			}
 		}
-		if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-		   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+		if(strtolower(getenv('HTTP_X_REQUESTED_WITH')) === 'xmlhttprequest') {
 			$request->ajax = true;
 		}
-		if(isset($_SERVER['PHP_AUTH_USER'])) {
-			$request->authUsername = $_SERVER['PHP_AUTH_USER'];
-			$request->authPassword = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : null;
+		if(getenv('PHP_AUTH_USER')) {
+			$request->authUsername = getenv('PHP_AUTH_USER');
+			$request->authPassword = getenv('PHP_AUTH_PW') ?: null;
 		} else if($request->header('Authorization') &&
 		          preg_match('/Basic\s+(.*)$/i', $request->headers['Authorization'], $match)) {
 			$request->authUsername = strip_tags(substr(strstr($match[0], ':'), 1));

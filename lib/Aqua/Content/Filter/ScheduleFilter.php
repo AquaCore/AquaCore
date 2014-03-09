@@ -6,7 +6,7 @@ use Aqua\Content\ContentData;
 use Aqua\Core\App;
 
 class ScheduleFilter
-	extends AbstractFilter
+extends AbstractFilter
 {
 	const STATUS_SCHEDULED = 10;
 

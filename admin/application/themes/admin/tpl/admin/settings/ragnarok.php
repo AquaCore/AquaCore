@@ -8,7 +8,7 @@ $option = &$menu->get('ragnarok');
 $option['class'] = 'active';
 ?>
 <table class="ac-settings-form">
-	<?php echo $form->render(null, false, array( 'acc', 'char', 'pincode_min', 'picode_max', 'shop_min', 'shop_max' )) ?>
+	<?php echo $form->render(null, false, array( 'acc', 'char', 'script', 'pincode_min', 'pincode_max', 'shop_max' )) ?>
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">

@@ -7,14 +7,17 @@ use Aqua\Core\App;
 include __DIR__ . '/settings-sidebar.php';
 $option = &$menu->get('captcha');
 $option['class'] = 'active';
+$bgColor = App::$settings->get('captcha')->get('background_color', 0x000000);
 ?>
 <table class="ac-settings-form">
 	<?php echo $form->render(null, false, array( 'width', 'height', 'case_sensitive' )) ?>
 	<?php if($file = App::settings()->get('captcha')->get('font_file')) : ?>
 		<tr>
 			<td colspan="3">
-				<div class="ac-captcha-font-preview ac-delete-wrapper">
+				<div class="ac-captcha-font-preview ac-delete-wrapper"
+				     style="background-color: <?php echo sprintf('#%06x', $bgColor) ?>">
 					<?php
+					$file = \Aqua\ROOT . $file;
 					$height = 30;
 					$name = ac_font_info($file, 1);
 					$bb = imageftbbox(15, 0, $file, $name);
@@ -23,8 +26,15 @@ $option['class'] = 'active';
 					$width = abs($bb[0]) + abs($bb[2]);
 					$y = floor($height / 2 - $ty / 2 - $bb[1]);
 					$img = imagecreatetruecolor($width, $height);
-					imagefilledrectangle($img, 0, 0, $width, $height, imagecolorallocate($img, 232, 235, 239));
-					imagettftext($img, 15, 0, 0, $y, imagecolorallocate($img, 34, 150, 239), $file, $name);
+					$b = $bgColor & 255;
+					$g = ($bgColor >> 8) & 255;
+					$r = ($bgColor >> 16) & 255;
+					imagefilledrectangle($img, 0, 0, $width, $height, imagecolorallocate($img, $r, $g, $b));
+					$textColor = App::settings()->get('captcha')->get('font_color');
+					$b = $textColor & 255;
+					$g = ($textColor >> 8) & 255;
+					$r = ($textColor >> 16) & 255;
+					imagettftext($img, 15, 0, 0, $y, imagecolorallocate($img, $r, $g, $b), $file, $name);
 					ob_start();
 					imagepng($img);
 					$base64 = base64_encode(ob_get_contents());
@@ -38,7 +48,19 @@ $option['class'] = 'active';
 			</td>
 		</tr>
 	<?php endif; ?>
-	<?php echo $form->render(null, false, array( 'font_file', 'font_size', 'use_font_shadow', 'font_color', 'font_shadow_color', 'bg_color', 'noise_color', 'noise_level', 'lines_color', 'min_lines', 'max_lines', 'distortion_amp', 'distortion_period', 'length', 'characters', 'expire', 'gc' )) ?>
+	<?php echo $form->render(null, false, array( 'font_file', 'font_size', 'font_color', 'font_color2' )) ?>
+	<?php if($file = App::settings()->get('captcha')->get('background_image')) : ?>
+		<tr>
+			<td colspan="3">
+				<div class="ac-captcha-bg-preview ac-delete-wrapper"
+				     style="background-color: <?php echo sprintf('#%06x', $bgColor) ?>">
+					<img src="<?php echo \Aqua\URL . $file ?>">
+					<input type="submit" name="x-delete-captcha-bg" class="ac-delete-button" value="">
+				</div>
+			</td>
+		</tr>
+	<?php endif; ?>
+	<?php echo $form->render(null, false, array( 'bg_file', 'bg_color', 'noise_color', 'noise_color2', 'noise_level', 'lines_color', 'min_lines', 'max_lines', 'distortion_amp', 'distortion_period', 'min_len', 'max_len', 'characters', 'expire', 'gc' )) ?>
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">

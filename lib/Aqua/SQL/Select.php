@@ -6,6 +6,10 @@ extends AbstractSearch
 implements \Iterator, \Countable
 {
 	/**
+	 * @var string
+	 */
+	public $resultsKey = null;
+	/**
 	 * @var array
 	 */
 	public $columns = array();
@@ -154,7 +158,12 @@ implements \Iterator, \Countable
 		}
 	}
 
-	public function getColumn($column, $key = null)
+	/**
+	 * @param string|null $column
+	 * @param string|null $key
+	 * @return array
+	 */
+	public function getColumn($column = null, $key = null)
 	{
 		if(empty($this->results) || !array_key_exists($column, $this->current())) {
 			return array();
@@ -190,6 +199,17 @@ implements \Iterator, \Countable
 		} else {
 			$this->where = $where;
 		}
+
+		return $this;
+	}
+
+	/**
+	 * @param string|null $name
+	 * @return static
+	 */
+	public function setKey($name)
+	{
+		$this->resultsKey = $name;
 
 		return $this;
 	}
@@ -488,12 +508,15 @@ implements \Iterator, \Countable
 						break;
 				}
 			}
-			if($this->parser) {
-				if($result = call_user_func($this->parser, $data)) {
-					$results[] = $result;
-				}
+			if(!$this->parser) {
+				$result = $data;
+			} else if(!($result = call_user_func($this->parser, $data))) {
+				continue;
+			}
+			if($this->resultsKey) {
+				$results[$data[$this->resultsKey]] = $result;
 			} else {
-				$results[] = $data;
+				$results[] = $result;
 			}
 		}
 		$this->results      = $results;

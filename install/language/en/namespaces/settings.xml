@@ -73,8 +73,8 @@
     <word namespace="settings" key="rss-copyright-label">Copyright</word>
     <word namespace="settings" key="use-recaptcha-label">Use ReCaptcha</word>
     <word namespace="settings" key="use-recaptcha-desc"><![CDATA[<a href="%s" target="_blank">Create a reCaptcha key pair</a> and paste keys on the fields below.]]></word>
-    <word namespace="settings" key="recaptcha-public-key-label">ReCaptcha Public Key</word>
-    <word namespace="settings" key="recaptcha-private-key-label">ReCaptcha Private Key</word>
+    <word namespace="settings" key="recaptcha-public-label">ReCaptcha Public Key</word>
+    <word namespace="settings" key="recaptcha-private-label">ReCaptcha Private Key</word>
     <word namespace="settings" key="captcha-width-label">Captcha Width</word>
     <word namespace="settings" key="captcha-height-label">Captcha Height</word>
     <word namespace="settings" key="captcha-case-label">Case Sensitive</word>
@@ -84,13 +84,13 @@
     <word namespace="settings" key="captcha-font-size-label">Font Size</word>
     <word namespace="settings" key="captcha-font-color-label">Text Color</word>
     <word namespace="settings" key="captcha-font-color-var-label">Text Color Variation</word>
-    <word namespace="settings" key="captcha-noise-color-label">Background Noise Color</word>
-    <word namespace="settings" key="captcha-noise-tint-label">Background Noise Tint</word>
+    <word namespace="settings" key="captcha-noise-color-label">Noise Color</word>
+    <word namespace="settings" key="captcha-noise-color-var-label">Noise Color Variation</word>
     <word namespace="settings" key="captcha-noise-level-label">Background Noise Level</word>
-    <word namespace="settings" key="captcha-lines-color-label">Lines Color</word>
     <word namespace="settings" key="captcha-min-lines-label">Minumum Lines</word>
     <word namespace="settings" key="captcha-max-lines-label">Maximum Lines</word>
-    <word namespace="settings" key="captcha-characters-label">Number of Characters</word>
+    <word namespace="settings" key="captcha-max-len-label">Mixumim Code Length</word>
+    <word namespace="settings" key="captcha-min-len-label">Minimum Code Length</word>
     <word namespace="settings" key="captcha-char-list-label">Character List</word>
     <word namespace="settings" key="captcha-ttl-label">Expiration Time</word>
     <word namespace="settings" key="captcha-ttl-desc">Captcha key expiration time in minutes.</word>
@@ -135,27 +135,38 @@
     <word namespace="settings" key="acc-avatar-width-label">Maximum Width</word>
     <word namespace="settings" key="acc-avatar-height-label">Maximum Height</word>
     <word namespace="settings" key="acc-avatar-size-label">Maximum Size</word>
-    <word namespace="settings" key="acc-avatar-size-desc">Maximum uploaded image size in megabytes.</word>
     <word namespace="settings" key="acc-username-min-label">Minimum Length</word>
     <word namespace="settings" key="acc-username-max-label">Maximum Length</word>
-    <word namespace="settings" key="acc-username-regex-label">Username Patterm</word>
+    <word namespace="settings" key="acc-username-regex-label">Pattern</word>
     <word namespace="settings" key="acc-username-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in usernames.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
-    <word namespace="settings" key="acc-display-name-min-label">Minimum Length</word>
-    <word namespace="settings" key="acc-display-name-max-label">Maximum Length</word>
-    <word namespace="settings" key="acc-display-name-regex-label">Display Name Pattern</word>
-    <word namespace="settings" key="acc-display-name-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in display names.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
-    <word namespace="settings" key="acc-display-name-update-limit-label">Update Limit</word>
-    <word namespace="settings" key="acc-display-name-update-limit-desc">Number of times users can change their display names every 30 days.</word>
+    <word namespace="settings" key="acc-display-min-label">Minimum Length</word>
+    <word namespace="settings" key="acc-display-max-label">Maximum Length</word>
+    <word namespace="settings" key="acc-display-regex-label">Pattern</word>
+    <word namespace="settings" key="acc-display-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in display names.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
+    <word namespace="settings" key="acc-display-limit-label">Update Limit</word>
+    <word namespace="settings" key="acc-display-limit-desc"><![CDATA[Number of times users can change their display names. Use "0" to disable this feature.]]></word>
+    <word namespace="settings" key="acc-display-interval-label">Update Limit Interval</word>
+    <word namespace="settings" key="acc-display-interval-desc">Amount of days it takes to reset the update limit.</word>
     <word namespace="settings" key="acc-password-min-label">Minimum Length</word>
     <word namespace="settings" key="acc-password-max-label">Maximum Length</word>
-    <word namespace="settings" key="acc-password-regex-label">Password Pattern</word>
+    <word namespace="settings" key="acc-password-regex-label">Pattern</word>
     <word namespace="settings" key="acc-password-regex-desc"><![CDATA[Regular expression for characters <b>NOT ALLOWED</b> in passwords.<br><a href="http://us1.php.net/manual/en/reference.pcre.pattern.syntax.php">See the documentation on Perl compatible regular expression (PCRE) syntax.</a>]]></word>
+    <word namespace="settings" key="acc-birthday-limit-label">Update Limit</word>
+    <word namespace="settings" key="acc-birthday-limit-desc"><![CDATA[Number of times users can change their birthdays. Use "0" to disable this feature.]]></word>
+    <word namespace="settings" key="acc-birthday-interval-label">Update Limit Interval</word>
+    <word namespace="settings" key="acc-birthday-interval-desc">Amount of days it takes to reset the update limit.</word>
+    <word namespace="settings" key="acc-birthday-min-label">Minimum Date</word>
+    <word namespace="settings" key="acc-birthday-min-desc">Leave this field blank to disable this feature.</word>
+    <word namespace="settings" key="acc-email-limit-label">Update Limit</word>
+    <word namespace="settings" key="acc-email-limit-desc"><![CDATA[Number of times users can change their emails. Use "0" to disable this feature.]]></word>
+    <word namespace="settings" key="acc-email-interval-label">Update Limit Interval</word>
+    <word namespace="settings" key="acc-email-interval-desc">Amount of days it takes to reset the update limit.</word>
     <word namespace="settings" key="ro-acc-url-label">Username in URL</word>
     <word namespace="settings" key="ro-char-url-label">Character Name in URL</word>
     <word namespace="settings" key="ro-item-script-label">Display Item Script</word>
-    <word namespace="settings" key="ro-pincode-min-label">Minimum Picode Length</word>
-    <word namespace="settings" key="ro-pincode-max-label">Maximum Picode Length</word>
-    <word namespace="settings" key="ro-purchase-max-label">Maximum Cash Shop Items</word>
+    <word namespace="settings" key="ro-pincode-min-label">Minimum Pincode Length</word>
+    <word namespace="settings" key="ro-pincode-max-label">Maximum Pincode Length</word>
+    <word namespace="settings" key="ro-purchase-max-label">Maximum Item Shop Items</word>
     <word namespace="settings" key="ro-emblem-cache-label">Browser Caching</word>
     <word namespace="settings" key="ro-emblem-ttl-label">Expiration Time</word>
     <word namespace="settings" key="ro-emblem-compress-label">Image Compression</word>
@@ -194,6 +205,7 @@
     <word namespace="settings" key="donation-min-label">Minimum Donation</word>
     <word namespace="settings" key="donation-min-desc">Minimum donation required to exchange credits.</word>
     <word namespace="settings" key="donation-exchange-rate-label">Exchange Rate</word>
+    <word namespace="settings" key="donation-exchange-rate-desc">Rate at which money is exchanged for credits.</word>
     <word namespace="settings" key="donation-goal-label">Donation Goal</word>
     <word namespace="settings" key="donation-goal-interval-label">Goal Interval</word>
     <word namespace="settings" key="invalid-timezone"><![CDATA[<b>Timezone</b>: "%s" is not a valid timezone.]]></word>

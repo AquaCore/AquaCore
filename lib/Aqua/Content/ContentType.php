@@ -441,6 +441,43 @@ implements \Serializable, SubjectInterface
 		return null;
 	}
 
+	public static function searchSite(array $contentTypes = null)
+	{
+		$where = array(
+			'uid'          => 'c._uid',
+			'type'         => 'c._type',
+			'author'       => 'c._author_id',
+			'last_editor'  => 'c._editor_id',
+			'publish_date' => 'c._publish_date',
+			'edit_date'    => 'c._edit_date',
+			'status'       => 'c._status',
+			'slug'         => 'c._slug',
+			'protected'    => 'c._protected',
+			'options'      => 'c._options',
+		);
+		$columns                  = $where;
+		$columns['title']         = 'c._title';
+		$columns['content']       = 'c._content';
+		$columns['plain_content'] = 'c._plain_content';
+		$columns['publish_date']  = 'UNIX_TIMESTAMP(c._publish_date)';
+		$columns['edit_date']     = 'UNIX_TIMESTAMP(c._edit_date)';
+		$search = Query::search(App::connection())
+			->columns($columns)
+			->whereOptions($where)
+			->groupBy('c._uid');
+		$ids = array();
+		foreach($contentTypes as $cType) {
+			if($cType instanceof self || is_int($cType) && ($cType = self::getContentType($cType))) {
+				$ids[] = $cType->id;
+			}
+		}
+		if(!empty($ids)) {
+			array_unshift($ids, Search::SEARCH_IN);
+			$search->where(array( 'type' => $ids ));
+		}
+		return $search;
+	}
+
 	/**
 	 * @return \Aqua\Content\ContentType[]
 	 */
