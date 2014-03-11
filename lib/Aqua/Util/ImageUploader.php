@@ -139,8 +139,13 @@ class ImageUploader
 			return false;
 		}
 		$host = $urlParts['host'];
-		if(isset($urlParts['port'])) $port = (int)$urlParts['port'];
-		else $port = (isset($urlParts['scheme']) && $urlParts['shceme'] === 'https' ? 443 : 80);
+		if(isset($urlParts['port'])) {
+			$port = (int)$urlParts['port'];
+		} else if(isset($urlParts['scheme']) && $urlParts['scheme'] === 'https') {
+			$port = 443;
+		} else {
+			$port = 80;
+		}
 		$target = '/';
 		if(isset($urlParts['path'])) $target = $urlParts['path'];
 		if(isset($urlParts['query'])) $target.= '?' . $urlParts['query'];
