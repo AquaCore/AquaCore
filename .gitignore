@@ -1,0 +1,15 @@
+/cli
+/language
+/settings/application.php
+/settings/smiley.php
+/settings/ragnarok.php
+/tmp
+/plugins
+/uploads
+/assets/client
+/assets/images
+config.rb
+.idea
+.sass-cache
+*.hdf
+*.pid
