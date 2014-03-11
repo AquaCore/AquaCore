@@ -116,7 +116,7 @@ class ProfileUpdateLog
 	 * @param int $id
 	 * @return \Aqua\Log\ProfileUpdateLog|null
 	 */
-	public function get($id)
+	public static function get($id)
 	{
 		$select = Query::select(App::connection())
 			->columns(array(
