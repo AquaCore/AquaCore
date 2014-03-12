@@ -1,8 +1,6 @@
 <?php
 use Aqua\Core\App;
 use Aqua\UI\Sidebar;
-use Aqua\UI\Form\Checkbox;
-use Aqua\UI\Form\Radio;
 /**
  * @var $form \Aqua\UI\Form
  * @var $page \Page\Admin\Settings

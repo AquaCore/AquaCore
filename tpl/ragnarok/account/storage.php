@@ -1,5 +1,4 @@
 <?php
-use Aqua\UI\ScriptManager;
 use Aqua\Core\App;
 /**
  * @var $storage_size int

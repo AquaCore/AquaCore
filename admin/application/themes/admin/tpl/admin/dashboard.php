@@ -2,7 +2,6 @@
 use Aqua\Core\App;
 use Aqua\Log\PayPalLog;
 use Aqua\Log\TransferLog;
-use Aqua\Event\Event;
 use Aqua\UI\ScriptManager;
 use Aqua\UI\Dashboard;
 use Aqua\User\Account;

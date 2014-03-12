@@ -1,5 +1,4 @@
 <?php
-use Aqua\UI\ScriptManager;
 /**
  * @var $mobs       \Aqua\Ragnarok\Mob[]
  * @var $mob_count  int

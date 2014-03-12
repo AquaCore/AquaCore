@@ -4,7 +4,6 @@ namespace Aqua\UI\Form;
 use Aqua\Captcha\ReCaptcha as _ReCaptcha;
 use Aqua\Core\App;
 use Aqua\Http\Request;
-use Aqua\UI\Form\FieldInterface;
 use Aqua\UI\Form;
 
 class ReCaptcha

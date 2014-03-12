@@ -3,7 +3,6 @@ namespace Aqua\User;
 
 use Aqua\Core\App;
 use Aqua\Event\Event;
-use Aqua\Plugin\Plugin;
 use Aqua\UI\Tag;
 
 class Role

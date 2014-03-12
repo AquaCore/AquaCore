@@ -1,8 +1,6 @@
 <?php
 namespace Aqua\Ragnarok\Server\Logs;
 
-use Aqua\Ragnarok\Server\Login;
-
 class PasswordResetLog
 {
 	/**

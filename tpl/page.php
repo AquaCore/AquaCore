@@ -1,5 +1,4 @@
 <?php
-use Aqua\Content\Page;
 use Aqua\UI\Menu;
 /**
  * @var $paginator \Aqua\UI\Pagination

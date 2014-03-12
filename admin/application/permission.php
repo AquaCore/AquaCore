@@ -1,9 +1,6 @@
 <?php
 use Aqua\Permission\PermissionSet;
-use Aqua\User\Role;
 use Aqua\Permission\Permission;
-use Aqua\Ragnarok\Ragnarok;
-use Aqua\Core\User;
 
 $permissions = new PermissionSet;
 

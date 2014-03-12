@@ -33,10 +33,12 @@ ScriptManager::register('jquery')
 // jQuery UI v1.10.3
 ScriptManager::register('jquery-ui')
 	->src(\Aqua\URL . '/assets/scripts/jquery-ui/jquery-ui-1.10.3.min.js')
+	->language(\Aqua\URL . '/assets/scripts/jquery-ui/i18n/%s.js', 'en')
 	->dependsOn(array( 'jquery' ));
-ScriptManager::register('jquery-ui-i18n')
-	->src(\Aqua\URL . '/assets/scripts/jquery-ui/i18n/:language.js')
-	->dependsOn(array( 'jquery-ui' ));
+// Moment
+ScriptManager::register('moment')
+	->src(\Aqua\URL . '/assets/scripts/moment/moment.min.js')
+	->language(\Aqua\URL . '/assets/scripts/moment/lang/%s.js', 'en');
 // Autosize
 ScriptManager::register('jquery.autosize')
 	->src(\Aqua\URL . '/assets/scripts/autosize/jquery.autosize.min.js')
@@ -44,10 +46,8 @@ ScriptManager::register('jquery.autosize')
 // Timepicker
 ScriptManager::register('jquery-ui.timepicker')
 	->src(\Aqua\URL . '/assets/scripts/timepicker/jquery-ui.timepicker.js')
+	->language(\Aqua\URL . '/assets/scripts/timepicker/i18n/%s.js', 'en')
 	->dependsOn(array( 'jquery-ui' ));
-ScriptManager::register('jquery-ui.timepicker-i18n')
-	->src(\Aqua\URL . '/assets/scripts/timepicker/i18n/:language.js')
-	->dependsOn(array( 'jquery-ui.timepicker' ));
 // AquaCore
 ScriptManager::register('aquacore')
 	->src(\Aqua\URL . '/assets/scripts/aquacore/aquacore.min.js')

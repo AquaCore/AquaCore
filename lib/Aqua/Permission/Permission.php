@@ -1,11 +1,9 @@
 <?php
 namespace Aqua\Permission;
 
-use Aqua\Core\App;
 use Aqua\Core\User;
 use Aqua\Event\EventDispatcher;
 use Aqua\Event\SubjectInterface;
-use Aqua\Http\Request;
 use Aqua\User\Role;
 
 class Permission

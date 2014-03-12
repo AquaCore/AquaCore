@@ -1,9 +1,6 @@
 <?php
 namespace Aqua\UI;
 
-use Aqua\UI\Template;
-use Aqua\UI\AbstractContent;
-
 class Menu
 extends AbstractContent
 implements \Iterator, \Countable

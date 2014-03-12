@@ -1,9 +1,6 @@
 <?php
-use Aqua\Core\App;
-use Aqua\Plugin\Plugin;
 use Aqua\UI\ScriptManager;
 use Aqua\UI\Form;
-use Aqua\UI\Form\FieldInterface;
 /**
  * @var $plugins      \Aqua\Plugin\Plugin[]
  * @var $plugin_count int

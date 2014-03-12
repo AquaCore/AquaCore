@@ -10,7 +10,6 @@ use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
-use Aqua\User\Role;
 
 class News
 extends Page

@@ -1,7 +1,6 @@
 <?php
 namespace Aqua\Ragnarok\Server\Logs;
 
-use Aqua\Ragnarok\Server\Login;
 use Aqua\User\Account;
 
 class BanLog

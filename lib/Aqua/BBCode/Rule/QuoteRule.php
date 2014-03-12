@@ -2,7 +2,6 @@
 namespace Aqua\BBCode\Rule;
 
 use Aqua\BBCode\AbstractRule;
-use Aqua\Core\App;
 
 class QuoteRule
 extends AbstractRule

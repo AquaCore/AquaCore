@@ -2,14 +2,10 @@
 namespace Page\Main;
 
 use Aqua\Core\App;
-use Aqua\Http\Request;
 use Aqua\Log\ErrorLog;
-use Aqua\Ragnarok\Exception\LoginServerException;
-use Aqua\Ragnarok\Ragnarok as _Ragnarok;
 use Aqua\Ragnarok\Account as RoAccount;
 use Aqua\UI\Menu;
 use Aqua\UI\Template;
-use Aqua\User\Account as UserAccount;
 use Aqua\Ragnarok\Server;
 use Aqua\Site\Page;
 use Aqua\UI\Form;

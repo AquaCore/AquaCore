@@ -1,13 +1,9 @@
 <?php
 use Aqua\Core\App;
-use Aqua\Core\Settings;
 use Aqua\Core\L10n;
 use Aqua\Core\Exception\PHP;
 use Aqua\Core\Exception\Assertion;
 use Aqua\Core\Exception\CoreException;
-use Aqua\UI\StyleManager;
-use Aqua\User\Role;
-use Aqua\User\Account;
 use Aqua\Log\ErrorLog;
 
 $time = microtime(true);

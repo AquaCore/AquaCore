@@ -1,6 +1,4 @@
 <?php
-use Aqua\Ragnarok\Account;
-use Aqua\Ragnarok\Ragnarok;
 /**
  * @var $account \Aqua\Ragnarok\Account
  * @var $form    \Aqua\UI\Form

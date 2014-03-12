@@ -1,10 +1,8 @@
 <?php
 namespace Aqua\Content\Filter\CommentFilter;
 
-use Aqua\Content\ContentType;
 use Aqua\Core\App;
 use Aqua\User\Account;
-use Aqua\Event\Event;
 
 class Comment
 {
@@ -12,77 +10,86 @@ class Comment
 	 * @var \Aqua\Content\ContentType
 	 */
 	public $contentType;
-
 	/**
 	 * @var int
 	 */
 	public $contentId;
-
+	/**
+	 * @var int
+	 */
+	public $rootId;
+	/**
+	 * @var int
+	 */
+	public $parentId;
+	/**
+	 * @var int
+	 */
+	public $nestingLevel;
 	/**
 	 * @var int
 	 */
 	public $id;
-
 	/**
 	 * @var string
 	 */
 	public $ipAddress;
-
 	/**
 	 * @var int
 	 */
 	public $status;
-
 	/**
 	 * @var bool
 	 */
 	public $anonymous;
-
 	/**
 	 * @var int
 	 */
 	public $authorId;
-
 	/**
 	 * @var int
 	 */
 	public $lastEditorId;
-
 	/**
 	 * @var int
 	 */
 	public $publishDate;
-
 	/**
 	 * @var int
 	 */
 	public $editDate;
-
 	/**
 	 * @var string
 	 */
 	public $bbCode;
-
 	/**
 	 * @var string
 	 */
 	public $html;
-
 	/**
 	 * @var int
 	 */
 	public $rating;
-
 	/**
 	 * @var int
 	 */
 	public $options;
-
+	/**
+	 * @var \Aqua\Content\Filter\CommentFilter\Comment|null
+	 */
+	public $parent;
+	/**
+	 * @var \Aqua\Content\Filter\CommentFilter\Comment[]|null
+	 */
+	public $children;
+	/**
+	 * @var int
+	 */
+	public $childCount;
 	/**
 	 * @var array
 	 */
 	public $meta;
-
 	/**
 	 * @var bool
 	 */

@@ -1,7 +1,6 @@
 <?php
 use Aqua\Core\App;
 use Aqua\User\Role;
-use Aqua\Log\PayPalLog;
 
 /**
  * @var \Aqua\Log\PaypalLog $txn

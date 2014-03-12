@@ -5,7 +5,6 @@ use Aqua\Storage\Exception\StorageException;
 use Aqua\Storage\FlushableStorageInterface;
 use Aqua\Storage\NumberStorageInterface;
 use Aqua\Storage\StorageInterface;
-use Aqua\Storage\StringStorageInterface;
 
 /**
  * Class Redis

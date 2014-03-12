@@ -1,7 +1,6 @@
 <?php
 namespace Aqua\UI;
 
-use Aqua\Core\App;
 use Aqua\Http\Request;
 use Aqua\UI\Form\Captcha;
 use Aqua\UI\Form\Checkbox;
@@ -301,6 +300,12 @@ class Form
 				$html .= "<td class=\"ac-field-status\"></td>";
 			}
 			if($label = $tag->getLabel()) {
+				if($tag instanceof Checkbox &&
+				   count($tag->values) === 1 &&
+				   ($labelTag = current($tag->labels)) &&
+				   $labelTag->content[0] === '') {
+					$label = "<label for=\"{$labelTag->getAttr('for')}\">$label</label>";
+				}
 				$html .= "<td class=\"ac-form-label\">$label</td>" .
 				         "<td class=\"ac-form-tag\">{$tag->render()}</td>";
 			} else {
@@ -357,34 +362,34 @@ class Form
 	}
 
 	/**
-	 * @param bool|callable $tag_render_function
-	 * @param bool|callable $body_render_function
+	 * @param bool|callable $tagRenderFunction
+	 * @param bool|callable $bodyRenderFunction
 	 * @param array         $fields
 	 * @return string
 	 */
-	public function render($tag_render_function = null, $body_render_function = null, array $fields = null)
+	public function render($tagRenderFunction = null, $bodyRenderFunction = null, array $fields = null)
 	{
 		$content = '';
-		if($tag_render_function !== false && !is_callable($tag_render_function)) {
-			$tag_render_function = array( $this, 'renderTag' );
+		if($tagRenderFunction !== false && !is_callable($tagRenderFunction)) {
+			$tagRenderFunction = array( $this, 'renderTag' );
 		}
-		if($body_render_function !== false && !is_callable($body_render_function)) {
-			$body_render_function = array( $this, 'renderBody' );
+		if($bodyRenderFunction !== false && !is_callable($bodyRenderFunction)) {
+			$bodyRenderFunction = array( $this, 'renderBody' );
 		}
-		if($tag_render_function) {
+		if($tagRenderFunction) {
 			if($fields) foreach($fields as $key) {
 				if(isset($this->content[$key])) {
-					$content .= call_user_func($tag_render_function, $this->content[$key]);
+					$content .= call_user_func($tagRenderFunction, $this->content[$key]);
 				} else if($key instanceof Tag) {
-					call_user_func($tag_render_function, $key);
+					call_user_func($tagRenderFunction, $key);
 				}
 			} else foreach($this->content as $tag) {
-				$content .= call_user_func($tag_render_function, $tag);
+				$content .= call_user_func($tagRenderFunction, $tag);
 			}
 		}
 		reset($this->content);
-		if($body_render_function) {
-			return call_user_func($body_render_function, $content, $this);
+		if($bodyRenderFunction) {
+			return call_user_func($bodyRenderFunction, $content, $this);
 		} else {
 			return $content;
 		}

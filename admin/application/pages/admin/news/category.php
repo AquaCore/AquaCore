@@ -2,7 +2,6 @@
 namespace Page\Admin\News;
 
 use Aqua\Content\ContentType;
-use Aqua\Content\PostCategory;
 use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
 use Aqua\Site\Page;

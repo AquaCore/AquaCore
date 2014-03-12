@@ -10,7 +10,6 @@ use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
-use Aqua\Ragnarok\Account;
 use Aqua\Ragnarok\Server;
 use Aqua\UI\Theme;
 

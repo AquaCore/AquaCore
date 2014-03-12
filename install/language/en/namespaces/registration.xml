@@ -16,5 +16,6 @@
     <word namespace="registration" key="email-sent">You account has been created! An email has been sent to you with information on how to activate your account.</word>
     <word namespace="registration" key="email-resent">An email has been sent to %s with information on how to activate your account.</word>
     <word namespace="registration" key="account-activated">Your account has been activated.</word>
+    <word namespace="registration" key="flagged">Your account has been flagged as spam! Your access to this site is limited, but don't worry, an administrator will look into it shortly.</word>
   </wordgroup>
 </languageimport>

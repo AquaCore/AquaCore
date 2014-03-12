@@ -1,14 +1,6 @@
 <?php
 namespace Aqua\Core;
 
-use Aqua\Event\Event;
-use Aqua\Plugin\Plugin;
-use Aqua\Storage\FlushableStorageInterface;
-use Aqua\Storage\FlushPrefixStorageInterface;
-use Aqua\Storage\StorageFactory;
-use Aqua\Storage\StorageInterface;
-use Aqua\UI\Template;
-
 class L10n
 {
 	/**

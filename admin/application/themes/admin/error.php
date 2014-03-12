@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-<?php
-use Aqua\Core\App;
-?>
 <!--[if lt IE 7 ]>
 <html class="ie6 ie">
 <![endif]-->

@@ -2,8 +2,6 @@
 namespace Aqua\Ragnarok\Server;
 
 use Aqua\Core\App;
-use Aqua\Http\Uri;
-use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Character;
 use Aqua\Ragnarok\Guild;
 use Aqua\Ragnarok\Homunculus;
@@ -14,8 +12,6 @@ use Aqua\Ragnarok\Server;
 use Aqua\Ragnarok\ShopCategory;
 use Aqua\SQL\Query;
 use Aqua\SQL\Search;
-use Aqua\User\Account as UserAccount;
-use Aqua\Ragnarok\Ragnarok;
 
 class CharMap
 {

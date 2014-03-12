@@ -3,8 +3,6 @@ namespace Aqua\Content;
 
 use Aqua\Content\Feed\RssItem;
 use Aqua\Core\App;
-use Aqua\Http\Request;
-use Aqua\User\Account;
 
 abstract class AbstractFilter
 {

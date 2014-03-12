@@ -2,7 +2,6 @@
 namespace Aqua\UI\Theme;
 
 use Aqua\Event\EventDispatcher;
-use Aqua\UI\ScriptManager;
 use Aqua\UI\Tag\Meta;
 
 class Head

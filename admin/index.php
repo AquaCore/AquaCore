@@ -5,7 +5,6 @@ use Aqua\Plugin\Plugin;
 use Aqua\Ragnarok\Server;
 use Aqua\Site\Dispatcher;
 use Aqua\UI\Menu;
-use Aqua\UI\ScriptManager;
 
 define('Aqua\ROOT', str_replace('\\', '/', rtrim(dirname(__DIR__), DIRECTORY_SEPARATOR)));
 define('Aqua\SCRIPT_NAME', basename(__FILE__));

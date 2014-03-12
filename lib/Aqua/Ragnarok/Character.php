@@ -3,7 +3,6 @@ namespace Aqua\Ragnarok;
 
 use Aqua\Core\App;
 use Aqua\Event\Event;
-use Aqua\Ragnarok\Server\CharMap;
 
 class Character
 {

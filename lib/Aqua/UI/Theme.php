@@ -3,7 +3,6 @@ namespace Aqua\UI;
 
 use Aqua\Core\App;
 use Aqua\Core\L10n;
-use Aqua\UI\Tag\Script;
 use Aqua\UI\Theme\Footer;
 use Aqua\UI\Theme\Head;
 

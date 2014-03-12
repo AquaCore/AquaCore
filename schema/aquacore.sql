@@ -434,19 +434,24 @@ CREATE TABLE IF NOT EXISTS `#tags` (
 CREATE TABLE IF NOT EXISTS `#comments` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _content_id INT UNSIGNED NOT NULL,
+  _root_id INT UNSIGNED NOT NULL DEFAULT '0',
+  _parent_id INT UNSIGNED NOT NULL DEFAULT '0',
+  _nesting_level INT UNSIGNED NOT NULL DEFAULT '0',
+  _children INT UNSIGNED NOT NULL DEFAULT '0',
   _author_id INT UNSIGNED NOT NULL,
   _editor_id INT UNSIGNED,
   _status TINYINT UNSIGNED NOT NULL,
   _ip_address VARCHAR(46) NOT NULL,
-  _anonymous ENUM('y', 'n') NOT NULL,
+  _anonymous ENUM('y', 'n') NOT NULL DEFAULT 'n',
   _publish_date DATETIME NOT NULL,
   _edit_date TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
   _html_content MEDIUMTEXT NOT NULL,
   _bbc_content MEDIUMTEXT NOT NULL,
   _rating INT NOT NULL DEFAULT '0',
-  _options INT UNSIGNED NOT NULL,
+  _options INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY ( id ),
   INDEX `_#comments__content_id_IN` ( _content_id ),
+  INDEX `_#comments__nesting_IN` ( _root_id, _nesting_level ),
   INDEX `_#comments__status_IN` ( _status ),
   INDEX `_#comments__publish_date_IN` ( _publish_date )
 ) ENGINE = MyIsam
@@ -461,6 +466,20 @@ CREATE TABLE IF NOT EXISTS `#comment_ratings` (
   _weight TINYINT NOT NULL,
   PRIMARY KEY ( _user_id, _comment_id ),
   INDEX `_#comment_ratings__content_id_IN` ( _content_id )
+) ENGINE = MyIsam
+  ROW_FORMAT = FIXED
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#comment_reports` (
+  id INT UNSIGNED NOT NULL,
+  _comment_id INT UNSIGNED NOT NULL,
+  _user_id INT UNSIGNED NOT NULL,
+  _ip_address VARCHAR(46) NOT NULL,
+  _date DATETIME NOT NULL,
+  _content TEXT,
+  PRIMARY KEY ( id ),
+  INDEX `_#comment_reports__comment_id_IN` ( _comment_id )
 ) ENGINE = MyIsam
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_unicode_ci;

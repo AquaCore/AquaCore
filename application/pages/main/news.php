@@ -25,9 +25,8 @@ extends Page
 	 * @var \Aqua\Content\ContentType
 	 */
 	public $contentType;
-
-	const POSTS_PER_PAGE    = 10;
-	const COMMENTS_PER_PAGE = 7;
+	public static $commentsPerPage = 7;
+	public static $postsPerPage    = 10;
 
 	public function run()
 	{
@@ -60,7 +59,7 @@ extends Page
 			$search
 				->calcRows(true)
 				->order($order)
-				->limit(($current_page - 1) * self::POSTS_PER_PAGE, self::POSTS_PER_PAGE)
+				->limit(($current_page - 1) * self::$postsPerPage, self::$postsPerPage)
 				->where($where)
 				->query($values);
 			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::POSTS_PER_PAGE), $current_page);
@@ -110,10 +109,10 @@ extends Page
 			$search
 				->calcRows(true)
 				->order($order)
-				->limit(($current_page - 1) * self::POSTS_PER_PAGE, self::POSTS_PER_PAGE)
+				->limit(($current_page - 1) * self::$postsPerPage, self::$postsPerPage)
 				->where($where)
 				->query($values);
-			$pgn   = new Pagination(App::request()->uri, ceil($search->rowsFound / self::POSTS_PER_PAGE), $current_page);
+			$pgn   = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$postsPerPage), $current_page);
 			$tpl   = new Template;
 			$tpl->set('posts', $search->results)
 				->set('post_count', $search->rowsFound)
@@ -160,10 +159,10 @@ extends Page
 			$search
 				->calcRows(true)
 				->order($order)
-				->limit(($current_page - 1) * self::POSTS_PER_PAGE, self::POSTS_PER_PAGE)
+				->limit(($current_page - 1) * self::$postsPerPage, self::$postsPerPage)
 				->where($where)
 				->query($values);
-			$pgn   = new Pagination(App::request()->uri, ceil($search->rowsFound / self::POSTS_PER_PAGE), $current_page);
+			$pgn   = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$postsPerPage), $current_page);
 			$tpl   = new Template;
 			$tpl->set('posts', $search->results)
 				->set('post_count', $search->rowsFound)
@@ -195,30 +194,30 @@ extends Page
 				->set('paginator', $pgn)
 				->set('page', $this);
 			if(!$post->getMeta('comments-disabled', false)) {
-				$current_page = $this->request->uri->getInt('comments', 1, 1);
-				$search       = $post->commentSearch();
-				$comments     = $search
-					->calcRows(true)
-					->limit(($current_page - 1) * self::COMMENTS_PER_PAGE, self::COMMENTS_PER_PAGE)
-					->order(array( 'publish_date' => 'ASC' ))
-					->where(array( 'status' => Comment::STATUS_PUBLISHED ))
-					->query();
-				$comments_pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::COMMENTS_PER_PAGE), $current_page, 'comments');
-				$comments_tpl = new Template;
-				$comments_tpl
+				$currentPage = $this->request->uri->getInt('comments', 1, 1);
+				list( $comments, $rowsFound ) = $post->getComments(
+					$this->request->uri->getInt('root', null),
+					($currentPage - 1) * self::$postsPerPage,
+					self::$commentsPerPage
+				);
+				$commentsPgn = new Pagination(App::request()->uri,
+				                              ceil($rowsFound / self::$commentsPerPage),
+				                              $currentPage, 'comments');
+				$commentsTpl = new Template;
+				$commentsTpl
 					->set('comments', $comments)
-					->set('comment_count', $search->rowsFound)
+					->set('commentCount', $rowsFound)
 					->set('content', $post)
-					->set('paginator', $comments_pgn)
+					->set('paginator', $commentsPgn)
 					->set('page', $this);
-				if(App::user()->role()->hasPermission('rate')) {
-					$comments_frm = new Form($this->request);
-					$comments_frm->textarea('content')->required();
+				if(App::user()->role()->hasPermission('comment')) {
+					$commentsFrm = new Form($this->request);
+					$commentsFrm->textarea('content')->required();
 					if($post->getMeta('comment-anonymously')) {
-						$comments_frm->checkbox('anonymous')->value(array( '1' => '' ))->setLabel(__('comment', 'comment-anonymously'));
+						$commentsFrm->checkbox('anonymous')->value(array( '1' => '' ))->setLabel(__('comment', 'comment-anonymously'));
 					}
-					$comments_frm->submit(__('comments', 'submit-comment'));
-					if($comments_frm->validate() === Form::VALIDATION_SUCCESS) {
+					$commentsFrm->submit(__('comments', 'submit-comment'));
+					if($commentsFrm->validate() === Form::VALIDATION_SUCCESS) {
 						$this->response->status(302)->redirect(App::request()->uri->url());
 						try {
 							$comment = $post->addComment(
@@ -234,16 +233,16 @@ extends Page
 							App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 						}
 					}
-					$comments_tpl->set('form', $comments_frm);
+					$commentsTpl->set('form', $commentsFrm);
 				}
-				$tpl->set('comments', $comments_tpl);
+				$tpl->set('comments', $commentsTpl);
 			}
 			if(!$post->getMeta('rating-disabled', false)) {
-				$rating_tpl = new Template;
-				$rating_tpl
+				$ratingTpl = new Template;
+				$ratingTpl
 					->set('content', $post)
 					->set('page', $this);
-				$tpl->set('rating', $rating_tpl);
+				$tpl->set('rating', $ratingTpl);
 			}
 			echo $tpl->render('news/view');
 		} catch(\Exception $exception) {

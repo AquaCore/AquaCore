@@ -1,5 +1,4 @@
 <?php
-use Aqua\Core\App;
 use Aqua\Core\L10n;
 use Aqua\UI\Sidebar;
 use Aqua\UI\ScriptManager;

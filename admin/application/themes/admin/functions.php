@@ -1,6 +1,5 @@
 <?php
 use Aqua\Core\App;
-use Aqua\Core\L10n;
 use Aqua\UI\ScriptManager;
 use Aqua\UI\Theme;
 /**

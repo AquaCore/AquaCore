@@ -1,6 +1,4 @@
 <?php
-use Aqua\User\Account;
-use Aqua\Core\App;
 /**
  * @var $account \Aqua\User\Account
  * @var $form    \Aqua\UI\Form

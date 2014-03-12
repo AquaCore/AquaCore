@@ -2,7 +2,6 @@
 namespace Page\Admin;
 
 use Aqua\Core\App;
-use Aqua\Http\Request;
 use Aqua\Log\ErrorLog;
 use Aqua\Log\PayPalLog;
 use Aqua\Log\ProfileUpdateLog;

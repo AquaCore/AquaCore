@@ -1,7 +1,6 @@
 <?php
 namespace Aqua\Captcha;
 
-use Aqua\Core\App;
 use Aqua\Http\Request;
 use Aqua\captcha\Exception\ReCaptchaException;
 

@@ -3,10 +3,7 @@ namespace Aqua\Plugin;
 
 use Aqua\Core\App;
 use Aqua\Core\L10n;
-use Aqua\Core\Log;
-use Aqua\Core\Settings;
 use Aqua\Event\Event;
-use Aqua\Http\Request;
 use Aqua\Plugin\Exception\PluginManagerException;
 use Aqua\SQL\Query;
 use Aqua\UI\Form;

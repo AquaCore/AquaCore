@@ -9,7 +9,6 @@ use Aqua\BBCode\Rule\IndentRule;
 use Aqua\BBCode\Rule\JustifyRule;
 use Aqua\BBCode\Rule\ListRule;
 use Aqua\BBCode\Rule\QuoteRule;
-use Aqua\BBCode\Rule\SpoilerRule;
 use Aqua\BBCode\Rule\TextRule;
 use Aqua\BBCode\Rule\UrlRule;
 use Aqua\BBCode\Rule\VideoRule;

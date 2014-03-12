@@ -4,7 +4,7 @@ use Aqua\Core\App;
  * @var $transfers      \Aqua\Log\TransferLog[]
  * @var $transfer_count int
  * @var $paginator      \Aqua\UI\Pagination
- * @var $page           \Page\Main\Donation
+ * @var $page           \Page\Main\Donate
  */
 $datetime_format = App::settings()->get('datetime_format');
 ?>

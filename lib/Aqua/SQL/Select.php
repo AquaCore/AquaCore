@@ -66,10 +66,6 @@ implements \Iterator, \Countable
 	 */
 	public $resultsCount = 0;
 	/**
-	 * @var int
-	 */
-	public $key = 0;
-	/**
 	 * @var bool
 	 */
 	public $calcRows = false;
@@ -116,27 +112,27 @@ implements \Iterator, \Countable
 
 	public function current()
 	{
-		return $this->results[$this->key];
+		return current($this->results);
 	}
 
 	public function next()
 	{
-		++$this->key;
+		next($this->results);
 	}
 
 	public function key()
 	{
-		return $this->key;
+		return key($this->results);
 	}
 
 	public function valid()
 	{
-		return ($this->resultsCount > $this->key);
+		return current($this->results);
 	}
 
 	public function rewind()
 	{
-		$this->key = 0;
+		reset($this->results);
 	}
 
 	public function count()
@@ -152,7 +148,8 @@ implements \Iterator, \Countable
 	public function get($column, $default = null)
 	{
 		if($this->valid()) {
-			return $this->results[$this->key][$column];
+			$current = $this->current();
+			return $current[$column];
 		} else {
 			return $default;
 		}
@@ -521,7 +518,7 @@ implements \Iterator, \Countable
 		}
 		$this->results      = $results;
 		$this->resultsCount = count($results);
-		$this->key          = 0;
+		$this->rewind();
 		if($this->calcRows) {
 			$this->rowsFound = (int)$this->dbh->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN, 0);
 		}

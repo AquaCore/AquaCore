@@ -3,7 +3,6 @@ namespace Aqua\Content\Filter;
 
 use Aqua\Content\AbstractFilter;
 use Aqua\Content\ContentData;
-use Aqua\Content\ContentType;
 use Aqua\Core\App;
 
 class TagFilter

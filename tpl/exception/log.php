@@ -1,5 +1,4 @@
 <?php
-use Aqua\Core\App;
 /**
  * @var $error \Aqua\Log\ErrorLog
  */

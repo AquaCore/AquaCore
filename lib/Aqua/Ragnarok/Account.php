@@ -4,7 +4,6 @@ namespace Aqua\Ragnarok;
 use Aqua\Core\App;
 use Aqua\Event\Event;
 use Aqua\Ragnarok\Server\CharMap;
-use Aqua\Ragnarok\Server\Login;
 use Aqua\SQL\Query;
 use Aqua\User\Account as UserAccount;
 

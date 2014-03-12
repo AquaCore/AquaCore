@@ -1,7 +1,5 @@
 <?php
-use Aqua\Content\Post;
 use Aqua\Core\App;
-use Aqua\User\Account;
 /**
  * @var $post      \Aqua\Content\Adapter\Post
  * @var $rating    \Aqua\UI\Template

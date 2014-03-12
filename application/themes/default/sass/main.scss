@@ -669,70 +669,86 @@ iframe[src="about:blank"]{ display: none !important; }
 	.ac-form-table {
 		width: 100% !important;
 	}
-	.ac-comments-table {
-		width: 100%;
-		border-spacing: 0;
-		border-collapse: collapse;
-		tr:first-child td {
-			border-top: 1px solid #c7d0e0;
+	.ac-comment-rating {
+		position: absolute;
+		top: 5px;
+		right: 10px;
+		margin-bottom: 5px;
+		display: inline-block;
+		height: 24px;
+		width: 80px;
+		.ac-comment-downvote, .ac-comment-upvote {
+			position: absolute;
+			left: 5px;
+			width: 13px;
+			height: 8px;
+			cursor: pointer;
 		}
-		.ac-comment-rating {
-			position: relative;
-			float: right;
-			margin-bottom: 5px;
-			display: inline-block;
-			height: 24px;
+		.ac-comment-downvote {
+			top: 13px;
+			background: transparent url('../../../../assets/images/icons/dvote.png') center center no-repeat;
+			&.active, &:hover {
+				background-image: url('../../../../assets/images/icons/dvote-active.png');
+			}
+		}
+		.ac-comment-upvote {
+			top: 3px;
+			background: transparent url('../../../../assets/images/icons/uvote.png') center center no-repeat;
+			&.active, &:hover {
+				background-image: url('../../../../assets/images/icons/uvote-active.png');
+			}
+		}
+		.ac-comment-points {
+			margin-left: 25px;
+			margin-right: 5px;
+			font-weight: bold;
+			line-height: 23px;
+		}
+	}
+	.ac-comment-child {
+		padding-left: 35px;
+	}
+	.ac-comment-info {
+		margin-bottom: 10px;
+		position: relative;
+	}
+	.ac-comment-author {
+		font-size: .85em;
+	}
+	.ac-comment-date {
+		font-size: .80em;
+		small {
+			font-size: .90em;
+		}
+	}
+	.ac-comment-avatar {
+		display: table-cell;
+		margin-right: 10px;
+		padding: 10px 0;
+		img {
+			height: auto;
 			width: 80px;
-			.ac-comment-downvote, .ac-comment-upvote {
-				position: absolute;
-				left: 5px;
-				width: 13px;
-				height: 8px;
-				cursor: pointer;
-			}
-			.ac-comment-downvote {
-				top: 13px;
-				background: transparent url('../../../../assets/images/icons/dvote.png') center center no-repeat;
-				&.active, &:hover {
-					background-image: url('../../../../assets/images/icons/dvote-active.png');
-				}
-			}
-			.ac-comment-upvote {
-				top: 3px;
-				background: transparent url('../../../../assets/images/icons/uvote.png') center center no-repeat;
-				&.active, &:hover {
-					background-image: url('../../../../assets/images/icons/uvote-active.png');
-				}
-			}
-			.ac-comment-points {
-				margin-left: 25px;
-				margin-right: 5px;
-				font-weight: bold;
-				line-height: 23px;
-			}
 		}
-		.ac-comment-info {
-			@include min-width(150px);
-			text-align: center;
-			border-right: 1px solid #c7d0e0;
-			border-bottom: 1px solid #c7d0e0;
-			padding: 5px 5px 5px 0;
-		}
-		.ac-comment-body {
-			vertical-align: top;
-			position: relative;
-			padding: 10px 20px;
-			border-bottom: 1px solid #c7d0e0;
-		}
-		.ac-comment-content {
-			clear: both
-		}
-		.ac-comment-op {
-			background: #FFF2E1;
-		}
-		.ac-comment-anonymous .ac-comment-author {
-			font-style: italic;
-		}
+		border-bottom: 1px solid #c7d0e0;
+	}
+	.ac-comment-body {
+		display: table-cell;
+		vertical-align: top;
+		padding: 10px 20px;
+		border-bottom: 1px solid #c7d0e0;
+	}
+	.ac-comment-content {
+		width: auto;
+	}
+	.ac-comment-actions {
+		width: 100%;
+		clear: both;
+	}
+	.ac-comment-op {
+		background: #FFF2E1;
+	}
+	.ac-comment-anonymous .ac-comment-author {
+		font-style: italic;
 	}
 }
 .ac-content-rating {

@@ -2,19 +2,10 @@
 namespace Page;
 
 use Aqua\Core\App;
-use Aqua\Core\L10n;
-use Aqua\Core\Log;
-use Aqua\Log\ErrorLog;
-use Aqua\Event\Event;
-use Aqua\Plugin\Exception\PluginManagerException;
-use Aqua\Plugin\Plugin;
 use Aqua\Site\Page;
 use Aqua\UI\Form;
-use Aqua\UI\Sidebar;
 use Aqua\UI\Template;
-use Aqua\UI\Pagination;
 use Aqua\UI\Theme;
-use Aqua\User\Role;
 
 class Admin
 extends Page

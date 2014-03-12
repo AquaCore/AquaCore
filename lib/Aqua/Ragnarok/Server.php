@@ -1,7 +1,6 @@
 <?php
 namespace Aqua\Ragnarok;
 
-use Aqua\Core\Settings;
 use Aqua\Http\Uri;
 use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Ragnarok\Server\Login;

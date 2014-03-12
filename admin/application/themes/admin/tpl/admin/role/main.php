@@ -3,7 +3,6 @@ use Aqua\UI\Form;
 use Aqua\UI\Tag;
 use Aqua\UI\ScriptManager;
 use Aqua\UI\Sidebar;
-use Aqua\User\Role;
 /**
  * @var $roles      \Aqua\User\Role[]
  * @var $role_count int

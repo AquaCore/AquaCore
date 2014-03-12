@@ -2,10 +2,6 @@
 namespace Aqua\Storage\Adapter;
 
 use Aqua\Storage\Exception\StorageException;
-use Aqua\Storage\StorageInterface;
-use Aqua\Storage\NumberStorageInterface;
-use Aqua\Storage\FlushPrefixStorageInterface;
-use Aqua\Storage\FlushableStorageInterface;
 
 class APCu
 extends APC
