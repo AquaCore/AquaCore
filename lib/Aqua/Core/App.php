@@ -5,12 +5,9 @@ use Aqua\Autoloader\Autoloader;
 use Aqua\Autoloader\ClassMap;
 use Aqua\Captcha\Captcha;
 use Aqua\Core\Exception\CoreException;
-use Aqua\Core\Exception\SettingsException;
 use Aqua\Http\Request;
 use Aqua\Http\Response;
-use Aqua\Storage\Adapter\File;
 use Aqua\Storage\StorageFactory;
-use Aqua\User\Role;
 
 class App
 {
@@ -135,7 +132,7 @@ class App
 			 * The current directory
 			 * @name \Aqua\WORKING_DIR
 			 */
-			define('Aqua\WORKING_DIR', str_replace('\\', '/', trim(substr(dirname(getenv('SCRIPT_FILENAME')), strlen(getenv('DOCUMENT_ROOT'))), '/\\')));
+			define('Aqua\WORKING_DIR', str_replace('\\', '/', trim(substr(dirname(getenv('SCRIPT_FILENAME')), strlen(\Aqua\ROOT)), '/\\')));
 		}
 		if(!defined('Aqua\TABLE_PREFIX')) {
 			/**

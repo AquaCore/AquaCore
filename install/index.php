@@ -1,6 +1,5 @@
 <?php
 use Aqua\Core\App;
-use Aqua\Core\L10n;
 use Aqua\Log\ErrorLog;
 use Aqua\Permission\PermissionSet;
 use Aqua\Router\Router;
