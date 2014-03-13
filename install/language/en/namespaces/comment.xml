@@ -10,6 +10,10 @@
     <word namespace="comment" key="confirm-delete">Are you sure you want to delete this comment?</word>
     <word namespace="comment" key="login-to-comment">Login to leave a comment</word>
     <word namespace="comment" key="edited-by"><![CDATA[Last edited by <i>%s</i> at %s]]></word>
+    <word namespace="comment" key="toggle-children">Toggle child comments</word>
+    <word namespace="comment" key="report-sent">Your report has been sent.</word>
+    <word namespace="comment" key="report-placeholder">Report reason (Optional)</word>
+    <word namespace="comment" key="child-count">%s child comments</word>
     <word namespace="comment" key="permalink">Permalink</word>
     <word namespace="comment" key="cancel">Cancel</word>
     <word namespace="comment" key="reply">Reply</word>
@@ -17,5 +21,7 @@
     <word namespace="comment" key="report">Report</word>
     <word namespace="comment" key="report-comment">Report Comment</word>
     <word namespace="comment" key="no-comments-found">No comments found.</word>
+    <word namespace="comment" key="saved">Your comment has been saved.</word>
+    <word namespace="comment" key="flagged">Your comment has been flagged as spam! It will be hidden until it is determined to be a legitimate comment by a moderator.</word>
   </wordgroup>
 </languageimport>

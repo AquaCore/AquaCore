@@ -1,5 +1,5 @@
 (function($) {
-	var loading, reply, ckeInstance;
+	var loading, reply, report, ckeInstance;
 
 	function deleteReplyElements() {
 		if(ckeInstance) {
@@ -45,8 +45,28 @@
 			}
 		});
 	});
+	$(".ac-hide-children").on("click", function(e) {
+		var wrapper = $(this).closest(".ac-comment");
+		if($(this).hasClass("hidden")) {
+			wrapper.find(".ac-comment-children").eq(0).stop(true, true).show({
+				effect: "blind",
+				easing: "easeInOutCirc",
+				duration: 300
+			});
+			$(this).removeClass("hidden");
+		} else {
+			wrapper.find(".ac-comment-children").eq(0).stop(true, true).hide({
+				effect: "blind",
+				easing: "easeInOutCirc",
+				duration: 300
+			});
+			$(this).addClass("hidden");
+		}
+	});
 	$(".ac-comment-reply").on("click", function(e) {
 		deleteReplyElements();
+		e.preventDefault();
+		e.stopPropagation();
 		var parent = $(this).closest(".ac-comment"),
 			cke = $("<textarea></textarea>")
 				.attr("name", "content")
@@ -86,13 +106,53 @@
 			.addClass("ac-comment-reply-wrapper")
 			.append(frm)
 			.insertAfter($(this).closest(".ac-comment-actions"));
-		e.preventDefault();
-		e.stopPropagation();
 		ckeInstance = CKEDITOR.replace("comment-reply", $.extend({
 			toolbarCanCollapse: true,
 			toolbarStartupExpanded : false
 		}, AquaCore.settings.ckeComments));
 		return false;
-	})
+	});
+	$(".ac-comment-report").on("click", function(e) {
+		if(report) {
+			report.remove();
+			report = undefined;
+		}
+		e.preventDefault();
+		e.stopPropagation();
+		var frm = $("<form></form>");
+		frm.attr("method", "POST")
+			.attr("action", $(this).attr("href"))
+			.append(
+				$("<textarea></textarea>")
+					.addClass("ac-report-field")
+					.attr("name", "report")
+					.attr("placeholder", AquaCore.l("comment", "report-placeholder"))
+			)
+			.append(
+				$("<button>")
+					.attr("type", "type")
+					.attr("class", "ac-button")
+					.on("click", function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						report.remove();
+						report = undefined;
+						return false;
+					})
+					.append(AquaCore.l("comment", "cancel"))
+			)
+			.append(
+				$("<button>")
+					.attr("type", "submit")
+					.attr("class", "ac-button")
+					.append(AquaCore.l("comment", "report"))
+			)
+			.append($("<div></div>").css("clear", "both"));
+		report = $("<div></div>")
+			.addClass("ac-comment-report-wrapper")
+			.append(frm)
+			.insertAfter($(this).closest(".ac-comment-actions"));
+		return false;
+	});
 	CKEDITOR.replace("cke-comment", AquaCore.settings.ckeComments);
 })(jQuery);

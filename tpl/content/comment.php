@@ -53,11 +53,6 @@ $datetimeFormat = \Aqua\Core\App::settings()->get('datetime_format');
 				              $comment->editDate($datetimeFormat)); ?>
 			</div>
 		<?php endif; ?>
-		<?php if($comment->childCount) : ?>
-			<div class="ac-child-count"><?php __('comments', 'child-count', number_format($comment->childCount)) ?></div>
-			<?php if(!empty($comment->children)) : ?>
-			<div class="ac-hide-children ac-script"><?php echo __('comment', 'toggle-children') ?></div>
-		<?php endif; endif; ?>
 		<div class="ac-comment-actions">
 			<?php if($actions) : ?>
 				<a class="ac-comment-permalink" href="<?php echo App::request()->uri->url(array(
@@ -80,7 +75,14 @@ $datetimeFormat = \Aqua\Core\App::settings()->get('datetime_format');
 				<?php endif; ?>
 			<?php endif; ?>
 		</div>
+		<?php if($actions && $comment->childCount !== count($comment->children)) : ?>
+		<div class="ac-child-count"><?php echo __('comment', 'child-count', number_format($comment->childCount)) ?></div>
+		<?php endif; ?>
+		<?php if($actions && !empty($comment->children)) : ?>
+			<div class="ac-hide-children ac-script"><?php echo __('comment', 'toggle-children') ?></div>
+		<?php endif; ?>
 	</div>
+	<div class="ac-comment-children">
 	<?php
 	if(!empty($comment->children)) : ?>
 		<?php
@@ -96,4 +98,5 @@ $datetimeFormat = \Aqua\Core\App::settings()->get('datetime_format');
 		}
 		?>
 	<?php endif; ?>
+	</div>
 </div>

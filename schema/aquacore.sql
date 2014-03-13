@@ -472,7 +472,7 @@ CREATE TABLE IF NOT EXISTS `#comment_ratings` (
   COLLATE = utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#comment_reports` (
-  id INT UNSIGNED NOT NULL,
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _comment_id INT UNSIGNED NOT NULL,
   _user_id INT UNSIGNED NOT NULL,
   _ip_address VARCHAR(46) NOT NULL,

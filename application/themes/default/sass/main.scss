@@ -720,6 +720,7 @@ iframe[src="about:blank"]{ display: none !important; }
 	}
 	.ac-comment-actions {
 		margin-top: 15px;
+		margin-bottom: 10px;
 		a {
 			margin-right: 5px;
 			padding: 3px 5px;
@@ -731,6 +732,30 @@ iframe[src="about:blank"]{ display: none !important; }
 		}
 		.ac-comment-report {
 			background-color: #e95464;
+		}
+	}
+	.ac-report-field {
+		margin: 10px 0;
+		width: 98%;
+		resize: vertical;
+		height: 80px;
+	}
+	.ac-child-count {
+		font-size: .8em;
+		color: #b1b4c3;
+		font-weight: bold;
+	}
+	.ac-hide-children {
+		width: 100%;
+		text-align: center;
+		padding: 3px 5px;
+		font-size: .8em;
+		color: #b1b4c3;
+		font-weight: bold;
+		cursor: pointer;
+		@include border-radius(4px);
+		&.hidden {
+			color: #417CFA;
 		}
 	}
 	.ac-comment-avatar {
@@ -745,6 +770,7 @@ iframe[src="about:blank"]{ display: none !important; }
 	}
 	.ac-comment-body {
 		display: table-cell;
+		width: 100%;
 		vertical-align: top;
 		padding: 10px 20px;
 		border-bottom: 1px solid #c7d0e0;
@@ -762,7 +788,7 @@ iframe[src="about:blank"]{ display: none !important; }
 	.ac-comment-anonymous .ac-comment-author {
 		font-style: italic;
 	}
-	.ac-comment-reply-wrapper {
+	.ac-comment-reply-wrapper, .ac-comment-report-wrapper {
 		#cke_comment-reply {
 			margin-top: 20px;
 			margin-bottom: 10px;

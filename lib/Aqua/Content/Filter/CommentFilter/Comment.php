@@ -291,6 +291,17 @@ class Comment
 	}
 
 	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public function reportSearch()
+	{
+		return $this->contentType
+			->filter('CommentFilter')
+			->reportSearch()
+			->where(array( 'comment_id' => $this->id ));
+	}
+
+	/**
 	 * @param array $edit
 	 * @return bool
 	 */

@@ -5,6 +5,7 @@ use Aqua\BBCode\BBCode;
 use Aqua\Content\AbstractFilter;
 use Aqua\Content\ContentData;
 use Aqua\Content\Filter\CommentFilter\Comment;
+use Aqua\Content\Filter\CommentFilter\Report;
 use Aqua\Core\App;
 use Aqua\Event\Event;
 use Aqua\SQL\Query;
@@ -326,15 +327,15 @@ extends AbstractFilter
 		$minNestingLevel = 0;
 		foreach($comments as $comment) {
 			$comment->children = array();
-			$in[] = $comment->rootId;
+			$in[] = $comment->rootId ?: $comment->id;
 			$minNestingLevel = min($nestingLevel, $comment->nestingLevel);
 		}
-		$minNestingLevel = max(0, $minNestingLevel - 1);
+		$in = array_unique($in);
 		array_unshift($in, Search::SEARCH_IN);
 		$search->where(array(
-			'root_id' => $in,
-			'nesting_level' => array( Search::SEARCH_BETWEEN, $minNestingLevel, $nestingLevel ),
-		), false)
+				'root_id' => $in,
+				'nesting_level' => array( Search::SEARCH_BETWEEN, $minNestingLevel, $nestingLevel + $minNestingLevel ),
+			), false)
 			->limit(null, null);
 		$search->query();
 		foreach($search as $comment) {
@@ -455,6 +456,29 @@ extends AbstractFilter
 		return $weight;
 	}
 
+	public function contentType_reportComment(Comment $comment, Account $user, $report)
+	{
+		$tbl = ac_table('comment_reports');
+		$sth = App::connection()->prepare("
+		INSERT INTO `$tbl` (_comment_id, _user_id, _ip_address, _date, _content)
+		VALUES (:comment, :user, :ip, NOW(), :content)
+		");
+		$sth->bindValue(':comment', $comment->id, \PDO::PARAM_INT);
+		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
+		$sth->bindValue(':ip', App::request()->ipString, \PDO::PARAM_STR);
+		$sth->bindValue(':content', $report, \PDO::PARAM_STR);
+		if(!$sth->execute() || !$sth->rowCount()) {
+			return false;
+		}
+		$report = $this->reportSearch()
+			->where(array( 'id' => App::connection()->lastInsertId() ))
+			->query()
+			->current();
+		$feedback = array( $report, $comment, $user );
+		Event::fire('comment.report', $feedback);
+		return $report;
+	}
+
 	public function contentData_commentSpamFilter(ContentData $content, Comment $comment)
 	{
 		$isSpam = false;
@@ -513,6 +537,31 @@ extends AbstractFilter
 	}
 
 	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public function reportSearch()
+	{
+		return Query::search(App::connection())
+			->parser(array( $this, 'parseReportSql' ))
+			->from(ac_table('comment_reports'), 'cr')
+			->groupBy('cr.id')
+			->columns(array(
+				'id'         => 'cr.id',
+				'comment_id' => 'cr._comment_id',
+				'user_id'    => 'cr._user_id',
+				'ip_address' => 'cr._ip_address',
+				'date'       => 'UNIX_TIMESTAMP(cr._date)',
+				'report'     => 'cr._content',
+			))->whereOptions(array(
+				'id'         => 'cr.id',
+				'comment_id' => 'cr._comment_id',
+				'user_id'    => 'cr._user_id',
+				'ip_address' => 'cr._ip_address',
+				'date'       => 'cr._date',
+			));
+	}
+
+	/**
 	 * @param array $data
 	 * @return \Aqua\Content\Filter\CommentFilter\Comment
 	 */
@@ -539,6 +588,23 @@ extends AbstractFilter
 		$comment->bbCode    = $data['bbcode'];
 
 		return $comment;
+	}
+
+	/**
+	 * @param array $data
+	 * @return \Aqua\Content\Filter\CommentFilter\Report
+	 */
+	public function parseReportSql(array $data)
+	{
+		$report            = new Report;
+		$report->id        = (int)$data['id'];
+		$report->commentId = (int)$data['comment_id'];
+		$report->userId    = (int)$data['user_id'];
+		$report->date      = (int)$data['date'];
+		$report->ipAddress = $data['ip_address'];
+		$report->report    = $data['report'];
+
+		return $report;
 	}
 
 	/**

@@ -154,6 +154,9 @@ implements FieldInterface
 		if(($data = $request->getString($this->attributes['name'], false)) === false) {
 			return Form::VALIDATION_INCOMPLETE;
 		}
+		if($this->getBool('required') && $data === '') {
+			return Form::VALIDATION_INCOMPLETE;
+		}
 
 		return Form::VALIDATION_SUCCESS;
 	}

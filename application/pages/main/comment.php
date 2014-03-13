@@ -11,22 +11,9 @@ use Aqua\UI\Template;
 class Comment
 extends Page
 {
-	public function index_action($cType = null, $id = null)
+	public function index_action()
 	{
-		if(!$this->request->method !== 'POST') {
-			$this->error(405);
-			return;
-		}
-		$this->response->redirect(302);
-		if(!$cType || !$id ||
-		   !($cType = ContentType::getContentType($cType)) ||
-		   !($content = $cType->get($id, 'id'))) {
-			$this->response->redirect(App::request()->previousUrl());
-			return;
-		}
-		if(!array_key_exists('content', $this->request->data)) {
-			return;
-		}
+		$this->error(404);
 	}
 
 	public function reply_action($cType = null, $contentId = null, $commentId = null)
@@ -111,9 +98,53 @@ extends Page
 		}
 	}
 
-	public function report_action($id = null)
+	public function report_action($cType = null, $commentId = null)
 	{
+		try {
+			if(!App::user()->role()->hasPermission('comment')) {
+				$this->error(403);
 
+				return;
+			}
+			if(!$commentId || !$cType ||
+			   !($cType = ContentType::getContentType($cType, 'key')) ||
+			   !($comment = $cType->getComment($commentId))) {
+				$this->error(404);
+
+				return;
+			}
+			$frm = new Form($this->request);
+			$frm->textarea('report');
+			$frm->submit();
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('comment', 'report-comment');
+				$tpl = new Template;
+				$tpl->set('comment', isset($comment) ? $comment : null)
+				    ->set('form', $frm)
+				    ->set('page', $this);
+				echo $tpl->render('content/comment-report');
+
+				return;
+			}
+			$this->response->redirect(302);
+			try {
+				if(($url = base64_decode($this->request->uri->getString('return', ''))) && parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
+					$this->response->redirect($url);
+				} else {
+					$this->response->redirect(\Aqua\URL);
+				}
+				if($cType->reportComment($comment, App::user()->account, $this->request->getString('report', ''))) {
+					App::user()->addFlash('success', null, __('comment', 'report-sent'));
+				}
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
 	}
 }
  
