@@ -120,7 +120,7 @@ extends AbstractFilter
 		$sth->bindValue(':opt', $options, \PDO::PARAM_INT);
 		if($parent) {
 			$sth->bindValue(':parent', $parent->id, \PDO::PARAM_INT);
-			$sth->bindValue(':root', $parent->rootId, \PDO::PARAM_INT);
+			$sth->bindValue(':root', $parent->rootId ?: $parent->id, \PDO::PARAM_INT);
 			$sth->bindValue(':level', $parent->nestingLevel + 1, \PDO::PARAM_INT);
 		} else {
 			$sth->bindValue(':parent', 0, \PDO::PARAM_INT);
@@ -326,7 +326,7 @@ extends AbstractFilter
 		$minNestingLevel = 0;
 		foreach($comments as $comment) {
 			$comment->children = array();
-			$in[] = $comment->id;
+			$in[] = $comment->rootId;
 			$minNestingLevel = min($nestingLevel, $comment->nestingLevel);
 		}
 		$minNestingLevel = max(0, $minNestingLevel - 1);
@@ -344,7 +344,7 @@ extends AbstractFilter
 				if(!$search->results[$comment->parentId]) {
 					$search->results[$comment->parentId] = array();
 				}
-				$search->results[$comment->parentId][] = $comment;
+				$search->results[$comment->parentId]->children[] = $comment;
 			}
 		}
 		return array( $comments, $rowsFound );
