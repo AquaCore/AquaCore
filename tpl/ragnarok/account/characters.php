@@ -7,7 +7,7 @@ use Aqua\Core\App;
  * @var $charmap      \Aqua\Ragnarok\Server\CharMap
  * @var $page         \Page\Main\Ragnarok\Account
  */
-assert('isset($characters) && isset($page) && isset($charmap) && isset($server)');
+
 $page->theme->head->enqueueScript(ScriptManager::script('jquery-ui'));
 ?>
 <form method="POST">

@@ -713,12 +713,24 @@ iframe[src="about:blank"]{ display: none !important; }
 		position: relative;
 	}
 	.ac-comment-author {
-		font-size: .85em;
+		font-size: .90em;
 	}
 	.ac-comment-date {
 		font-size: .80em;
-		small {
-			font-size: .90em;
+	}
+	.ac-comment-actions {
+		margin-top: 15px;
+		a {
+			margin-right: 5px;
+			padding: 3px 5px;
+			font-size: .8em;
+			background-color: #417CFA;
+			color: white;
+			font-weight: bold;
+			@include border-radius(4px);
+		}
+		.ac-comment-report {
+			background-color: #e95464;
 		}
 	}
 	.ac-comment-avatar {
@@ -749,6 +761,31 @@ iframe[src="about:blank"]{ display: none !important; }
 	}
 	.ac-comment-anonymous .ac-comment-author {
 		font-style: italic;
+	}
+	.ac-comment-reply-wrapper {
+		#cke_comment-reply {
+			margin-top: 20px;
+			margin-bottom: 10px;
+		}
+		button {
+			margin-left: 10px;
+		}
+	}
+	.ac-comment-submit {
+		width: 100%;
+		margin-bottom: 5px;
+		padding-bottom: 15px;
+		border-bottom: 1px solid #c7d0e0;
+		#cke_cke-comment {
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+	}
+	&.ac-comments-action {
+		border-top: none;
+		.ac-comment-submit {
+			border-bottom: none;
+		}
 	}
 }
 .ac-content-rating {

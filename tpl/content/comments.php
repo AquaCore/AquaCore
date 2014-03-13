@@ -7,59 +7,29 @@ use Aqua\UI\ScriptManager;
  * @var $comments     \Aqua\Content\Filter\CommentFilter\Comment[]
  * @var $commentCount int
  * @var $paginator    \Aqua\UI\Pagination
- * @var $form         \Aqua\UI\Form
  * @var $page         \Aqua\Site\Page
  */
 if($content->forged || App::user()->role()->hasPermission('comment')) {
 	$page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('number-format'));
-	$page->theme->footer->enqueueScript('theme.content-comments')
+	$page->theme->footer->enqueueScript('tpl.comments')
 		->type('text/javascript')
-		->append('
-	(function($) {
-		var loading;
-		$(".ac-comment-upvote, .ac-comment-downvote").on("click", function() {
-			var wrapper, id, ctype, weight, self = this;
-			wrapper = $(this).closest(".ac-comment");
-			if(loading || !wrapper.length) return;
-			id = wrapper.attr("ac-comment-id");
-			ctype = wrapper.attr("ac-comment-ctype");
-			weight = $(this).is(".ac-comment-upvote") ? 1 : -1;
-			if(AquaCore.settings["commentRatings"][id] === weight) weight = 0;
-			loading = true;
-			$.ajax({
-				dataType: "json",
-				cache: false,
-				url: AquaCore.buildUrl({
-					script: "ratecomment.php",
-					query: {
-						"ctype": ctype,
-						"comment" : id,
-						"weight": weight
-					}
-				}),
-				success: function(data) {
-					if(data.success) {
-						var parent = $(self).parent();
-						$(".ac-comment-upvote, .ac-comment-downvote", parent).removeClass("active");
-						$(".ac-comment-points", parent).text(data.rating.format());
-						AquaCore.settings["commentRatings"][id] = data.rating;
-						if(data.rating !== 0) $(self).addClass("active");
-					}
-				},
-				complete: function() {
-					loading = false;
-				}
-			});
-		});
-		CKEDITOR.replace("cke-comment", AquaCore.settings.ckeComments);
-	})(jQuery);
-	');
+		->src(ac_build_url(array(
+			'base_dir' => \Aqua\DIR . '/tpl/scripts',
+			'script' => 'comments.js'
+		)));
 	$smileys = include \Aqua\ROOT . '/settings/smiley.php';
 	$ratings = $content->commentRatings(App::user()->account);
 	$page->theme
+		->addWordGroup('comment', array( 'cancel', 'reply', 'comment-anonymously' ))
+		->addSettings('contentData', array(
+			'ID' => $content->uid,
+		    'cType' => $content->contentType->id,
+		    'allowAnonymous' => (bool)$content->getMeta('comment-anonymously')
+		))
 		->addSettings('commentRatings', $ratings)
+		->addSettings('base64Url', base64_encode(App::request()->uri->url()))
 		->addSettings('ckeComments',array(
 				'font_sizes'            => 'Georgia/Georgia, serif;' .
 				                         'Palatino/"Palatino Linotype", "Book Antiqua", Palatino, serif;' .
@@ -92,7 +62,7 @@ if($content->forged || App::user()->role()->hasPermission('comment')) {
 				                         'size,font,' .
 				                         'indent,center,right,justify' .
 				                         'hide,spoiler,acronym,list',
-				'height'                => 150,
+				'height'                => 100,
 				'enterMode'             => 2,
 				'allowedContent'        => false,
 				'toolbar'               => array(
@@ -181,20 +151,37 @@ $tpl = new \Aqua\UI\Template;
 		</div>
 	<?php elseif(App::user()->role()->hasPermission('comment')) : ?>
 		<div class="ac-comment-submit">
-			<?php
-			$form->field('content')->attr('id', 'cke-comment');
-			echo $form->render();
-			?>
+			<form method="POST" action="<?php echo ac_build_url(array(
+				'path' => array( 'comment' ),
+			    'action' => 'reply',
+			    'arguments' => array( $content->contentType->key, $content->uid ),
+			    'query' => array( 'return' => $page->theme->jsSettings['base64Url'] )
+			)) ?>">
+				<textarea id="cke-comment"></textarea>
+				<?php if($content->getMeta('comment-anonymously')) : ?>
+					<input type="checkbox" name="anonymous" value="1" id="anon-comment">
+					<label for="anon-comment"><?php echo __('comment', 'comment-anonymously') ?></label>
+				<?php endif; ?>
+				<input type="submit" value="<?php echo __('application', 'submit') ?>" class="ac-button">
+			</form>
 		</div>
 	<?php endif; ?>
 	<?php if(empty($comments)) : ?>
 		<div class="ac-table-no-result"><?php echo __('comment', 'no-comments-found') ?></div>
-	<?php else : foreach($comments as $comment) {
+	<?php else : ?>
+		<div id="comments">
+		<?php
+		foreach($comments as $comment) {
 			$tpl->set('page', $page)
+			    ->set('ratings', $ratings)
 			    ->set('level', 0)
+			    ->set('actions', true)
 			    ->set('content', $content)
 				->set('comment', $comment);
 			echo $tpl->render('content/comment');
-		} endif; ?>
+		}
+		?>
+		</div>
+	<?php endif; ?>
 	<div class="ac-comment-pagination"><?php echo $paginator->render() ?></div>
 </div>

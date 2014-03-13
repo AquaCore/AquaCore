@@ -10,5 +10,12 @@
     <word namespace="comment" key="confirm-delete">Are you sure you want to delete this comment?</word>
     <word namespace="comment" key="login-to-comment">Login to leave a comment</word>
     <word namespace="comment" key="edited-by"><![CDATA[Last edited by <i>%s</i> at %s]]></word>
+    <word namespace="comment" key="permalink">Permalink</word>
+    <word namespace="comment" key="cancel">Cancel</word>
+    <word namespace="comment" key="reply">Reply</word>
+    <word namespace="comment" key="reply-comment">Reply Comment</word>
+    <word namespace="comment" key="report">Report</word>
+    <word namespace="comment" key="report-comment">Report Comment</word>
+    <word namespace="comment" key="no-comments-found">No comments found.</word>
   </wordgroup>
 </languageimport>

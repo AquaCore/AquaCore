@@ -1,12 +1,20 @@
 <?php
 use Aqua\Ragnarok\Character;
 use Aqua\Ragnarok\MapMarker;
+use Aqua\UI\ScriptManager;
 /**
  * @var $characters   \Aqua\Ragnarok\Character[]
  * @var $online_chars int
  * @var $paginator    \Aqua\UI\Pagination
  * @var $page         \Page\Main\Ragnarok\Server
  */
+$page->theme->footer->enqueueScript(ScriptManager::script('jquery-ui'));
+$page->theme->footer->enqueueScript('tpl.server-online')
+	->type('text/javascript')
+	->src(ac_build_url(array(
+		'base_dir' => \Aqua\DIR . '/tpl/scripts',
+		'script'   => 'server-online.js'
+	)));
 ?>
 <table class="ac-table" id="ac-whos-online">
 	<thead>
@@ -92,21 +100,3 @@ use Aqua\Ragnarok\MapMarker;
 	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('ragnarok', 'x-chars-found', number_format($online_chars))?></span>
-<script type="text/javascript">
-	(function($){
-		$(".ac-whos-online-marker").tooltip({
-			position: {
-				my: "center+5 bottom-20",
-				at: "center top"
-			},
-			hide: null,
-			show: null,
-			content: function() {
-				return $("<span/>")
-					.append($("<div/>").addClass("ac-tooltip-top"))
-					.append($("<div/>").addClass("ac-tooltip-content").append($(this).parent().find(".ac-map").clone()))
-					.append($("<div/>").addClass("ac-tooltip-bottom"));
-			}
-		});
-	})(jQuery);
-</script>

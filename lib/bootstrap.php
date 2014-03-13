@@ -104,13 +104,13 @@ try {
 		case 'CLI':
 			$args = array();
 			foreach($argv as $arg) {
-				if(preg_match('/([^\s]+)\s*=\s*(.*)\/', $arg, $match)) {
+				if(preg_match('/([^\s]+)\s*=(\s*(.*)|\s*"([^"]*)")/', $arg, $match)) {
 					$args[$match[1]] = $match[2];
 				} else {
 					$args[] = $arg;
 				}
 			}
-			$_GLOBALS['argl'] = $args;
+			$GLOBALS['argl'] = $args;
 			break;
 		case 'MINIMAL':
 			break;

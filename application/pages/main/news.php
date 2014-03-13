@@ -62,7 +62,9 @@ extends Page
 				->limit(($current_page - 1) * self::$postsPerPage, self::$postsPerPage)
 				->where($where)
 				->query($values);
-			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::POSTS_PER_PAGE), $current_page);
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$postsPerPage),
+			                      $current_page);
 			$tpl = new Template;
 			$tpl->set('posts', $search->results)
 				->set('post_count', $search->rowsFound)
@@ -112,7 +114,9 @@ extends Page
 				->limit(($current_page - 1) * self::$postsPerPage, self::$postsPerPage)
 				->where($where)
 				->query($values);
-			$pgn   = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$postsPerPage), $current_page);
+			$pgn   = new Pagination(App::request()->uri,
+			                        ceil($search->rowsFound / self::$postsPerPage),
+			                        $current_page);
 			$tpl   = new Template;
 			$tpl->set('posts', $search->results)
 				->set('post_count', $search->rowsFound)
@@ -162,7 +166,9 @@ extends Page
 				->limit(($current_page - 1) * self::$postsPerPage, self::$postsPerPage)
 				->where($where)
 				->query($values);
-			$pgn   = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$postsPerPage), $current_page);
+			$pgn   = new Pagination(App::request()->uri,
+			                        ceil($search->rowsFound / self::$postsPerPage),
+			                        $current_page);
 			$tpl   = new Template;
 			$tpl->set('posts', $search->results)
 				->set('post_count', $search->rowsFound)
@@ -210,31 +216,6 @@ extends Page
 					->set('content', $post)
 					->set('paginator', $commentsPgn)
 					->set('page', $this);
-				if(App::user()->role()->hasPermission('comment')) {
-					$commentsFrm = new Form($this->request);
-					$commentsFrm->textarea('content')->required();
-					if($post->getMeta('comment-anonymously')) {
-						$commentsFrm->checkbox('anonymous')->value(array( '1' => '' ))->setLabel(__('comment', 'comment-anonymously'));
-					}
-					$commentsFrm->submit(__('comments', 'submit-comment'));
-					if($commentsFrm->validate() === Form::VALIDATION_SUCCESS) {
-						$this->response->status(302)->redirect(App::request()->uri->url());
-						try {
-							$comment = $post->addComment(
-								App::user()->account,
-								$this->request->getString('content'),
-								$this->request->getInt('anonymous') && $post->getMeta('comment-anonymously')
-							);
-							if($comment) {
-								App::user()->addFlash('success', null, __('comment', 'comment-sent'));
-							}
-						} catch(\Exception $exception) {
-							ErrorLog::logSql($exception);
-							App::user()->addFlash('error', null, __('application', 'unexpected-error'));
-						}
-					}
-					$commentsTpl->set('form', $commentsFrm);
-				}
 				$tpl->set('comments', $commentsTpl);
 			}
 			if(!$post->getMeta('rating-disabled', false)) {

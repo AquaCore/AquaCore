@@ -64,6 +64,7 @@ extends AbstractFilter
 	 * @param bool                      $anon
 	 * @param int                       $options
 	 * @param int                       $status
+	 * @param \Aqua\Content\Filter\COmmentFilter\Comment|null $parent
 	 * @return \Aqua\Content\Filter\CommentFilter\Comment|null
 	 */
 	public function contentData_addComment(
@@ -361,7 +362,7 @@ extends AbstractFilter
 	}
 
 	/**
-	 * @param  int                      $id
+	 * @param  int $id
 	 * @return \Aqua\Content\Filter\CommentFilter\Comment|null
 	 */
 	public function contentType_getComment($id)
@@ -370,10 +371,10 @@ extends AbstractFilter
 			->columns(array(
 				'id'            => 'c.id',
 				'content_id'    => 'c._content_id',
-				'parent_id'     => 'co._parent_id',
-				'root_id'       => 'co._root_id',
-				'nesting_level' => 'co._nesting_level',
-				'children'      => 'co._children',
+				'parent_id'     => 'c._parent_id',
+				'root_id'       => 'c._root_id',
+				'nesting_level' => 'c._nesting_level',
+				'children'      => 'c._children',
 				'author'        => 'c._author_id',
 				'last_editor'   => 'c._editor_id',
 				'ip_address'    => 'c._ip_address',
@@ -493,7 +494,7 @@ extends AbstractFilter
 				'html'          => 'co._html_content',
 				'bbcode'        => 'co._bbc_content'
 			))->whereOptions(array(
-				'id'            => 'co._id',
+				'id'            => 'co.id',
 				'content_id'    => 'co._content_id',
 				'parent_id'     => 'co._parent_id',
 				'root_id'       => 'co._root_id',

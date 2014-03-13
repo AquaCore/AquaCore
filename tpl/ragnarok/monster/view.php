@@ -5,6 +5,13 @@ use Aqua\UI\ScriptManager;
  * @var $drops array
  * @var $page  \Page\Main\Ragnarok\Server\Mob
  */
+
+$page->theme->footer->enqueueScript('cardbmp')
+		->type('text/javascript')
+		->src(ac_build_url(array(
+			'base_dir' => \Aqua\DIR . '/tpl/scripts',
+			'script'   => 'cardbmp.js'
+		)));
 $mobName = htmlspecialchars($mob->iName);
 $allDrops = array();
 if(isset($drops['card'])) {

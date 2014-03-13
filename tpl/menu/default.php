@@ -4,7 +4,7 @@
  * @var $options array
  * @var $class   string
  */
-assert('isset($depth) && isset($options) && isset($class)');
+
 $optClass = '';
 $class.= ' menu-depth-' . $depth;
 if($depth) {

@@ -331,7 +331,7 @@ class ErrorLog
 			$url = 'http://';
 		}
 		$url .= getenv('SERVER_NAME') . getenv('REQUEST_URI');
-		$ip   = $_SERVER['REMOTE_ADDR'];
+		$ip   = getenv('REMOTE_ADDR');
 		$_err = $err = new self;
 		$next = null;
 		do {
