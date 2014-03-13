@@ -49,6 +49,7 @@
 		deleteReplyElements();
 		var parent = $(this).closest(".ac-comment"),
 			cke = $("<textarea></textarea>")
+				.attr("name", "content")
 				.attr("id", "comment-reply"),
 			frm = $("<form></form>");
 		frm.attr("method", "POST")

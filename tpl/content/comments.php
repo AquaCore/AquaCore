@@ -157,12 +157,13 @@ $tpl = new \Aqua\UI\Template;
 			    'arguments' => array( $content->contentType->key, $content->uid ),
 			    'query' => array( 'return' => $page->theme->jsSettings['base64Url'] )
 			)) ?>">
-				<textarea id="cke-comment"></textarea>
+				<textarea name="content" id="cke-comment"></textarea>
 				<?php if($content->getMeta('comment-anonymously')) : ?>
 					<input type="checkbox" name="anonymous" value="1" id="anon-comment">
 					<label for="anon-comment"><?php echo __('comment', 'comment-anonymously') ?></label>
 				<?php endif; ?>
 				<input type="submit" value="<?php echo __('application', 'submit') ?>" class="ac-button">
+				<div style="clear: both"></div>
 			</form>
 		</div>
 	<?php endif; ?>

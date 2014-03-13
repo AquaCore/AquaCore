@@ -78,7 +78,7 @@ extends Page
 			}
 			$this->response->redirect(302);
 			try {
-				if(($url = $this->request->uri->getString('return')) && parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
+				if(($url = base64_decode($this->request->uri->getString('return', ''))) && parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
 					$this->response->redirect($url);
 				} else {
 					$this->response->redirect(\Aqua\URL);
