@@ -42,7 +42,7 @@ extends Page
 			$order        = array( 'publish_date' => 'DESC' );
 			$values       = array();
 			$where        = array(array(
-					'status' => Post::STATUS_PUBLISHED,
+					'status' => array( Search::SEARCH_IN, Post::STATUS_PUBLISHED, Post::STATUS_ARCHIVED ),
 					'OR',
 					array(
 						'status'       => Post::STATUS_SCHEDULED,
@@ -92,7 +92,7 @@ extends Page
 			$values       = array();
 			$where        = array(
 				array(
-					'status' => Post::STATUS_PUBLISHED,
+					'status' => array( Search::SEARCH_IN, Post::STATUS_PUBLISHED, Post::STATUS_ARCHIVED ),
 					'OR',
 					array(
 						'status'       => Post::STATUS_SCHEDULED,
@@ -146,7 +146,7 @@ extends Page
 			$where      = array(
 				'tag' => $tag,
 				array(
-					'status' => Post::STATUS_PUBLISHED,
+					'status' => array( Search::SEARCH_IN, Post::STATUS_PUBLISHED, Post::STATUS_ARCHIVED ),
 					'OR',
 					array(
 						'status'       => Post::STATUS_SCHEDULED,
@@ -185,7 +185,9 @@ extends Page
 	public function view_action($id = '')
 	{
 		try {
-			if(!($post = $this->contentType->get($id, 'slug')) || $post->status !== Post::STATUS_PUBLISHED) {
+			if(!($post = $this->contentType->get($id, 'slug')) ||
+			   ($post->status !== Post::STATUS_PUBLISHED &&
+			    $post->status !== Post::STATUS_ARCHIVED)) {
 				$this->error(404);
 
 				return;

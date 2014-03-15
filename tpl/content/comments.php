@@ -42,7 +42,11 @@ $tpl = new \Aqua\UI\Template;
 		              'comment-count-' . ($commentCount === 1 ? 's' : 'p'),
 		              number_format($commentCount)) ?>
 	</span>
-	<?php if(!$user->loggedIn()) : ?>
+	<?php if($content->contentType->hasFilter('ArchiveFilter') && $content->isArchived()) : ?>
+		<div class="ac-table-no-result">
+			<?php echo __('comment', 'archived') ?>
+		</div>
+	<?php elseif(!$user->loggedIn()) : ?>
 		<div class="ac-comment-login">
 			<a href="<?php echo ac_build_url(array( 'path' => array( 'account' ), 'action' => 'login' )) ?>">
 				<?php echo __('comment', 'login-to-comment') ?>
@@ -69,6 +73,16 @@ $tpl = new \Aqua\UI\Template;
 	<?php if(empty($comments)) : ?>
 		<div class="ac-table-no-result"><?php echo __('comment', 'no-comments-found') ?></div>
 	<?php else : ?>
+		<?php if($page->request->uri->getInt('root')) : ?>
+			<div class="ac-comments-all">
+				<a href="<?php echo App::request()->uri->url(array(
+					'query' => array( 'root' => null ) + App::request()->uri->parameters,
+				    'hash'  => 'comments'
+				)) ?>">
+					<?php echo __('comment', 'view-all-comments') ?>
+				</a>
+			</div>
+		<?php endif; ?>
 		<div id="comments">
 		<?php
 		foreach($comments as $comment) {

@@ -2,7 +2,6 @@
 <languageimport>
   <wordgroup language="en">
     <word namespace="news" key="edit-post">Edit Post</word>
-    <word namespace="news" key="featured-desc">Featured posts are displayed in the front page.</word>
     <word namespace="news" key="more-posts">More</word>
     <word namespace="news" key="new-post">New Post</word>
     <word namespace="news" key="news">News</word>

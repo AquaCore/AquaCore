@@ -19,8 +19,11 @@
     <word namespace="comment" key="reply">Reply</word>
     <word namespace="comment" key="reply-comment">Reply Comment</word>
     <word namespace="comment" key="report">Report</word>
+    <word namespace="comment" key="parent">Parent</word>
+    <word namespace="comment" key="view-all-comments">View all comments</word>
     <word namespace="comment" key="report-comment">Report Comment</word>
     <word namespace="comment" key="no-comments-found">No comments found.</word>
+    <word namespace="comment" key="archived">This post is archived. Rating and commenting is disabled.</word>
     <word namespace="comment" key="saved">Your comment has been saved.</word>
     <word namespace="comment" key="flagged">Your comment has been flagged as spam! It will be hidden until it is determined to be a legitimate comment by a moderator.</word>
   </wordgroup>

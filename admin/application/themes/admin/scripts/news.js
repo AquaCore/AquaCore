@@ -1,5 +1,22 @@
 (function($) {
-	var datePicker, dateForm, updateDatePicker;
+	var datePicker, schedule, archive;
+
+	function updateDatePicker() {
+		var date = $(this).datetimepicker("getDate"),
+			text = $(this).closest("td").find(".ac-schedule-date");
+		if(!date || (Math.floor((new Date).getTime() / 1000) * 1000) == date.getTime()) {
+			text.text(AquaCore.l("application", ($(this).hasClass("ac-post-schedule") ? "now" : "none")));
+			$(this).val("");
+		} else {
+			var format = moment(date.getTime());
+			text.html(
+				format.format("MMMM DD, YYYY") +
+					"<br/><span class=\"ac-post-schedule-time\">" +
+					format.format("HH:mm:ss") +
+					"</span>"
+			);
+		}
+	}
 
 	function filter(term) {
 		var regex = new RegExp("^" + term.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), "i");
@@ -52,29 +69,9 @@
 			.appendTo(ul);
 	};
 
-	updateDatePicker = function() {
-		var date = datePicker.datetimepicker("getDate"),
-			text = $(".ac-post-schedule-date");
-		if(!date || (Math.floor((new Date).getTime() / 1000) * 1000) == date.getTime()) {
-			text.html(AquaCore.l("application", "now"));
-			dateForm.val("");
-		} else {
-			text.html($.datepicker.formatDate("MM dd, yy", date) + "<br/><span class=\"ac-post-schedule-time\">" + $.datepicker.formatTime("HH:mm:ss", {
-				hour: date.getHours(),
-				minute: date.getMinutes(),
-				second: date.getSeconds()
-			}) + "</span>");
-			dateForm.val($.datepicker.formatDate("yy-mm-dd", date) + " " + $.datepicker.formatTime("HH:mm:ss", {
-				hour: date.getHours(),
-				minute: date.getMinutes(),
-				second: date.getSeconds()
-			}));
-		}
-	};
-	datePicker = $("<input type=\"hidden\">");
-	dateForm = $(".ac-post-schedule");
-	dateForm.css("display", "none").before(datePicker);
-	datePicker.datetimepicker({
+	schedule = $(".ac-post-schedule");
+	archive  = $(".ac-archive-schedule");
+	schedule.datetimepicker({
 		showOn: "button",
 		buttonText: "",
 		nextText: "",
@@ -82,13 +79,33 @@
 		dateFormat: "yy-mm-dd",
 		timeFormat: "HH:mm:ss",
 		onSelect: updateDatePicker
-	});
-	if(dateForm.attr("timestamp")) {
-		var date = new Date((parseInt(dateForm.attr("timestamp")) * 1000));
-		var _date = new Date(date);
-		datePicker.datetimepicker("setDate", _date);
+	}).css("display", "none");
+	archive.datetimepicker({
+		afterUpdate: function(e, inst) {
+			var current = $(".ui-datepicker-current", inst.dpDiv);
+			current.off("click")
+				.text(AquaCore.l("application", "none"))
+				.on("click", function() {
+					$.datepicker._clearDate(e);
+				});
+		},
+		showOn: "button",
+		buttonText: "",
+		nextText: "",
+		prevText: "",
+		dateFormat: "yy-mm-dd",
+		timeFormat: "HH:mm:ss",
+		onSelect: updateDatePicker
+	}).css("display", "none");
+	for(var k = 0; k < 2; ++k) {
+		var element = (k ? schedule : archive);
+		if(element.attr("timestamp")) {
+			var date = new Date(new Date((parseInt(schedule.attr("timestamp")) * 1000)));
+			element.datetimepicker("setDate", date);
+		}
 	}
-	updateDatePicker();
+	updateDatePicker.call(schedule.get(0));
+	updateDatePicker.call(archive.get(0));
 	$(".ac-post-delete").bind("click", function(e) {
 		if(!confirm(AquaCore.l("news", "confirm-delete-s"))) {
 			e.preventDefault();

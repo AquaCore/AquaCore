@@ -370,7 +370,7 @@ implements \Serializable, SubjectInterface
 			$select->where(array( '_uid' => array( Search::SEARCH_DIFFERENT, $id ) ));
 		}
 		$select->query();
-		return ac_slug_available($slug, $select->column('slug'));
+		return ac_slug_available($slug, $select->getColumn('slug'));
 	}
 
 	public function attach($event, \Closure $listener)
@@ -834,7 +834,6 @@ implements \Serializable, SubjectInterface
 			$content = new ContentData;
 		}
 		$feedback = array( $content, &$data );
-		$this->applyFilters('parseData', $feedback);
 		$content->contentType  = & $this;
 		$content->uid          = (int)$data['uid'];
 		$content->status       = (int)$data['status'];
@@ -867,6 +866,7 @@ implements \Serializable, SubjectInterface
 			}
 			$content->data[$alias] = $data[$alias];
 		}
+		$this->applyFilters('parseData', $feedback);
 		$content->ready();
 
 		return $content;

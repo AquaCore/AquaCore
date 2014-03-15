@@ -25,13 +25,17 @@ $success = false;
 $status  = 200;
 try {
 	if(!App::user()->role()->hasPermission('rate')) {
-		$status = 401;
-	} else if(($ctype = ContentType::getContentType($ctype)) && ($content = $ctype->get($cid))) {
+		$status = 403;
+	} else if(!($ctype = ContentType::getContentType($ctype)) ||
+	          !($content = $ctype->get($cid))) {
+		$status = 404;
+	} else if($ctype->hasFilter('ArchiveFilter') &&
+	          $content->isArchived()) {
+		$status = 403;
+	} else {
 		$weight = $content->rate(App::user()->account, $weight);
 		$success = true;
 		$rating = $content->ratingAverage();
-	} else {
-		$status = 404;
 	}
 } catch(\Exception $exception) {
 	ErrorLog::logSql($exception);

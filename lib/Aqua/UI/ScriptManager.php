@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\UI;
 
+use Aqua\Core\L10n;
 use Aqua\UI\Tag\Script;
 
 class ScriptManager
@@ -22,6 +23,14 @@ extends Script
 	 * @var array
 	 */
 	public $styles = array();
+	/**
+	 * @var string
+	 */
+	public $language;
+	/**
+	 * @var string
+	 */
+	public $defaultLanguage;
 	/**
 	 * @var \Aqua\UI\ScriptManager[]
 	 */
@@ -81,6 +90,25 @@ extends Script
 		}
 
 		return $this;
+	}
+
+	public function language($format, $default = null)
+	{
+		$this->language        = $format;
+		$this->defaultLanguage = $default;
+
+		return $this;
+	}
+
+	public function render()
+	{
+		$script = parent::render();
+		if($this->language && $this->defaultLanguage !== L10n::getDefault()->code) {
+			$script.= "\r\n<script type=\"text/javascript\" src=\"" .
+			          sprintf($this->language, (strtolower(L10n::getDefault()->code))) .
+		              "\"></script>";
+		}
+		return $script;
 	}
 
 	/**

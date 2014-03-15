@@ -11,8 +11,16 @@ use Aqua\Core\App;
   */
 
 $datetimeFormat = \Aqua\Core\App::settings()->get('datetime_format');
+$isArchived = ($content->contentType->hasFilter('ArchiveFilter') &&
+               $content->isArchived());
 ?>
-<div class="ac-comment <?php if($level) echo 'ac-comment-child' ?>"
+<div class="ac-comment <?php
+if($level) {
+	echo 'ac-comment-child ';
+}
+if($comment->authorId === $content->authorId && !$comment->anonymous) {
+	echo 'ac-comment-op ';
+} ?>"
 	ac-comment-id="<?php echo $comment->id ?>"
 	ac-comment-ctype="<?php echo $comment->contentType->id ?>">
 	<div class="ac-comment-avatar">
@@ -30,7 +38,8 @@ $datetimeFormat = \Aqua\Core\App::settings()->get('datetime_format');
 			</div>
 			<?php if($content->contentType->filter('CommentFilter')->getOption('rating', false)) : ?>
 				<div class="ac-comment-rating">
-					<?php if($actions && App::user()->role()->hasPermission('rate')) : ?>
+					<?php if($actions && !$isArchived &&
+					         App::user()->role()->hasPermission('rate')) : ?>
 						<a class="ac-comment-upvote <?php if(isset($ratings[$comment->id]) &&
 						                                     $ratings[$comment->id] === 1) {
 							echo 'active';
@@ -59,7 +68,13 @@ $datetimeFormat = \Aqua\Core\App::settings()->get('datetime_format');
 					'query' => array( 'root' => $comment->id ),
 				    'hash' => 'comments'
 				)) ?>"><?php echo __('comment', 'permalink') ?></a>
-				<?php if(App::user()->role()->hasPermission('comment')) : ?>
+				<?php if($comment->nestingLevel && $level === 0) : ?>
+					<a class="ac-comment-permalink" href="<?php echo App::request()->uri->url(array(
+						'query' => array( 'root' => $comment->parentId ),
+						'hash' => 'comments'
+					)) ?>"><?php echo __('comment', 'parent') ?></a>
+				<?php endif; ?>
+				<?php if(!$isArchived && App::user()->role()->hasPermission('comment')) : ?>
 					<a class="ac-comment-reply" href="<?php echo ac_build_url(array(
 						'path' => array( 'comment' ),
 					    'action' => 'reply',

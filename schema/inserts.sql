@@ -60,6 +60,7 @@ INSERT INTO `#content_type_filters` VALUES
 ,(1, 'RatingFilter', 'a:0:{}')
 ,(1, 'ScheduleFilter', 'a:0:{}')
 ,(1, 'TagFilter', 'a:0:{}')
+,(1, 'ArchiveFilter', 'a:0:{}')
 ,(2, 'RatingFilter', 'a:0:{}')
 ,(2, 'RelationshipFilter', 'a:0:{}')
 ;

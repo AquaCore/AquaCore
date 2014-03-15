@@ -104,7 +104,9 @@
 			sliderAccessArgs: null,
 			controlType: 'slider',
 			defaultValue: null,
-			parse: 'strict'
+			parse: 'strict',
+			beforeUpdate: null,
+			afterUpdate: null
 		};
 		$.extend(this._defaults, this.regional['']);
 	};
@@ -1375,14 +1377,18 @@
 		}
 
 		if (typeof(inst.stay_open) !== 'boolean' || inst.stay_open === false) {
-
+			var beforeUpdate, afterUpdate;
 			this._base_updateDatepicker(inst);
 
+			beforeUpdate = this._get(inst, 'beforeUpdate');
+			afterUpdate = this._get(inst, 'afterUpdate');
 			// Reload the time control when changing something in the input text field.
+			if(beforeUpdate) beforeUpdate.apply(input, [ input, inst ]);
 			var tp_inst = this._get(inst, 'timepicker');
 			if (tp_inst) {
 				tp_inst._addTimePicker(inst);
 			}
+			if(afterUpdate) afterUpdate.apply(input, [ input, inst ]);
 		}
 	};
 

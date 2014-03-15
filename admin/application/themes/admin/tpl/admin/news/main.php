@@ -73,7 +73,8 @@ $x = $page->request->uri->getArray('s');
 <select name="s[]" multiple="1">
 	<?php foreach(array(\Aqua\Content\Adapter\Post::STATUS_PUBLISHED,
 		                \Aqua\Content\Adapter\Post::STATUS_DRAFT,
-		                \Aqua\Content\Adapter\Post::STATUS_SCHEDULED) as $i) : ?>
+		                \Aqua\Content\Adapter\Post::STATUS_SCHEDULED,
+		                \Aqua\Content\Adapter\Post::STATUS_ARCHIVED) as $i) : ?>
 		<option value="<?php echo $i ?>"
 				<?php echo(in_array($i, $x, false) ? 'selected="selected"' : '') ?>>
 			<?php echo __('news-status', $i) ?>

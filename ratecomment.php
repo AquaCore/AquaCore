@@ -18,21 +18,23 @@ $response->setHeader('Content-Type', 'application/json');
 $response->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
 $response->setHeader('Expires', time() - 100);
 $weight      = App::request()->uri->getInt('weight');
-$ctype       = App::request()->uri->getInt('ctype');
+$cType       = App::request()->uri->getInt('ctype');
 $comment_id  = App::request()->uri->getInt('comment');
 $rating  = null;
 $success = false;
 $status  = 200;
 try {
 	if(!App::user()->role()->hasPermission('rate')) {
-		$status = 401;
-	} else if(($ctype = ContentType::getContentType($ctype)) && ($comment = $ctype->getComment($comment_id))) {
-		if(($weight = $comment->rate(App::user()->account, $weight)) !== false) {
-			$success = true;
-			$rating = $comment->rating;
-		}
-	} else {
+		$status = 403;
+	} else if(!($cType = ContentType::getContentType($cType)) ||
+	          !($comment = $cType->getComment($comment_id))) {
 		$status = 404;
+	} else if($cType->hasFilter('ArchiveFilter') &&
+	          $comment->content()->isArchived()) {
+		$status = 403;
+	} else if(($weight = $comment->rate(App::user()->account, $weight)) !== false) {
+		$success = true;
+		$rating = $comment->rating;
 	}
 } catch(\Exception $exception) {
 	ErrorLog::logSql($exception);

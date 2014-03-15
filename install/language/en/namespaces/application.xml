@@ -17,6 +17,7 @@
     <word namespace="application" key="action">Action</word>
     <word namespace="application" key="apply">Apply</word>
     <word namespace="application" key="never">Never</word>
+    <word namespace="application" key="default">Default</word>
     <word namespace="application" key="none">None</word>
     <word namespace="application" key="no-search-results">No search results.</word>
     <word namespace="application" key="search-results-s">%s result found.</word>

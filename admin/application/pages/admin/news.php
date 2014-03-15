@@ -111,6 +111,7 @@ extends Page
 	public function new_action()
 	{
 		try {
+			$settings = App::settings()->get('cms')->get('post');
 			$frm        = new Form($this->request);
 			$categories = array();
 			foreach($this->contentType->categories() as $category) {
@@ -131,35 +132,50 @@ extends Page
 				->required()
 				->value(array(
 			        Post::STATUS_PUBLISHED => __('news-status', Post::STATUS_PUBLISHED),
-			        Post::STATUS_DRAFT     => __('news-status', Post::STATUS_DRAFT)
+			        Post::STATUS_DRAFT     => __('news-status', Post::STATUS_DRAFT),
+			        Post::STATUS_ARCHIVED  => __('news-status', Post::STATUS_ARCHIVED),
 				))
 				->setLabel(__('content', 'status'));
 			$frm->input('publish_date', true)
 				->type('text')
 				->placeholder('YYYY-MM-DD hh:mm:ss')
 				->setLabel(__('content', 'publish-date'));
+			$frm->input('archive_date', true)
+				->type('text')
+				->placeholder('YYYY-MM-DD hh:mm:ss')
+				->setLabel(__('content', 'archive-date'));
 			$frm->checkbox('comments', true)
 				->value(array( '1' => '' ))
-				->checked(App::settings()->get('cms')->get('enable_comments_by_default', false) ? '1' : null)
+				->checked($settings->get('enable_comments_by_default', false) ? '1' : null)
 				->setLabel(__('content', 'comments-enabled'));
 			$frm->checkbox('anonymous', true)
 				->value(array( '1' => '' ))
-				->checked(App::settings()->get('cms')->get('enable_anon_by_default', false) ? '1' : null)
+				->checked($settings->get('enable_anonymous_by_default', false) ? '1' : null)
 				->setLabel(__('content', 'anonymous-enabled'));
 			$frm->checkbox('featured', true)
 				->value(array( '1' => '' ))
-				->checked('1')
+				->checked($settings->get('featured_by_default', false) ? '1' : null)
 				->setLabel(__('content', 'featured'))
-				->setDescription(__('news', 'featured-desc'));
+				->setDescription(__('content', 'featured-desc'));
 			$frm->checkbox('rating', true)
 				->value(array( '1' => '' ))
-				->checked('1')
+				->checked($settings->get('enable_rating_by_default', false) ? '1' : null)
 				->setLabel(__('content', 'enable-rating'));
+			$frm->checkbox('archiving', true)
+				->value(array( '1' => '' ))
+				->checked($settings->get('enable_archiving_by_default', false) ? '1' : null)
+				->setLabel(__('content', 'enable-archiving'));
 			$frm->textarea('content', true);
 			$frm->validate(function (Form $frm) {
 					if(($date = trim($frm->request->getString('publish_date'))) &&
 					   !\DateTime::CreateFromFormat('Y-m-d H:i:s', $date)) {
 						$frm->field('publish_date')->setWarning(__('form', 'invalid-date'));
+
+						return false;
+					}
+					if(($date = trim($frm->request->getString('archive_date'))) &&
+					   !\DateTime::CreateFromFormat('Y-m-d H:i:s', $date)) {
+						$frm->field('archive_date')->setWarning(__('form', 'invalid-date'));
 
 						return false;
 					}
@@ -183,23 +199,31 @@ extends Page
 		}
 		$this->response->status(302);
 		try {
-			if(($publish_date = trim($frm->request->getString('publish_date'))) &&
-			   ($publish_date = \DateTime::CreateFromFormat('Y-m-d H:i:s', $publish_date))) {
-				$publish_date = $publish_date->getTimestamp();
+			if(($publishDate = trim($frm->request->getString('publish_date'))) &&
+			   ($publishDate = \DateTime::CreateFromFormat('Y-m-d H:i:s', $publishDate))) {
+				$publishDate = $publishDate->getTimestamp();
 			} else {
-				$publish_date = time();
+				$publishDate = time();
+			}
+			if(($archiveDate = trim($frm->request->getString('archive_date'))) &&
+			   ($archiveDate = \DateTime::CreateFromFormat('Y-m-d H:i:s', $publishDate))) {
+				$archiveDate = $archiveDate->getTimestamp();
+			} else {
+				$archiveDate = null;
 			}
 			$post = $this->contentType->create(array(
 				'title'               => $this->request->getString('title'),
 				'content'             => $this->request->getString('content'),
 				'status'              => $this->request->getInt('status'),
-				'publish_date'        => $publish_date,
+				'publish_date'        => $publishDate,
+				'archive_date'        => $archiveDate,
 				'comments_disabled'   => !(bool)$this->request->getInt('comments'),
 				'category'            => $this->request->getArray('category'),
 				'tags'                => $this->request->getString('tags'),
 				'comment_anonymously' => (bool)$this->request->getInt('anonymous'),
 				'rating_disabled'     => !(bool)$this->request->getInt('rating'),
 				'featured'            => (bool)$this->request->getInt('featured'),
+				'archiving'           => (bool)$this->request->getInt('archiving'),
 			    'author'              => App::user()->account->id
 			));
 			if(!$post) {
@@ -272,11 +296,11 @@ extends Page
 			$frm->select('status', true)
 				->value(array(
 					Post::STATUS_PUBLISHED => __('news-status', Post::STATUS_PUBLISHED),
-					Post::STATUS_DRAFT     => __('news-status', Post::STATUS_DRAFT)
+					Post::STATUS_DRAFT     => __('news-status', Post::STATUS_DRAFT),
+					Post::STATUS_ARCHIVED  => __('news-status', Post::STATUS_ARCHIVED)
 				))
 				->required()
-				->selected($post->status !== Post::STATUS_PUBLISHED && $post->status !== Post::STATUS_DRAFT ?
-						   Post::STATUS_PUBLISHED : $post->status)
+				->selected(in_array($post->status, array_keys($frm->field('status')->values)) ? $post->status : Post::STATUS_PUBLISHED)
 				->setLabel(__('content', 'status'));
 			$frm->input('publish_date', true)
 				->type('text')
@@ -284,6 +308,13 @@ extends Page
 				->attr('timestamp', $post->publishDate)
 				->value(date('Y-m-d H:i:s', $post->publishDate))
 				->setLabel(__('content', 'publish-date'));
+			$archiveDate = $post->getMeta('archive-date') ?: '';
+			$frm->input('archive_date', true)
+			    ->type('text')
+				->attr('timestamp', $archiveDate)
+				->value($archiveDate ? date('Y-m-d H:i:s', $archiveDate) : '')
+			    ->placeholder('YYYY-MM-DD hh:mm:ss')
+			    ->setLabel(__('content', 'archive-date'));
 			$frm->checkbox('featured', true)
 				->value(array( '1' => '' ))
 				->checked('1')
@@ -302,6 +333,10 @@ extends Page
 				->value(array( '1' => '' ))
 				->checked($post->getMeta('rating-disabled') ? null : '1')
 				->setLabel(__('content', 'enable-rating'));
+			$frm->checkbox('archiving', true)
+			    ->value(array( '1' => '' ))
+			    ->checked($post->getMeta('disable-archiving') ? null : '1')
+			    ->setLabel(__('content', 'enable-archiving'));
 			$frm->textarea('content', true)
 				->append(htmlspecialchars($post->content));
 			$frm->validate(function (Form $frm) {
@@ -311,6 +346,12 @@ extends Page
 
 						return false;
 					}
+				if(($date = trim($frm->request->getString('archive_date'))) &&
+				   !\DateTime::CreateFromFormat('Y-m-d H:i:s', $date)) {
+					$frm->field('archive_date')->setWarning(__('form', 'invalid-date'));
+
+					return false;
+				}
 
 					return true;
 				});
@@ -332,22 +373,30 @@ extends Page
 		}
 		$this->response->status(302)->redirect(App::request()->uri->url());
 		try {
-			if(($publish_date = trim($frm->request->getString('publish_date'))) &&
-			   ($publish_date = \DateTime::CreateFromFormat('Y-m-d H:i:s', $publish_date))) {
-				$publish_date = $publish_date->getTimestamp();
+			if(($publishDate = trim($frm->request->getString('publish_date'))) &&
+			   ($publishDate = \DateTime::CreateFromFormat('Y-m-d H:i:s', $publishDate))) {
+				$publishDate = $publishDate->getTimestamp();
 			} else {
-				$publish_date = time();
+				$publishDate = time();
+			}
+			if(($archiveDate = trim($frm->request->getString('archive_date'))) &&
+			   ($archiveDate = \DateTime::CreateFromFormat('Y-m-d H:i:s', $publishDate))) {
+				$archiveDate = $archiveDate->getTimestamp();
+			} else {
+				$archiveDate = null;
 			}
 			$updated = $post->update(array(
 				'title'               => $this->request->getString('title'),
 				'content'             => $this->request->getString('content'),
 				'status'              => $this->request->getInt('status'),
-				'publish_date'        => $publish_date,
+				'publish_date'        => $publishDate,
+				'archive_date'        => $archiveDate,
 				'comments_disabled'   => !(bool)$this->request->getInt('comments'),
 				'category'            => $this->request->getArray('category'),
 				'tags'                => $this->request->getString('tags'),
 				'comment_anonymously' => (bool)$this->request->getInt('anonymous'),
 				'rating_disabled'     => !(bool)$this->request->getInt('rating'),
+				'archiving'           => (bool)$this->request->getInt('archiving'),
 				'featured'            => (bool)$this->request->getInt('featured'),
 			));
 			if($updated) {

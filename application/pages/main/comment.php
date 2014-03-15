@@ -33,6 +33,11 @@ extends Page
 
 				return;
 			}
+			if($cType->hasFilter('ArchiveFilter') && $content->isArchived()) {
+				$this->error(403);
+
+				return;
+			}
 			if(empty($comment) && $this->request->method !== 'POST')  {
 				$this->error(405);
 
@@ -110,6 +115,11 @@ extends Page
 			   !($cType = ContentType::getContentType($cType, 'key')) ||
 			   !($comment = $cType->getComment($commentId))) {
 				$this->error(404);
+
+				return;
+			}
+			if($cType->hasFilter('ArchiveFilter') && $comment->content()->isArchived()) {
+				$this->error(403);
 
 				return;
 			}

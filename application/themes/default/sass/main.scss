@@ -647,6 +647,18 @@ iframe[src="about:blank"]{ display: none !important; }
 	margin: 5px 0 0;
 	padding: 0 10px;
 	border-top: 1px solid #c7d0e0;
+	.ac-comments-all a {
+		width: 100%;
+		margin-bottom: 5px;
+		text-align: center;
+		display: block;
+		padding: 3px 0;
+		background-color: #417CFA;
+		@include border-radius(4px);
+		font-size: .8em;
+		color: white;
+		font-weight: bold;
+	}
 	.ac-comment-count {
 		display: block;
 		width: 100%;
@@ -760,8 +772,7 @@ iframe[src="about:blank"]{ display: none !important; }
 	}
 	.ac-comment-avatar {
 		display: table-cell;
-		margin-right: 10px;
-		padding: 10px 0;
+		padding: 10px;
 		img {
 			height: auto;
 			width: 80px;
@@ -782,7 +793,8 @@ iframe[src="about:blank"]{ display: none !important; }
 		width: 100%;
 		clear: both;
 	}
-	.ac-comment-op {
+	.ac-comment-op > .ac-comment-avatar,
+	.ac-comment-op > .ac-comment-body {
 		background: #FFF2E1;
 	}
 	.ac-comment-anonymous .ac-comment-author {

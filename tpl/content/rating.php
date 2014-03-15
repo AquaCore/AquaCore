@@ -15,7 +15,10 @@ if($max_weight % 2) {
 	$weight = $max_weight / 2;
 }
 $avg = $content->ratingAverage();
-if(App::user()->role()->hasPermission('rate') && !$content->forged) {
+if((!$content->contentType->hasFilter('ArchiveFilter') ||
+    !$content->isArchived()) &&
+   App::user()->role()->hasPermission('rate') &&
+   !$content->forged) {
 	$page->theme->addSettings('contentRating', array(
 			'contentType'   => $content->contentType->id,
 			'contentId'     => $content->uid,
@@ -24,7 +27,7 @@ if(App::user()->role()->hasPermission('rate') && !$content->forged) {
 			'maxWeight'     => $max_weight
 		));
 	$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.rating'));
-	$page->theme->footer->enqueueScript('theme.content-rating')
+	$page->theme->footer->enqueueScript('tpl.content-rating')
 		->type('text/javascript')
 		->append('new AquaCore.Rating($(".ac-content-rating"), AquaCore.settings.contentRating);');
 }

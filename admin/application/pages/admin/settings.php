@@ -670,17 +670,41 @@ extends Page
 			$frm->checkbox('post_rating', true)
 				->value(array( '1' => '' ))
 				->checked($settings->get('post')->get('enable_rating_by_default', false) ? '1' : null, false)
-				->setLabel(__('settings', ''));
+				->setLabel(__('settings', 'cms-post-rating-label'));
 			$frm->checkbox('post_comments', true)
 				->value(array( '1' => '' ))
-				->checked($settings->get('post')->get('enable_comments_by_default', false) ? '1' : null, false);
+				->checked($settings->get('post')->get('enable_comments_by_default', false) ? '1' : null, false)
+				->setLabel(__('settings', 'cms-post-comments-label'));
 			$frm->checkbox('post_anon', true)
 				->value(array( '1' => '' ))
-				->checked($settings->get('post')->get('enable_anonymous_by_default', false) ? '1' : null, false);
-			$frm->input('post_rating_weight', true)
+				->checked($settings->get('post')->get('enable_anonymous_by_default', false) ? '1' : null, false)
+				->setLabel(__('settings', 'cms-post-anon-label'));
+			$frm->input('post_weight', true)
 				->type('number')
 				->attr('min', 1)
-				->value($post->filter('ratingFilter')->getOption('maxweight', 10), false);
+				->value($post->filter('ratingFilter')->getOption('maxweight', 10), false)
+				->setLabel(__('settings', 'cms-post-weight-label'));
+			$frm->input('post_archive', true)
+				->type('number')
+				->attr('min', 0)
+				->value($post->filter('ratingFilter')->getOption('maxweight', 10), false)
+				->setLabel(__('settings', 'cms-post-archive-label'))
+				->setDescription(__('settings', 'cms-post-archive-desc'));
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('settings', 'content');
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+				    ->set('page', $this);
+				echo $tpl->render('admin/settings/content');
+				return;
+			}
+			$post->filter('ratingFilter')->setOption(array(
+				'maxweight' => $this->request->getInt('post_weight')
+			));
+			$post->filter('commentFilter')->setOption(array(
+				'nesting' => $this->request->getInt('post_nesting')
+			));
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

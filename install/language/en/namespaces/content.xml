@@ -15,9 +15,11 @@
     <word namespace="content" key="category-not-found">Category not found.</word>
     <word namespace="content" key="category-updated"><![CDATA[Category <b>%s</b> updated.]]></word>
     <word namespace="content" key="comments">Comments</word>
-    <word namespace="content" key="enable-rating">Enable Rating</word>
-    <word namespace="content" key="anonymous-enabled">Enable Anon Comments</word>
-    <word namespace="content" key="comments-enabled">Enable Comments</word>
+    <word namespace="content" key="enable-rating">Rating</word>
+    <word namespace="content" key="anonymous-enabled">Anon Comments</word>
+    <word namespace="content" key="comments-enabled">Comments</word>
+    <word namespace="content" key="enable-archiving">Archiving</word>
+    <word namespace="content" key="archive-date">Archive Date</word>
     <word namespace="content" key="create-category">Create Category</word>
     <word namespace="content" key="delete">Delete</word>
     <word namespace="content" key="delete-category">Delete</word>
@@ -45,5 +47,6 @@
     <word namespace="content" key="parent">Parent</word>
     <word namespace="content" key="select-parent">Select parent</word>
     <word namespace="content" key="rating">Rating</word>
+    <word namespace="content" key="featured-desc">Featured posts are displayed in the front page.</word>
   </wordgroup>
 </languageimport>

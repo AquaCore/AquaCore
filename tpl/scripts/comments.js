@@ -10,6 +10,10 @@
 			reply.remove();
 			reply = undefined;
 		}
+		if(report) {
+			report.remove();
+			report = undefined;
+		}
 	};
 	$(".ac-comment-upvote, .ac-comment-downvote").on("click", function() {
 		var wrapper, id, ctype, weight, self = this;
@@ -93,7 +97,7 @@
 				$("<button>")
 					.attr("type", "type")
 					.attr("class", "ac-button")
-					.on("click", function(e) { deleteReplyElements() })
+					.on("click", deleteReplyElements)
 					.append(AquaCore.l("comment", "cancel"))
 			)
 			.append(
@@ -113,10 +117,7 @@
 		return false;
 	});
 	$(".ac-comment-report").on("click", function(e) {
-		if(report) {
-			report.remove();
-			report = undefined;
-		}
+		deleteReplyElements();
 		e.preventDefault();
 		e.stopPropagation();
 		var frm = $("<form></form>");
@@ -132,13 +133,7 @@
 				$("<button>")
 					.attr("type", "type")
 					.attr("class", "ac-button")
-					.on("click", function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-						report.remove();
-						report = undefined;
-						return false;
-					})
+					.on("click", deleteReplyElements)
 					.append(AquaCore.l("comment", "cancel"))
 			)
 			.append(

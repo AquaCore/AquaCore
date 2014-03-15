@@ -16,21 +16,14 @@ $page->theme->template = 'sidebar-right';
 $page->theme
 	->set('wrapper', $form->buildTag())
 	->addSettings('newsTags', $page->contentType->tags())
-	->addWordGroup('application', array( 'now' ))
+	->addWordGroup('application', array( 'now', 'none' ))
 	->addWordGroup('news', 'confirm-delete-s');
 $page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
 $page->theme->footer->enqueueScript(ScriptManager::script('jquery-ui.timepicker'));
+$page->theme->footer->enqueueScript(ScriptManager::script('moment'));
 $page->theme->footer->enqueueScript('theme.news')
 	->type('text/javascript')
 	->src($page->theme->url . '/scripts/news.js');
-if(L10n::getDefault()->code !== 'en') {
-	$page->theme->footer->enqueueScript(ScriptManager::script('jquery-ui.timepicker-i18n', array(
-			'language' => L10n::getDefault()->code
-		)));
-	$page->theme->footer->enqueueScript(ScriptManager::script('jquery-ui-i18n', array(
-			'language' => L10n::getDefault()->code
-		)));
-}
 $sidebar = new Sidebar;
 ob_start();
 ?>
@@ -78,8 +71,18 @@ endif;
 		<tr>
 			<td><?php echo $form->field('publish_date')->getLabel() ?></td>
 			<td>
-				<div class="ac-post-schedule-date ac-script" style="font-weight: bold"></div>
+				<div class="ac-schedule-date ac-script" style="font-weight: bold"></div>
 				<?php echo $form->field('publish_date')->attr('class', 'ac-post-schedule')->render() ?>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="ac-form-warning"><?php echo $form->field('archive_date')->getWarning() ?></td>
+		</tr>
+		<tr>
+			<td><?php echo $form->field('archive_date')->getLabel() ?></td>
+			<td>
+				<div class="ac-schedule-date ac-script" style="font-weight: bold"></div>
+				<?php echo $form->field('archive_date')->attr('class', 'ac-archive-schedule')->render() ?>
 			</td>
 		</tr>
 		<tr>
@@ -94,6 +97,20 @@ endif;
 			<td style="vertical-align: middle">
 				<?php echo $form->field('comments')->option('1')->attr('name', 'comments')
 					->attr('id', 'opt-comments')->render() ?>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="ac-form-warning"><?php echo $form->field('archiving')->getWarning() ?></td>
+		</tr>
+		<tr>
+			<td>
+				<label for="opt-archiving">
+					<?php echo $form->field('archiving')->getLabel() ?>
+				</label>
+			</td>
+			<td style="vertical-align: middle">
+				<?php echo $form->field('archiving')->option('1')->attr('name', 'archiving')
+				                ->attr('id', 'opt-archiving')->render() ?>
 			</td>
 		</tr>
 		<tr>

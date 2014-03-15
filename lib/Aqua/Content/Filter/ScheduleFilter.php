@@ -8,7 +8,7 @@ use Aqua\Core\App;
 class ScheduleFilter
 extends AbstractFilter
 {
-	const STATUS_SCHEDULED = 10;
+	const STATUS_SCHEDULED = 2;
 
 	public function parseData(ContentData $content, array &$data)
 	{
