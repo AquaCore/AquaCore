@@ -69,7 +69,7 @@ extends Site\Page
 				->setLabel(__('page', 'publish-date'));
 			$frm->checkbox('rating')
 				->value(array( '1' => '' ))
-				->checked(App::settings()->get('cms')->get('enable_rating_default', false) ? '1' : null)
+				->checked(App::settings()->get('cms')->get('page')->get('enable_rating_by_default', false) ? '1' : null)
 				->setLabel(__('content', 'enable-rating'));
 			$frm->textarea('content');
 			$frm->validate(function(Form $frm) {
@@ -169,7 +169,7 @@ extends Site\Page
 				->setLabel(__('page', 'publish-date'));
 			$frm->checkbox('rating')
 			    ->value(array( '1' => '' ))
-			    ->checked(!$page->getMeta('rating-disabled', false), false)
+			    ->checked($page->getMeta('rating-disabled', false) ? null : '1', false)
 			    ->setLabel(__('content', 'enable-rating'));
 			$frm->textarea('content', true)
 				->append($this->request->getString('content', null) ?: $page->content);

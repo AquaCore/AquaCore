@@ -48,5 +48,6 @@
     <word namespace="content" key="select-parent">Select parent</word>
     <word namespace="content" key="rating">Rating</word>
     <word namespace="content" key="featured-desc">Featured posts are displayed in the front page.</word>
+    <word namespace="content" key="spoiler">Spoiler</word>
   </wordgroup>
 </languageimport>

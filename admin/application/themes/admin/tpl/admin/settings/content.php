@@ -12,10 +12,30 @@ $option['class'] = 'active';
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">
+				<div class="title"><?php echo __('settings', 'section-pages') ?></div>
+				<div class="separator"></div>
+			</div>
+		</td>
+	</tr>
+	<?php echo $form->render(null, false, array(
+		'page_weight',
+		'page_rating'
+	)) ?>
+	<tr>
+		<td colspan="3">
+			<div class="ac-settings-section">
 				<div class="title"><?php echo __('settings', 'section-news') ?></div>
 				<div class="separator"></div>
 			</div>
 		</td>
 	</tr>
-	<?php echo $form->render(null, false, array( 'post_archive', 'post_nesting', 'post_weight', 'post_rating', 'post_comments', 'post_anon' )) ?>
+	<?php echo $form->render(null, false, array(
+		'post_archive_interval',
+		'post_nesting',
+		'post_weight',
+		'post_archive',
+		'post_rating',
+		'post_comments',
+		'post_anon'
+	)) ?>
 </table>

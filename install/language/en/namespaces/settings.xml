@@ -197,12 +197,14 @@
     <word namespace="settings" key="ro-act-attack2">Attack 2</word>
     <word namespace="settings" key="ro-act-attack3">Attack 3</word>
     <word namespace="settings" key="ro-act-skill">Casting skill</word>
-    <word namespace="settings" key="cms-post-rating-label">Enable Rating By Default</word>
-    <word namespace="settings" key="cms-post-weight-label">Maximum Rating Weight</word>
-    <word namespace="settings" key="cms-post-comments-label">Enable Comments By Default</word>
-    <word namespace="settings" key="cms-post-anon-label">Enable Anonymous Comments By Default</word>
-    <word namespace="settings" key="cms-post-archive-label">Archive Interval</word>
-    <word namespace="settings" key="cms-post-archive-desc"><![CDATA[Automatically archive posts after the number of days specified.<br/>Comments cannot be reported, rated or added to archived content.<br/>Use "0" to disable this feature.]]></word>
+    <word namespace="settings" key="cms-rating-label">Enable Rating By Default</word>
+    <word namespace="settings" key="cms-weight-label">Maximum Rating Weight</word>
+    <word namespace="settings" key="cms-comments-label">Enable Comments By Default</word>
+    <word namespace="settings" key="cms-anon-label">Enable Anonymous Comments By Default</word>
+    <word namespace="settings" key="cms-archive-label">Archive Interval</word>
+    <word namespace="settings" key="cms-archive-desc"><![CDATA[Automatically archive posts after the number of days specified.<br/>Comments cannot be reported, rated or added to archived content.<br/>Use "0" to disable this feature.]]></word>
+    <word namespace="settings" key="cms-archiving-label">Enable Archiving By Default</word>
+    <word namespace="settings" key="cms-nesting-label">Comments Maximum Nesting Level</word>
     <word namespace="settings" key="donation-pp-sandbox-label">Use PayPal Sandbox</word>
     <word namespace="settings" key="donation-pp-sandbox-desc">Direct payments to PayPal's test server.</word>
     <word namespace="settings" key="donation-pp-email-label">PayPal Business Email</word>
@@ -242,5 +244,6 @@
     <word namespace="settings" key="invalid-avatar-image"><![CDATA[<b>Default Avatar</b>: The file uploaded is not a valid JPEG, PNG or GIF image.]]></word>
     <word namespace="settings" key="failed-to-upload-avatar"><![CDATA[<b>Default Avatar</b>: Failed to save uploaded file.]]></word>
     <word namespace="settings" key="failed-to-upload-rss-image"><![CDATA[<b>Channel Image</b>: Failed to save uploaded file.]]></word>
+    <word namespace="settings" key="settings-saved">Settings Saved</word>
   </wordgroup>
 </languageimport>

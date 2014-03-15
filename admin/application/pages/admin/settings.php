@@ -670,26 +670,44 @@ extends Page
 			$frm->checkbox('post_rating', true)
 				->value(array( '1' => '' ))
 				->checked($settings->get('post')->get('enable_rating_by_default', false) ? '1' : null, false)
-				->setLabel(__('settings', 'cms-post-rating-label'));
+				->setLabel(__('settings', 'cms-rating-label'));
 			$frm->checkbox('post_comments', true)
 				->value(array( '1' => '' ))
 				->checked($settings->get('post')->get('enable_comments_by_default', false) ? '1' : null, false)
-				->setLabel(__('settings', 'cms-post-comments-label'));
+				->setLabel(__('settings', 'cms-comments-label'));
 			$frm->checkbox('post_anon', true)
 				->value(array( '1' => '' ))
 				->checked($settings->get('post')->get('enable_anonymous_by_default', false) ? '1' : null, false)
-				->setLabel(__('settings', 'cms-post-anon-label'));
+				->setLabel(__('settings', 'cms-anon-label'));
+			$frm->checkbox('post_archive', true)
+				->value(array( '1' => '' ))
+				->checked($settings->get('post')->get('enable_archiving_by_default', false) ? '1' : null, false)
+				->setLabel(__('settings', 'cms-archiving-label'));
 			$frm->input('post_weight', true)
 				->type('number')
 				->attr('min', 1)
 				->value($post->filter('ratingFilter')->getOption('maxweight', 10), false)
-				->setLabel(__('settings', 'cms-post-weight-label'));
-			$frm->input('post_archive', true)
+				->setLabel(__('settings', 'cms-weight-label'));
+			$frm->input('post_nesting', true)
+				->type('number')
+				->attr('min', 1)
+				->value($post->filter('commentFilter')->getOption('nesting', 5), false)
+				->setLabel(__('settings', 'cms-nesting-label'));
+			$frm->input('post_archive_interval', true)
 				->type('number')
 				->attr('min', 0)
-				->value($post->filter('ratingFilter')->getOption('maxweight', 10), false)
-				->setLabel(__('settings', 'cms-post-archive-label'))
-				->setDescription(__('settings', 'cms-post-archive-desc'));
+				->value($post->filter('archiveFilter')->getOption('interval', 20), false)
+				->setLabel(__('settings', 'cms-archive-label'))
+				->setDescription(__('settings', 'cms-archive-desc'));
+			$frm->checkbox('page_rating', true)
+			    ->value(array( '1' => '' ))
+			    ->checked($settings->get('page')->get('enable_rating_by_default', false) ? '1' : null, false)
+			    ->setLabel(__('settings', 'cms-rating-label'));
+			$frm->input('page_weight', true)
+			    ->type('number')
+			    ->attr('min', 1)
+			    ->value($page->filter('ratingFilter')->getOption('maxweight', 10), false)
+			    ->setLabel(__('settings', 'cms-weight-label'));
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('settings', 'content');
@@ -699,12 +717,31 @@ extends Page
 				echo $tpl->render('admin/settings/content');
 				return;
 			}
-			$post->filter('ratingFilter')->setOption(array(
-				'maxweight' => $this->request->getInt('post_weight')
-			));
-			$post->filter('commentFilter')->setOption(array(
-				'nesting' => $this->request->getInt('post_nesting')
-			));
+			$this->response->status(302)->redirect(App::request()->uri->url());
+			try {
+				$page->filter('ratingFilter')->setOption(array(
+					'maxweight' => $this->request->getInt('page_weight')
+				));
+				$post->filter('ratingFilter')->setOption(array(
+					'maxweight' => $this->request->getInt('post_weight')
+				));
+				$post->filter('commentFilter')->setOption(array(
+					'nesting' => $this->request->getInt('post_nesting')
+				));
+				$post->filter('archiveFilter')->setOption(array(
+					'interval' => $this->request->getInt('post_archive_interval')
+				));
+				$settings->get('page')->set('enable_rating_by_default', (bool)$this->request->getString('page_rating'));
+				$settings->get('post')->set('enable_rating_by_default', (bool)$this->request->getString('post_rating'));
+				$settings->get('post')->set('enable_comments_by_default', (bool)$this->request->getString('post_comments'));
+				$settings->get('post')->set('enable_anonymous_by_default', (bool)$this->request->getString('post_anon'));
+				$settings->get('post')->set('enable_archiving_by_default', (bool)$this->request->getString('post_archive'));
+				App::settings()->export(\Aqua\ROOT . '/settings/application.php');
+				App::user()->addFlash('success', null, __('settings', 'settings-saved'));
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
