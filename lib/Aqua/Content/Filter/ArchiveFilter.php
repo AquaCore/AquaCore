@@ -52,7 +52,7 @@ extends AbstractFilter
 
 	public function archive(ContentData $content, array &$data)
 	{
-		if(array_key_exists('archiving', $data) && !$data) {
+		if(array_key_exists('archiving', $data) && !$data['archiving']) {
 			$content->setMeta('disable-archiving', true);
 			return null;
 		}

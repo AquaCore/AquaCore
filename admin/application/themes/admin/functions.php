@@ -21,12 +21,13 @@ function registerCKEditorSettings(Theme $theme) {
 		'smiley_path' => \Aqua\URL . '/uploads/smiley/',
 		'smiley_descriptions' => array_keys($smileys),
 		'smiley_images' => array_values($smileys),
-		'removePlugins' => 'autogrow',
+		'removePlugins' => 'autogrow,bbcode,spoiler',
 		'height' => 450,
 		'contentsLangDirection' => strtolower($lang->direction),
 		'defaultLanguage' => $lang->code,
 		'pageSeparator' => '<!--- nextpage -->',
 		'pageSeparatorPattern' => '(?:<!--+ *nextpage *--+>)',
+		'enterMode' => 1,
 		'toolbar' => 'AquaCore_Admin',
 		'toolbar_AquaCore_Admin' => array(
 			array(

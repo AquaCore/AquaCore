@@ -21,11 +21,15 @@ $page->theme
 		'entities'              => false,
 		'fillEmptyBlocks'       => false,
 		'forcePasteAsPlainText' => true,
+		'contentsCss'           => array(
+			\Aqua\URL . '/assets/scripts/ckeditor/contents.css',
+			\Aqua\URL . '/assets/styles/bbcode.css'
+		),
 		'smiley_path'           => \Aqua\URL . '/uploads/smiley/',
 		'smiley_descriptions'   => array_keys($smileys),
 		'smiley_images'         => array_values($smileys),
 		'removePlugins'         => 'autogrow,pagination',
-		'extraPlugins'          => 'bbcode',
+		'extraPlugins'          => 'bbcode,spoiler',
 		'bbCodeTags'            => 'b,s,u,i,' .
 		                           'sub,sup,' .
 		                           'url,email,img,' .

@@ -14,17 +14,10 @@ $page->theme
 	->addWordGroup('application', array( 'now' ));
 $page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
 $page->theme->footer->enqueueScript(ScriptManager::script('jquery-ui.timepicker'));
+$page->theme->footer->enqueueScript(ScriptManager::script('moment'));
 $page->theme->footer->enqueueScript('theme.page')
 	->type('text/javascript')
 	->src($page->theme->url . '/scripts/page.js');
-if(L10n::getDefault()->code !== 'en') {
-	$page->theme->footer->enqueueScript(ScriptManager::script('jquery-ui.timepicker-i18n', array(
-				'language' => L10n::getDefault()->code
-			)));
-	$page->theme->footer->enqueueScript(ScriptManager::script('jquery-ui-i18n', array(
-				'language' => L10n::getDefault()->code
-			)));
-}
 $sidebar = new Sidebar;
 ob_start();
 if($form->field('parent')) :
@@ -54,7 +47,7 @@ endif;
 		<tr>
 			<td><?php echo $form->field('publish_date')->getLabel() ?></td>
 			<td>
-				<div class="ac-post-schedule-date ac-script" style="font-weight: bold"></div>
+				<div class="ac-schedule-date ac-script" style="font-weight: bold"></div>
 				<?php echo $form->field('publish_date')->attr('class', 'ac-post-schedule')->render() ?>
 			</td>
 		</tr>

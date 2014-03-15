@@ -158,7 +158,7 @@ extends AbstractFilter
 		$data   = array();
 		$edit   = array_intersect_key($edit, array_flip(array(
 				'author', 'last_editor', 'status', 'ip_address',
-				'anonymous', 'publish_date', 'edit_date',
+				'anonymous', 'publish_date',
 				'bbcode_content', 'html_content', 'options'
 			)));
 		if(empty($edit)) {
@@ -187,14 +187,9 @@ extends AbstractFilter
 			$values['publish_date'] = date('Y-m-d H:i:s', $data['publishDate']);
 			$update .= '_publish_date = ?, ';
 		}
-		if(array_key_exists('edit_date', $edit) && $edit['edit_date'] !== $comment->editDate) {
-			$data['editDate']    = $edit['edit_date'];
-			$values['edit_date'] = date('Y-m-d H:i:s', $data['edit_date']);
-			$update .= '_edit_date = ?, ';
-		}
 		if(array_key_exists('bbcode_content', $edit)) {
 			$values['bbcode_content'] = $data['bbCode'] = $edit['bbcode_content'];
-			$update .= '_bbcode_content = ?, ';
+			$update .= '_bbc_content = ?, ';
 			if(!isset($edit['html_content'])) {
 				$edit['html_content'] = $this->parseCommentContent($edit['bbcode_content']);
 			}
@@ -232,11 +227,10 @@ extends AbstractFilter
 		}
 		array_pop($values);
 		if(isset($values['publish_date'])) $values['publish_date'] = strtotime($values['publish_date']);
-		if(isset($values['edit_date'])) $values['edit_date'] = strtotime($values['publish_date']);
 		if(isset($values['anonymous'])) $values['anonymous'] = ($values['anonymous'] === 'y');
+		$comment->editDate = time();
 		$feedback = array( $comment, $values );
 		Event::fire('comment.update', $feedback);
-		if(!$values['edit_date']) $comment->editDate = time();
 		foreach($data as $key => $val) {
 			$comment->$key = $val;
 		}

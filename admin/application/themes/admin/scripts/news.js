@@ -11,9 +11,9 @@
 			var format = moment(date.getTime());
 			text.html(
 				format.format("MMMM DD, YYYY") +
-					"<br/><span class=\"ac-post-schedule-time\">" +
-					format.format("HH:mm:ss") +
-					"</span>"
+				"<br/><span class=\"ac-post-schedule-time\">" +
+				format.format("HH:mm:ss") +
+				"</span>"
 			);
 		}
 	}

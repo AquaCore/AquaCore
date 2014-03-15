@@ -173,6 +173,9 @@ implements \Serializable
 			$content.= $str . $match[0][0];
 			$offset = $tagOffset + $tagLength;
 		}
+		if($printed < $max) {
+			$content.= substr($this->content, $offset, $max - $printed);
+		}
 		$content = substr($content, 0, strrpos($content, ' '));
 		$inline = array(
 			'b', 'big', 'i', 'small', 'tt', 'label',

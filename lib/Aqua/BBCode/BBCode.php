@@ -9,6 +9,7 @@ use Aqua\BBCode\Rule\IndentRule;
 use Aqua\BBCode\Rule\JustifyRule;
 use Aqua\BBCode\Rule\ListRule;
 use Aqua\BBCode\Rule\QuoteRule;
+use Aqua\BBCode\Rule\SpoilerRule;
 use Aqua\BBCode\Rule\TextRule;
 use Aqua\BBCode\Rule\UrlRule;
 use Aqua\BBCode\Rule\VideoRule;
@@ -63,8 +64,8 @@ class BBCode
 		$this->addRule('indent', new IndentRule());
 		$this->addRule('list', new ListRule());
 		$this->addRule('video', new VideoRule());
-		$this->addRule('quote', new QuoteRule());
-		//$this->addRule('spoiler', new SpoilerRule());
+		//$this->addRule('quote', new QuoteRule());
+		$this->addRule('spoiler', new SpoilerRule());
 		$this->addFilter('smiley', new SmileyFilter(), 0);
 		$this->addFilter('clickable', new ClickableFilter(), 1);
 		return $this;

@@ -19,42 +19,62 @@
 .bbc-quote-content {
 	padding: 3px 20px 3px 40px;
 }
-.bbc-spoiler {
+.bbc-spoiler, spoiler-wrapper {
 	position: relative;
-	padding: 5px 0;
-	width: 100%;
-	margin: 15px 0 5px;
-	border: 1px solid;
-	-webkit-border-radius: 5px;
-	-khtml-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-ms-border-radius: 5px;
-	-o-border-radius: 5px;
-	border-radius: 5px;
+	padding: .2em 10px;
+	margin: 1.4em 0 1em;
+	border: 1px solid #a6a6a6;
+	outline: none !important;
+	border-radius: 3px;
+	background: #ededed;
+	-moz-box-shadow: 0 2px 2px rgba(0, 0, 0, .3) inset;
+	-webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, .3) inset;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, .3) inset;
 }
-.bbc-spoiler-title {
-	z-index: 1;
+.bbc-spoiler-title, .spoiler-title {
 	position: absolute;
-	top: -13px;
-	width: auto;
-	padding: 3px 10px;
+	display: inline-block;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	top: -1em;
+	left: 1em;
+	outline: none !important;
+	border: 1px solid #a6a6a6;
+	padding: .3em 10px;
+	font-size: .80em;
 	font-weight: bold;
-	font-size: .8em;
-	text-transform: uppercase;
+	border-radius: 4px;
 	cursor: pointer;
-	background: white;
-	-webkit-border-radius: 5px;
-	-khtml-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-ms-border-radius: 5px;
-	-o-border-radius: 5px;
-	border-radius: 5px;
+	text-shadow: 1px 1px 0 0 white;
+	background: #ffffff;
+	background: -moz-linear-gradient(top,  #ffffff 0%, #e4e4e4 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e4e4e4));
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#e4e4e4 100%);
+	background: -o-linear-gradient(top,  #ffffff 0%,#e4e4e4 100%);
+	background: -ms-linear-gradient(top,  #ffffff 0%,#e4e4e4 100%);
+	background: linear-gradient(to bottom,  #ffffff 0%,#e4e4e4 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e4e4e4',GradientType=0 );
 }
-.bbc-spoiler-content {
+.bbc-spoiler-title:hover, .spoiler-title:hover {
+	-moz-box-shadow: 0 0 1px rgba(0, 0, 0, .3) inset;
+	-webkit-box-shadow: 0 0 1px rgba(0, 0, 0, .3) inset;
+	box-shadow: 0 0 1px rgba(0, 0, 0, .3) inset;
+	background: #f2f2f2;
+	background: -moz-linear-gradient(top,  #f2f2f2 0%, #cccccc 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f2f2), color-stop(100%,#cccccc));
+	background: -webkit-linear-gradient(top,  #f2f2f2 0%,#cccccc 100%);
+	background: -o-linear-gradient(top,  #f2f2f2 0%,#cccccc 100%);
+	background: -ms-linear-gradient(top,  #f2f2f2 0%,#cccccc 100%);
+	background: linear-gradient(to bottom,  #f2f2f2 0%,#cccccc 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f2', endColorstr='#cccccc',GradientType=0 );
+}
+.bbc-spoiler-content, .spoiler-content {
+	margin: 1.2em 10px .5em;
+	min-height: 1em;
+}
+.bbc-spoiler-content.hidden, .spoiler-content.spoiler-hidden {
 	display: none;
-	padding: 5px 10px 0 10px;
 }
-.cke_editable .bbc-spoiler-content {
+.cke_editable .spoiler-content {
 	display: block !important;
 }
 .bbc-hide-text {

@@ -1,29 +1,24 @@
 (function($) {
-	var datePicker, dateForm, updateDatePicker;
+	var schedule;
 
-	updateDatePicker = function() {
-		var date = datePicker.datetimepicker("getDate"),
-			text = $(".ac-post-schedule-date");
+	function updateDatePicker() {
+		var date = $(this).datetimepicker("getDate"),
+			text = $(this).closest("td").find(".ac-schedule-date");
 		if(!date || (Math.floor((new Date).getTime() / 1000) * 1000) == date.getTime()) {
 			text.html(AquaCore.l("application", "now"));
-			dateForm.val("");
+			schedule.val("");
 		} else {
-			text.html($.datepicker.formatDate("MM dd, yy", date) + "<br/><span class=\"ac-post-schedule-time\">" + $.datepicker.formatTime("HH:mm:ss", {
-				hour: date.getHours(),
-				minute: date.getMinutes(),
-				second: date.getSeconds()
-			}) + "</span>");
-			dateForm.val($.datepicker.formatDate("yy-mm-dd", date) + " " + $.datepicker.formatTime("HH:mm:ss", {
-				hour: date.getHours(),
-				minute: date.getMinutes(),
-				second: date.getSeconds()
-			}));
+			var format = moment(date.getTime());
+			text.html(
+				format.format("MMMM DD, YYYY") +
+				"<br/><span class=\"ac-post-schedule-time\">" +
+				format.format("HH:mm:ss") +
+				"</span>"
+			);
 		}
 	};
-	datePicker = $("<input type=\"hidden\">");
-	dateForm = $(".ac-post-schedule");
-	dateForm.css("display", "none").before(datePicker);
-	datePicker.datetimepicker({
+	schedule = $(".ac-post-schedule");
+	schedule.datetimepicker({
 		showOn: "button",
 		buttonText: "",
 		nextText: "",
@@ -31,13 +26,12 @@
 		dateFormat: "yy-mm-dd",
 		timeFormat: "HH:mm:ss",
 		onSelect: updateDatePicker
-	});
-	if(dateForm.attr("timestamp")) {
-		var date = new Date((parseInt(dateForm.attr("timestamp")) * 1000));
-		console.log(date);
-		datePicker.datetimepicker("setDate", date);
+	}).css("display", "none");
+	if(schedule.attr("timestamp")) {
+		var date = new Date((parseInt(schedule.attr("timestamp")) * 1000));
+		schedule.datetimepicker("setDate", date);
 	}
-	updateDatePicker();
+	updateDatePicker.apply(schedule.get(0));
 	$(".ac-post-delete").bind("click", function(e) {
 		if(!confirm(AquaCore.l("page", "confirm-delete-s"))) {
 			e.preventDefault();

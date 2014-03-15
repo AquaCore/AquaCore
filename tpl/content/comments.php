@@ -1,6 +1,7 @@
 <?php
 use Aqua\Core\App;
 use Aqua\UI\ScriptManager;
+use Aqua\UI\StyleManager;
 
 /**
  * @var $content      \Aqua\Content\ContentData
@@ -11,6 +12,7 @@ use Aqua\UI\ScriptManager;
  */
 if($content->forged || App::user()->role()->hasPermission('comment')) {
 	$page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
+	$page->theme->footer->enqueueLink(StyleManager::style('bbcode'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('number-format'));
 	$page->theme->footer->enqueueScript('tpl.comments')
