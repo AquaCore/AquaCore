@@ -58,6 +58,10 @@ implements \Iterator, \Countable
 	 */
 	public $rowsFound = 0;
 	/**
+	 * @var int
+	 */
+	public $rowCount = 0;
+	/**
 	 * @var array
 	 */
 	public $results = array();
@@ -69,6 +73,10 @@ implements \Iterator, \Countable
 	 * @var bool
 	 */
 	public $calcRows = false;
+	/**
+	 * @var bool
+	 */
+	public $countRows = false;
 	/**
 	 * @var bool
 	 */
@@ -362,6 +370,17 @@ implements \Iterator, \Countable
 	 * @param bool $val
 	 * @return static
 	 */
+	public function countRows($val = true)
+	{
+		$this->countRows = (bool)$val;
+
+		return $this;
+	}
+
+	/**
+	 * @param bool $val
+	 * @return static
+	 */
 	public function withRollup($val = true)
 	{
 		$this->rollup = (bool)$val;
@@ -489,8 +508,12 @@ implements \Iterator, \Countable
 			$this->errorInfo = $sth->errorInfo();
 			throw $exception;
 		}
-		$results = array();
-		while($data = $sth->fetch(\PDO::FETCH_ASSOC)) {
+		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
+		$this->results = array();
+		if($this->calcRows) {
+			$this->rowsFound = (int)$this->dbh->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN, 0);
+		}
+		foreach($results as $data) {
 			foreach($this->columnTypes as $column => $type) {
 				if(array_key_exists($column, $data)) switch($type) {
 					case 'integer':
@@ -511,17 +534,23 @@ implements \Iterator, \Countable
 				continue;
 			}
 			if($this->resultsKey) {
-				$results[$data[$this->resultsKey]] = $result;
+				$this->results[$data[$this->resultsKey]] = $result;
 			} else {
-				$results[] = $result;
+				$this->results[] = $result;
 			}
 		}
-		$this->results      = $results;
-		$this->resultsCount = count($results);
-		$this->rewind();
-		if($this->calcRows) {
-			$this->rowsFound = (int)$this->dbh->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN, 0);
+		$this->resultsCount = count($this->results);
+		if($this->countRows) {
+			$count = clone $this;
+			$this->rowCount = $count->calcRows(false)
+				->countRows(false)
+				->columns(array( 'count' => 'COUNT(1)' ), false)
+				->setColumnType(array( 'count' => 'integer' ))
+				->query()
+				->get('count');
+
 		}
+		$this->rewind();
 
 		return $this;
 	}
