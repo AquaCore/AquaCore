@@ -297,6 +297,7 @@ extends AbstractFilter
 	public function contentData_getComments(ContentData $content, $root = null, $start = 0, $limit = 0)
 	{
 		$search = $this->contentData_commentSearch($content)
+			->calcRows(true)
 			->setKey('id')
 			->limit($start, $limit)
 			->order(array( 'publish_date' => 'DESC' ));
@@ -306,13 +307,7 @@ extends AbstractFilter
 			$search->where(array( 'root_id' => 0 ));
 		}
 		$search->query();
-		$rowsFound = Query::search(App::connection())
-			->columns(array( 'count' => 'COUNT(1)' ))
-			->setColumnType(array( 'count' => 'integer' ))
-			->from(ac_table('comments'))
-			->where(array( '_content_id' => $content->uid ))
-			->query()
-			->get('count');
+		$rowsFound = $search->rowsFound;
 		$comments  = $search->results;
 		if(!($nestingLevel = (int)$this->getOption('nasting', 5)) || empty($comments)) {
 			return array( $comments, $rowsFound );

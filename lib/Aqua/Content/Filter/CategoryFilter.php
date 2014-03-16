@@ -280,10 +280,10 @@ extends AbstractFilter
 			->columns(array( 'category_id' => 'cc._category_id' ))
 			->whereOptions(array( 'category_id' => 'cc._category_id' ))
 			->from(ac_table('content_categories'), 'cc')
-			->groupBy(array( 'cc._content_id', 'cc._category_id' ))
-			->leftJoin(ac_table('content'), 'c._uid = cc._content_id', 'c');
+			->groupBy(array( 'c._uid' ))
+			->innerJoin(ac_table('content'), 'c._uid = cc._content_id', 'c');
 		if($this->contentType->table && isset($search->joins[$this->contentType->table])) {
-			$search->joins[$this->contentType->table]['on'] = 't._uid = cc._content_id';
+			$search->joins[$this->contentType->table]->on = 't._uid = cc._content_id';
 		}
 
 		return $search;

@@ -214,7 +214,7 @@ extends Page
 				$commentsTpl = new Template;
 				$commentsTpl
 					->set('comments', $comments)
-					->set('commentCount', $rowsFound)
+					->set('commentCount', $post->commentCount())
 					->set('content', $post)
 					->set('paginator', $commentsPgn)
 					->set('page', $this);
