@@ -8,7 +8,7 @@ use Aqua\UI\Form;
  * @var $token        string
  * @var $page         \Page\Admin\Plugin
  */
-$page->theme->addWordGroup('settings', array(
+$page->theme->addWordGroup('plugin', array(
 		'plugin-settings',
 		'confirm-delete-s',
 		'confirm-delete-p'

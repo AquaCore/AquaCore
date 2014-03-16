@@ -17,11 +17,11 @@ extends Page
 	 * @var \Aqua\Ragnarok\Server
 	 */
 	public $server;
-
 	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
+
 	public static $categoriesPerPage = 20;
 	public static $itemsPerPage = 20;
 	public static $charactersPerPage = 20;
@@ -695,12 +695,17 @@ extends Page
 				return;
 			}
 			$frm = new Form($this->request);
-			$frm->input('name', true);
+			$frm->input('name', true)
+				->type('text')
+				->value(htmlspecialchars($category->name), false)
+				->setLabel(__('ragnarok-shop', 'category-name'));
+			$frm->input('name', true)
+				->type('text')
+				->value(htmlspecialchars($category->name), false)
+				->setLabel(__('ragnarok-shop', 'category-name'));
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
-
-			return;
 		}
 	}
 

@@ -867,7 +867,7 @@ extends Page
 				$where['last_ip_address'] = array(Search::SEARCH_LIKE, addcslashes($x, '%_\\') . '%');
 			}
 			if(($x = $this->request->uri->getInt('g', false)) !== false) {
-				$where['username'] = intval($x);
+				$where['group_id'] = intval($x);
 			}
 			if(($x = $this->request->uri->getArray('s', false)) && !empty($x)) {
 				$x = array_map('intval', $x);
@@ -988,6 +988,10 @@ extends Page
 					->results;
 			}
 			$this->title = $this->theme->head->section = __('ragnarok', 'account-info', htmlspecialchars($account->username));
+			$this->theme->set('return', ac_build_url(array(
+					'path' => array( 'r', $this->server->key ),
+			        'action' => 'account'
+				)));
 			$tpl = new Template;
 			$tpl->set('account', $account)
 			    ->set('characters', $characters)

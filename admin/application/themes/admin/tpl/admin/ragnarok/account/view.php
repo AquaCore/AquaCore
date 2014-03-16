@@ -26,7 +26,7 @@ $datetime_format = App::$settings->get('datetime_format', '');
 			<td><?php echo $account->id ?></td>
 			<td><b><?php echo __('ragnarok', 'username') ?></b></td>
 			<td ac-field="username"><?php echo htmlspecialchars($account->username) ?></td>
-			<td colspan="2"><b><?php echo __('ragnarok', 'user') ?></b></td>
+			<td colspan="2"><b><?php echo __('ragnarok', 'owner') ?></b></td>
 			<td><?php echo ($account->owner ? '<a href="' . ac_build_url(array(
 					'path' => array( 'user' ),
 					'action' => 'view',

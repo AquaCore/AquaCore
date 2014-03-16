@@ -51,10 +51,11 @@ $sidebar->append('role', array(array(
 		</select>
 		'
 	)))->append('submit', array('class' => 'ac-sidebar-action', array(
-		'content' => '<input class="ac-sidebar-submit" type="submit" value="' . __('account', 'search') . '">'
+		'content' => '<input class="ac-sidebar-submit" type="submit" value="' . __('application', 'search') . '">'
 	)));
 $wrapper = new Tag('form');
 $wrapper->attr('method', 'GET');
+$wrapper->append(ac_form_path());
 $sidebar->wrapper($wrapper);
 $page->theme->template = 'sidebar-right';
 $page->theme->set('sidebar', $sidebar);

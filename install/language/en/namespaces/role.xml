@@ -15,6 +15,7 @@
     <word namespace="role" key="confirm-delete-s">Are you sure you want to delete this role?</word>
     <word namespace="role" key="new-role">New Role</word>
     <word namespace="role" key="edit-role">Edit Role</word>
+    <word namespace="role" key="x-edit-role">Edit Role - %s</word>
     <word namespace="role" key="edit">Edit</word>
     <word namespace="role" key="delete">Delete</word>
   </wordgroup>

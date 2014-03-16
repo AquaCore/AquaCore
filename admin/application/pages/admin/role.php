@@ -165,7 +165,8 @@ extends Page
 			$frm->submit();
 			$frm->validate(null, !$this->request->ajax);
 			if(!$this->request->ajax && $frm->status !== Form::VALIDATION_SUCCESS) {
-				$this->title = __('role', 'edit-role-name', htmlspecialchars($role->name));
+				$this->title = __('role', 'x-edit-role', htmlspecialchars($role->name));
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'role' ) )));
 				$this->theme->head->section = __('role', 'edit-role');
 				$tpl = new Template;
 				$tpl->set('role', $role)

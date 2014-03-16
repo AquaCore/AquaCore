@@ -139,8 +139,8 @@ $ban_user_url = ac_build_url(array(
 	<?php else : foreach($ragnarokAccounts as $acc) : ?>
 		<tr>
 			<td><a href="<?php echo ac_build_url(array(
-				                                     'path'      => array( 'ro', $acc->server->key ),
-				                                     'action'    => 'view_account',
+				                                     'path'      => array( 'r', $acc->server->key ),
+				                                     'action'    => 'viewaccount',
 				                                     'arguments' => array( $acc->id )
 			                                     )) ?>"><?php echo htmlspecialchars($acc->username) ?></a></td>
 			<td><?php echo $acc->gender() ?></td>

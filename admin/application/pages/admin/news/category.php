@@ -89,7 +89,7 @@ extends Page
 				->setLabel(__('content', 'category-description'));
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				$this->theme->head->section = $this->title = __('news', 'categories');
+				$this->theme->head->section = $this->title = __('content', 'categories');
 				$current_page = $this->request->uri->getInt('page', 1, 1);
 				$categories = $this->contentType->categories();
 				$count = count($categories);
@@ -151,7 +151,7 @@ extends Page
 				try {
 					$category->removeImage(true);
 					$error = false;
-					$message = __('news', 'category-updated');
+					$message = __('content', 'category-updated');
 				} catch(\Exception $exception) {
 					$error = true;
 					$message = __('application', 'unexpected-error');
@@ -175,20 +175,22 @@ extends Page
 			}
 			$frm = new Form($this->request);
 			$frm->file('image')
-		        ->attr('accept', 'image/jpeg, image/png, image/gif');
+		        ->attr('accept', 'image/jpeg, image/png, image/gif')
+				->setLabel(__('content', 'category-image'));
 			$frm->input('name', true)
 				->required()
 		        ->attr('maxlength', 255)
 				->value(htmlspecialchars($category->name))
-		        ->setLabel(__('news', 'category-name'));
+		        ->setLabel(__('content', 'category-name'));
 			$frm->textarea('description', true)
 				->append(htmlspecialchars($category->description))
-		        ->setLabel(__('news', 'category-description'));
+		        ->setLabel(__('content', 'category-description'));
 			$frm->submit();
 			$frm->validate(null, $this->request->ajax);
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				$this->title = $this->theme->head->section = __('content', 'edit-category-x',
-				                                                htmlspecialchars($category->name));
+				$this->title = __('content', 'edit-category-x', htmlspecialchars($category->name));
+				$this->theme->head->section = __('content', 'edit-category');
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'news', 'category' ) )));
 				$tpl = new Template;
 				$tpl->set('category', $category)
 					->set('form', $frm)

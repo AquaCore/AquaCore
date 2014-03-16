@@ -87,6 +87,10 @@ extends Page
 				$this->response->setHeader('Content-Type', 'text/plain');
 				echo $tpl->render('exception/log');
 			} else {
+				$this->theme->set('return', ac_build_url(array(
+						'path' => array( 'log' ),
+						'action' => 'error'
+					)));
 				echo $tpl->render('admin/log/view_error');
 			}
 		} catch(\Exception $exception) {
@@ -150,6 +154,10 @@ extends Page
 
 				return;
 			}
+			$this->theme->set('return', ac_build_url(array(
+					'path' => array( 'log' ),
+					'action' => 'paypal'
+				)));
 			$tpl = new Template;
 			$tpl->set('txn', $txn)
 				->set('page', $this);

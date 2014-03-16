@@ -91,6 +91,7 @@ extends Page
 				return;
 			}
 			$this->theme->head->section = $this->title = __('account', 'view-account');
+			$this->theme->set('return', ac_build_url(array( 'path' => array( 'user' ) )));
 			$ragnarok_accounts          = array();
 			foreach(Server::$servers as $server) {
 				$ragnarok_accounts = array_merge($ragnarok_accounts, $server->login->getAccounts($account));
@@ -264,6 +265,11 @@ extends Page
 				}, $this->request->ajax);
 			if($frm->status !== Form::VALIDATION_SUCCESS && !$this->request->ajax) {
 				$this->theme->head->section = $this->title = __('account', 'edit-account');
+				$this->theme->set('return', ac_build_url(array(
+						'path' => array( 'role' ),
+				        'action' => 'view',
+				        'arguments' => array( $account->id )
+					)));
 				$tpl = new Template;
 				$tpl->set('account', $account)
 					->set('form', $frm)
@@ -417,6 +423,11 @@ extends Page
 					$this->title                = __('profile', 'ban-x-user', htmlspecialchars($account->displayName));
 					$this->theme->head->section = __('profile', 'ban');
 				}
+				$this->theme->set('return', ac_build_url(array(
+						'path' => array( 'role' ),
+						'action' => 'view',
+						'arguments' => array( $account->id )
+					)));
 				$tpl = new Template;
 				$tpl->set('account', $account)
 					->set('form', $frm)
@@ -518,6 +529,11 @@ extends Page
 				return;
 			}
 			$this->theme->head->section = $this->title = __('profile-history', 'x-profile-history', htmlspecialchars($account->displayName));
+			$this->theme->set('return', ac_build_url(array(
+					'path' => array( 'role' ),
+					'action' => 'view',
+					'arguments' => array( $account->id )
+				)));
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$search = ProfileUpdateLog::search()
 				->calcRows(true)

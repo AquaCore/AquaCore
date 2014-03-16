@@ -3,7 +3,7 @@
   <wordgroup language="en">
     <word namespace="content" key="author">Author</word>
     <word namespace="content" key="editor">Last Editor</word>
-    <word namespace="content" key="categories">News Categories</word>
+    <word namespace="content" key="categories">Categories</word>
     <word namespace="content" key="categories-deleted">%d categories deleted.</word>
     <word namespace="content" key="category">Category</word>
     <word namespace="content" key="category-cannot-delete">The category %s cannot be deleted.</word>
@@ -26,7 +26,7 @@
     <word namespace="content" key="description">Description</word>
     <word namespace="content" key="edit">Edit</word>
     <word namespace="content" key="edit-category">Edit Category</word>
-    <word namespace="content" key="edit-category-x">Edit Category %s</word>
+    <word namespace="content" key="edit-category-x">Edit Category - %s</word>
     <word namespace="content" key="edit-date">Last Edited</word>
     <word namespace="content" key="featured">Featured</word>
     <word namespace="content" key="id">ID</word>

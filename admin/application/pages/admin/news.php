@@ -10,6 +10,7 @@ use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
+use Aqua\User\Account;
 
 class News
 extends Page
@@ -92,6 +93,7 @@ extends Page
 			}
 			$search
 				->calcRows(true)
+				->where($where)
 				->limit(($current_page - 1) * self::ENTRIES_PER_PAGE, self::ENTRIES_PER_PAGE)
 				->order(array( 'uid' => 'DESC' ))
 				->query();

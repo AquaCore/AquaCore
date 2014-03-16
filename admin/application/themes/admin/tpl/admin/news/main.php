@@ -41,6 +41,7 @@ $categories = $page->contentType->categories();
 $sidebar    = new Sidebar;
 $wrapper    = new Tag('form');
 $wrapper->attr('method', 'GET');
+$wrapper->append(ac_form_path());
 $sidebar->wrapper($wrapper);
 $datetime_format = App::settings()->get('datetime_format');
 ob_start();

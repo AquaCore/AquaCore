@@ -177,7 +177,8 @@ extends Page
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title =
-				$this->theme->head->section = __('plugin', 'plugin-settings', htmlspecialchars($plugin->name));
+				$this->theme->head->section = __('plugin', 'x-plugin-settings', htmlspecialchars($plugin->name));
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'plugin' ) )));
 				$tpl         = new Template;
 				$tpl->set('plugin', $plugin)
 				    ->set('form', $frm)

@@ -2,8 +2,8 @@
 <languageimport>
   <wordgroup language="en">
     <word namespace="plugin" key="plugins">Plugins</word>
-    <word namespace="plugin" key="plugin-settings">Plugin Settings </word>
-    <word namespace="plugin" key="x-plugin-settings">%s Settings </word>
+    <word namespace="plugin" key="plugin-settings">Plugin Settings</word>
+    <word namespace="plugin" key="x-plugin-settings">Plugin Settings - %s</word>
     <word namespace="plugin" key="activate">Activate</word>
     <word namespace="plugin" key="deactivate">Deactivate</word>
     <word namespace="plugin" key="delete">Delete</word>
