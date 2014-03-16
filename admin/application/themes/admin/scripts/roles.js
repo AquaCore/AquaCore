@@ -70,6 +70,16 @@
 			return false;
 		}
 	});
+	$("[name=x-bulk]").bind("click", function(e) {
+		var len = $("[name=\"roles[]\"]:checked").length;
+		if(($("select[name=action]").val() === "delete") &&
+			(len === 1 && !confirm(AquaCore.l("role", "confirm-delete-s"))) ||
+			(len > 1 && !confirm(AquaCore.l("role", "confirm-delete-p")))) {
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		}
+	});
 	$(".ac-edit-role").bind("click", function(e) {
 		$("#edit-role" + $(this).attr("ac-role-id")).dialog("open");
 		e.preventDefault();

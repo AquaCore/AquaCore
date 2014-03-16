@@ -9,7 +9,7 @@
 			modal: true,
 			resizable: false,
 			draggable: false,
-			title: AquaCore.l("settings", "plugin-settings")
+			title: AquaCore.l("plugin", "plugin-settings")
 		}).dialog("close");
 		new AquaCore.AjaxForm($("form", this).get(0), {
 			dataType: "json",

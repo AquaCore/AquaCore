@@ -500,7 +500,7 @@ button.ac-delete-button {
 		font-size: 1.7em;
 		font-size: italic;
 		font-family: "Trebuchet MS", "Calibri", Helvetica, sans-serif;
-		text-indent: 30px;
+		text-indent: 15px;
 		color: $mid-blue-1;
 		height: 30px;
 		border-bottom: 1px solid;
@@ -509,6 +509,14 @@ button.ac-delete-button {
 		@include text-shadow(1px -1px 0 white);
 		&:first-letter {
 			font-size: 1.3em;
+		}
+		.ac-return-icon {
+			display: block;
+			width: 16px;
+			height: 16px;
+			margin: 7px 0 0 20px;
+			background: transparent url('../../../../../assets/images/icons/return.png') center center no-repeat;
+			float: left;
 		}
 	}
 	.navigation {
@@ -1438,4 +1446,17 @@ button.ac-delete-button {
 }
 .ac-delete-server {
 	margin-right: 20px;
+}
+.ac-form-table {
+	width: 400px;
+	input, textarea, select {
+		width: 97%;
+	}
+	textarea {
+		height: 100px
+	}
+	input[type=submit] {
+		width: auto;
+		float: right;
+	}
 }

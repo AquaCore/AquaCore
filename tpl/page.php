@@ -8,8 +8,7 @@ use Aqua\UI\Menu;
  */
 $title = '';
 if($parent = $content->parent()) {
-	$title.= '<a class="ac-page-parent" href="' . ac_build_url(array( 'path' => array( 'page', $parent->slug ) ));
-	$title.='" style="float: left"><div class="ac-page-parent-icon"></div></a>';
+	$page->theme->set('return', ac_build_url(array( 'path' => array( 'page', $parent->slug ) )));
 }
 $title.= '<a href="' . ac_build_url(array( 'path' => array( 'page', $content->slug ) )) . '" style="float: left">';
 $title.= htmlspecialchars($content->title);
