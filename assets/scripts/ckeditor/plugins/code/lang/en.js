@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("code","en",{title:"Insert Code",blockTitle:"Code (:mode)",widgetTitle:"Code",language:"Language",theme:"Theme"});

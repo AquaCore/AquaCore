@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagination","pt-BR",{addPanelTitle:"Nova Página",deletePanelTitle:"Deletar Página",pageNumber:"Página :number"});

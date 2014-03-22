@@ -1,0 +1,30 @@
+.cke_dialog_contents .CodeMirror {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	text-decoration: none;
+	width: auto;
+	height: auto;
+	vertical-align: baseline;
+	box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	-webkit-transition: none;
+	-moz-transition: none;
+	-ms-transition: none;
+	transition: none;
+	border-collapse: collapse;
+	font-family: Monaco, "Lucida Console", monospace;
+	color: #000;
+	text-align: left;
+	white-space: normal;
+	cursor: auto;
+	float: none;
+
+	position: absolute;
+	left: 3px;
+	right: 3px;
+	top: 70px;
+	bottom: 40px;
+}
