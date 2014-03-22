@@ -3,11 +3,14 @@ namespace Page\Admin;
 
 use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
+use Aqua\Log\PayPalLog;
+use Aqua\Log\TransferLog;
 use Aqua\Site\Page;
 use Aqua\UI\Form;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
 use Aqua\UI\Theme;
+use Aqua\User\Account;
 use Aqua\User\Role as R;
 
 class Role
@@ -38,7 +41,12 @@ extends Page
 					App::user()->addFlash('success', null, __('role', 'role-' . $action . '-s', htmlspecialchars($role->name)));
 				} else if($updated > 1) {
 					App::user()->addFlash('success', null, __('role', 'role-' . $action . '-p', number_format($updated)));
+				} else {
+					return;
 				}
+				Account::rebuildCache('last_user');
+				TransferLog::rebuildCache('last_transfer');
+				PayPalLog::rebuildCache('last_donation');
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
