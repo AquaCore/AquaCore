@@ -562,6 +562,9 @@ extends Page
 		} else {
 			$user->addFlash('success', __('registration', 'completed'), __('registration', 'registered'));
 			$user->login($account);
+			if($account->spamFilter()) {
+				$user->addFlash('warning', null, __('registration', 'flagged'));
+			}
 		}
 		$this->response->redirect(\Aqua\URL);
 	}
@@ -589,6 +592,9 @@ extends Page
 			$account->deleteMeta(self::REGISTRATION_KEY);
 			$account->update(array( 'status' => UserAccount::STATUS_NORMAL ));
 			App::user()->addFlash('success', null, __('registration', 'account-activated'));
+			if($account->spamFilter()) {
+				App::user()->addFlash('warning', null, __('registration', 'flagged'));
+			}
 			$this->response->status(302)->redirect(\Aqua\URL);
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);

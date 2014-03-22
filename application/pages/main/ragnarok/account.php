@@ -68,6 +68,7 @@ extends Page
 	public function index_action()
 	{
 		$this->title = __('ragnarok-account', 'view-account-name', htmlspecialchars($this->account->username));
+		$this->theme->set('return', ac_build_url(array( 'path' => array( 'account' ) )));
 		$this->theme->head->section = __('ragnarok-account', 'view-account');
 		$tpl = new Template;
 		$tpl->set('account', $this->account);
@@ -344,7 +345,7 @@ extends Page
 				'email'        => htmlspecialchars($user->account->email),
 				'time-now'     => strftime(App::settings()->get('date_format'), ''),
 				'key'          => $key,
-				'url'          => $this->account->url(array( 'action' => 'resetpass', 'arguments' => array( $key ) ))
+				'url'          => $this->account->url(array( 'action' => 'resetpw', 'arguments' => array( $key ) ))
 			), $title, $content);
 			App::user()->session->tmp('ragnarok-pw-reset::' . $this->account->id, $key, 3600 * 2);
 			$mailer = ac_mailer(true);

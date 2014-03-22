@@ -70,7 +70,6 @@ class Account
 	 * @access protected
 	 */
 	protected $_metaLoaded = false;
-
 	/**
 	 * @var \Aqua\User\Account
 	 */
@@ -85,6 +84,7 @@ class Account
 	const STATUS_SUSPENDED                = 2;
 	const STATUS_BANNED                   = 3;
 	const STATUS_LOCKED                   = 4;
+	const STATUS_FLAGGED                  = 5;
 
 	const REGISTRATION_USERNAME_TAKEN     = 1;
 	const REGISTRATION_DISPLAY_NAME_TAKEN = 2;
@@ -267,6 +267,17 @@ class Account
 			$this->meta[$data[0]] = $data[1];
 		}
 		$this->_metaLoaded = true;
+	}
+
+	public function spamFilter()
+	{
+		$isSpam = false;
+		$feedback = array( $this, $isSpam );
+		if(Event::fire('account.spam-filter', $feedback) === false || $isSpam) {
+			$this->update(array( 'status' => self::STATUS_FLAGGED ));
+			return true;
+		}
+		return false;
 	}
 
 	/**
