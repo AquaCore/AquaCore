@@ -89,7 +89,7 @@ $sidebar->append('status', array( array(
 	)));
 ob_clean();
 ?>
-<input class="ac-sidebar-submit" type="submit" value="<?php echo __('news', 'search') ?>">
+<input class="ac-sidebar-submit" type="submit" value="<?php echo __('application', 'search') ?>">
 <?php
 $sidebar->append('submit', array(
 	'class' => 'ac-sidebar-action',

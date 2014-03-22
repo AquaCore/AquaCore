@@ -298,6 +298,7 @@ extends AbstractFilter
 	{
 		$search = $this->contentData_commentSearch($content)
 			->calcRows(true)
+			->where(array( 'status' => Comment::STATUS_PUBLISHED ))
 			->setKey('id')
 			->limit($start, $limit)
 			->order(array( 'publish_date' => 'DESC' ));
@@ -373,6 +374,7 @@ extends AbstractFilter
 				'publish_date'  => 'UNIX_TIMESTAMP(c._publish_date)',
 				'edit_date'     => 'UNIX_TIMESTAMP(c._edit_date)',
 				'rating'        => 'c._rating',
+				'reports'       => 'c._reports',
 				'options'       => 'c._options',
 				'html'          => 'c._html_content',
 				'bbcode'        => 'c._bbc_content'
@@ -459,8 +461,19 @@ extends AbstractFilter
 		if(!$sth->execute() || !$sth->rowCount()) {
 			return false;
 		}
+		$tbl = ac_table('comments');
+		$reportId = App::connection()->lastInsertId();
+		$sth = App::connection()->prepare("
+		UPDATE `$tbl`
+		SET _reports = _reports + 1
+		WHERE id = ?
+		LIMIT 1
+		");
+		$sth->bindValue(1, $comment->id, \PDO::PARAM_INT);
+		$sth->execute();
+		$comment->reportCount++;
 		$report = $this->reportSearch()
-			->where(array( 'id' => App::connection()->lastInsertId() ))
+			->where(array( 'id' => $reportId ))
 			->query()
 			->current();
 		$feedback = array( $report, $comment, $user );
@@ -503,6 +516,7 @@ extends AbstractFilter
 				'publish_date'  => 'UNIX_TIMESTAMP(co._publish_date)',
 				'edit_date'     => 'UNIX_TIMESTAMP(co._edit_date)',
 				'rating'        => 'co._rating',
+				'reports'       => 'co._reports',
 				'options'       => 'co._options',
 				'html'          => 'co._html_content',
 				'bbcode'        => 'co._bbc_content'
@@ -521,6 +535,7 @@ extends AbstractFilter
 				'publish_date'  => 'co._publish_date',
 				'edit_date'     => 'co._edit_date',
 				'rating'        => 'co._rating',
+				'reports'       => 'co._reports',
 				'options'       => 'co._options',
 			));
 	}
@@ -569,12 +584,13 @@ extends AbstractFilter
 		if($data['last_editor'] !== null) $comment->lastEditorId = (int)$data['last_editor'];
 		$comment->publishDate = (int)$data['publish_date'];
 		if($data['edit_date'] !== null) $comment->editDate = (int)$data['edit_date'];
-		$comment->options   = (int)$data['options'];
-		$comment->rating    = (int)$data['rating'];
-		$comment->anonymous = ($data['anonymous'] === 'y');
-		$comment->ipAddress = $data['ip_address'];
-		$comment->html      = $data['html'];
-		$comment->bbCode    = $data['bbcode'];
+		$comment->options     = (int)$data['options'];
+		$comment->rating      = (int)$data['rating'];
+		$comment->reportCount = (int)$data['reports'];
+		$comment->anonymous   = ($data['anonymous'] === 'y');
+		$comment->ipAddress   = $data['ip_address'];
+		$comment->html        = $data['html'];
+		$comment->bbCode      = $data['bbcode'];
 
 		return $comment;
 	}

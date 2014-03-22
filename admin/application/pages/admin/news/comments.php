@@ -2,6 +2,7 @@
 namespace Page\Admin\news;
 
 use Aqua\Content\ContentType;
+use Aqua\Content\Filter\CommentFilter\Comment;
 use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
 use Aqua\Site\Page;
@@ -17,7 +18,7 @@ extends Page
 	 */
 	public $contentType;
 
-	const COMMENTS_PER_PAGE = 15;
+	public static $commentsPerPage = 7;
 
 	public function run()
 	{
@@ -42,10 +43,12 @@ extends Page
 			$search
 				->calcRows(true)
 				->order(array( 'id' => 'DESC' ))
-				->limit(($current_page - 1) * self::COMMENTS_PER_PAGE, self::COMMENTS_PER_PAGE)
+				->limit(($current_page - 1) * self::$commentsPerPage, self::$commentsPerPage)
 				->where($where)
 				->query();
-			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / 15), $current_page);
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$commentsPerPage),
+			                      $current_page);
 			$tpl = new Template;
 			$tpl->set('comments', $search->results)
 				->set('comment_count', $search->rowsFound)
@@ -66,21 +69,62 @@ extends Page
 				$this->error(404);
 				return;
 			}
-			$this->title = $this->theme->head->section = __('content', 'edit-comment');
+			/**
+			 * @var $comment \Aqua\Content\Filter\CommentFilter\Comment
+			 */
 			$frm = new Form($this->request);
 			$frm->textarea('content')
+				->append(htmlspecialchars($comment->bbCode))
 				->required();
 			$frm->checkbox('anonymous')
 				->value(array( '1' => '' ))
-			    ->setLabel(__('news', 'comment-anonymously'));
-			$frm->checkbox('anonymous')
-				->value(array( '1' => '' ))
-			    ->setLabel(__('news', 'comment-anonymously'));
-			$tpl = new Template;
-			$tpl->set('comment', $comment)
-		        ->set('page', $this);
-			$tpl->render('admin/news/edit_comment');
-			return;
+				->checked($comment->anonymous ? '1' : null)
+			    ->setLabel(__('comment', 'anonymous'));
+			$frm->select('status')
+				->value(array(
+					Comment::STATUS_PUBLISHED => __('comment-status', Comment::STATUS_PUBLISHED),
+					Comment::STATUS_HIDDEN => __('comment-status', Comment::STATUS_HIDDEN),
+					Comment::STATUS_FLAGGED => __('comment-status', Comment::STATUS_FLAGGED)
+				))
+				->selected($comment->status)
+			    ->setLabel(__('content', 'status'));
+			$frm->input('delete')
+				->type('submit')
+				->setLabel(__('application', 'delete'));
+			$frm->input('submit')
+				->type('submit')
+				->setLabel(__('application', 'submit'));
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'news', 'comments' ) )));
+				$this->title = $this->theme->head->section = __('content', 'edit-comment');
+				$tpl = new Template;
+				$tpl->set('comment', $comment)
+					->set('reports', $comment
+						->reportSearch()
+						->query()
+						->results)
+				    ->set('form', $frm)
+				    ->set('page', $this);
+				echo $tpl->render('admin/news/edit-comment');
+				return;
+			}
+			try {
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				if($this->request->data('submit')) {
+					$comment->update(array(
+							'bbcode_content' => $this->request->getString('content'),
+							'anonymous' => (bool)$this->request->getInt('anonymous'),
+							'status' => $this->request->getInt('status'),
+							'last_editor' => App::user()->account->id
+						));
+				} else if($this->request->data('delete')) {
+					$comment->delete();
+				}
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

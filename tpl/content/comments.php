@@ -11,8 +11,8 @@ use Aqua\UI\StyleManager;
  * @var $page         \Aqua\Site\Page
  */
 if($content->forged || App::user()->role()->hasPermission('comment')) {
+	$page->theme->head->enqueueLink(StyleManager::style('bbcode'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
-	$page->theme->footer->enqueueLink(StyleManager::style('bbcode'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('number-format'));
 	$page->theme->footer->enqueueScript('tpl.comments')
@@ -30,8 +30,8 @@ if($content->forged || App::user()->role()->hasPermission('comment')) {
 		    'allowAnonymous' => (bool)$content->getMeta('comment-anonymously')
 		))
 		->addSettings('commentRatings', $ratings)
-		->addSettings('base64Url', base64_encode(App::request()->uri->url()));
-	include __DIR__ . '/comment-settings.php';
+		->addSettings('base64Url', base64_encode(App::request()->uri->url()))
+		->addSettings('ckeComments', include \Aqua\ROOT . '/settings/ckeditor.php');
 } else {
 	$ratings = array();
 }

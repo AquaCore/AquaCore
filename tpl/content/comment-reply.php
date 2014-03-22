@@ -7,6 +7,9 @@ use Aqua\UI\ScriptManager;
  * @var $page    \Page\Main\Comment
  */
 
+use Aqua\UI\StyleManager;
+
+$page->theme->head->enqueueLink(StyleManager::style('bbcode'));
 $page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
 $page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 $page->theme->footer->enqueueScript(ScriptManager::script('number-format'));
@@ -16,7 +19,7 @@ $page->theme->footer->enqueueScript('tpl.comments')
 		'base_dir' => \Aqua\DIR . '/tpl/scripts',
 		'script' => 'comments.js'
 	)));
-include __DIR__ . '/comment-settings.php';
+$page->theme->addSettings('ckeComments',include \Aqua\ROOT . '/settings/ckeditor.php');
 ?>
 <div class="ac-comments ac-comments-action">
 <?php

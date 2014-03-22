@@ -73,6 +73,10 @@ class Comment
 	/**
 	 * @var int
 	 */
+	public $reportCount;
+	/**
+	 * @var int
+	 */
 	public $options;
 	/**
 	 * @var \Aqua\Content\Filter\CommentFilter\Comment|null
@@ -97,7 +101,7 @@ class Comment
 
 	const STATUS_PUBLISHED = 0;
 	const STATUS_HIDDEN    = 1;
-	const STATUS_FLAGGED   = 3;
+	const STATUS_FLAGGED   = 2;
 
 	/**
 	 * @return \Aqua\Content\ContentData
@@ -308,6 +312,11 @@ class Comment
 	public function update(array $edit)
 	{
 		return $this->content()->updateComment($this, $edit);
+	}
+
+	public function delete()
+	{
+		return $this->content()->deleteComment($this);
 	}
 
 	public function rate(Account $user, $weight)

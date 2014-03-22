@@ -1,6 +1,8 @@
 <?php
 namespace Aqua\Content\Filter\CommentFilter;
 
+use Aqua\User\Account;
+
 class Report
 {
 	/**
@@ -27,5 +29,15 @@ class Report
 	 * @var string
 	 */
 	public $report;
+
+	public function user()
+	{
+		return Account::get($this->userId, 'id');
+	}
+
+	public function date($format)
+	{
+		return strftime($format, $this->date);
+	}
 }
  

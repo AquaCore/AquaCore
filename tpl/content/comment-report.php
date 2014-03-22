@@ -4,6 +4,10 @@
  * @var $comment null|\Aqua\Content\Filter\CommentFilter\Comment
  * @var $page    \Page\Main\Comment
  */
+
+use Aqua\UI\StyleManager;
+
+$page->theme->head->enqueueLink(StyleManager::style('bbcode'));
 ?>
 <div class="ac-comments ac-comments-action">
 	<?php
