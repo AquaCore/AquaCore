@@ -1,72 +1,102 @@
+SET @ROLE_GUEST = 1;
+SET @ROLE_USER  = 2;
+SET @ROLE_ADMIN = 3;
+
+SET @PERMISSION_REGISTER       = 1;
+SET @PERMISSION_COMMENT        = 2;
+SET @PERMISSION_RATE           = 3;
+SET @PERMISSION_VIEW_ADMIN_CP  = 4;
+SET @PERMISSION_EDIT_CP_USER   = 5;
+SET @PERMISSION_EDIT_RO_USER   = 6;
+SET @PERMISSION_VIEW_ITEMS     = 7;
+SET @PERMISSION_BAN_CP_USER    = 8;
+SET @PERMISSION_BAN_RO_USER    = 9;
+SET @PERMISSION_VIEW_CP_LOGS   = 10;
+SET @PERMISSION_VIEW_RO_LOGS   = 11;
+SET @PERMISSION_EDIT_CP_CONF   = 12;
+SET @PERMISSION_EDIT_RO_CONF   = 13;
+SET @PERMISSION_CREATE_PAGES   = 14;
+SET @PERMISSION_CREATE_POSTS   = 15;
+SET @PERMISSION_MANAGE_ROLES   = 16;
+SET @PERMISSION_MANAGE_PLUGINS = 17;
+
+SET @CTYPE_POST = 1;
+SET @CTYPE_PAGE = 2;
+
+SET @PROFILE_HTML     = 1;
+SET @PROFILE_BBCODE   = 2;
+SET @PROFILE_MARKDOWN = 3;
+SET @PROFILE_TEXT     = 4;
+
 INSERT IGNORE INTO `#roles` VALUES
- (1, 'Guest', NULL, NULL, 'y', 'n', NULL)
-,(2, 'User', NULL, NULL, 'y', 'y', NULL)
-,(3, 'Administrator', '16723522', NULL, 'y', 'y', NULL)
+ (@ROLE_GUEST, 'Guest', NULL, NULL, 'y', 'n', NULL)
+,(@ROLE_USER, 'User', NULL, NULL, 'y', 'y', NULL)
+,(@ROLE_ADMIN, 'Administrator', '16723522', NULL, 'y', 'y', NULL)
 ;
 
 REPLACE INTO `#permissions` VALUES
- (1, 'register-account', NULL)
-,(2, 'comment', NULL)
-,(3, 'rate', NULL)
-,(4, 'view-admin-cp', NULL)
-,(5, 'edit-cp-user', NULL)
-,(6, 'edit-server-user', NULL)
-,(7, 'view-user-items', NULL)
-,(8, 'ban-cp-user', NULL)
-,(9, 'ban-server-user', NULL)
-,(10, 'view-cp-logs', NULL)
-,(11, 'view-server-logs', NULL)
-,(12, 'edit-cp-settings', NULL)
-,(13, 'edit-server-settings', NULL)
-,(14, 'create-pages', NULL)
-,(15, 'publish-posts', NULL)
-,(16, 'manage-roles', NULL)
-,(17, 'manage-plugins', NULL)
+ (@PERMISSION_REGISTER, 'register-account', NULL)
+,(@PERMISSION_COMMENT, 'comment', NULL)
+,(@PERMISSION_RATE, 'rate', NULL)
+,(@PERMISSION_VIEW_ADMIN_CP, 'view-admin-cp', NULL)
+,(@PERMISSION_EDIT_CP_USER, 'edit-cp-user', NULL)
+,(@PERMISSION_EDIT_RO_USER, 'edit-server-user', NULL)
+,(@PERMISSION_VIEW_ITEMS, 'view-user-items', NULL)
+,(@PERMISSION_BAN_CP_USER, 'ban-cp-user', NULL)
+,(@PERMISSION_BAN_RO_USER, 'ban-server-user', NULL)
+,(@PERMISSION_VIEW_CP_LOGS, 'view-cp-logs', NULL)
+,(@PERMISSION_VIEW_RO_LOGS, 'view-server-logs', NULL)
+,(@PERMISSION_EDIT_CP_CONF, 'edit-cp-settings', NULL)
+,(@PERMISSION_EDIT_RO_CONF, 'edit-server-settings', NULL)
+,(@PERMISSION_CREATE_PAGES, 'create-pages', NULL)
+,(@PERMISSION_CREATE_POSTS, 'publish-posts', NULL)
+,(@PERMISSION_MANAGE_ROLES, 'manage-roles', NULL)
+,(@PERMISSION_MANAGE_PLUGINS, 'manage-plugins', NULL)
 ;
 
 REPLACE INTO `#role_permissions` VALUES
- (2, 1, 'n')
-,(2, 2, 'n')
-,(2, 3, 'n')
-,(3, 1, 'y')
-,(3, 2, 'y')
-,(3, 3, 'y')
-,(3, 4, 'y')
-,(3, 5, 'y')
-,(3, 6, 'y')
-,(3, 7, 'y')
-,(3, 8, 'y')
-,(3, 9, 'y')
-,(3, 10, 'y')
-,(3, 11, 'y')
-,(3, 12, 'y')
-,(3, 13, 'y')
-,(3, 14, 'y')
-,(3, 15, 'y')
-,(3, 16, 'y')
-,(3, 17, 'y')
+ (@ROLE_USER, @PERMISSION_REGISTER, 'n')
+,(@ROLE_USER, @PERMISSION_COMMENT, 'n')
+,(@ROLE_USER, @PERMISSION_RATE, 'n')
+,(@ROLE_ADMIN, @PERMISSION_REGISTER, 'y')
+,(@ROLE_ADMIN, @PERMISSION_COMMENT, 'y')
+,(@ROLE_ADMIN, @PERMISSION_RATE, 'y')
+,(@ROLE_ADMIN, @PERMISSION_VIEW_ADMIN_CP, 'y')
+,(@ROLE_ADMIN, @PERMISSION_EDIT_CP_USER, 'y')
+,(@ROLE_ADMIN, @PERMISSION_EDIT_RO_USER, 'y')
+,(@ROLE_ADMIN, @PERMISSION_VIEW_ITEMS, 'y')
+,(@ROLE_ADMIN, @PERMISSION_BAN_CP_USER, 'y')
+,(@ROLE_ADMIN, @PERMISSION_BAN_RO_USER, 'y')
+,(@ROLE_ADMIN, @PERMISSION_VIEW_CP_LOGS, 'y')
+,(@ROLE_ADMIN, @PERMISSION_VIEW_RO_LOGS, 'y')
+,(@ROLE_ADMIN, @PERMISSION_EDIT_CP_CONF, 'y')
+,(@ROLE_ADMIN, @PERMISSION_EDIT_RO_CONF, 'y')
+,(@ROLE_ADMIN, @PERMISSION_CREATE_PAGES, 'y')
+,(@ROLE_ADMIN, @PERMISSION_CREATE_POSTS, 'y')
+,(@ROLE_ADMIN, @PERMISSION_MANAGE_ROLES, 'y')
+,(@ROLE_ADMIN, @PERMISSION_MANAGE_PLUGINS, 'y')
 ;
 
 INSERT IGNORE INTO `#content_type` VALUES
- (1, 'news', NULL, 'Post', NULL)
-,(2, 'page', NULL, 'Page', NULL)
+ (@CTYPE_POST, 'news', NULL, 'Post', NULL)
+,(@CTYPE_PAGE, 'page', NULL, 'Page', NULL)
 ;
 
 TRUNCATE `#content_type_filters`;
 INSERT INTO `#content_type_filters` VALUES
- (1, 'CategoryFilter', 'a:0:{}')
-,(1, 'CommentFilter', 'a:0:{}')
-,(1, 'FeaturedFilter', 'a:0:{}')
-,(1, 'RatingFilter', 'a:0:{}')
-,(1, 'ScheduleFilter', 'a:0:{}')
-,(1, 'TagFilter', 'a:0:{}')
-,(1, 'ArchiveFilter', 'a:0:{}')
-,(2, 'RatingFilter', 'a:0:{}')
-,(2, 'RelationshipFilter', 'a:0:{}')
+ (@CTYPE_POST, 'CategoryFilter', 'a:0:{}')
+,(@CTYPE_POST, 'CommentFilter', 'a:0:{}')
+,(@CTYPE_POST, 'FeaturedFilter', 'a:0:{}')
+,(@CTYPE_POST, 'RatingFilter', 'a:0:{}')
+,(@CTYPE_POST, 'ScheduleFilter', 'a:0:{}')
+,(@CTYPE_POST, 'TagFilter', 'a:0:{}')
+,(@CTYPE_POST, 'ArchiveFilter', 'a:0:{}')
+,(@CTYPE_PAGE, 'RatingFilter', 'a:0:{}')
+,(@CTYPE_PAGE, 'RelationshipFilter', 'a:0:{}')
 ;
 
 INSERT IGNORE INTO `#content` VALUES
- (1, 2, 1 , NULL, NOW(), NULL, 0, 'tos', 'Terms of Service', '', '', 'y', 0)
+ (1, @CTYPE_PAGE, 1 , NULL, NOW(), NULL, 0, 'tos', 'Terms of Service', '', '', 'y', 0)
 ;
 INSERT IGNORE INTO `#content_meta` VALUES
  (1, 'rating-disabled', 'b:1;')

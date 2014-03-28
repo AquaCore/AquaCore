@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-shop" key="shop-categories">Shop Categories</word>
+    <word namespace="ragnarok-shop" key="category-name">Name</word>
+    <word namespace="ragnarok-shop" key="category-desc">Description</word>
+    <word namespace="ragnarok-shop" key="new-category">Create Category</word>
+  </wordgroup>
+</languageimport>

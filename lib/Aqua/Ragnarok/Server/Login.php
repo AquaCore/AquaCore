@@ -399,7 +399,7 @@ class Login
 		}
 		$select->query();
 
-		return (bool)$select->get('id');
+		return $select->get('id');
 	}
 
 	/**

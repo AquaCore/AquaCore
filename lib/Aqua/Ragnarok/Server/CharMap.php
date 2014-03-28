@@ -504,6 +504,9 @@ class CharMap
 	public function guildSearch()
 	{
 		$columns = array(
+			'id' => 'g.guild_id',
+			'name' => 'g.`name`',
+			'master_id' => 'g.char_id',
 			'master' => 'g.master',
 			'level'  => 'g.guild_lv',
 			'max_members'  => 'g.max_member',
@@ -520,7 +523,7 @@ class CharMap
 				'member_count' => 'COUNT(gm.char_id)',
 				'castle_count' => 'COUNT(gc.castle_id)',
 			) + $columns)
-			->whereOptions($columns)
+			->whereOptions(array( 'castle' => 'gc.castle_id' ) + $columns)
 			->havingOptions(array(
 				'member_count' => 'COUNT(gm.char_id)',
 				'castle_count' => 'COUNT(gc.castle_id)',
@@ -1398,6 +1401,12 @@ class CharMap
 		return $this->woeCastles;
 	}
 
+	public function woeSchedule()
+	{
+		$this->woeSchedule !== null or $this->fetchWoeSchedule();
+		return $this->woeSchedule;
+	}
+
 	public function castleName($id)
 	{
 		$this->woeCastles !== null or $this->fetchWoeSchedule();
@@ -1968,10 +1977,11 @@ class CharMap
 		$guild->level          = (int)$data['level'];
 		$guild->experience     = (int)$data['experience'];
 		$guild->castleCount    = (int)$data['castle_count'];
-		$guild->leaderId       = (int)$data['master'];
+		$guild->leaderId       = (int)$data['master_id'];
+		$guild->leaderName     = $data['master'];
 		$guild->averageLevel   = (int)$data['average_level'];
 		$guild->memberCount    = (int)$data['member_count'];
-		$guild->memberLimit    = (int)$data['member_limit'];
+		$guild->memberLimit    = (int)$data['max_members'];
 		$guild->nextExperience = (int)$data['next_experience'];
 		$guild->skillPoints    = (int)$data['skill_points'];
 		$guild->online         = (int)$data['online'];

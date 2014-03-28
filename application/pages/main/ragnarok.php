@@ -119,7 +119,7 @@ extends Page
 				} else if($password !== $password_r) {
 					$frm->field('password_r')->setWarning(__('ragnarok', 'password-mismatch'));
 					$error = true;
-				} else if(($count = $server->login->countAccounts(App::user()->account->id)) >= $max) {
+				} else if($max && ($count = $server->login->countAccounts(App::user()->account->id)) >= $max) {
 					$message = __('ragnarok', 'registration-account-limit', $count);
 					$error = true;
 				} else if($server->login->exists($username)) {
@@ -202,21 +202,21 @@ extends Page
 					->setWarning(__('ragnarok-account', 'invalid-server-selected'))
 			        ->value($servers);
 			}
-			$pincode_len = (int)App::settings()->get('ragnarok')->get('pincode_max_len', 4);
+			$pincodeLen = (int)App::settings()->get('ragnarok')->get('pincode_max_len', 4);
 			$frm->input('username')
 				->type('text')
 				->attr('maxlength', 255)
 				->required()
-		        ->setLabel(__('ragnarok-account', 'username'));
+		        ->setLabel(__('ragnarok', 'username'));
 			$frm->input('password')
 		        ->type('password')
 				->required()
-		        ->setLabel(__('ragnarok-account', 'password'));
+		        ->setLabel(__('ragnarok', 'password'));
 			$frm->input('pincode')
 		        ->type('password')
-				->attr('maxlen', $pincode_len)
-				->attr('size', $pincode_len)
-		        ->setLabel(__('ragnarok-account', 'pincode'));
+				->attr('maxlen', $pincodeLen)
+				->attr('size', $pincodeLen)
+		        ->setLabel(__('ragnarok', 'pincode'));
 			$frm->submit();
 			$self = $this;
 			$account = null;
@@ -229,17 +229,21 @@ extends Page
 						return false;
 					}
 					$account = $self->server->login->get($username, 'username');
-					if($account->owner === App::user()->account->id) {
-						$message = __('ragnarok-account', 'already-linked');
+					$max = (int)$self->server->login->getOption('max-accounts');
+					if($max && ($count = $self->server->login->countAccounts(App::user()->account->id)) >= $max) {
+						$message = __('ragnarok', 'registration-account-limit', $count);
+						return false;
+					} else if($account->owner === App::user()->account->id) {
+						$message = __('ragnarok', 'already-linked');
 						return false;
 					} else if($account->owner) {
-						$message = __('ragnarok-account', 'invalid-credentials');
+						$message = __('ragnarok', 'invalid-credentials');
 						return false;
 					}
 					return true;
 				});
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				$this->title = $this->theme->head->section = __('ragnarok-account', 'link-account');
+				$this->title = $this->theme->head->section = __('ragnarok', 'link-account');
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 			        ->set('page', $this);
@@ -251,7 +255,7 @@ extends Page
 				 * @var $account \Aqua\Ragnarok\Account
 				 */
 				$account->link(App::user()->account);
-				App::user()->addFlash('error', null, __('ragnarok', 'account-linked'));
+				App::user()->addFlash('success', null, __('ragnarok', 'account-linked', htmlspecialchars($account->username)));
 				$this->response->status(302)->redirect($account->url());
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);

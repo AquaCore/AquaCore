@@ -40,6 +40,9 @@ extends Page
 				))->append('cash shop', array(
 				'title' => __('ragnarok', 'whos-online'),
 				'url'   => "{$base_url}online"
+				))->append('castles', array(
+				'title' => __('ragnarok', 'castles'),
+				'url'   => "{$base_url}castle"
 				))
 			;
 			$pgn->theme->set('menu', $menu);
@@ -106,6 +109,37 @@ extends Page
 			$tpl->set('paginator',    $pgn);
 			$tpl->set('page',         $this);
 			echo $tpl->render('ragnarok/server/online');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			return;
+		}
+	}
+
+	public function castle_action()
+	{
+		try {
+			if($this->charmap->woe()) {
+				$this->error(503, __('http-error', 503), __('ragnarok', 'woe-disabled'));
+				return;
+			}
+			$this->title = $this->theme->head->section = __('ragnarok', 'castles');
+			$castles = $this->charmap->castles();
+			$castleIds = array_keys($castles);
+			array_unshift($castleIds, Search::SEARCH_IN);
+			$guilds = $this->charmap->guildSearch()
+				->where(array( 'castle' => $castleIds ))
+				->columns(array( 'castle' => 'gc.castle_id' ))
+				->groupBy('gc.castle_id')
+				->setKey('castle')
+				->query()
+				->results;
+			$tpl = new Template;
+			$tpl->set('guilds', $guilds)
+				->set('castles', $castles)
+				->set('schedule', $this->charmap->woeSchedule())
+				->set('page', $this);
+			echo $tpl->render('ragnarok/server/castle');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

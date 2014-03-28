@@ -36,6 +36,10 @@ class Guild
 	 */
 	public $leaderId;
 	/**
+	 * @var string
+	 */
+	public $leaderName;
+	/**
 	 * @var int
 	 */
 	public $memberLimit;

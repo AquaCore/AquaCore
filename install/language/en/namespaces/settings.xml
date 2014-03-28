@@ -81,6 +81,7 @@
     <word namespace="settings" key="captcha-height-label">Captcha Height</word>
     <word namespace="settings" key="captcha-case-label">Case Sensitive</word>
     <word namespace="settings" key="captcha-bg-color-label">Background Color</word>
+    <word namespace="settings" key="captcha-bg-image-label">Background Image</word>
     <word namespace="settings" key="captcha-font-label">Font</word>
     <word namespace="settings" key="captcha-font-desc">A TTF font used to render the verification code.</word>
     <word namespace="settings" key="captcha-font-size-label">Font Size</word>
@@ -163,6 +164,10 @@
     <word namespace="settings" key="acc-email-limit-desc"><![CDATA[Number of times users can change their emails. Use "0" to disable this feature.]]></word>
     <word namespace="settings" key="acc-email-interval-label">Update Limit Interval</word>
     <word namespace="settings" key="acc-email-interval-desc">Amount of days it takes to reset the update limit.</word>
+    <word namespace="settings" key="acc-password-limit-label">Update Limit</word>
+    <word namespace="settings" key="acc-password-limit-desc"><![CDATA[Number of times users can change their passwords. Use "0" to disable this feature.]]></word>
+    <word namespace="settings" key="acc-password-interval-label">Update Limit Interval</word>
+    <word namespace="settings" key="acc-password-interval-desc">Amount of days it takes to reset the update limit.</word>
     <word namespace="settings" key="ro-acc-url-label">Username in URL</word>
     <word namespace="settings" key="ro-char-url-label">Character Name in URL</word>
     <word namespace="settings" key="ro-item-script-label">Display Item Script</word>
@@ -171,9 +176,11 @@
     <word namespace="settings" key="ro-purchase-max-label">Maximum Item Shop Items</word>
     <word namespace="settings" key="ro-emblem-cache-label">Browser Caching</word>
     <word namespace="settings" key="ro-emblem-ttl-label">Expiration Time</word>
+    <word namespace="settings" key="ro-emblem-ttl-desc">Time, in seconds, an emblem should remain cached in the browser.</word>
     <word namespace="settings" key="ro-emblem-compress-label">Image Compression</word>
     <word namespace="settings" key="ro-sprite-cache-label">Browser Caching</word>
     <word namespace="settings" key="ro-sprite-ttl-label">Expiration Time</word>
+    <word namespace="settings" key="ro-sprite-ttl-desc">Time, in seconds, a sprite should remain cached in the browser.</word>
     <word namespace="settings" key="ro-sprite-compress-label">Image Compression</word>
     <word namespace="settings" key="ro-head-dir-label">Head Direction</word>
     <word namespace="settings" key="ro-body-dir-label">Body Direction</word>

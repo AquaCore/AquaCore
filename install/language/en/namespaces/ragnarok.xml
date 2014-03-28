@@ -233,5 +233,10 @@
     <word namespace="ragnarok" key="online-stats">Online Stats</word>
     <word namespace="ragnarok" key="player-peak-all">All time player peak: %s</word>
     <word namespace="ragnarok" key="player-peak-this-month">This month's player peak: %s</word>
+    <word namespace="ragnarok" key="link-account">Link Account</word>
+    <word namespace="ragnarok" key="already-linked">This account is already linked to another account.</word>
+    <word namespace="ragnarok" key="account-linked"><![CDATA["%s" has been linked to your CP account.]]></word>
+    <word namespace="ragnarok" key="castle-id">Castle ID</word>
+    <word namespace="ragnarok" key="castle-name">Castle Name</word>
   </wordgroup>
 </languageimport>

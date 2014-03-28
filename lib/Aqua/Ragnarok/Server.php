@@ -11,47 +11,38 @@ class Server
 	 * @var string
 	 */
 	public $key;
-
 	/**
 	 * @var string
 	 */
 	public $name;
-
 	/**
 	 * @var \Aqua\Ragnarok\Server\Login
 	 */
 	public $login;
-
 	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap[]
 	 */
 	public $charmap = array();
-
 	/**
 	 * @var int
 	 */
 	public $charmapCount = 0;
-
 	/**
 	 * @var int
 	 */
 	public $emulator;
-
 	/**
 	 * @var \Aqua\Http\URI
 	 */
 	public $uri;
-
 	/**
 	 * @var \Aqua\Ragnarok\Server[]
 	 */
 	public static $servers = array();
-
 	/**
 	 * @var int
 	 */
 	public static $serverCount;
-
 	/**
 	 * @var \Aqua\Core\Settings
 	 */

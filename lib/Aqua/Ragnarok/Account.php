@@ -319,14 +319,21 @@ class Account
 	 */
 	public function link(UserAccount $user)
 	{
+		if($this->owner) {
+			$this->unlink();
+		}
 		$sth = $this->server->login->connection()->prepare("
 		UPDATE {$this->server->login->table('login')}
-		SET ac_user_id = ?
+		SET ac_user_id = ?,
+			email = ?,
+			birthdate = ?
 		WHERE account_id = ?
 		LIMIT 1
 		");
 		$sth->bindValue(1, $user->id, \PDO::PARAM_INT);
-		$sth->bindValue(2, $this->id, \PDO::PARAM_INT);
+		$sth->bindValue(2, $user->email, \PDO::PARAM_STR);
+		$sth->bindValue(3, date('Y-m-d', $user->birthDate), \PDO::PARAM_STR);
+		$sth->bindValue(4, $this->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$this->owner = $user->id;
 		$feedback = array( $this, $user );

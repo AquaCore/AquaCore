@@ -64,5 +64,6 @@
     <word namespace="profile" key="ban-type">Ban type</word>
     <word namespace="profile" key="ban-accounts">Ban RO accounts</word>
     <word namespace="profile" key="unban-accounts">Unban RO accounts</word>
+    <word namespace="profile" key="view-account">Viewing %s's Account</word>
   </wordgroup>
 </languageimport>

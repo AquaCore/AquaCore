@@ -448,6 +448,7 @@ CREATE TABLE IF NOT EXISTS `#comments` (
   _html_content MEDIUMTEXT NOT NULL,
   _bbc_content MEDIUMTEXT NOT NULL,
   _rating INT NOT NULL DEFAULT '0',
+  _reports INT NOT NULL DEFAULT '0',
   _options INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY ( id ),
   INDEX `_#comments__content_id_IN` ( _content_id ),
