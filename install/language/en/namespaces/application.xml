@@ -30,5 +30,8 @@
     <word namespace="application" key="this-week">This week</word>
     <word namespace="application" key="weeks-ago-s">%d week ago</word>
     <word namespace="application" key="weeks-ago-p">%d weeks ago</word>
+    <word namespace="application" key="save-order">Save order</word>
+    <word namespace="application" key="delete">Delete</word>
+    <word namespace="application" key="add">Add</word>
   </wordgroup>
 </languageimport>

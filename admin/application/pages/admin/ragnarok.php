@@ -4,6 +4,7 @@ namespace Page\Admin;
 use Aqua\Core\App;
 use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
+use Aqua\Ragnarok\Account;
 use Aqua\Site\Page;
 use Aqua\SQL\Search;
 use Aqua\UI\Form;
@@ -29,28 +30,28 @@ extends Page
 		$this->server = App::$activeServer;
 		if($this->server) {
 			$nav      = new Menu;
-			$base_url = ac_build_url(array(
+			$baseUrl = ac_build_url(array(
 					'path'   => array('r', $this->server->key),
 					'action' => ''
 				));
 			$nav->append('server', array(
 					'title' => htmlspecialchars($this->server->name),
-					'url'   => $base_url . 'index'
+					'url'   => $baseUrl . 'index'
 				))->append('settings', array(
 					'title' => __('ragnarok-server', 'settings'),
-					'url'   => $base_url . 'edit'
+					'url'   => $baseUrl . 'edit'
 				))->append('accounts', array(
 					'title' => __('ragnarok-server', 'accounts'),
-					'url'   => $base_url . 'account'
+					'url'   => $baseUrl . 'account'
 				))->append('login-log', array(
 					'title' => __('ragnarok-server', 'login-log'),
-					'url'   => $base_url . 'login'
+					'url'   => $baseUrl . 'login'
 				))->append('ban-log', array(
 					'title' => __('ragnarok-server', 'ban-log'),
-					'url'   => $base_url . 'ban'
+					'url'   => $baseUrl . 'ban'
 				))->append('password-reset-log', array(
 					'title' => __('ragnarok-server', 'password-reset-log'),
-					'url'   => $base_url . 'password'
+					'url'   => $baseUrl . 'password'
 				));
 			$this->theme->set('nav', $nav);
 		} else {
@@ -67,15 +68,9 @@ extends Page
 				$this->response->status(302)->redirect(ac_build_url(array(
 						'path' => array( 'r', $this->server->key, 'server' )
 					)));
-			} else if($this->server->charmapCount === 1) {
-				$server = current($this->server->charmap);
-				$this->response->status(302)->redirect(ac_build_url(array(
-					'path' => array( 'r', $this->server->key, $server->key )
-					)));
 			} else {
 				$this->server_index();
 			}
-
 			return;
 		}
 		try {
@@ -531,7 +526,7 @@ extends Page
 					'charmap'  => array()
 					));
 				$settings->export($file);
-				$this->response->status(302)->redirect(ac_build_url(array('path' => array('ro', $key))));
+				$this->response->status(302)->redirect(ac_build_url(array('path' => array('r', $key))));
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
@@ -831,7 +826,7 @@ extends Page
 					              null,
 					              __('ragnarok-server', 'updated', htmlspecialchars($this->server->name)));
 					$this->response->status(302)->redirect(ac_build_url(array(
-							'path'   => array('ro', $this->server->key),
+							'path'   => array('r', $this->server->key),
 							'action' => 'edit'
 						)));
 				}
@@ -839,7 +834,7 @@ extends Page
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				$this->response->status(302)->redirect(ac_build_url(array(
-						'path'   => array('ro', $this->server->key),
+						'path'   => array('r', $this->server->key),
 						'action' => 'edit'
 					)));
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
@@ -855,7 +850,7 @@ extends Page
 	public function account_action()
 	{
 		try {
-			$this->title = $this->theme->head->section = __('ragnarok-server', 'account');
+			$this->title = $this->theme->head->section = __('ragnarok-server', 'accounts');
 			$where       = array( 'id' => array(Search::SEARCH_HIGHER, Server\Login::MIN_ACCOUNT_ID - 1) );
 			if($x = $this->request->uri->getString('u')) {
 				$where['username'] = array(Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%');
@@ -981,13 +976,14 @@ extends Page
 			}
 			$characters = array();
 			foreach($this->server->charmap as $charmap) {
-				$characters[$charmap->key] = $charmap->charSearch()
+				$characters+= $charmap->charSearch()
 					->where(array( 'account_id' => $account->id ))
 					->order(array( 'slot' => 'ASC' ))
 					->query()
 					->results;
 			}
-			$this->title = $this->theme->head->section = __('ragnarok', 'account-info', htmlspecialchars($account->username));
+			$this->title = $this->theme->head->section = __('ragnarok', 'account-info',
+			                                                htmlspecialchars($account->username));
 			$this->theme->set('return', ac_build_url(array(
 					'path' => array( 'r', $this->server->key ),
 			        'action' => 'account'
@@ -1046,7 +1042,14 @@ extends Page
 			$frm->input('user', true)
 			    ->type('text')
 				->value($account->owner ? htmlspecialchars($account->user()->displayName) : '', false)
-			    ->setLabel(__('ragnarok', 'user'));
+			    ->setLabel(__('ragnarok', 'owner'));
+			if(!$account->owner) {
+				$frm->input('email')
+				    ->type('email')
+				    ->required()
+				    ->value(htmlspecialchars($account->email))
+				    ->setLabel(__('ragnarok', 'email'));
+			}
 			$frm->input('password')
 			    ->type('password')
 			    ->setLabel(__('ragnarok', 'password'));
@@ -1066,6 +1069,20 @@ extends Page
 					->value($account->slots)
 					->setLabel(__('ragnarok', 'slots'));
 			}
+			if(!$account->owner) {
+				$frm->input('birthday')
+				    ->type('date')
+				    ->required()
+				    ->value(date('Y-m-d', $account->birthday))
+				    ->setLabel(__('ragnarok', 'birthday'));
+			}
+			$locked = $frm->checkbox('locked')
+			    ->value(array( '1' => '' ))
+			    ->checked($account->isLocked() ? '1' : null)
+			    ->setLabel(__('ragnarok', 'locked'));
+			if($account->isBanned()) {
+				$locked->option('1')->bool('disabled', true);
+			}
 			$frm->radio('sex')
 			    ->value(array(
 					'M' => __('ragnarok-gender', 1),
@@ -1073,19 +1090,6 @@ extends Page
 				))
 			    ->checked($account->gender ? 'F' : 'M')
 			    ->setLabel(__('ragnarok', 'sex'));
-			if(!$account->owner) {
-				$frm->input('email')
-					->type('email')
-					->required()
-					->value(htmlspecialchars($account->email))
-					->setLabel(__('ragnarok', 'email'));
-				$frm->input('birthday')
-					->type('date')
-					->required()
-					->value(date('Y-m-d', $account->birthday))
-					->placeholder('YYYY-MM-DD')
-					->setLabel(__('ragnarok', 'birthday'));
-			}
 			$frm->input('group-id')
 			    ->type('number')
 			    ->attr('min', 0)
@@ -1095,10 +1099,15 @@ extends Page
 			    ->setLabel(__('ragnarok', 'group'));
 			$frm->submit();
 			$self = $this;
-			$frm->validate(function(Form $frm) use($self) {
+			$frm->validate(function(Form $frm) use($self, $account) {
 				$error = false;
-				if($self->server->login->checkValidUsername($frm->request->getString('username'), $message) !== Server\Login::FIELD_OK) {
+				if($self->server->login->checkValidUsername($frm->request->getString('username'),
+				                                            $message) !== Server\Login::FIELD_OK) {
 					$frm->field('username')->setWarning($message);
+					$error = true;
+				}
+				if(($id = $self->server->login->exists($frm->request->getString('username'))) && $id !== $account->id) {
+					$frm->field('username')->setWarning(__('ragnarok', 'username-taken'));
 					$error = true;
 				}
 				if(($password = trim($frm->request->getString('password'))) &&
@@ -1117,11 +1126,11 @@ extends Page
 					$frm->field('user')->setWarning(__('ragnarok', 'user-not-found'));
 					$error = true;
 				}
-
 				return !$error;
 			}, !$this->request->ajax);
 			if($frm->status !== Form::VALIDATION_SUCCESS && !$this->request->ajax) {
-				$this->title = $this->theme->head->section = __('ragnarok', 'edit-account', htmlspecialchars($account->username));
+				$this->title = $this->theme->head->section = __('ragnarok', 'edit-account',
+				                                                htmlspecialchars($account->username));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('page', $this);
@@ -1160,7 +1169,15 @@ extends Page
 						$update['email'] = $this->request->getString('email');
 					}
 					if(!$frm->field('birthday')->getWarning()) {
-						$update['birthday'] = \DateTime::createFromFormat('Y-m-d', $this->request->getString('birthday'))->getTimestamp();
+						$update['birthday'] = \DateTime::createFromFormat('Y-m-d', $this->request->getString('birthday'))
+							->getTimestamp();
+					}
+				}
+				if(!$frm->field('locked')->getWarning()) {
+					if($this->request->getInt('locked')) {
+						$update['state'] = Account::STATE_LOCKED;
+					} else if($account->isLocked()) {
+						$update['state'] = Account::STATE_NORMAL;
 					}
 				}
 				if($account->update($update)) {
@@ -1206,7 +1223,9 @@ extends Page
 				    'pincode'        => $account->pinCode,
 				    'group-id'       => $account->groupId,
 				    'sex'            => $account->gender ? 'F' : 'M',
-				    'password'       => $account->password
+				    'password'       => $account->password,
+				    'locked'         => $account->isLocked(),
+				    'banned'         => $account->isBanned()
 				);
 				echo json_encode($response);
 			} else {
@@ -1236,14 +1255,16 @@ extends Page
 			}
 			$frm = new Form($this->request);
 			if($account->isBanned()) {
-				$frm->textarea('reason');
-				$frm->submit(__('ragnarok-account', 'unban'));
+				$frm->textarea('reason')
+					->setLabel(__('ragnarok-account', 'unban-reason'));
+				$frm->submit();
 			} else {
 				$frm->input('unban')
 				    ->type('text')
 				    ->setLabel(__('ragnarok-account', 'unban-date'));
-				$frm->textarea('reason');
-				$frm->submit(__('ragnarok-account', 'ban'));
+				$frm->textarea('reason')
+					->setLabel(__('ragnarok-account', 'ban-reason'));
+				$frm->submit();
 			}
 			$frm->validate(function (Form $frm) use ($account) {
 				if($account->isBanned() &&
@@ -1253,10 +1274,14 @@ extends Page
 				}
 
 				return true;
-			});
+			}, !$this->request->ajax);
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				if($account->isBanned()) {
+					$this->title = __('ragnarok-account', 'unban-account', htmlspecialchars($account->username));
+				}
 				$tpl = new Template;
 				$tpl->set('account', $account)
+					->set('form', $frm)
 				    ->set('page', $this);
 				echo $tpl->render('admin/ragnarok/account/ban');
 

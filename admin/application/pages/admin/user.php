@@ -90,7 +90,7 @@ extends Page
 
 				return;
 			}
-			$this->theme->head->section = $this->title = __('account', 'view-account');
+			$this->theme->head->section = $this->title = __('profile', 'view-account', htmlspecialchars($account->displayName));
 			$this->theme->set('return', ac_build_url(array( 'path' => array( 'user' ) )));
 			$ragnarok_accounts          = array();
 			foreach(Server::$servers as $server) {
@@ -264,9 +264,9 @@ extends Page
 					return !($error);
 				}, $this->request->ajax);
 			if($frm->status !== Form::VALIDATION_SUCCESS && !$this->request->ajax) {
-				$this->theme->head->section = $this->title = __('account', 'edit-account');
+				$this->theme->head->section = $this->title = __('profile', 'edit-account-admin', htmlspecialchars($account->displayName));
 				$this->theme->set('return', ac_build_url(array(
-						'path' => array( 'role' ),
+						'path' => array( 'user' ),
 				        'action' => 'view',
 				        'arguments' => array( $account->id )
 					)));
@@ -417,14 +417,14 @@ extends Page
 				}, !$this->request->ajax);
 			if($frm->status !== Form::VALIDATION_SUCCESS && !$this->request->ajax) {
 				if($account->isBanned()) {
-					$this->title                = __('profile', 'unban-x-user', htmlspecialchars($account->displayName));
+					$this->title                = __('profile', 'unban-account', htmlspecialchars($account->displayName));
 					$this->theme->head->section = __('profile', 'unban');
 				} else {
-					$this->title                = __('profile', 'ban-x-user', htmlspecialchars($account->displayName));
+					$this->title                = __('profile', 'ban-account', htmlspecialchars($account->displayName));
 					$this->theme->head->section = __('profile', 'ban');
 				}
 				$this->theme->set('return', ac_build_url(array(
-						'path' => array( 'role' ),
+						'path' => array( 'user' ),
 						'action' => 'view',
 						'arguments' => array( $account->id )
 					)));

@@ -322,11 +322,13 @@ class CharMap
 		        ->columns(array(
 					'i.*',
 					'shop_price' => 'cs.`price`',
+					'shop_sold' => 'cs.`sold`',
 					'shop_category' => 'cs.`category_id`',
 					'cash_shop' => 'COUNT(cs.`item_id`)'
 				))
 		        ->whereOptions(array(
 					'shop_price' => 'cs.price',
+					'shop_sold' => 'cs.sold',
 					'shop_category' => 'cs.category_id',
 					'custom' => 'i.`custom`',
 				))
@@ -422,6 +424,7 @@ class CharMap
 				'tmp_tbl.*',
 				'shop_price' => 'cs.price',
 				'shop_category' => 'cs.category_id',
+				'shop_sold' => 'cs.`sold`',
 				'shop_order' => 'cs.`order`',
 			))
 			->whereOptions(array(
@@ -429,6 +432,7 @@ class CharMap
 				'shop_price' => 'cs.price',
 				'shop_category' => 'cs.category_id',
 				'shop_order' => 'cs.`order`',
+				'shop_sold' => 'cs.`sold`',
 				'custom' => 'tmp_tbl.`custom`',
 			))
 			->from($this->table('ac_cash_shop'), 'cs')
@@ -824,6 +828,7 @@ class CharMap
 		               ->columns(array(
 			                         'i.*',
 			                         'shop_price' => 'cs.`price`',
+			                         'shop_sold' => 'cs.`sold`',
 			                         'shop_category' => 'cs.`category_id`',
 			                         'cash_shop' => 'COUNT(cs.`item_id`)'
 		                         ))
@@ -866,7 +871,7 @@ class CharMap
 				$itemDb->where(array( 'i.id' => $id ));
 				$itemDb2->where(array( 'i.id' => $id ));
 				break;
-			case 'identifier':
+			case 'name':
 				$itemDb->where(array( 'i.name_english' => $id ));
 				$itemDb2->where(array( 'i.name_english' => $id ));
 				break;
@@ -1702,6 +1707,7 @@ class CharMap
 			$item = new ItemData;
 		}
 		$item->id            = (int)$data['id'];
+		$item->charmap       = &$this;
 		$item->enName        = $data['identifier'];
 		$item->jpName        = stripslashes($data['name']);
 		$item->type          = (int)$data['type'];
@@ -1735,6 +1741,7 @@ class CharMap
 		}
 		if($data['shop_price'] !== null && $data['shop_category'] !== null) {
 			$item->shopPrice      = (int)$data['shop_price'];
+			$item->shopSold       = (int)$data['shop_sold'];
 			$item->shopCategoryId = $data['shop_category'];
 			$item->inCashShop     = true;
 		}
@@ -1825,6 +1832,7 @@ class CharMap
 			$mob = new Mob;
 		}
 		$mob->id            = (int)$data['id'];
+		$mob->charmap       = &$this;
 		$mob->kName         = $data['identifier'];
 		$mob->iName         = stripslashes($data['name']);
 		$mob->level         = (int)$data['level'];

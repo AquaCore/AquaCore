@@ -238,5 +238,22 @@
     <word namespace="ragnarok" key="account-linked"><![CDATA["%s" has been linked to your CP account.]]></word>
     <word namespace="ragnarok" key="castle-id">Castle ID</word>
     <word namespace="ragnarok" key="castle-name">Castle Name</word>
+    <word namespace="ragnarok" key="price">Price</word>
+    <word namespace="ragnarok" key="shop-category">Shop Category</word>
+    <word namespace="ragnarok" key="new-item">Add Item</word>
+    <word namespace="ragnarok" key="new-category">Add Category</word>
+    <word namespace="ragnarok" key="new-categories">Add Categories</word>
+    <word namespace="ragnarok" key="shop-item-already-exists">This item is already in the shop.</word>
+    <word namespace="ragnarok" key="shop-item-added"><![CDATA[<b>%s</b> added to the item shop.]]></word>
+    <word namespace="ragnarok" key="shop-item-removed-s"><![CDATA[<b>%s</b> removed from the item shop.]]></word>
+    <word namespace="ragnarok" key="shop-item-removed-p">%s items removed from the item shop.</word>
+    <word namespace="ragnarok" key="shop-category-added"><![CDATA[<b>%s</b> category removed from the item shop.]]></word>
+    <word namespace="ragnarok" key="shop-category-removed-s"><![CDATA[<b>%s</b> category removed from the item shop.]]></word>
+    <word namespace="ragnarok" key="shop-category-removed-p">%s categories removed from the item shop.</word>
+    <word namespace="ragnarok" key="confirm-delete-item-s">Are you sure you want to remove this item form the shop?</word>
+    <word namespace="ragnarok" key="confirm-delete-item-p">Are you sure you want to remove these items form the shop?</word>
+    <word namespace="ragnarok" key="confirm-delete-category-s">Are you sure you want to remove this category form the item shop?</word>
+    <word namespace="ragnarok" key="confirm-delete-category-p">Are you sure you want to remove these categories form the shop?</word>
+    <word namespace="ragnarok" key="sold">Sold</word>
   </wordgroup>
 </languageimport>

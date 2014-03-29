@@ -1,15 +1,16 @@
 <?php
-use Aqua\UI\Sidebar;
 /**
  * @var $categories     \Aqua\Ragnarok\ShopCategory[]
  * @var $category_count int
  * @var $form           \Aqua\UI\Form
- * @var $paginator      \Aqua\UI\Pagination
  * @var $page           \Page\Admin\Ragnarok\Server
  */
+
+use Aqua\UI\Sidebar;
+
 $page->theme->template = 'sidebar-right';
 if(!empty($categories)) {
-	$page->theme->addWordGroup('ragnarok-shop', array( 'confirm-delete-s', 'confirm-delete-p' ));
+	$page->theme->addWordGroup('ragnarok', array( 'confirm-delete-category-s', 'confirm-delete-category-p' ));
 	$page->theme->footer->enqueueScript('theme.shop-category')
 		->type('text/javascript')
 		->src($page->theme->url . '/scripts/shop-category.js');
@@ -34,7 +35,7 @@ $sidebar->append('description', array(array(
 		'title' => $form->field('description')->getLabel(),
 		'content' => ob_get_contents()
 	)))->append('submit', array('class' => 'ac-sidebar-action', array(
-		'content' => '<input class="ac-sidebar-submit" type="submit" value="' . __('ragnarok-shop', 'new-category') .'">'
+		'content' => '<input class="ac-sidebar-submit" type="submit" value="' . __('ragnarok', 'new-category') .'">'
 	)));
 ob_end_clean();
 $page->theme->set('sidebar', $sidebar);
@@ -52,8 +53,8 @@ $page->theme->set('sidebar', $sidebar);
 		<tr>
 			<td colspan="5" style="text-align: right">
 				<select name="action">
-					<option value="order"><?php echo __('ragnarok-shop', 'save-order') ?></option>
-					<option value="delete"><?php echo __('ragnarok-shop', 'delete') ?></option>
+					<option value="order"><?php echo __('application', 'save-order') ?></option>
+					<option value="delete"><?php echo __('application', 'delete') ?></option>
 				</select>
 				<input type="submit" name="x-bulk" value="<?php echo __('application', 'apply') ?>">
 			</td>
@@ -87,11 +88,7 @@ $page->theme->set('sidebar', $sidebar);
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr>
-			<td colspan="5">
-				<?php echo $paginator->render() ?>
-			</td>
-		</tr>
+		<tr><td colspan="5"></td></tr>
 	</tfoot>
 </table>
 </form>

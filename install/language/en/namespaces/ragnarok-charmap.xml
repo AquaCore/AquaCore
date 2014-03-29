@@ -9,6 +9,7 @@
     <word namespace="ragnarok-charmap" key="key-label">Key</word>
     <word namespace="ragnarok-charmap" key="key-desc">Server's unique identifier, used in URLs.</word>
     <word namespace="ragnarok-charmap" key="timezone-label">Timezone</word>
+    <word namespace="ragnarok-charmap" key="timezone-desc"><![CDATA[Check <a href="http://php.net/manual/en/timezones.php" target="_blank">php.net</a> for a list of valid timezones.]]></word>
     <word namespace="ragnarok-charmap" key="char-host-label">Char Server IP</word>
     <word namespace="ragnarok-charmap" key="char-port-label">Char Server Port</word>
     <word namespace="ragnarok-charmap" key="map-host-label">Map Server IP</word>
@@ -25,8 +26,11 @@
     <word namespace="ragnarok-charmap" key="fame-label">Fame Ranking Places</word>
     <word namespace="ragnarok-charmap" key="online-stats-label">Online Stats Interval</word>
     <word namespace="ragnarok-charmap" key="online-stats-desc"><![CDATA[Log online players every <i>x</i> minutes.<br/><a href="https://dev.mysql.com/doc/refman/5.1/en/events-configuration.html">MYSQL's Event Scheduler</a> must be enabled to log online players periodically, use "0" to disable this feature.]]></word>
+    <word namespace="ragnarok-charmap" key="default-x-label">X Coordinate</word>
+    <word namespace="ragnarok-charmap" key="default-y-label">Y Coordinate</word>
+    <word namespace="ragnarok-charmap" key="map-restriction-label">Restriction Pattern</word>
+    <word namespace="ragnarok-charmap" key="map-restriction-desc"><![CDATA[Regular expression that matches restricted map names.<br/>The default value <i>"/^(sec_pri|[^@]+@[0-9]+)(\.gat)?$/i"</i> matches sec_pri and all instance maps.]]></word>
     <word namespace="ragnarok-charmap" key="default-map-label">Default Map</word>
-    <word namespace="ragnarok-charmap" key="default-map-desc">Default Map</word>
     <word namespace="ragnarok-charmap" key="section-sql-connection">Char/Map Database</word>
     <word namespace="ragnarok-charmap" key="section-log-connection">Log Database</word>
     <word namespace="ragnarok-charmap" key="section-settings">Settings</word>
@@ -62,5 +66,14 @@
     <word namespace="ragnarok-charmap" key="section-card-rate">Cards</word>
     <word namespace="ragnarok-charmap" key="section-mvp-rate">MVP Items</word>
     <word namespace="ragnarok-charmap" key="rates">Rates</word>
+    <word namespace="ragnarok-charmap" key="shop">Item Shop</word>
+    <word namespace="ragnarok-charmap" key="shop-categories">Shop Categories</word>
+    <word namespace="ragnarok-charmap" key="characters">Characters</word>
+    <word namespace="ragnarok-charmap" key="guilds">Guilds</word>
+    <word namespace="ragnarok-charmap" key="settings">Settings</word>
+    <word namespace="ragnarok-charmap" key="settings-saved">Settings saved.</word>
+    <word namespace="ragnarok-charmap" key="delete-server">Delete Server</word>
+    <word namespace="ragnarok-charmap" key="server-deleted"><![CDATA[Char/Map server <b>%s</b> removed from the control panel.]]></word>
+    <word namespace="ragnarok-charmap" key="confirm-delete">Are you sure you want to remove this char/map server from the control panel?  This action will not affect the server and nothing will be deleted from the database.</word>
   </wordgroup>
 </languageimport>

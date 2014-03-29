@@ -1,19 +1,10 @@
 <?php
 use Aqua\Core\App;
 /**
- * @var $account \Aqua\Ragnarok\Account
- * @var $page    \Page\Admin\Ragnarok
+ * @var $account    \Aqua\Ragnarok\Account
+ * @var $characters \Aqua\Ragnarok\Character[]
+ * @var $page       \Page\Admin\Ragnarok
  */
-$chars = array();
-$char_count = 0;
-foreach($account->server->charmap as $charmap) {
-	$chars[$charmap->key] = $charmap->charSearch()
-		->where(array( 'account_id' => $account->id ))
-		->order(array( 'slot' => 'DESC' ))
-		->query()
-		->results;
-	$count+= count($chars[$charmap->key]);
-}
 $datetime_format = App::$settings->get('datetime_format', '');
 ?>
 <table class="ac-table">
@@ -93,12 +84,16 @@ $datetime_format = App::$settings->get('datetime_format', '');
 			<td colspan="2"><?php echo __('ragnarok', 'guild') ?></td>
 			<td><?php echo __('ragnarok', 'server') ?></td>
 		</tr>
-		<?php if(!$char_count) : ?>
+		<?php if(empty($characters)) : ?>
 		<tr><td colspan="7" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
-	<?php else : foreach($chars as $charmap => $characters) : foreach($characters as $char) : ?>
+	<?php else : foreach($characters as $char) : ?>
 		<tr>
 			<td><img src="<?php echo ac_char_head($char) ?>"></td>
-			<td><?php echo htmlspecialchars($char->name) ?></td>
+			<td><a href="<?php echo ac_build_url(array(
+				'path' => array( 'r', $char->charmap->server->key, $char->charmap->key ),
+				'action' => 'viewchar',
+				'arguments' => array( $char->id )
+			)) ?>"><?php echo htmlspecialchars($char->name) ?></a></td>
 			<td><?php echo number_format($char->baseLevel) ?></td>
 			<td><?php echo number_format($char->jobLevel) ?></td>
 			<?php if($char->guildId) : ?>
@@ -107,16 +102,18 @@ $datetime_format = App::$settings->get('datetime_format', '');
 			<?php else : ?>
 			<td colspan="2"></td>
 			<?php endif; ?>
-			<td></td>
+			<td><a href="<?php echo ac_build_url(array(
+				'path' => array( 'r', $char->charmap->server->key, $char->charmap->key )
+			)) ?>"><?php echo htmlspecialchars($char->charmap->name) ?></a></td>
 		</tr>
-	<?php endforeach; endforeach; endif; ?>
+	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
 		<tr>
 			<td colspan="7">
 				<?php if($account->owner !== 1 || App::user()->account->id === 1) : ?>
 				<a class="ac-edit-account" href="<?php echo ac_build_url(array(
-						'path' => array( 'ro', $account->server->key ),
+						'path' => array( 'r', $account->server->key ),
 						'action' => 'editaccount',
 						'arguments' => array( $account->id )
 					)) ?>"><button class="ac-button"><?php echo __('ragnarok', 'edit-account') ?></button></a>

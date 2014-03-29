@@ -59,7 +59,7 @@
     <word namespace="ragnarok-server" key="delete-server">Delete Server</word>
     <word namespace="ragnarok-server" key="edit-server">Edit Server - %s</word>
     <word namespace="ragnarok-server" key="updated"><![CDATA[Server <b>%s</b> updated.]]></word>
-    <word namespace="ragnarok-server" key="confirm-delete">Are you sure you want to remove this server from the control panel?</word>
+    <word namespace="ragnarok-server" key="confirm-delete">Are you sure you want to remove this login server and its respective char/map servers from the control panel? This action will not affect the server and nothing will be deleted from the database.</word>
     <word namespace="ragnarok-server" key="link-label">Account Linking</word>
     <word namespace="ragnarok-server" key="link-desc">Allow users to link pre existing game accounts to their site accounts.</word>
     <word namespace="ragnarok-server" key="ban-log">Ban Log</word>
@@ -68,5 +68,6 @@
     <word namespace="ragnarok-server" key="accounts">Accounts</word>
     <word namespace="ragnarok-server" key="settings">Settings</word>
     <word namespace="ragnarok-server" key="add-charmap">Add Server</word>
+    <word namespace="ragnarok-server" key="server-deleted"><![CDATA[Login server <b>%s</b> removed from the control panel.]]></word>
   </wordgroup>
 </languageimport>

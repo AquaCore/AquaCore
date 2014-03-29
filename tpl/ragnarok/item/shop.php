@@ -44,7 +44,7 @@ $base_item_url = $page->charmap->url(array(
 <?php endforeach; ?>
 </div>
 <?php if(empty($items)) : ?>
-	<div style="text-align: center"><?php echo __('ragnarok', '0-items')?></div>
+	<div style="text-align: center"><?php echo __('application', 'no-search-results')?></div>
 	<?php return; ?>
 <?php else : ?>
 	<table class="ac-cash-shop-table">

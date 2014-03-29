@@ -116,6 +116,10 @@ class ItemData
 	/**
 	 * @var int
 	 */
+	public $shopSold;
+	/**
+	 * @var int
+	 */
 	public $shopCategoryId;
 	/**
 	 * @var bool
@@ -193,5 +197,54 @@ class ItemData
 			}
 		} while($key && next($db) !== false);
 		return $matches;
+	}
+
+	public function setShopData($price, $categoryId)
+	{
+		$tbl = $this->charmap->table('ac_cash_shop');
+		$order = (int)$this->charmap->connection()->query("SELECT MAX(`order`) FROM $tbl")->fetchColumn(0);
+		$sth = $this->charmap->connection()->prepare("
+		INSERT INTO $tbl (item_id, category_id, `order`, price)
+		VALUES (:id, :category, :order, :price)
+		ON DUPLICATE KEY UPDATE category_id = VALUES(category_id), price = VALUES(price)
+		");
+		$sth->bindValue(':id', $this->id, \PDO::PARAM_INT);
+		$sth->bindValue(':order', $order + 1, \PDO::PARAM_INT);
+		$sth->bindValue(':price', $price, \PDO::PARAM_INT);
+		if($categoryId) {
+			$sth->bindValue(':category', $categoryId, \PDO::PARAM_INT);
+		} else {
+			$sth->bindValue(':category', null, \PDO::PARAM_NULL);
+		}
+		if($sth->execute()) {
+			$this->shopPrice = (int)$price;
+			$this->shopCategoryId = (int)$categoryId;
+			$this->shopSold = $this->shopSold ?: 0;
+			$this->inCashShop = true;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function removeFromShop()
+	{
+		if(!$this->inCashShop) {
+			return false;
+		}
+		$sth = $this->charmap->connection()->prepare("
+		DELETE FROM {$this->charmap->table('ac_cash_shop')}
+		WHERE item_id = ?
+		");
+		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
+		if($sth->execute() && $sth->rowCount()) {
+			$this->inCashShop = false;
+			$this->shopCategoryId = null;
+			$this->shopPrice = null;
+			$this->shopSold = null;
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -15,10 +15,7 @@
 			dataType: "json",
 			async: false,
 			beforeSend: formBeforeSend,
-			success: formSuccess,
-			error: function(x, y, z) {
-				console.log(x, y, z);
-			}
+			success: formSuccess
 		});
 	});
 	$(".ac-action-plugin-settings", form).bind("click", function(e) {

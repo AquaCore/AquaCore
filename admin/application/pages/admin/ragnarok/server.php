@@ -4,11 +4,14 @@ namespace Page\Admin\ragnarok;
 use Aqua\Core\App;
 use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
+use Aqua\Ragnarok\ItemData;
 use Aqua\Site\Page;
+use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
+use Aqua\UI\Theme;
 
 class Server
 extends Page
@@ -35,10 +38,40 @@ extends Page
 			$this->error(404);
 		} else if($this->charmap) {
 			$nav = new Menu;
-			$base_url = ac_build_url(array(
-					'path' => array( 'ro', $this->server->key, 's', $this->charmap->key ),
+			$baseUrl = ac_build_url(array(
+					'path' => array( 'r', $this->server->key, $this->charmap->key ),
 					'action' => ''
 				));
+			$nav->append('server', array(
+				'title' => htmlspecialchars($this->charmap->name),
+			    'url' => "{$baseUrl}index"
+			))->append('settings', array(
+				'title' => __('ragnarok-charmap', 'settings'),
+			    'url' => "{$baseUrl}settings"
+			))->append('rates', array(
+				'title' => __('ragnarok-charmap', 'rates'),
+			    'url' => "{$baseUrl}rates"
+			))->append('shop', array(
+				'title' => __('ragnarok-charmap', 'shop'),
+			    'url' => "{$baseUrl}shop"
+			))->append('categories', array(
+				'title' => __('ragnarok-charmap', 'shop-categories'),
+			    'url' => "{$baseUrl}category"
+			))->append('characters', array(
+				'title' => __('ragnarok-charmap', 'characters'),
+			    'url' => "{$baseUrl}characters"
+			))->append('guilds', array(
+				'title' => __('ragnarok-charmap', 'guilds'),
+			    'url' => "{$baseUrl}shop"
+			))->append('parties', array(
+				'title' => __('ragnarok-charmap', 'parties'),
+			    'url' => "{$baseUrl}shop"
+			))->append('', array(
+				'title' => __('ragnarok-charmap', 'characters'),
+			    'url' => "{$baseUrl}char"
+			));
+			$this->theme->set('nav', $nav);
+			$this->theme->set('return', ac_build_url(array( 'path' => array( 'r', $this->server->key ) )));
 		} else if($this->request->uri->action !== 'index') {
 			$this->error(404);
 		}
@@ -115,7 +148,7 @@ extends Page
 			$frm->input('sql-timezone', true)
 				->type('text')
 			    ->setLabel(__('ragnarok-charmap', 'db-timezone-label'))
-			    ->setDescription(__('ragnaork-charmap-settings', 'db-timezone-desc'));
+			    ->setDescription(__('ragnarok-charmap', 'db-timezone-desc'));
 			$frm->input('log-host', true)
 				->type('text')
 			    ->required()
@@ -144,7 +177,7 @@ extends Page
 			$frm->input('log-timezone', true)
 				->type('text')
 			    ->setLabel(__('ragnarok-charmap', 'db-timezone-label'))
-			    ->setDescription(__('ragnaork-charmap-settings', 'db-timezone-desc'));
+			    ->setDescription(__('ragnarok-charmap', 'db-timezone-desc'));
 			$frm->checkbox('renewal', true)
 		        ->value(array( '1' => '' ))
 				->checked(1, false)
@@ -152,7 +185,7 @@ extends Page
 			$frm->input('online-stats', true)
 				->type('number')
 				->attr('min', 0)
-				->value(30, false)
+				->value(0, false)
 		        ->setLabel(__('ragnarok-charmap', 'online-stats-label'))
 		        ->setDescription(__('ragnarok-charmap', 'online-stats-desc'));
 			$frm->input('fame', true)
@@ -160,14 +193,12 @@ extends Page
 				->attr('min', 0)
 				->required()
 				->value(10, false)
-				->setLabel(__('ragnarok-charmap', 'fame-label'))
-				->setLabel(__('ragnarok-charmap', 'fame-desc'));
+				->setLabel(__('ragnarok-charmap', 'fame-label'));
 			$frm->input('default-map', true)
 		        ->type('text')
 		        ->value('prontera', false)
 				->required()
-		        ->setLabel(__('ragnarok-charmap', 'default-map-label'))
-		        ->setDescription(__('ragnarok-charmap', 'default-map-desc'));
+		        ->setLabel(__('ragnarok-charmap', 'default-map-label'));
 			$frm->input('default-x', true)
 		        ->type('number')
 				->attr('min', 0)
@@ -193,7 +224,7 @@ extends Page
 					if($regex = $frm->request->getString('map-restrictions')) {
 						@preg_match($regex, '');
 						if($mes = ac_pcre_error_str()) {
-							$frm->field('username-regex')->setWarning($mes);
+							$frm->field('map-restrictions')->setWarning($mes);
 							$error = true;
 						}
 					}
@@ -326,11 +357,11 @@ extends Page
 				");
 				$sth->bindValue(':chost', $this->request->getString('char-host'));
 				$sth->bindValue(':cport', $this->request->getInt('char-port'));
-				$sth->bindValue(':mhost', $this->request->getInt('map-port'));
+				$sth->bindValue(':mhost', $this->request->getString('map-host'));
 				$sth->bindValue(':mport', $this->request->getInt('map-port'));
 				$sth->bindValue(':timezone', $this->request->getString('timezone'));
-				$sth->bindValue(':timeout', $this->request->getInt('status-timeout'));
-				$sth->bindValue(':ttl', $this->request->getInt('status-cache'));
+				$sth->bindValue(':timeout', $this->request->getInt('status-timeout', 3));
+				$sth->bindValue(':ttl', $this->request->getInt('status-cache', 300));
 				$sth->bindValue(':online', $this->request->getInt('online-stats'));
 				$sth->bindValue(':renewal', $this->request->getInt('renewal') ? '1' : '');
 				$sth->bindValue(':fame', $this->request->getInt('fame'));
@@ -384,7 +415,7 @@ extends Page
 						'log_tables' => array()
 					));
 				$settings->export($file);
-				$this->response->status(302)->redirect(ac_build_url(array( 'path' => array( 'ro', $this->server->key, 's', $key ) )));
+				$this->response->status(302)->redirect(ac_build_url(array( 'path' => array( 'r', $this->server->key, $key ) )));
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
@@ -399,7 +430,197 @@ extends Page
 
 	public function server_index()
 	{
+		$this->title = htmlspecialchars($this->charmap->name);
+		$this->theme->head->section = htmlspecialchars(sprintf('%s / %s',
+		                                                       $this->server->name,
+		                                                       $this->charmap->name));
 		var_dump($this->charmap);
+	}
+
+	public function settings_action() {
+		try {
+			$frm = new Form($this->request);
+			$frm->input('name', true)
+			    ->type('text')
+			    ->attr('maxlength', 255)
+			    ->required()
+				->value(htmlspecialchars($this->charmap->name), false)
+			    ->setLabel(__('ragnarok-charmap', 'name-label'));
+			$frm->input('key', true)
+			    ->type('text')
+			    ->attr('maxlength', 255)
+			    ->required()
+				->value(htmlspecialchars($this->charmap->key), false)
+			    ->setLabel(__('ragnarok-charmap', 'key-label'))
+			    ->setDescription(__('ragnarok-charmap', 'key-desc'));
+			$frm->input('timezone', true)
+			    ->type('text')
+				->value(htmlspecialchars($this->charmap->getOption('timezone')), false)
+			    ->setLabel(__('ragnarok-charmap', 'timezone-label'))
+			    ->setDescription(__('ragnarok-charmap', 'timezone-desc'));
+			$frm->input('char-host', true)
+			    ->type('text')
+			    ->required()
+				->value(htmlspecialchars($this->charmap->getOption('char-ip')), false)
+			    ->setLabel(__('ragnarok-charmap', 'char-host-label'));
+			$frm->input('char-port', true)
+			    ->type('number')
+			    ->attr('min', 0)
+			    ->required()
+			    ->value($this->charmap->getOption('char-port'), false)
+			    ->setLabel(__('ragnarok-charmap', 'char-port-label'));
+			$frm->input('map-host', true)
+			    ->type('text')
+			    ->required()
+				->value(htmlspecialchars($this->charmap->getOption('map-ip')), false)
+			    ->setLabel(__('ragnarok-charmap', 'map-host-label'));
+			$frm->input('map-port', true)
+			    ->type('number')
+			    ->attr('min', 0)
+			    ->required()
+				->value($this->charmap->getOption('map-port'), false)
+			    ->setLabel(__('ragnarok-charmap', 'map-port-label'));
+			$frm->checkbox('renewal', true)
+			    ->value(array( '1' => '' ))
+			    ->checked($this->charmap->getOption('renewal', true) ? '1' : null, false)
+			    ->setLabel(__('ragnarok-charmap', 'renewal-label'));
+			$frm->input('online-stats', true)
+			    ->type('number')
+			    ->attr('min', 0)
+			    ->value(30, false)
+			    ->setLabel(__('ragnarok-charmap', 'online-stats-label'))
+			    ->setDescription(__('ragnarok-charmap', 'online-stats-desc'));
+			$frm->input('fame', true)
+			    ->type('number')
+			    ->attr('min', 0)
+			    ->required()
+			    ->value($this->charmap->getOption('fame-ladder', 10), false)
+			    ->setLabel(__('ragnarok-charmap', 'fame-label'));
+			$frm->input('default-map', true)
+			    ->type('text')
+			    ->value($this->charmap->getOption('default-map'), false)
+			    ->required()
+			    ->setLabel(__('ragnarok-charmap', 'default-map-label'));
+			$frm->input('default-x', true)
+			    ->type('number')
+			    ->attr('min', 0)
+			    ->required()
+			    ->value($this->charmap->getOption('default-map-x'), false)
+			    ->setLabel(__('ragnarok-charmap', 'default-x-label'));
+			$frm->input('default-y', true)
+			    ->type('number')
+			    ->attr('min', 0)
+			    ->required()
+			    ->value($this->charmap->getOption('default-map-y'), false)
+			    ->setLabel(__('ragnarok-charmap', 'default-y-label'));
+			$frm->input('map-restrictions', true)
+			    ->type('text')
+			    ->value($this->charmap->getOption('map-restriction'), false)
+			    ->setLabel(__('ragnarok-charmap', 'map-restriction-label'))
+			    ->setDescription(__('ragnarok-charmap', 'map-restriction-desc'));
+			$frm->submit();
+			$frm->input('delete')
+				->type('submit')
+				->value(__('ragnarok-charmap', 'delete-server'));
+			$frm->validate(function(Form $frm) {
+				if($regex = $frm->request->getString('map-restrictions')) {
+					@preg_match($regex, '');
+					if($mes = ac_pcre_error_str()) {
+						$frm->field('map-restrictions')->setWarning($mes);
+						return false;
+					}
+				}
+				try {
+					$tz = trim($this->request->getString('timezone'));
+					if(!empty($tz)) {
+						new \DateTimeZone($tz);
+					}
+				} catch(\Exception $e) {
+					$frm->field('timezone')
+					    ->setWarning(__('settings',
+					                    'invalid-timezone',
+					                    htmlspecialchars($frm->request->getString('timezone'))));
+					return false;
+				}
+				return true;
+			});
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'settings');
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+				    ->set('page', $this);
+				echo $tpl->render('admin/ragnarok/charmap-settings');
+				return;
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			return;
+		}
+		$this->response->status(302);
+		try {
+			$file     = \Aqua\ROOT . '/settings/ragnarok.php';
+			$settings = new Settings;
+			$settings->import($file);
+			$charmapSettings = $settings->get($this->server->key)->get('charmap');
+			if(!empty($this->request->data['delete'])) {
+				$this->charmap->flushCache();
+				$charmapSettings->delete($this->charmap->key);
+				$settings->export($file);
+				App::user()->addFlash('success', null, __('ragnarok-charmap', 'server-deleted', htmlspecialchars($this->charmap->name)));
+				$this->response->redirect(ac_build_url(array( 'path' => array( 'r', $this->server->key ) )));
+			} else {
+				$charmapSettings->get($this->charmap->key)->set('name', $this->request->getString('name'));
+				if($this->request->getString('key') !== $this->charmap->key) {
+					$copy = clone $charmapSettings->get($this->charmap->key);
+					$charmapSettings->delete($this->charmap->key);
+					$charmapSettings->set($this->request->getString('key'), $copy);
+				}
+				$this->charmap->key = $this->request->getString('key');
+				$this->charmap->name = $this->request->getString('name');
+				$settings->export($file);
+				$this->charmap->setOption(array(
+					'char-ip' => $this->request->getString('char-host'),
+					'char-port' => $this->request->getInt('char-port'),
+					'map-ip' => $this->request->getString('map-host'),
+					'map-port' => $this->request->getInt('map-port'),
+					'timezone' => $this->request->getString('timezone'),
+					'status-timeout' => $this->request->getInt('status-timeout', 3),
+					'status-ttl' => $this->request->getInt('status-cache', 300),
+					'online-stats' => $this->request->getInt('online-stats'),
+					'renewal' => $this->request->getInt('renewal') ? '1' : '',
+					'fame-ladder' => $this->request->getInt('fame'),
+					'default-map' => $this->request->getInt('default-map'),
+					'default-map-y' => $this->request->getInt('default-y'),
+					'default-map-x' => $this->request->getInt('default-x'),
+					'map-restriction' => $this->request->getInt('map-restrictions'),
+				));
+				if(!$this->request->getInt('online-stats')) {
+					$this->charmap->connection()->exec('ALTER EVENT ac_online_stats_event DISABLE');
+				} else {
+					$sth = $this->charmap->connection()->prepare('
+					ALTER EVENT ac_online_stats_event
+					ON SCHEDULE
+					EVERY :interval MINUTE
+					ENABLE
+					');
+					$sth->bindValue(':interval', $this->request->getInt('online-stats'), \PDO::PARAM_INT);
+					$sth->execute();
+				}
+				App::user()->addFlash('success', null, __('ragnarok-charmap', 'settings-saved'));
+				$this->response->redirect(ac_build_url(array(
+						'path' => array( 'r', $this->server->key, $this->charmap->key ),
+						'action' => 'settings'
+					)));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			$this->response->redirect(ac_build_url(array(
+					'path' => array( 'r', $this->server->key, $this->charmap->key ),
+					'action' => 'settings'
+				)));
+		}
 	}
 
 	public function rates_action()
@@ -648,21 +869,15 @@ extends Page
 			$frm->submit();
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				$this->title = $this->theme->head->section = __('ragnarok-shop', 'categories');
-				$currentPage = $this->request->uri->getInt('page', 1, 1);
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'shop-categories');
 				$search = $this->charmap->shopCategorySearch()
 					->calcRows(true)
 					->order(array( 'order' => 'ASC' ))
-					->limit(($currentPage - 1) * self::$categoriesPerPage, self::$categoriesPerPage)
 					->query();
-				$pgn = new Pagination(App::request()->uri,
-				                      ceil($search->rowsFound / self::$categoriesPerPage),
-				                      $currentPage);
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('categories', $search->results)
 					->set('category_count', $search->rowsFound)
-					->set('paginator', $pgn)
 					->set('page', $this);
 				echo $tpl->render('admin/ragnarok/shop-category');
 				return;
@@ -714,41 +929,89 @@ extends Page
 		try {
 			$frm = new Form($this->request);
 			$frm->input('item')
-		        ->type('number')
-				->attr('min', 0)
+		        ->type('text')
 				->required()
-		        ->setLabel(__('ragnarok-shop', 'item-id'));
+		        ->setLabel(__('ragnarok', 'item-id'));
 			$frm->input('price')
 		        ->type('number')
 				->attr('min', 1)
 				->required()
-		        ->setLabel(__('ragnarok-shop', 'price'));
-			$frm->input('category')
-		        ->type('text')
-		        ->attr('maxlength', 255)
-		        ->setLabel(__('ragnarok-shop', 'price'));
+		        ->setLabel(__('ragnarok', 'price'));
+			$categories = array( '' => __('application', 'none') );
+			foreach($this->charmap
+				        ->shopCategorySearch()
+				        ->order('`name`')
+				        ->query() as $category) {
+				$categories[$category->id] = htmlspecialchars($category->name);
+			}
+			$frm->select('category')
+				->value($categories)
+		        ->setLabel(__('ragnarok', 'shop-category'));
+			$frm->submit();
 			$self = $this;
-			$frm->submit(function(Form $frm) use ($self) {
-					if(!($item = $self->charmap->item($frm->request->getInt('item')))) {
-						$frm->field('item')->setWarning(__('ragnarok-shop', 'item-not-found'));
+			$item = null;
+			$frm->validate(function(Form $frm) use ($self, &$item) {
+					$itemName = $frm->request->getString('item');
+					if($itemName) {
+						if(ctype_digit($itemName)) {
+							$item = $self->charmap->item($itemName);
+						} else {
+							$item = $self->charmap->item($itemName, 'name');
+						}
+					}
+					if(!$item) {
+						$frm->field('item')->setWarning(__('ragnarok', 'item-not-found'));
 						return false;
 					} else if($item->inCashShop) {
-						$frm->field('item')->setWarning(__('ragnarok-shop', 'item-already-exists'));
+						$frm->field('item')->setWarning(__('ragnarok', 'shop-item-already-exists'));
 						return false;
 					}
 					return true;
 				});
-			if($frm->status !== Form::VALIDATION_SUCCESS) {
-
+			if($frm->status !== Form::VALIDATION_SUCCESS || !$item instanceof ItemData) {
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'shop');
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+					->set('items', $this->charmap
+						->itemShopSearch()
+						->order('shop_order')
+						->query()
+						->results)
+					->set('page', $this);
+				echo $tpl->render('admin/ragnarok/shop');
+				return;
 			}
+			$this->response->status(302)->redirect(App::request()->uri->url());
 			try {
-
+				/**
+				 * @var $item \Aqua\Ragnarok\ItemData
+				 */
+				if($item->setShopData($this->request->getInt('price'),
+				                      $this->request->getInt('category') ?: null)) {
+					App::user()->addFlash('success', null, __('ragnarok-shop', 'item-added', htmlspecialchars($item->jpName)));
+				} else {
+					App::user()->addFlash('success', null, __('ragnarok-shop', 'item-not-added', htmlspecialchars($item->jpName)));
+				}
 			} catch(\Exception $exception) {
-
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function item_action($id = null)
+	{
+		try {
+			if(!$id || !($item = $this->charmap->item($id)) || !$item->inCashShop) {
+				$this->error(404);
+				return;
+			}
+			$frm = new Form($this->request);
+		} catch(\Exception $exception) {
+
 		}
 	}
 
