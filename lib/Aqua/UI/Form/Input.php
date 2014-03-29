@@ -198,7 +198,7 @@ implements FieldInterface
 		$value = $request->getString($this->getAttr('name'), null);
 		if($value === null) {
 			return Form::VALIDATION_INCOMPLETE;
-		} else if(empty($value)) {
+		} else if($value === '') {
 			if($this->getBool('required')) {
 				$this->error = self::VALIDATION_EMPTY_VALUE;
 				$error       = __('form', 'field-required');

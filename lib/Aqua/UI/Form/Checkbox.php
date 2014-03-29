@@ -294,7 +294,7 @@ implements FieldInterface
 	 */
 	public function validate(Request $request, &$message = null)
 	{
-		if(($data = $request->getString($this->name, null)) === null &&
+		if(($data = $request->getString($this->name, '')) === '' &&
 		   ($data = $request->getArray($this->name, null)) === null) {
 			return ($this->required ? Form::VALIDATION_INCOMPLETE : Form::VALIDATION_SUCCESS);
 		}

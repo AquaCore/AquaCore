@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\Site;
 
+use Aqua\Event\Event;
 use Aqua\Event\EventDispatcher;
 use Page\Common;
 

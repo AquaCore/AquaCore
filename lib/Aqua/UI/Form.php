@@ -433,7 +433,6 @@ class Form
 			if($this->status === self::VALIDATION_INCOMPLETE ||
 			   ($stop_on_error && $this->status !== self::VALIDATION_SUCCESS)) {
 				reset($this->content);
-
 				return $this->status;
 			}
 		} while(next($this->content));

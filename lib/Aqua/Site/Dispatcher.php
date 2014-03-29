@@ -73,7 +73,7 @@ implements SubjectInterface
 				break;
 			}
 		} while(next($pages) !== false && !$this->_error);
-		$this->notify('dispatch_start');
+		$this->notify('dispatch-start');
 		$status = $this->permissions->check($user, $request);
 		if($status & Permission::STATUS_AUTHENTICATE) {
 			$this->triggerError(401);
@@ -90,11 +90,12 @@ implements SubjectInterface
 		$action = $request->uri->action;
 		$arguments = $request->uri->arguments;
 		$feedback = array( &$_page, &$action, &$arguments );
-		$this->notify('render_start', $feedback);
-		$_page->action($action, $arguments);
+		if($this->notify('render-start', $feedback) !== true) {
+			$_page->action($action, $arguments);
+		}
 		$content = ob_get_contents();
 		$feedback[] = &$content;
-		$this->notify('render_end', $feedback);
+		$this->notify('render-end', $feedback);
 		ob_end_clean();
 		$theme->set('user', $user);       // Partial: flash
 		$content = $theme->render($this->_currentData['layout'], $this->_currentData['page_title'], $content);
