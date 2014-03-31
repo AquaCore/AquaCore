@@ -34,14 +34,39 @@ $permissions
 	->allowPermission('view-admin-cp')
 	->allowPermission('edit-cp-settings');
 $permissions
-	->set('admin/ragnarok/action/[edit|index]')
+	->set('admin/ragnarok/action/settings')
 	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
 	->allowPermission('view-admin-cp')
-	->allowPermission('edit-cp-settings');
+	->allowPermission('edit-server-settings');
 $permissions
-	->set('admin/ragnarok/action/[login_log|ban_log|password_log]')
+	->set('admin/ragnarok/server/action/settings')
 	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
 	->allowPermission('view-admin-cp')
-	->allowPermission('edit-cp-settings');
+	->allowPermission('edit-server-settings');
+$permissions
+	->set('admin/ragnarok/action/[account|viewaccount]')
+	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
+	->allowPermission('view-admin-cp')
+	->allowPermission('view-server-acc');
+$permissions
+	->set('admin/ragnarok/action/[account|viewaccount|editaccount]')
+	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
+	->allowPermission('view-admin-cp')
+	->allowPermission('edit-server-user');
+$permissions
+	->set('admin/ragnarok/action/[account|viewaccount|banaccount]')
+	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
+	->allowPermission('view-admin-cp')
+	->allowPermission('ban-server-user');
+$permissions
+	->set('admin/ragnarok/action/[loginlog|banlog|pwlog]')
+	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
+	->allowPermission('view-admin-cp')
+	->allowPermission('view-server-logs');
+$permissions
+	->set('admin/ragnarok/server/action/[zenylog|shoplog|picklog|mvplog|chatlog|npclog|atcmdlog|viewshoplog]')
+	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
+	->allowPermission('view-admin-cp')
+	->allowPermission('view-server-logs');
 
 return $permissions;

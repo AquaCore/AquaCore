@@ -44,20 +44,36 @@ extends Page
 				));
 			$nav->append('server', array(
 				'title' => htmlspecialchars($this->charmap->name),
-			    'url' => "{$baseUrl}index"
-			))->append('settings', array(
-				'title' => __('ragnarok-charmap', 'settings'),
-			    'url' => "{$baseUrl}settings"
-			))->append('rates', array(
-				'title' => __('ragnarok-charmap', 'rates'),
-			    'url' => "{$baseUrl}rates"
-			))->append('shop', array(
-				'title' => __('ragnarok-charmap', 'shop'),
-			    'url' => "{$baseUrl}shop"
-			))->append('categories', array(
-				'title' => __('ragnarok-charmap', 'shop-categories'),
-			    'url' => "{$baseUrl}category"
-			))->append('characters', array(
+				'url' => "{$baseUrl}index"
+			));
+			if(App::user()->role()->hasPermission('edit-server-settings')) {
+				$nav->append('settings', array(
+					'title' => __('ragnarok-charmap', 'settings'),
+					'url' => "{$baseUrl}settings"
+				));
+			}
+			if(App::user()->role()->hasPermission('view-server-logs')) {
+				$nav->append('zenylog', array(
+					'title' => __('ragnarok-charmap', 'zeny-log'),
+				    'url' => "{$baseUrl}zenylog"
+				))->append('shop-log', array(
+					'title' => __('ragnarok-charmap', 'shop-log'),
+					'url' => "{$baseUrl}shoplog"
+				))->append('pick-log', array(
+					'title' => __('ragnarok-charmap', 'pick-log'),
+					'url' => "{$baseUrl}picklog"
+				))->append('mvp-log', array(
+					'title' => __('ragnarok-charmap', 'mvp-log'),
+					'url' => "{$baseUrl}mvplog"
+				))->append('atcmd-log', array(
+					'title' => __('ragnarok-charmap', 'atcommand-log'),
+					'url' => "{$baseUrl}atcmdlog"
+				))->append('npc-log', array(
+					'title' => __('ragnarok-charmap', 'npc-log'),
+					'url' => "{$baseUrl}npclog"
+				));
+			}
+			$nav->append('characters', array(
 				'title' => __('ragnarok-charmap', 'characters'),
 			    'url' => "{$baseUrl}characters"
 			))->append('guilds', array(
@@ -81,6 +97,9 @@ extends Page
 	{
 		if($this->charmap) {
 			$this->server_index();
+			return;
+		} else if(!App::user()->role()->hasPermission('edit-server-settings')) {
+			$this->error(403);
 			return;
 		}
 		try {
@@ -595,15 +614,16 @@ extends Page
 					'default-map-x' => $this->request->getInt('default-x'),
 					'map-restriction' => $this->request->getInt('map-restrictions'),
 				));
+				$evt = $this->charmap->table('ac_online_stats_event');
 				if(!$this->request->getInt('online-stats')) {
-					$this->charmap->connection()->exec('ALTER EVENT ac_online_stats_event DISABLE');
+					$this->charmap->connection()->exec("ALTER EVENT $evt DISABLE");
 				} else {
-					$sth = $this->charmap->connection()->prepare('
-					ALTER EVENT ac_online_stats_event
+					$sth = $this->charmap->connection()->prepare("
+					ALTER EVENT $evt
 					ON SCHEDULE
 					EVERY :interval MINUTE
 					ENABLE
-					');
+					");
 					$sth->bindValue(':interval', $this->request->getInt('online-stats'), \PDO::PARAM_INT);
 					$sth->execute();
 				}
@@ -1045,26 +1065,134 @@ extends Page
 		}
 	}
 
-	public function log_action($type = '')
+	public function zenylog_action()
 	{
-		switch($type) {
-			case 'zeny':
-				break;
-			case 'shop':
-				break;
-			case 'pick':
-				break;
-			case 'atcommand':
-				break;
-			case 'branch':
-				break;
-			case 'mvp':
-				break;
-			case 'npc':
-				break;
-			case 'chat':
-				break;
-			default: $this->error(404); return;
+		try {
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'zeny-log');
+
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function shoplog_action()
+	{
+		try {
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'shop-log');
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $this->charmap->log->searchCashShopLog()
+				->calcRows(true)
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
+				->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('log', $search->results)
+				->set('count', $search->rowsFound)
+				->set('paginator', $pgn)
+				->set('page', $this);
+			echo $tpl->render('admin/ragnarok/log/shop-log');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function viewshoplog_action($id = null)
+	{
+		try {
+			if(!$id || !($log = $this->charmap->log->getCashShopLog($id))) {
+				$this->error(404);
+				return;
+			}
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'view-shop-log');
+			$tpl = new Template;
+			$tpl->set('log', $log)
+				->set('page', $this);
+			echo $tpl->render('admin/ragnarok/log/view-shop-log');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function atcmdlog_action()
+	{
+		try {
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'atcommand-log');
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $this->charmap->log->searchAtcommandLog()
+				->calcRows(true)
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
+				->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('log', $search->results)
+			    ->set('count', $search->rowsFound)
+			    ->set('paginator', $pgn)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/log/atcommand-log');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function picklog_action()
+	{
+		try {
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'pick-log');
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $this->charmap->log->searchPickLog()
+				->calcRows(true)
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
+				->query();
+			if($search->rowsFound !== 0) {
+				$characters = $search->getColumn('char_id');
+				$items      = $search->getColumn('item_id');
+				array_unshift($characters, Search::SEARCH_IN);
+				array_unshift($items, Search::SEARCH_IN);
+				$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
+				$this->charmap->itemSearch()->where(array( 'id' => $items ))->query();
+			}
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('log', $search->results)
+			    ->set('count', $search->rowsFound)
+			    ->set('paginator', $pgn)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/log/pick-log');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function mvplog_action()
+	{
+		try {
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'mvp-log');
+
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function npclog_action()
+	{
+		try {
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'npc-log');
+
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 }
