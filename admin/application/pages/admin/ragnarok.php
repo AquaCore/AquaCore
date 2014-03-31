@@ -35,24 +35,33 @@ extends Page
 					'action' => ''
 				));
 			$nav->append('server', array(
-					'title' => htmlspecialchars($this->server->name),
-					'url'   => $baseUrl . 'index'
-				))->append('settings', array(
+				'title' => htmlspecialchars($this->server->name),
+				'url'   => $baseUrl . 'index'
+			));
+			if(App::user()->role()->hasPermission('edit-server-settings')) {
+				$nav->append('settings', array(
 					'title' => __('ragnarok-server', 'settings'),
-					'url'   => $baseUrl . 'edit'
-				))->append('accounts', array(
+					'url'   => $baseUrl . 'settings'
+				));
+			}
+			if(App::user()->role()->hasPermission('view-server-acc')) {
+				$nav->append('accounts', array(
 					'title' => __('ragnarok-server', 'accounts'),
 					'url'   => $baseUrl . 'account'
-				))->append('login-log', array(
+				));
+			}
+			if(App::user()->role()->hasPermission('view-server-logs')) {
+				$nav->append('login-log', array(
 					'title' => __('ragnarok-server', 'login-log'),
-					'url'   => $baseUrl . 'login'
+					'url'   => $baseUrl . 'loginlog'
 				))->append('ban-log', array(
 					'title' => __('ragnarok-server', 'ban-log'),
-					'url'   => $baseUrl . 'ban'
+					'url'   => $baseUrl . 'banlog'
 				))->append('password-reset-log', array(
 					'title' => __('ragnarok-server', 'password-reset-log'),
-					'url'   => $baseUrl . 'password'
+					'url'   => $baseUrl . 'pwlog'
 				));
+			}
 			$this->theme->set('nav', $nav);
 		} else {
 			if($this->request->uri->action !== 'index') {
@@ -71,6 +80,9 @@ extends Page
 			} else {
 				$this->server_index();
 			}
+			return;
+		} else if(!App::user()->role()->hasPermission('edit-server-settings')) {
+			$this->error(403);
 			return;
 		}
 		try {
@@ -554,7 +566,7 @@ extends Page
 		}
 	}
 
-	public function edit_action()
+	public function settings_action()
 	{
 		try {
 			$frm = new Form($this->request);
@@ -827,7 +839,7 @@ extends Page
 					              __('ragnarok-server', 'updated', htmlspecialchars($this->server->name)));
 					$this->response->status(302)->redirect(ac_build_url(array(
 							'path'   => array('r', $this->server->key),
-							'action' => 'edit'
+							'action' => 'settings'
 						)));
 				}
 				$settings->export($file);
@@ -835,7 +847,7 @@ extends Page
 				ErrorLog::logSql($exception);
 				$this->response->status(302)->redirect(ac_build_url(array(
 						'path'   => array('r', $this->server->key),
-						'action' => 'edit'
+						'action' => 'settings'
 					)));
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			}
@@ -891,7 +903,7 @@ extends Page
 		}
 	}
 
-	public function login_action()
+	public function loginlog_action()
 	{
 		try {
 			$current_page = $this->request->uri->getInt('page', 1, 1);
@@ -916,7 +928,7 @@ extends Page
 		}
 	}
 
-	public function ban_action()
+	public function banlog_action()
 	{
 		try {
 			$current_page = $this->request->uri->getInt('page', 1, 1);
@@ -941,7 +953,7 @@ extends Page
 		}
 	}
 
-	public function password_action()
+	public function pwlog_action()
 	{
 		try {
 			$current_page = $this->request->uri->getInt('page', 1, 1);
@@ -1128,7 +1140,11 @@ extends Page
 				}
 				return !$error;
 			}, !$this->request->ajax);
-			if($frm->status !== Form::VALIDATION_SUCCESS && !$this->request->ajax) {
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				if($this->request->ajax) {
+					$this->error(204);
+					return;
+				}
 				$this->title = $this->theme->head->section = __('ragnarok', 'edit-account',
 				                                                htmlspecialchars($account->username));
 				$tpl = new Template;
