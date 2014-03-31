@@ -81,7 +81,7 @@ var AquaCore = AquaCore || {};
 			query+= "&";
 		}
 		if(query) {
-			return "?" + query;
+			return "/?" + query;
 		} else {
 			return "";
 		}

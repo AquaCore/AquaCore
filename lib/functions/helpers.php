@@ -209,7 +209,7 @@ function ac_build_query(array $options)
 		}
 	}
 	if(!empty($options['query'])) {
-		$query.= '?' . http_build_query($options['query']);
+		$query.= '/?' . http_build_query($options['query']);
 	}
 	if($options['hash']) {
 		$query.= '#' . $options['hash'];

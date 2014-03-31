@@ -263,7 +263,11 @@ extends Page
 
 					return !($error);
 				}, $this->request->ajax);
-			if($frm->status !== Form::VALIDATION_SUCCESS && !$this->request->ajax) {
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				if($this->request->ajax) {
+					$this->error(204);
+					return;
+				}
 				$this->theme->head->section = $this->title = __('profile', 'edit-account-admin', htmlspecialchars($account->displayName));
 				$this->theme->set('return', ac_build_url(array(
 						'path' => array( 'user' ),
@@ -281,7 +285,7 @@ extends Page
 			$message = '';
 			$error   = false;
 			try {
-				$update         = array();
+				$update        = array();
 				$avatarUpdated = false;
 				if(!$frm->field('username')->getWarning()) {
 					$update['username'] = trim($this->request->getString('username'));
@@ -359,6 +363,7 @@ extends Page
 				);
 				echo json_encode($response);
 			} else {
+				$this->response->status(302)->redirect(App::request()->uri->url());
 				$user = App::user();
 				foreach($frm->content as $key => $field) {
 					if($field instanceof Form\FieldInterface && ($warning = $field->getWarning())) {
@@ -415,7 +420,11 @@ extends Page
 
 					return true;
 				}, !$this->request->ajax);
-			if($frm->status !== Form::VALIDATION_SUCCESS && !$this->request->ajax) {
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				if($this->request->ajax) {
+					$this->error(204);
+					return;
+				}
 				if($account->isBanned()) {
 					$this->title                = __('profile', 'unban-account', htmlspecialchars($account->displayName));
 					$this->theme->head->section = __('profile', 'unban');

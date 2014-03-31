@@ -81,6 +81,7 @@ extends Page
 				->setLabel(__('role', 'description'));
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('role', 'roles');
 				$current_page = $this->request->uri->get('page', 1, 1);
 				$count = count(R::$roles);
 				$pages = ceil($count / self::ENTRIES_PER_PAGE);
@@ -172,7 +173,11 @@ extends Page
 				->setLabel(__('role', 'description'));
 			$frm->submit();
 			$frm->validate(null, !$this->request->ajax);
-			if(!$this->request->ajax && $frm->status !== Form::VALIDATION_SUCCESS) {
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				if($this->request->ajax) {
+					$this->error(204);
+					return;
+				}
 				$this->title = __('role', 'x-edit-role', htmlspecialchars($role->name));
 				$this->theme->set('return', ac_build_url(array( 'path' => array( 'role' ) )));
 				$this->theme->head->section = __('role', 'edit-role');
