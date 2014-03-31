@@ -2,11 +2,14 @@
 namespace Aqua\Ragnarok\Server;
 
 use Aqua\Core\App;
+use Aqua\Ragnarok\Account;
 use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Character;
 use Aqua\Ragnarok\Item;
+use Aqua\Ragnarok\Server\Logs\AtcommandLog;
 use Aqua\Ragnarok\Server\Logs\CashShopLog;
 use Aqua\Ragnarok\Server\Logs\PickLog;
+use Aqua\Ragnarok\Server\Logs\ZenyLog;
 use Aqua\SQL\Query;
 
 class CharMapLog
@@ -82,23 +85,24 @@ class CharMapLog
 				'id' => 'c.id',
 				'ip_address' => 'c.ip_address',
 				'account_id' => 'c.account_id',
+				'username' => 'c.username',
 				'total' => 'c.total',
-				'date' => 'c.date',
-				'items' => 'COUNT(i.item_id)',
-				'amount' => 'SUM(i.amount)'
+				'date' => 'c.`date`',
+				'items' => 'c.items',
+				'amount' => 'c.amount'
 			))
 			->whereOptions(array(
 				'id' => 'c.id',
 				'ip_address' => 'c.ip_address',
 				'account_id' => 'c.account_id',
+				'username' => 'c.username',
 				'total' => 'c.total',
-				'date' => 'c.date',
-				'items' => 'COUNT(i.item_id)',
-				'amount' => 'SUM(i.amount)',
-				'item_id' => 'i.item_id',
+				'date' => 'c.`date`',
+				'items' => 'c.items',
+				'amount' => 'c.amount'
 			))
 			->from($this->table('ac_cash_shop_log'), 'c')
-			->leftJoin($this->table('ac_cash_shop_items'), 'i.id = c.id', 'i')
+			->order('id')
 			->parser(array( $this, 'parseCashShopLog' ));
 	}
 
@@ -116,20 +120,24 @@ class CharMapLog
 	}
 
 	/**
-	 * @param int     $accountId
-	 * @param \Aqua\Ragnarok\Cart $cart
+	 * Log a shop purchase in the database
+	 *
+	 * @param \Aqua\Ragnarok\Account $account
+	 * @param \Aqua\Ragnarok\Cart    $cart
 	 * @return bool
 	 */
-	public function logCashShopPurchase($accountId, Cart $cart)
+	public function logCashShopPurchase(Account $account, Cart $cart)
 	{
 		$sth = $this->connection()->prepare("
-		INSERT INTO {$this->table('ac_cash_shop_log')} (ip_address, account_id, total, items, `date`)
-		VALUES (?, ?, ?, ?, NOW())
+		INSERT INTO {$this->table('ac_cash_shop_log')} (ip_address, account_id, username, total, items, amount, `date`)
+		VALUES (:ip, :accid, :username, :total, :items, :amount, NOW())
 		");
-		$sth->bindValue(1, App::request()->ipString, \PDO::PARAM_STR);
-		$sth->bindValue(2, $accountId, \PDO::PARAM_INT);
-		$sth->bindValue(3, $cart->total, \PDO::PARAM_INT);
-		$sth->bindValue(4, $cart->itemCount, \PDO::PARAM_INT);
+		$sth->bindValue(':ip', App::request()->ipString, \PDO::PARAM_STR);
+		$sth->bindValue(':accid', $account->id, \PDO::PARAM_INT);
+		$sth->bindValue(':username', $account->username, \PDO::PARAM_STR);
+		$sth->bindValue(':items', count($cart->items), \PDO::PARAM_INT);
+		$sth->bindValue(':amount', $cart->itemCount, \PDO::PARAM_INT);
+		$sth->bindValue(':total', $cart->total, \PDO::PARAM_INT);
 		$sth->execute();
 		$id = $this->connection()->lastInsertId();
 		$sth = $this->connection()->prepare("
@@ -183,6 +191,7 @@ class CharMapLog
 	           'map' => 'pl.map',
 	           'date' => 'pl.time'
 			))
+			->groupBy('id')
 			->from($this->table('picklog'), 'pl')
 			->parser(array( $this, 'parsePickLogSql' ));
 	}
@@ -200,12 +209,90 @@ class CharMapLog
 		return ($search->valid() ? $search->current() : null);
 	}
 
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public function searchZenyLog()
+	{
+		return Query::search($this->connection())
+			->columns(array(
+				'id' => 'z.id',
+			    'date' => 'z.`time`',
+			    'char_id' => 'z.char_id',
+			    'src_id' => 'z.src_id',
+			    'type' => 'z.`type`',
+			    'amount' => 'z.amount',
+			    'map' => 'z.map'
+			))
+			->whereOptions(array(
+				'id' => 'z.id',
+				'date' => 'z.`time`',
+				'char_id' => 'z.char_id',
+				'src_id' => 'z.src_id',
+				'type' => 'z.`type`',
+				'amount' => 'z.amount',
+				'map' => 'z.map'
+			))
+			->groupBy('id')
+			->from($this->table('zenylog'), 'z')
+			->parser(array( $this, 'parseZenyLogSql' ));
+	}
+
+	public function getZenyLog($id)
+	{
+
+	}
+
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public function searchAtcommandLog()
+	{
+		return Query::search($this->connection())
+			->columns(array(
+				'id' => 'a.atcommand_id',
+				'date' => 'a.atcommand_date',
+				'account_id' => 'a.account_id',
+				'char_id' => 'a.char_id',
+				'char_name' => 'a.char_name',
+				'map' => 'a.map',
+				'command' => 'a.command',
+			))
+			->whereOptions(array(
+				'id' => 'a.actcommand_id',
+				'date' => 'a.actcommand_date',
+				'account_id' => 'a.account_id',
+				'char_id' => 'a.char_id',
+				'char_name' => 'a.char_name',
+				'map' => 'a.map',
+				'command' => 'a.command',
+			))
+			->groupBy('id')
+			->from($this->table('atcommandlog'), 'a')
+			->parser(array( $this, 'parseAtcommandLogSql' ));
+	}
+
+	public function getAtcommandLog($id)
+	{
+
+	}
+
+	/**
+	 * @param array $data
+	 * @return \Aqua\Ragnarok\Server\Logs\CashShopLog
+	 */
 	public function parseCashShopLog(array $data)
 	{
 		$log = new CashShopLog;
-		$log->charmap = &$this;
-		$log->id = (int)$data['id'];
+		$log->charmap   = &$this->charmap;
+		$log->id        = (int)$data['id'];
 		$log->accountId = (int)$data['account_id'];
+		$log->date      = (int)$data['date'];
+		$log->total     = (int)$data['total'];
+		$log->items     = (int)$data['items'];
+		$log->amount    = (int)$data['amount'];
+		$log->ipAddress = $data['ip_address'];
+		$log->username  = $data['username'];
 		return $log;
 	}
 
@@ -216,6 +303,7 @@ class CharMapLog
 	public function parsePickLogSql(array $data)
 	{
 		$log = new PickLog;
+		$log->charmap   = &$this->charmap;
 		$log->id        = (int)$data['id'];
 		$log->date      = (int)$data['date'];
 		$log->charId    = (int)$data['char_id'];
@@ -228,6 +316,42 @@ class CharMapLog
 		$log->cards[2]  = (int)$data['card2'];
 		$log->cards[3]  = (int)$data['card3'];
 		$log->uniqueId  = $data['unique_id'];
+		$log->map       = $data['map'];
+		return $log;
+	}
+
+	/**
+	 * @param array $data
+	 * @return \Aqua\Ragnarok\Server\Logs\ZenyLog
+	 */
+	public function parseZenyLogSql(array $data)
+	{
+		$log = new ZenyLog;
+		$log->charmap   = &$this->charmap;
+		$log->id        = (int)$data['id'];
+		$log->date      = (int)$data['date'];
+		$log->charId    = (int)$data['char_id'];
+		$log->srcId     = (int)$data['src_id'];
+		$log->type      = (int)$data['type'];
+		$log->amount    = (int)$data['amount'];
+		$log->map       = $data['map'];
+		return $log;
+	}
+
+	/**
+	 * @param array $data
+	 * @return \Aqua\Ragnarok\Server\Logs\AtcommandLog
+	 */
+	public function parseAtcommandLogSql(array $data)
+	{
+		$log = new AtcommandLog;
+		$log->charmap   = &$this->charmap;
+		$log->id        = (int)$data['id'];
+		$log->date      = (int)$data['date'];
+		$log->accountId = (int)$data['account_id'];
+		$log->charId    = (int)$data['char_id'];
+		$log->charName  = $data['char_name'];
+		$log->command   = $data['command'];
 		$log->map       = $data['map'];
 		return $log;
 	}

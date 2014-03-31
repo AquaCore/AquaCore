@@ -20,14 +20,20 @@ class Cart
 	 */
 	public $charmapKey;
 	/**
+	 * Associative array of items: itemId => array ( ["name"], ["price"], ["amount"] )
+	 *
 	 * @var array
 	 */
 	public $items = array();
 	/**
+	 * Amount of items in the cart
+	 *
 	 * @var int
 	 */
 	public $itemCount;
 	/**
+	 * Total price
+	 *
 	 * @var int
 	 */
 	public $total = 0;
@@ -172,7 +178,7 @@ class Cart
 			$soldCount->execute();
 			$soldCount->closeCursor();
 		}
-		$this->charmap()->log->logCashShopPurchase($account->id, $this);
+		$this->charmap()->log->logCashShopPurchase($account, $this);
 		$feedback = array( $this, $insertedIds );
 		Event::fire('cart.checkout', $feedback);
 		return true;
