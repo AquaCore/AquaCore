@@ -31,6 +31,10 @@
 	tbody {
 		tr {
 			td {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				-o-text-overflow: ellipsis;
 				background: #e9eef4;
 				padding: 5px;
 				border-top: 1px solid white;

@@ -10,7 +10,15 @@ use Aqua\Core\App;
 
 $date_format = App::settings()->get('datetime_format', '');
 ?>
-<table class="ac-table">
+<table class="ac-table" style="table-layout: fixed">
+	<colgroup>
+		<col style="width: 90px">
+		<col style="width: 250px">
+		<col style="width: 90px">
+		<col style="width: 200px">
+		<col>
+		<col style="width: 130px">
+	</colgroup>
 	<thead>
 		<tr class="alt">
 			<td><?php echo __('error', 'id')?></td>
