@@ -66,6 +66,10 @@ implements \Iterator, \Countable
 	 */
 	public $results = array();
 	/**
+	 * @var array
+	 */
+	public $resultsData = array();
+	/**
 	 * @var int
 	 */
 	public $resultsCount = 0;
@@ -156,8 +160,7 @@ implements \Iterator, \Countable
 	public function get($column, $default = null)
 	{
 		if($this->valid()) {
-			$current = $this->current();
-			return $current[$column];
+			return $this->resultsData[$this->key()][$column];
 		} else {
 			return $default;
 		}
@@ -170,10 +173,10 @@ implements \Iterator, \Countable
 	 */
 	public function getColumn($column = null, $key = null)
 	{
-		if(empty($this->results) || !array_key_exists($column, $this->current())) {
+		if(empty($this->results) && array_key_exists($column, $this->resultsData)) {
 			return array();
 		}
-		return array_column($this->results, $column, $key);
+		return array_column($this->resultsData, $column, $key);
 	}
 
 	/**
@@ -535,8 +538,10 @@ implements \Iterator, \Countable
 			}
 			if($this->resultsKey) {
 				$this->results[$data[$this->resultsKey]] = $result;
+				$this->resultsData[$data[$this->resultsKey]] = $data;
 			} else {
 				$this->results[] = $result;
+				$this->resultsData[] = $data;
 			}
 		}
 		$this->resultsCount = count($this->results);
