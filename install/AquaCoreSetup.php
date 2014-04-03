@@ -111,10 +111,16 @@ class AquaCoreSetup
 			                                '/\\'));
 		}
 		if(!defined('Aqua\WORKING_URL')) {
-			define('Aqua\WORKING_URL',
-				'http' . (\Aqua\HTTPS ? 's' : '') . '://' .
-				getenv('HTTP_HOST') .
-				rtrim(dirname(getenv('PHP_SELF')), '/'));
+			if(($path = getenv('PHP_SELF')) !== false) {
+				$path = dirname($path);
+			} else {
+				$path = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
+				if(substr($path, -4) === '.php') {
+					$path = dirname($path);
+				}
+			}
+			$path = rtrim($path, '/');
+			define('Aqua\WORKING_URL', 'http' . (\Aqua\HTTPS ? 's' : '') . '://' . getenv('HTTP_HOST') . $path);
 		}
 		if(!defined('Aqua\URL')) {
 			define('Aqua\URL',
