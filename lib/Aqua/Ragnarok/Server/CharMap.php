@@ -66,10 +66,6 @@ class CharMap
 	 */
 	public $woeCastles;
 	/**
-	 * @return \Aqua\Ragnarok\ShopCategory[]
-	 */
-	public $shopCategories;
-	/**
 	 * @var array
 	 */
 	public $cache;
@@ -93,6 +89,10 @@ class CharMap
 	 * @var \Aqua\Ragnarok\Homunculus[]
 	 */
 	public $homunculus = array();
+	/**
+	 * @return \Aqua\Ragnarok\ShopCategory[]
+	 */
+	public $shopCategories = array();
 
 	const BASE_EXP  = 0;
 	const JOB_EXP   = 1;
