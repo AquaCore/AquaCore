@@ -462,6 +462,7 @@ class Session
 		WHERE _last_update < DATE_SUB(NOW(), INTERVAL :interval MINUTE)
 		");
 		$sth->bindValue(':interval', $this->expire, \PDO::PARAM_INT);
+		$sth->execute();
 	}
 
 	/**
