@@ -482,7 +482,7 @@ class Account
 		array_pop($values);
 		if(array_key_exists('unbanDate', $acc_data)) $values['unban_date'] = $acc_data['unbanDate'];
 		if(array_key_exists('birthDate', $acc_data)) $values['birthday'] = $acc_data['birthDate'];
-		if(array_key_exists('password', $options)) $values['plain_password'] = $acc_data['password'];
+		if(array_key_exists('password', $acc_data)) $values['plain_password'] = $acc_data['password'];
 		unset($options['password']);
 		$feedback = array( $this, $values );
 		Event::fire('account.update', $feedback);
