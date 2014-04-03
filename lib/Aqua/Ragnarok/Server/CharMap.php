@@ -125,10 +125,14 @@ class CharMap
 			isset($settings['log_tables']) ? $settings['log_tables'] : array()
 		);
 		if($this->getOption('renewal', false)) {
-			$this->tables = array(
-				'item_db' => 'item_db_re',
-			    'mob_db'  => 'mob_db_re'
-			);
+			$this->tables = array( 'item_db' => 'item_db_re' );
+			if($this->server->emulator === Server::EMULATOR_RATHENA) {
+				$this->tables+= array(
+					'item_db2' => 'item_db2_re',
+				    'mob_db'   => 'mob_db_re',
+				    'mob_db2'  => 'mob_db2_re',
+				);
+			}
 		}
 		if(isset($settings['tables'])) { $this->tables = $settings['tables'] + $this->tables; }
 	}
