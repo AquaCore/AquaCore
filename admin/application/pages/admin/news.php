@@ -186,6 +186,7 @@ extends Page
 				});
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->theme->head->section = $this->title = __('news', 'new-post');
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'news' ) )));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('page', $this);
@@ -359,6 +360,7 @@ extends Page
 				});
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->theme->head->section = $this->title = __('news', 'edit-post');
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'news' ) )));
 				$tpl = new Template;
 				$tpl->set('post', $post)
 					->set('form', $frm)

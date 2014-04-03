@@ -39,7 +39,7 @@
     <word namespace="profile" key="email-len-min">The email you have entered is invalid, emails must be at least %d characters long.</word>
     <word namespace="profile" key="email-len-range">The email you have entered is invalid, emails must be between %d and %d characters long.</word>
     <word namespace="profile" key="birthday-len-min">The birthday you have entered is invalid, please enter a date later than %s.</word>
-    <word namespace="profile" key="birthday-len-range">The birthday you have entered is invalid, birthdays must be between %d and %d characters long.</word>
+    <word namespace="profile" key="birthday-len-range">The birthday you have entered is invalid, please enter a date between %s and %s.</word>
     <word namespace="profile" key="username-invalid-character">Your username contains invalid characters, the following characters aren't allowed: %s</word>
     <word namespace="profile" key="password-invalid-character">Your password contains invalid characters, the following characters aren't allowed: %s</word>
     <word namespace="profile" key="display-name-invalid-character">Your display name contains invalid characters, the following characters aren't allowed: %s</word>

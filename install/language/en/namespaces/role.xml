@@ -18,5 +18,6 @@
     <word namespace="role" key="x-edit-role">Edit Role - %s</word>
     <word namespace="role" key="edit">Edit</word>
     <word namespace="role" key="delete">Delete</word>
+    <word namespace="role" key="roles">Roles</word>
   </wordgroup>
 </languageimport>

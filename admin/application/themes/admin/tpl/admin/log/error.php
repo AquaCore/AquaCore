@@ -10,14 +10,14 @@ use Aqua\Core\App;
 
 $date_format = App::settings()->get('datetime_format', '');
 ?>
-<table class="ac-table" style="table-layout: fixed">
+<table class="ac-table ac-table-fixed">
 	<colgroup>
-		<col style="width: 90px">
-		<col style="width: 250px">
-		<col style="width: 90px">
-		<col style="width: 200px">
+		<col style="width: 7%">
+		<col style="width: 15%">
+		<col style="width: 10%">
+		<col style="width: 15%">
 		<col>
-		<col style="width: 130px">
+		<col style="width: 200px">
 	</colgroup>
 	<thead>
 		<tr class="alt">

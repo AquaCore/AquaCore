@@ -81,6 +81,7 @@ extends Site\Page
 				});
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('page', 'new-page');
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'page' ) )));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('page', $this);
@@ -182,6 +183,7 @@ extends Site\Page
 				});
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('page', 'edit-page');
+				$this->theme->set('return', ac_build_url(array( 'path' => array( 'page' ) )));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('content', $page)

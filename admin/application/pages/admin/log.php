@@ -91,7 +91,7 @@ extends Page
 						'path' => array( 'log' ),
 						'action' => 'error'
 					)));
-				echo $tpl->render('admin/log/view_error');
+				echo $tpl->render('admin/log/view-error');
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
@@ -161,7 +161,7 @@ extends Page
 			$tpl = new Template;
 			$tpl->set('txn', $txn)
 				->set('page', $this);
-			echo $tpl->render('admin/log/view_pp');
+			echo $tpl->render('admin/log/view-pp');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

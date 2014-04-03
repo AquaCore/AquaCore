@@ -1,0 +1,45 @@
+$assetsPath: "../" !default;
+
+.ac-item-collection {
+	padding: 5px 30px !important;
+	vertical-align: middle;
+	text-align: center;
+	background: #fff !important;
+}
+.ac-ro-cardbmp {
+	padding: 0 !important;
+	img {
+		width: 190px;
+		height: 254px;
+	}
+}
+.ac-card-slot {
+	vertical-align: middle;
+	text-align: center;
+	height: 1.5em;
+	width: 40px;
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	background-image: url(#{$assetsPath}images/icons/card.png) !important;
+	a {
+		display: block;
+		height: 1.3em;
+		width: 100%;
+	}
+}
+.ac-slot-disabled {
+	background-image: url(#{$assetsPath}images/icons/disabled_card.png) !important;
+}
+.ac-slot-empty {
+	background-image: url(#{$assetsPath}images/icons/empty_card.png) !important;
+}
+.ui-tooltip.ac-card-bmp {
+	padding: 5px;
+	img {
+		height: 200px;
+		width: auto;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+	}
+}

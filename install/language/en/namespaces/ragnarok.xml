@@ -255,5 +255,18 @@
     <word namespace="ragnarok" key="confirm-delete-category-s">Are you sure you want to remove this category form the item shop?</word>
     <word namespace="ragnarok" key="confirm-delete-category-p">Are you sure you want to remove these categories form the shop?</word>
     <word namespace="ragnarok" key="sold">Sold</word>
+    <word namespace="ragnarok" key="unique-id">Unique ID</word>
+    <word namespace="ragnarok" key="id">ID</word>
+    <word namespace="ragnarok" key="map">Map</word>
+    <word namespace="ragnarok" key="cards">Cards</word>
+    <word namespace="ragnarok" key="date">Date</word>
+    <word namespace="ragnarok" key="items-purchased">Items Purchased</word>
+    <word namespace="ragnarok" key="subtotal">Subtotal</word>
+    <word namespace="ragnarok" key="character-id">Character ID</word>
+    <word namespace="ragnarok" key="deleted"><![CDATA[<span class="ac-char-deleted">Deleted <small>(%s)</small></span>]]></word>
+    <word namespace="ragnarok" key="command">Command</word>
+    <word namespace="ragnarok" key="parameters">Parameters</word>
+    <word namespace="ragnarok" key="type-id">Type ID</word>
+    <word namespace="ragnarok" key="receiver">Receiver</word>
   </wordgroup>
 </languageimport>

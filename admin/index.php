@@ -21,14 +21,26 @@ try {
 		$role = App::user()->role();
 		App::autoloader('Page')->addDirectory(__DIR__ . '/application/pages');
 		Server::init();
-		$viewRagnarokMenu = $role->hasPermission('edit-server-settings');
-		if($viewRagnarokMenu) {
+		$viewRagnarokMenuAdmin = $role->hasPermission('edit-server-settings');
+		$viewRagnarokMenu      = $viewRagnarokMenuAdmin;
+		if(!$viewRagnarokMenuAdmin) foreach(array( 'edit-server-settings',
+		                                           'edit-server-user',
+		                                           'view-server-acc',
+		                                           'view-user-items',
+		                                           'ban-server-user',
+		                                           'view-server-logs' ) as $permission) {
+			if($role->hasPermission($permission)) {
+				$viewRagnarokMenu = true;
+				break;
+			}
+		}
+		if($viewRagnarokMenuAdmin) {
 			$ragnarokSubmenu = array(array(
 				'title' => __('admin-menu', 'ragnarok-add-server'),
 				'url'   => ac_build_url(array( 'path' => array( 'ragnarok' ) ))
 			));
 		}
-		foreach(Server::$servers as $server) {
+		if($viewRagnarokMenu) foreach(Server::$servers as $server) {
 			$serverSubmenu = array();
 			if($server->charmapCount) {
 				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'r', $server->key ) ));
@@ -36,19 +48,11 @@ try {
 				foreach($server->charmap as $charmap) {
 					$charmaps[] = array(
 						'title' => htmlspecialchars($charmap->name),
-						'url' => ac_build_url(array( 'path' => array( 'r', $server->key, $charmap->key ) )),
-						'submenu' => array(array(
-							'title' => 'x',
-							'url' => ac_build_url(array( 'path' => array( 'r', $server->key, $charmap->key ) ))
-						))
+						'url' => ac_build_url(array( 'path' => array( 'r', $server->key, $charmap->key ) ))
 					);
 				}
-				if($server->charmapCount === 1) {
-					$serverSubmenu['submenu'] = $charmaps[0]['submenu'];
-				} else {
-					$serverSubmenu['submenu'] = $charmaps;
-				}
-			} else if(!$viewRagnarokMenu) {
+				$serverSubmenu['submenu'] = $charmaps;
+			} else if(!$viewRagnarokMenuAdmin) {
 				continue;
 			} else {
 				$serverSubmenu['url'] = ac_build_url(array( 'path' => array( 'r', $server->key ) ));

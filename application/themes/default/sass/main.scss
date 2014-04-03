@@ -1,8 +1,11 @@
+$assetsPath: "../../../../assets/";
+
 @import "aquacore";
 @import "aquacore.flash";
 @import "aquacore.table";
 @import "aquacore.buttons";
 @import "aquacore.pagination";
+@import "aquacore.cards";
 
 ::-webkit-input-placeholder { color: #c8cedd; }
 :-moz-placeholder { color: #a0a5b3; }
@@ -1060,19 +1063,6 @@ iframe[src="about:blank"]{ display: none !important; }
 		-o-text-overflow: ellipsis;
 	}
 }
-.ac-item-collection {
-	padding: 5px 30px !important;
-	vertical-align: middle;
-	text-align: center;
-	background: #fff !important;
-}
-.ac-ro-cardbmp {
-	padding: 0 !important;
-	img {
-		width: 190px;
-		height: 254px;
-	}
-}
 .ac-edit-options {
 	float: right;
 	color: #959aa3;
@@ -1087,28 +1077,8 @@ iframe[src="about:blank"]{ display: none !important; }
 	&.ac-char-online { background-image: url('../images/char-online.png') !important; }
 	&.ac-char-offline { background-image: url('../images/char-offline.png') !important; }
 }
-.ac-card-slot {
-	vertical-align: middle;
-	text-align: center;
-	height: 1.5em;
-	width: 40px;
-	background-position: center center !important;
-	background-repeat: no-repeat !important;
-	background-image: url('../../../../assets/images/icons/card.png') !important;
-	a {
-		display: block;
-		height: 1.3em;
-		width: 100%;
-	}
-}
 .ac-item-amount {
 	width: 100px;
-}
-.ac-slot-disabled {
-	background-image: url('../../../../assets/images/icons/disabled_card.png') !important;
-}
-.ac-slot-empty {
-	background-image: url('../../../../assets/images/icons/empty_card.png') !important;
 }
 .ac-mob-sprite {
 	width: 260px;
@@ -1355,16 +1325,6 @@ iframe[src="about:blank"]{ display: none !important; }
 .ac-update-cart-num {
 	float: left;
 	margin-left: 10px;
-}
-.ui-tooltip.ac-card-bmp {
-	padding: 5px;
-	img {
-		height: 200px;
-		width: auto;
-		max-width: none;
-		max-height: none;
-		margin: 0;
-	}
 }
 .ac-renewal-exp-info {
 	float: left;

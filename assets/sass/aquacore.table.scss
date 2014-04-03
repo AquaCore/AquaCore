@@ -31,10 +31,6 @@
 	tbody {
 		tr {
 			td {
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				-o-text-overflow: ellipsis;
 				background: #e9eef4;
 				padding: 5px;
 				border-top: 1px solid white;
@@ -96,6 +92,18 @@
 	}
 	td {
 		text-align: center;
+	}
+}
+.ac-table-fixed {
+	table-layout: fixed;
+	td, th {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-o-text-overflow: ellipsis;
+		&.wrap {
+			white-space: normal;
+		}
 	}
 }
 .ac-search-result {

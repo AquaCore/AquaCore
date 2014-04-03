@@ -68,9 +68,17 @@
     <word namespace="ragnarok-charmap" key="rates">Rates</word>
     <word namespace="ragnarok-charmap" key="shop">Item Shop</word>
     <word namespace="ragnarok-charmap" key="shop-categories">Shop Categories</word>
+    <word namespace="ragnarok-charmap" key="woe">Woe Schedule</word>
     <word namespace="ragnarok-charmap" key="characters">Characters</word>
     <word namespace="ragnarok-charmap" key="guilds">Guilds</word>
     <word namespace="ragnarok-charmap" key="settings">Settings</word>
+    <word namespace="ragnarok-charmap" key="zeny-log">Zeny Log</word>
+    <word namespace="ragnarok-charmap" key="shop-log">Shop Log</word>
+    <word namespace="ragnarok-charmap" key="pick-log">Pick Log</word>
+    <word namespace="ragnarok-charmap" key="mvp-log">MVP Log</word>
+    <word namespace="ragnarok-charmap" key="atcommand-log">Atcommand Log</word>
+    <word namespace="ragnarok-charmap" key="npc-log">NPC Log</word>
+    <word namespace="ragnarok-charmap" key="chat-log">Chat Log</word>
     <word namespace="ragnarok-charmap" key="settings-saved">Settings saved.</word>
     <word namespace="ragnarok-charmap" key="delete-server">Delete Server</word>
     <word namespace="ragnarok-charmap" key="server-deleted"><![CDATA[Char/Map server <b>%s</b> removed from the control panel.]]></word>

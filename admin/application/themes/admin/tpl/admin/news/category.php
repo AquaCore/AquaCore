@@ -75,7 +75,7 @@ $page->theme->set('sidebar', $sidebar);
 		<tr>
 			<td colspan="8" style="text-align: right">
 				<select name="action">
-					<option value="1"><?php echo __('content', 'delete') ?></option>
+					<option value="1"><?php echo __('application', 'delete') ?></option>
 				</select>
 				<input type="submit" name="x-bulk-action" value="<?php echo __('application', 'apply') ?>">
 			</td>

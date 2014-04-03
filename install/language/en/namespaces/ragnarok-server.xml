@@ -68,6 +68,11 @@
     <word namespace="ragnarok-server" key="accounts">Accounts</word>
     <word namespace="ragnarok-server" key="settings">Settings</word>
     <word namespace="ragnarok-server" key="add-charmap">Add Server</word>
+    <word namespace="ragnarok-server" key="name">Server Name</word>
+    <word namespace="ragnarok-server" key="base-exp">Base Exp. Rate</word>
+    <word namespace="ragnarok-server" key="job-exp">Job Exp. Rate</word>
+    <word namespace="ragnarok-server" key="characters">Characters</word>
+    <word namespace="ragnarok-server" key="online">Players Online</word>
     <word namespace="ragnarok-server" key="server-deleted"><![CDATA[Login server <b>%s</b> removed from the control panel.]]></word>
   </wordgroup>
 </languageimport>

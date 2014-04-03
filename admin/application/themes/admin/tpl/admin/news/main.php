@@ -49,7 +49,7 @@ ob_start();
 <input type="text" name="k" value="<?php echo $page->request->uri->getString('k') ?>">
 <?php
 $sidebar->append('keyword', array( array(
-		'title'   => __('news', 'keyword'),
+		'title'   => __('content', 'keyword'),
 		'content' => ob_get_contents()
 	)));
 ob_clean();
@@ -65,7 +65,7 @@ $x = $page->request->uri->getArray('c');
 </select>
 <?php
 $sidebar->append('category', array( array(
-		'title'   => __('news', 'category'),
+		'title'   => __('content', 'category'),
 		'content' => ob_get_contents()
 	)));
 ob_clean();
@@ -84,7 +84,7 @@ $x = $page->request->uri->getArray('s');
 </select>
 <?php
 $sidebar->append('status', array( array(
-		'title'   => __('news', 'status'),
+		'title'   => __('content', 'status'),
 		'content' => ob_get_contents()
 	)));
 ob_clean();
@@ -105,7 +105,7 @@ $page->theme->set('sidebar', $sidebar);
 		<tr>
 			<td colspan="11" style="text-align: right">
 				<select name="action">
-					<option value="delete"><?php echo __('news', 'delete') ?></option>
+					<option value="delete"><?php echo __('application', 'delete') ?></option>
 				</select>
 				<input type="submit" name="x-bulk" value="<?php echo __('application', 'apply') ?>">
 			</td>

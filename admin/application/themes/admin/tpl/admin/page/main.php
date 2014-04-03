@@ -26,7 +26,7 @@ $datetime_format = App::settings()->get('datetime_format');
 		<tr>
 			<td colspan="10" style="text-align: right">
 				<select name="action">
-					<option name="delete"><?php echo __('page', 'delete') ?></option>
+					<option name="delete"><?php echo __('application', 'delete') ?></option>
 				</select>
 				<input type="submit" value="<?php echo __('application', 'apply') ?>">
 			</td>
