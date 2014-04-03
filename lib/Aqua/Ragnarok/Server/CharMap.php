@@ -117,7 +117,6 @@ class CharMap
 		} else {
 			$this->uri->path[] = 'server';
 		}
-		if(isset($settings['tables'])) { $this->tables = $settings['tables'] + $this->tables; }
 		if(isset($settings['database_name'])) { $this->db = $settings['database_name']; }
 		$this->log = new CharMapLog(
 			$this,
@@ -125,6 +124,13 @@ class CharMap
 			$settings['log_db'],
 			isset($settings['log_tables']) ? $settings['log_tables'] : array()
 		);
+		if($this->getOption('renewal', false)) {
+			$this->tables = array(
+				'item_db' => 'item_db_re',
+			    'mob_db'  => 'mob_db_re'
+			);
+		}
+		if(isset($settings['tables'])) { $this->tables = $settings['tables'] + $this->tables; }
 	}
 
 	/**
