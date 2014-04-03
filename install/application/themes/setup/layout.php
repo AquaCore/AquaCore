@@ -4,8 +4,6 @@ use Aqua\Core\App;
 use Aqua\UI\ScriptManager;
 use Aqua\Core\L10n;
 /**
- * @var $__url      string
- * @var $__file     string
  * @var $body_class string
  * @var $head       \Aqua\UI\Theme\Head
  * @var $footer     \Aqua\UI\Theme\Footer
@@ -30,15 +28,15 @@ $direction = $setup->languageDirection();
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<?php echo $head->render() ?>
-	<link type="text/css" href="<?php echo $__url?>/style.css" rel="stylesheet" />
-	<script src="<?php echo $__url?>/main.js"></script>
+	<link type="text/css" href="<?php echo $this->url ?>/style.css" rel="stylesheet" />
+	<script src="<?php echo $this->url ?>/main.js"></script>
 </head>
 <body class="<?php echo $body_class?>">
 <div id="main">
 	<div id="body">
 		<div id="menu">
 			<div class="logo">
-				<img src="<?php echo $__url ?>/images/logo.png">
+				<img src="<?php echo $this->url ?>/images/logo.png">
 			</div>
 			<?php echo $menu->render() ?>
 		</div>
