@@ -9,22 +9,73 @@ class Item
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
+	/**
+	 * @var int
+	 */
 	public $itemId;
+	/**
+	 * @var int
+	 */
 	public $name;
+	/**
+	 * @var int int
+	 */
 	public $type       = self::TYPE_INVENTORY;
+	/**
+	 * @var int
+	 */
 	public $amount     = 0;
+	/**
+	 * @var int
+	 */
 	public $charId     = 0;
+	/**
+	 * @var string
+	 */
 	public $character  = '';
+	/**
+	 * @var bool
+	 */
 	public $identified = true;
+	/**
+	 * @var int
+	 */
 	public $refine     = 0;
+	/**
+	 * @var array
+	 */
 	public $cards      = array();
+	/**
+	 * @var int
+	 */
 	public $attribute  = 0;
+	/**
+	 * @var int
+	 */
 	public $equip      = 0;
+	/**
+	 * @var int
+	 */
 	public $expire     = 0;
+	/**
+	 * @var int
+	 */
 	public $uniqueId   = 0;
+	/**
+	 * @var int
+	 */
 	public $slots      = 0;
+	/**
+	 * @var int
+	 */
 	public $itemType   = 0;
+	/**
+	 * @var int
+	 */
 	public $bound      = 0;
+	/**
+	 * @var array
+	 */
 	public $data       = array();
 
 	const TYPE_INVENTORY = 0;

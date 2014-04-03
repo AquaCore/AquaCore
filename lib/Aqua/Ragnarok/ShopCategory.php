@@ -38,7 +38,48 @@ class ShopCategory
 
 	public function update(array $data)
 	{
-
+		$values = array();
+		$update = '';
+		if(array_key_exists('slug', $data) && $data['slug'] !== $this->slug) {
+			$values['slug'] = $data['slug'];
+			$update.= '`slug` = ?, ';
+		}
+		if(array_key_exists('name', $data) && $data['name'] !== $this->name) {
+			$values['name'] = $data['name'];
+			$update.= '`name` = ?, ';
+			if(!array_key_exists('slug', $data) &&
+			   !array_key_exists('slug', $values)) {
+				$values['slug'] = $this->charmap->shopCategorySlug($data['name'], $this->id);
+				$update.= '`slug` = ?, ';
+			}
+		}
+		if(array_key_exists('description', $data) && $data['description'] !== $this->description) {
+			$values['description'] = $data['description'];
+			$update.= '`description` = ?, ';
+		}
+		if(array_key_exists('order', $data) && (int)$data['order'] !== $this->order) {
+			$values['order'] = $data['order'];
+			$update.= '`order` = ?, ';
+		}
+		if(empty($values)) {
+			return false;
+		}
+		$values[] = $this->id;
+		$sth = $this->charmap->connection()->prepare("
+		UPDATE {$this->charmap->table('ac_cash_shop_categories')}
+		SET {$update}
+		WHERE id = ?
+		");
+		$sth->execute(array_values($values));
+		if(!$sth->rowCount()) {
+			return false;
+		}
+		$feedback = array( $this, $values );
+		Event::fire('ragnarok.update-shop-category', $feedback);
+		foreach($values as $key => $val) {
+			$this->{$key} = $val;
+		}
+		return true;
 	}
 
 	public function delete()

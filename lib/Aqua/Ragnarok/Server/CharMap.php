@@ -2,6 +2,8 @@
 namespace Aqua\Ragnarok\Server;
 
 use Aqua\Core\App;
+use Aqua\Event\Event;
+use Aqua\Ragnarok\Account;
 use Aqua\Ragnarok\Character;
 use Aqua\Ragnarok\Guild;
 use Aqua\Ragnarok\Homunculus;
@@ -711,7 +713,7 @@ class CharMap
 	 */
 	public function character($id, $type = 'id')
 	{
-		if($type === 'id' && isset($this->characters[$id])) {
+		if($type === 'id' && array_key_exists($id, $this->characters)) {
 			return $this->characters[$id];
 		}
 		$select = Query::select($this->connection())
@@ -790,7 +792,7 @@ class CharMap
 	{
 		if(!$id) {
 			return null;
-		} else if($type === 'id' && isset($this->itemDb[$id])) {
+		} else if($type === 'id' && array_key_exists($id, $this->itemDb)) {
 			return $this->itemDb[$id];
 		}
 		$columns = array(
@@ -890,7 +892,7 @@ class CharMap
 	 */
 	public function shopCategory($id, $type = 'id')
 	{
-		if($type === 'id' && isset($this->shopCategories[$id])) {
+		if($type === 'id' && array_key_exists($id, $this->shopCategories)) {
 			return $this->shopCategories[$id];
 		}
 		$select = Query::select($this->connection())
@@ -927,7 +929,7 @@ class CharMap
 	{
 		if(!$id) {
 			return null;
-		} else if($type === 'id' && isset($this->mobDb[$id])) {
+		} else if($type === 'id' && array_key_exists($id, $this->mobDb)) {
 			return $this->mobDb[$id];
 		}
 		$columns = array(
@@ -993,10 +995,51 @@ class CharMap
 	/**
 	 * @param int|string $id
 	 * @param string     $type "id" or "name"
+	 * @return \Aqua\Ragnarok\Guild|null
 	 */
 	public function guild($id, $type = 'id')
 	{
+		if(!$id) {
+			return null;
+		} else if($type === 'id' && array_key_exists($id, $this->guilds)) {
+			return $this->guilds[$id];
+		}
+		$select = Query::select($this->connection())
+			->columns(array(
+				'id' => 'g.guild_id',
+				'name' => 'g.`name`',
+				'master_id' => 'g.char_id',
+				'master' => 'g.master',
+				'level'  => 'g.guild_lv',
+				'max_members'  => 'g.max_member',
+				'online'  => 'g.connect_member',
+				'average_level'  => 'g.average_lv',
+				'experience'  => 'g.exp',
+				'next_experience'  => 'g.next_exp',
+				'skill_points'  => 'g.skill_point',
+				'message1'  => 'g.mes1',
+				'message2'  => 'g.mes2',
+				'member_count' => 'COUNT(gm.char_id)',
+				'castle_count' => 'COUNT(gc.castle_id)'
+			))
+			->from($this->table('guild'), 'g')
+			->leftJoin($this->table('guild_castle'), 'g.guild_id = gc.guild_id', 'gc')
+			->leftJoin($this->table('guild_member'), 'g.guild_id = gm.guild_id', 'gm')
+			->groupBy('g.guild_id')
+			->parser(array( $this, 'parseGuildSql' ));
+		switch($type) {
+			case 'id':
+				$select->where(array( 'id' => $id ));
+				break;
+			case 'name':
+				$select->where(array( 'name' => $id ));
+				break;
+			default:
+				return null;
+		}
+		$select->query();
 
+		return ($select->valid() ? $select->current() : null);
 	}
 
 	/**
@@ -1005,7 +1048,7 @@ class CharMap
 	 */
 	public function homunculus($id)
 	{
-		if(isset($this->homunculus[$id])) {
+		if(array_key_exists($id, $this->homunculus)) {
 			return $this->homunculus[$id];
 		}
 		$select = Query::select($this->connection())
@@ -1384,7 +1427,7 @@ class CharMap
 			$select->where(array( 'id' => array( Search::SEARCH_DIFFERENT, $id ) ));
 		}
 		$select->query();
-		return ac_slug_available($slug, $select->column('slug'));
+		return ac_slug_available($slug, $select->getColumn('slug'));
 	}
 
 	/**
@@ -1418,26 +1461,19 @@ class CharMap
 		return (isset($this->woeCastles[$id]) ? $this->woeCastles[$id] : null);
 	}
 
-	public function addCastle($id, $name)
+	public function setCastles($castles)
 	{
-		if($this->castleName($id) !== null) {
-			return false;
-		}
+		$this->connection()->exec("TRUNCATE TABLE {$this->table('ac_woe_castles')}");
 		$sth = $this->connection()->prepare("
-		INSERT INTO {$this->table('ac_woe_castles')} ( id, `name` )
-		VALUES ( ?, ? )
+		INSERT INTO {$this->table('ac_woe_castles')} (id, `name`)
+		VALUES (:id, :name)
 		");
-		$sth->bindValue(1, $id, \PDO::PARAM_INT);
-		$sth->bindValue(2, $name, \PDO::PARAM_STR);
-		$sth->execute();
-		if(!$sth->execute() || !$sth->rowCount()) {
-			return false;
+		foreach($castles as $id => $name) {
+			$sth->bindValue(':id', $id, \PDO::PARAM_INT);
+			$sth->bindValue(':name', $name, \PDO::PARAM_STR);
+			$sth->execute();
 		}
-	}
-
-	public function removeCastle($id)
-	{
-
+		return $this;
 	}
 
 	public function addWoeTime($name, array $castles, $end_day, $end_time, $start_day, $start_time)
@@ -1705,6 +1741,7 @@ class CharMap
 			$item = $this->itemDb[$data['id']];
 		} else {
 			$item = new ItemData;
+			$this->itemDb[$data['id']] = $item;
 		}
 		$item->id            = (int)$data['id'];
 		$item->charmap       = &$this;
@@ -1745,6 +1782,7 @@ class CharMap
 			$item->shopCategoryId = $data['shop_category'];
 			$item->inCashShop     = true;
 		}
+
 		return $item;
 	}
 
@@ -1809,6 +1847,7 @@ class CharMap
 			$cat = $this->shopCategories[$data['id']];
 		} else {
 			$cat = new ShopCategory;
+			$this->shopCategories[$data['id']] = $cat;
 		}
 		$cat->charmap     = &$this;
 		$cat->id          = (int)$data['id'];
@@ -1830,6 +1869,7 @@ class CharMap
 			$mob = $this->mobDb[$data['id']];
 		} else {
 			$mob = new Mob;
+			$this->mobDb[$data['id']] = $mob;
 		}
 		$mob->id            = (int)$data['id'];
 		$mob->charmap       = &$this;
@@ -1864,6 +1904,7 @@ class CharMap
 		$mob->jobExp        = $this->calcExperience((int)$data['job_exp'], self::JOB_EXP);
 		$mob->mvpExp        = $this->calcExperience((int)$data['mvp_exp'], self::MVP_EXP);
 		$mob->custom        = (bool)$data['custom'];
+
 		return $mob;
 	}
 
@@ -1880,6 +1921,7 @@ class CharMap
 			$char = $this->characters[$data['id']];
 		} else {
 			$char = new Character;
+			$this->characters[$data['id']] = $char;
 		}
 		$char->charmap      = &$this;
 		$char->id           = (int)$data['id'];
@@ -1937,6 +1979,7 @@ class CharMap
 			$hom = $this->homunculus[$data['id']];
 		} else {
 			$hom = new Homunculus;
+			$this->homunculus[$data['id']] = $hom;
 		}
 		$hom->charmap = &$this;
 		$hom->id      = $data['id'];
@@ -1962,6 +2005,7 @@ class CharMap
 		$hom->alive = (bool)$data['alive'];
 		$hom->vaporized = (bool)$data['vaporized'];
 		$hom->renamed = (bool)$data['rename'];
+
 		return $hom;
 	}
 
@@ -1978,6 +2022,7 @@ class CharMap
 			$guild = $this->guilds[$data['id']];
 		} else {
 			$guild = new Guild;
+			$this->guilds[$data['id']] = $guild;
 		}
 		$guild->charmap        = &$this;
 		$guild->id             = (int)$data['id'];
@@ -1995,6 +2040,7 @@ class CharMap
 		$guild->online         = (int)$data['online'];
 		$guild->message[1]     = $data['message1'];
 		$guild->message[2]     = $data['message2'];
+
 		return $guild;
 	}
 

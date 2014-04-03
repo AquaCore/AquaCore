@@ -253,7 +253,7 @@ class Login
 	 */
 	public function get($id, $type = 'id')
 	{
-		if($type === 'id' && isset($this->accounts[$id])) {
+		if($type === 'id' && array_key_exists($id, $this->accounts)) {
 			return $this->accounts[$id];
 		}
 		$select = Query::select($this->connection())
@@ -663,6 +663,7 @@ class Login
 			$acc = $this->accounts[$data['id']];
 		} else {
 			$acc = new RagnarokAccount;
+			$this->accounts[$data['id']] = $acc;
 		}
 		$acc->server     = & $this->server;
 		$acc->id         = (int)$data['id'];
