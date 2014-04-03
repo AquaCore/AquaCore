@@ -86,21 +86,21 @@ class PickLog
 	public $map;
 	protected $_item;
 
-	const TYPE_MONSTER      = 0;
-	const TYPE_PLAYER       = 1;
-	const TYPE_LOOT         = 2;
-	const TYPE_TRADE        = 3;
-	const TYPE_VENDING      = 4;
-	const TYPE_SHOP         = 5;
-	const TYPE_STORAGE      = 6;
-	const TYPE_GSTORAGE     = 7;
-	const TYPE_MAIL         = 8;
-	const TYPE_BUYING_STORE = 9;
-	const TYPE_PRODUCE      = 10;
-	const TYPE_AUCTION      = 11;
-	const TYPE_OTHER        = 12;
-	const TYPE_STEAL        = 13;
-	const TYPE_PRIZE        = 14;
+	const TYPE_MONSTER      = 1;
+	const TYPE_PLAYER       = 2;
+	const TYPE_LOOT         = 3;
+	const TYPE_TRADE        = 4;
+	const TYPE_VENDING      = 5;
+	const TYPE_SHOP         = 6;
+	const TYPE_STORAGE      = 7;
+	const TYPE_GSTORAGE     = 8;
+	const TYPE_MAIL         = 9;
+	const TYPE_BUYING_STORE = 10;
+	const TYPE_PRODUCE      = 11;
+	const TYPE_AUCTION      = 12;
+	const TYPE_OTHER        = 13;
+	const TYPE_STEAL        = 14;
+	const TYPE_PRIZE        = 15;
 
 	/**
 	 * Format the transfer date.

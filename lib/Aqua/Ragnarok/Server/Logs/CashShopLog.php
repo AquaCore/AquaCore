@@ -26,12 +26,6 @@ class CashShopLog
 	 */
 	public $accountId;
 	/**
-	 * Target server account name
-	 *
-	 * @var string
-	 */
-	public $username;
-	/**
 	 * Purchase timestamp
 	 *
 	 * @var int
@@ -69,6 +63,11 @@ class CashShopLog
 	public function date($format)
 	{
 		return strftime($format, $this->date);
+	}
+
+	public function account()
+	{
+		return $this->charmap->server->login->get($this->accountId, 'id');
 	}
 
 	public function cart()
