@@ -146,28 +146,28 @@ class App
 			 * Permission for public files, meant to be viewed by anyone. Defaults to 0644
 			 * @name \Aqua\PUBLIC_FILE_PERMISSION
 			 */
-			define('Aqua\PUBLIC_FILE_PERMISSION', 0644);
+			define('Aqua\PUBLIC_FILE_PERMISSION', 0774);
 		}
 		if(!defined('Aqua\PUBLIC_DIRECTORY_PERMISSION')) {
 			/**
 			 * Permission for public directories, meant to be viewed by anyone. Defaults to 0775
 			 * @name \Aqua\PUBLIC_DIRECTORY_PERMISSION
 			 */
-			define('Aqua\PUBLIC_DIRECTORY_PERMISSION', 0755);
+			define('Aqua\PUBLIC_DIRECTORY_PERMISSION', 0775);
 		}
 		if(!defined('Aqua\PRIVATE_FILE_PERMISSION')) {
 			/**
 			 * Permission for private files. Not meant to be viewed by non-users. Defaults to 0600
 			 * @name \Aqua\PRIVATE_FILE_PERMISSION
 			 */
-			define('Aqua\PRIVATE_FILE_PERMISSION', 0600);
+			define('Aqua\PRIVATE_FILE_PERMISSION', 0770);
 		}
 		if(!defined('Aqua\PRIVATE_DIRECTORY_PERMISSION')) {
 			/**
 			 * Permission for private directories, not meant to be viewed by non-users. Defaults to 0700
 			 * @name \Aqua\PRIVATE_DIRECTORY_PERMISSION
 			 */
-			define('Aqua\PRIVATE_DIRECTORY_PERMISSION', 0700);
+			define('Aqua\PRIVATE_DIRECTORY_PERMISSION', 0770);
 		}
 		if(!defined('Aqua\BLANK')) {
 			/**
