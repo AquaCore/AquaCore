@@ -337,7 +337,9 @@ implements SubjectInterface
 					header('Content-Type: text/html');
 				}
 				ob_end_flush();
-				ob_flush();
+				if(ob_get_level() > 0) {
+					ob_flush();
+				}
 				flush();
 				if(function_exists('fastcgi_finish_request')) {
 					@fastcgi_finish_request();
