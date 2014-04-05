@@ -81,6 +81,16 @@ $rows = 5 + min(1, Server::$serverCount);
 					<?php echo __('ragnarok', 'register-account')?>
 				</button>
 			</a>
+			<?php foreach(Server::$servers as $server) : if($server->login->getOption('link-accounts')) : ?>
+				<a href="<?php echo ac_build_url(array(
+					                                 'path' => array( 'ragnarok' ),
+					                                 'action' => 'link'
+				                                 ))?>">
+					<button style="margin: 0 10px" type="button" class="ac-button ac-register-ragnarok-account">
+						<?php echo __('ragnarok', 'link-account')?>
+					</button>
+				</a>
+			<?php break; endif; endforeach; ?>
 		</td>
 	</tr>
 	</tfoot>

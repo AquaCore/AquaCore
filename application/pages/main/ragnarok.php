@@ -190,13 +190,23 @@ extends Page
 			}
 			$frm = new Form($this->request);
 			if($this->server) {
+				if(!$this->server->login->getOption('link-accounts')) {
+					$this->error(404);
+					return;
+				}
 				$this->title = __('ragnarok', 'link-account-server', $this->server->name);
 			} else {
 				$servers = array();
 				foreach(Server::$servers as $server) {
-					$servers[$server->key] = htmlspecialchars($server->name);
+					if($server->login->getOption('link-accounts')) {
+						$servers[$server->key] = htmlspecialchars($server->name);
+					}
 				}
 				reset(Server::$servers);
+				if(empty($servers)) {
+					$this->error(404);
+					return;
+				}
 				$frm->select('server')
 			        ->setLabel(__('ragnarok-account', 'server'))
 					->setWarning(__('ragnarok-account', 'invalid-server-selected'))
