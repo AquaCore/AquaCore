@@ -48,14 +48,6 @@ $base_url = $charmap->url(array(
 					<label for="ac_storage-all"><?php echo __('application', 'all')?></label>
 				</div>
 				<div style="float:right">
-					<?php if($server->charmapCount > 1) : ?>
-						<select onchange="document.location.href = this.options[this.selectedIndex].value;" class="ac-script">
-							<?php $x_base_url = App::request()->uri->url(array( 'arguments' => array( '' ) )); ?>
-							<?php foreach($server->charmap as &$cm) : ?>
-								<option value="<?php echo $x_base_url . $cm->key()?>" <?php echo ($charmap->key() === $cm->key() ? 'selected' : '')?>><?php echo $cm->name?></option>
-							<?php endforeach; ?>
-						</select>
-					<?php endif; ?>
 					<input type="text" name="s" value="<?php echo htmlspecialchars($page->request->uri->getString('s'))?>">
 					<input type="submit" value="<?php echo __('application', 'search')?>">
 				</div>
@@ -113,7 +105,16 @@ $base_url = $charmap->url(array(
 	<tfoot>
 		<tr>
 			<td colspan="7" style="text-align: center">
-				<?php echo $paginator->render()?>
+				<?php
+				echo $paginator->render();
+				if($server->charmapCount > 1) : ?>
+					<select style="float: right" onchange="document.location.href = this.options[this.selectedIndex].value;" class="ac-script">
+						<?php $x_base_url = App::request()->uri->url(array( 'arguments' => array( '' ) )); ?>
+						<?php foreach($server->charmap as &$cm) : ?>
+							<option value="<?php echo $x_base_url . $cm->key?>" <?php echo ($charmap->key === $cm->key ? 'selected' : '')?>><?php echo $cm->name?></option>
+						<?php endforeach; ?>
+					</select>
+				<?php endif; ?>
 			</td>
 		</tr>
 	</tfoot>

@@ -125,12 +125,11 @@ implements FieldInterface
 	public function render()
 	{
 		$key     = App::captcha()->create(App::request()->ip);
-		$url     = ac_build_url(
-			array(
-				'base_dir' => App::settings()->get('base_dir') . '/captcha.php',
+		$url     = ac_build_url(array(
+				'base_dir' => App::settings()->get('base_dir'),
+				'script'   => 'captcha.php',
 				'query'    => array( 'id' => $key )
-			)
-		);
+			));
 		$message = __('application', '');
 
 		return "

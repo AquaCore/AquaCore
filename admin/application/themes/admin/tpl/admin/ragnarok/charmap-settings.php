@@ -22,7 +22,6 @@ $page->theme->footer->enqueueScript('theme.charmap-settings')
 	});
 })(jQuery);
 ');
-
 ?>
 <table class="ac-settings-form ac-login-settings">
 	<?php if($form->message) : ?>
@@ -32,7 +31,7 @@ $page->theme->footer->enqueueScript('theme.charmap-settings')
 			</td>
 		</tr>
 	<?php endif ?>
-	<?php echo $form->render(null, false, array( 'name', 'key', 'timezone', 'char-host', 'char-port', 'map-host', 'map-port' )) ?>
+	<?php echo $form->render(null, false, array( 'name', 'key', 'timezone', 'default', 'char-host', 'char-port', 'map-host', 'map-port' )) ?>
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">

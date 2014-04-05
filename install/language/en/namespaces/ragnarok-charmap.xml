@@ -81,6 +81,16 @@
     <word namespace="ragnarok-charmap" key="chat-log">Chat Log</word>
     <word namespace="ragnarok-charmap" key="settings-saved">Settings saved.</word>
     <word namespace="ragnarok-charmap" key="delete-server">Delete Server</word>
+    <word namespace="ragnarok-charmap" key="schedule-name">Name</word>
+    <word namespace="ragnarok-charmap" key="schedule-castles">Castles IDs</word>
+    <word namespace="ragnarok-charmap" key="schedule-castles-desc">Separate castle IDs with comma.</word>
+    <word namespace="ragnarok-charmap" key="schedule-startday">Start Day</word>
+    <word namespace="ragnarok-charmap" key="schedule-starttime">Start Time</word>
+    <word namespace="ragnarok-charmap" key="schedule-endday">End Day</word>
+    <word namespace="ragnarok-charmap" key="schedule-endtime">End Time</word>
+    <word namespace="ragnarok-charmap" key="castle-id">Castle ID</word>
+    <word namespace="ragnarok-charmap" key="castle-name">Castle Name</word>
+    <word namespace="ragnarok-charmap" key="add-castle">Add Castle</word>
     <word namespace="ragnarok-charmap" key="server-deleted"><![CDATA[Char/Map server <b>%s</b> removed from the control panel.]]></word>
     <word namespace="ragnarok-charmap" key="confirm-delete">Are you sure you want to remove this char/map server from the control panel?  This action will not affect the server and nothing will be deleted from the database.</word>
   </wordgroup>

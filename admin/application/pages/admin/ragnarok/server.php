@@ -28,7 +28,10 @@ extends Page
 	public static $categoriesPerPage = 20;
 	public static $itemsPerPage = 20;
 	public static $charactersPerPage = 20;
+	public static $guildsPerPage = 20;
 	public static $logsPerPage = 20;
+
+	const TIME_PATTERN = '/^(((2[0-4])|([01][0-9]))(:[0-5][0-9]){1,2}|((0[0-9])|(1[012]))(:[0-5][0-9]){1,2}(PM|AM))/i';
 
 	public function run()
 	{
@@ -50,6 +53,18 @@ extends Page
 				$nav->append('settings', array(
 					'title' => __('ragnarok-charmap', 'settings'),
 					'url' => "{$baseUrl}settings"
+				))->append('rates', array(
+					'title' => __('ragnarok-charmap', 'rates'),
+					'url' => "{$baseUrl}rates"
+				))->append('shop', array(
+					'title' => __('ragnarok-charmap', 'shop'),
+					'url' => "{$baseUrl}shop"
+				))->append('shop-categories', array(
+					'title' => __('ragnarok-charmap', 'shop-categories'),
+					'url' => "{$baseUrl}category"
+				))->append('woe', array(
+					'title' => __('ragnarok-charmap', 'woe'),
+					'url' => "{$baseUrl}woe"
 				));
 			}
 			if(App::user()->role()->hasPermission('view-server-logs')) {
@@ -62,32 +77,22 @@ extends Page
 				))->append('pick-log', array(
 					'title' => __('ragnarok-charmap', 'pick-log'),
 					'url' => "{$baseUrl}picklog"
-				))->append('mvp-log', array(
-					'title' => __('ragnarok-charmap', 'mvp-log'),
-					'url' => "{$baseUrl}mvplog"
 				))->append('atcmd-log', array(
 					'title' => __('ragnarok-charmap', 'atcommand-log'),
 					'url' => "{$baseUrl}atcmdlog"
-				))->append('npc-log', array(
-					'title' => __('ragnarok-charmap', 'npc-log'),
-					'url' => "{$baseUrl}npclog"
+				))->append('chat-log', array(
+					'title' => __('ragnarok-charmap', 'chat-log'),
+					'url' => "{$baseUrl}chatlog"
 				));
 			}
 			$nav->append('characters', array(
 				'title' => __('ragnarok-charmap', 'characters'),
-			    'url' => "{$baseUrl}characters"
+			    'url' => "{$baseUrl}char"
 			))->append('guilds', array(
 				'title' => __('ragnarok-charmap', 'guilds'),
-			    'url' => "{$baseUrl}shop"
-			))->append('parties', array(
-				'title' => __('ragnarok-charmap', 'parties'),
-			    'url' => "{$baseUrl}shop"
-			))->append('', array(
-				'title' => __('ragnarok-charmap', 'characters'),
-			    'url' => "{$baseUrl}char"
+			    'url' => "{$baseUrl}guild"
 			));
 			$this->theme->set('nav', $nav);
-			$this->theme->set('return', ac_build_url(array( 'path' => array( 'r', $this->server->key ) )));
 		} else if($this->request->uri->action !== 'index') {
 			$this->error(404);
 		}
@@ -119,6 +124,11 @@ extends Page
 		        ->type('text')
 		        ->setLabel(__('ragnarok-charmap', 'timezone-label'))
 				->setDescription(__('ragnarok-charmap', 'timezone-desc'));
+			if($this->server->charmapCount) {
+				$frm->checkbox('default')
+					->value(array( '1' => '' ))
+					->setLabel(__('ragnarok-charmap', 'default-label'));
+			}
 			$frm->input('char-host', true)
 		        ->type('text')
 		        ->required()
@@ -351,6 +361,7 @@ extends Page
 				$dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/ac_woe_schedule.sql'));
 				$dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/ac_online_stats.sql'));
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db.description.sql')); } catch(\PDOException $e) { }
+				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db_re.description.sql')); } catch(\PDOException $e) { }
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db2.description.sql')); } catch(\PDOException $e) { }
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/char.ac_options.sql')); } catch(\PDOException $e) { }
 				$ldbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap-log/ac_cash_shop_log.sql'));
@@ -433,6 +444,11 @@ extends Page
 						'tables' => array(),
 						'log_tables' => array()
 					));
+				if(!$this->server->charmapCount ||
+				   !$settings->get('default_server', null) ||
+				   $this->request->getInt('default')) {
+					$settings->get($this->server->key)->set('default_server', $key);
+				}
 				$settings->export($file);
 				$this->response->status(302)->redirect(ac_build_url(array( 'path' => array( 'r', $this->server->key, $key ) )));
 			} catch(\Exception $exception) {
@@ -449,11 +465,20 @@ extends Page
 
 	public function server_index()
 	{
-		$this->title = htmlspecialchars($this->charmap->name);
-		$this->theme->head->section = htmlspecialchars(sprintf('%s / %s',
-		                                                       $this->server->name,
-		                                                       $this->charmap->name));
-		var_dump($this->charmap);
+		try {
+			$this->theme->set('return', ac_build_url(array( 'path' => array( 'r', $this->server->key ) )));
+			$this->title = htmlspecialchars($this->charmap->name);
+			$this->theme->head->section = htmlspecialchars(sprintf('%s / %s',
+			                                                       $this->server->name,
+			                                                       $this->charmap->name));
+			$tpl = new Template;
+			$tpl->set('charmap', $this->charmap)
+				->set('page', $this);
+			echo $tpl->render('admin/ragnarok/charmap');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
 	}
 
 	public function settings_action() {
@@ -477,6 +502,11 @@ extends Page
 				->value(htmlspecialchars($this->charmap->getOption('timezone')), false)
 			    ->setLabel(__('ragnarok-charmap', 'timezone-label'))
 			    ->setDescription(__('ragnarok-charmap', 'timezone-desc'));
+			if($this->server->charmapCount > 1) {
+				$frm->checkbox('default')
+				    ->value(array( '1' => '' ))
+				    ->setLabel(__('ragnarok-charmap', 'default-label'));
+			}
 			$frm->input('char-host', true)
 			    ->type('text')
 			    ->required()
@@ -597,6 +627,9 @@ extends Page
 				}
 				$this->charmap->key = $this->request->getString('key');
 				$this->charmap->name = $this->request->getString('name');
+				if($this->server->charmapCount > 1 && $this->request->getInt('default')) {
+					$settings->get($this->server->key)->set('default_server', $this->charmap->key);
+				}
 				$settings->export($file);
 				$this->charmap->setOption(array(
 					'char-ip' => $this->request->getString('char-host'),
@@ -841,6 +874,223 @@ extends Page
 		}
 	}
 
+	public function woe_action()
+	{
+		try {
+			$castlesForm = new Form($this->request);
+			$castlesForm->input('setcastles')
+				->type('submit')
+				->required()
+				->value(__('application', 'submit'));
+			$castlesForm->validate(function($frm, &$message) {
+				$ids = $frm->request->getArray('casid', null);
+				$names = $frm->request->getArray('casname', null);
+				if(!$ids || !$names || count($ids) !== count($names)) {
+					return Form::VALIDATION_INCOMPLETE;
+				}
+				$count = count($ids);
+				for($i = 0; $i < $count; ++$i) {
+					if(!isset($ids[$i]) || !isset($names[$i])) {
+						return Form::VALIDATION_INCOMPLETE;
+					}
+					if($ids[$i] === '' && $names[$i] === '') {
+						continue;
+					}
+					if(!ctype_digit($ids[$i]) || (int)$ids[$i] < 0) {
+						$message = __('ragnarok-charmap', 'castle-id-number');
+						return Form::VALIDATION_FAIL;
+					} else if($names[$i] === '') {
+						$message =  __('ragnarok-charmap', 'castle-name-empty');
+						return Form::VALIDATION_FAIL;
+					}
+				}
+				return true;
+			});
+			if($castlesForm->status === Form::VALIDATION_SUCCESS) {
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				try {
+					$castles = array();
+					$ids = $this->request->getArray('casid', null);
+					$names = $this->request->getArray('casname', null);
+					$count = count($ids);
+					for($i = 0; $i < $count; ++$i) {
+						if($ids[$i] === '' && $names[$i] === '') {
+							continue;
+						}
+						$castles[$ids[$i]] = $names[$i];
+					}
+					if($this->charmap->setCastles($castles)) {
+						App::user()->addFlash('success', null, __('ragnarok-charmap', 'castles-updated'));
+					}
+				} catch(\Exception $exception) {
+					ErrorLog::logSql($exception);
+					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+				}
+				return;
+			}
+			$scheduleForm = new Form($this->request);
+			$scheduleForm->input('name')
+				->type('text')
+				->required()
+				->setLabel(__('ragnarok-charmap', 'schedule-name'));
+			$scheduleForm->input('starttime')
+				->type('text')
+				->required()
+				->attr('pattern', self::TIME_PATTERN)
+				->placeholder('HH:MM:SS')
+				->setLabel(__('ragnarok-charmap', 'schedule-starttime'));
+			$scheduleForm->input('endtime')
+				->type('text')
+				->required()
+				->attr('pattern', self::TIME_PATTERN)
+				->placeholder('HH:MM:SS')
+				->setLabel(__('ragnarok-charmap', 'schedule-endtime'));
+			$scheduleForm->select('startday')
+				->value(array(
+					0 => __('week', 0),
+					1 => __('week', 1),
+					2 => __('week', 2),
+					3 => __('week', 3),
+					4 => __('week', 4),
+					5 => __('week', 5),
+					6 => __('week', 6)
+				))
+				->required()
+				->setLabel(__('ragnarok-charmap', 'schedule-startday'));
+			$scheduleForm->select('endday')
+				->value(array(
+					0 => __('week', 0),
+					1 => __('week', 1),
+					2 => __('week', 2),
+					3 => __('week', 3),
+					4 => __('week', 4),
+					5 => __('week', 5),
+					6 => __('week', 6)
+				))
+				->required()
+				->setLabel(__('ragnarok-charmap', 'schedule-endday'));
+			$scheduleForm->input('castles')
+				->type('text')
+				->required()
+				->setLabel(__('ragnarok-charmap', 'schedule-castles'))
+				->setDescription(__('ragnarok-charmap', 'schedule-castles-desc'));
+			$scheduleForm->validate(function(Form $frm) {
+				$count   = 0;
+				$castles = preg_split('/\s*,\s*/', $frm->request->getString('castles'));
+				foreach($castles as $castle) {
+					if(!ctype_digit(trim($castle))) {
+						$frm->input('castles')->setWarning(__('form', 'invalid-number'));
+						return false;
+					}
+					++$count;
+				}
+				if(!$count) {
+					$frm->input('castles')->setWarning(__('form', 'field-required'));
+					return false;
+				}
+				return true;
+			});
+			if($scheduleForm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'woe');
+				$tpl = new Template;
+				$tpl->set('schedule', $this->charmap->woeSchedule())
+					->set('castles', $this->charmap->castles())
+					->set('schedule_form', $scheduleForm)
+					->set('castles_form', $castlesForm)
+					->set('page', $this);
+				echo $tpl->render('admin/ragnarok/woe');
+				return;
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+			return;
+		}
+		$this->response->status(302)->redirect(App::request()->uri->url());
+		try {
+			$castles = array_map(function($x) {
+				return intval(trim($x));
+			}, preg_split('/\s*,\s*/', $this->request->getString('castles')));
+			if($this->charmap->addWoeTime($this->request->getString('name'),
+			                              $castles,
+			                              $this->request->getString('endday'),
+			                              $this->request->getString('endtime'),
+			                              $this->request->getString('startday'),
+			                              $this->request->getString('starttime'))) {
+				App::user()->addFlash('success', null, __('ragnarok-charmap', 'added-schedule'));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+		}
+	}
+
+	public function schedule_action($id)
+	{
+		$schedule = $this->charmap->woeSchedule();
+		if(!isset($schedule[$id])) {
+			$this->error(404);
+			return;
+		}
+		$schedule = $schedule[$id];
+		$frm = new Form($this->request);
+		$frm->input('name')
+			->type('text')
+			->required()
+			->value(htmlspecialchars($schedule['name']))
+			->setLabel(__('ragnarok-charmap', 'schedule-name'));
+		$frm->input('castles')
+			->type('text')
+			->required()
+			->value(implode(', ', $schedule['castles']))
+			->setLabel(__('ragnarok-charmap', 'schedule-castles'))
+			->setDescription(__('ragnarok-charmap', 'schedule-castles-desc'));
+		$frm->input('starttime')
+			->type('text')
+			->required()
+			->attr('pattern', self::TIME_PATTERN)
+			->value($schedule['start_time'])
+			->placeholder('HH:MM:SS')
+			->setLabel(__('ragnarok-charmap', 'schedule-starttime'));
+		$frm->select('startday')
+		    ->value(array(
+				0 => __('week', 0),
+				1 => __('week', 1),
+				2 => __('week', 2),
+				3 => __('week', 3),
+				4 => __('week', 4),
+				5 => __('week', 5),
+				6 => __('week', 6)
+			))
+		    ->required()
+			->selected($schedule['start_day'])
+		    ->setLabel(__('ragnarok-charmap', 'schedule-startday'));
+		$frm->input('endtime')
+			->type('text')
+			->required()
+			->attr('pattern', self::TIME_PATTERN)
+			->value($schedule['end_time'])
+			->placeholder('HH:MM:SS')
+			->setLabel(__('ragnarok-charmap', 'schedule-endtime'));
+		$frm->select('endday')
+			->value(array(
+				0 => __('week', 0),
+				1 => __('week', 1),
+				2 => __('week', 2),
+				3 => __('week', 3),
+				4 => __('week', 4),
+				5 => __('week', 5),
+				6 => __('week', 6)
+			))
+			->required()
+			->selected($schedule['end_day'])
+			->setLabel(__('ragnarok-charmap', 'schedule-endday'));
+		$frm->submit();
+		$frm->validate(function(Form $frm) {
+
+		});
+	}
+
 	public function category_action()
 	{
 		if($this->request->method === 'POST' && $this->request->data('x-bulk')) {
@@ -890,6 +1140,9 @@ extends Page
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'shop-categories');
+				$this->theme->set('return', ac_build_url(array(
+					'path' => array( 'r', $this->server->key, $this->charmap->key )
+				)));
 				$search = $this->charmap->shopCategorySearch()
 					->calcRows(true)
 					->order(array( 'order' => 'ASC' ))
@@ -934,10 +1187,42 @@ extends Page
 				->type('text')
 				->value(htmlspecialchars($category->name), false)
 				->setLabel(__('ragnarok-shop', 'category-name'));
-			$frm->input('name', true)
-				->type('text')
-				->value(htmlspecialchars($category->name), false)
-				->setLabel(__('ragnarok-shop', 'category-name'));
+			$frm->textarea('description', true)
+				->append(htmlspecialchars($category->name), false)
+				->setLabel(__('ragnarok-shop', 'category-desc'));
+			$frm->submit();
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				if($this->request->ajax) {
+					$this->error(204);
+					return;
+				}
+				$this->theme->set('return', ac_build_url(array(
+					'path' => array( 'r', $this->server->key, $this->charmap->key ),
+				    'action' => 'category'
+				)));
+				return;
+			}
+			$error = false;
+			$message = '';
+			try {
+				$update = array();
+				if(!$frm->field('name')->getWarning()) {
+					$update['name'] = $this->request->getString('name');
+				}
+				if(!$frm->field('description')->getWarning()) {
+					$update['description'] = $this->request->getString('description');
+				}
+				if($category->update($update)) {
+					$message = __('ragnarok-shop', 'category-updated', htmlspecialchars($category->name));
+				} else {
+					$message = __('ragnarok-shop', 'category-not-updated');
+				}
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				$error = true;
+				$message = __('application', 'unexpected-error');
+			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
@@ -1045,9 +1330,77 @@ extends Page
 		}
 	}
 
-	public function view_char_action()
+	public function viewchar_action($id = null)
 	{
 		try {
+			if(!$id || !($char = $this->charmap->character($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$this->theme->set('return', ac_build_url(array(
+				'path' => array( 'r', $this->server->key, $this->charmap->key ),
+			    'action' => 'char'
+			)));
+			$tpl = new Template;
+			$tpl->set('char', $char)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/view-char');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function inventory_action($id = null)
+	{
+		try {
+			if(!$id || !($char = $this->charmap->character($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$this->theme->set('return', ac_build_url(array(
+				'path' => array( 'r', $this->server->key, $this->charmap->key ),
+				'action' => 'viewchar',
+			    'arguments' => array( $char->id )
+			)));
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function cart_action($id = null)
+	{
+		try {
+			if(!$id || !($char = $this->charmap->character($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$this->theme->set('return', ac_build_url(array(
+				'path' => array( 'r', $this->server->key, $this->charmap->key ),
+				'action' => 'viewchar',
+				'arguments' => array( $char->id )
+			)));
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function editchar_action($id = null)
+	{
+		try {
+			if(!$id || !($char = $this->charmap->character($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$this->theme->set('return', ac_build_url(array(
+				'path' => array( 'r', $this->server->key, $this->charmap->key ),
+				'action' => 'viewchar',
+				'arguments' => array( $char->id )
+			)));
 
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
@@ -1055,21 +1408,92 @@ extends Page
 		}
 	}
 
-	public function edit_char_action()
+	public function guild_action()
 	{
 		try {
-
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'guilds');
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$where = array();
+			if($x = $this->request->uri->getString('n')) {
+				$where['name'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%');
+			}
+			if($x = $this->request->uri->getString('m')) {
+				$where['master'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%');
+			}
+			$search = $this->charmap->guildSearch()
+				->calcRows(true)
+				->where($where)
+				->limit(($currentPage - 1) * self::$guildsPerPage, self::$guildsPerPage)
+				->query();
+			if($search->rowsFound) {
+				$characters = $search->getColumn('master_id');
+				array_unshift($characters, Search::SEARCH_IN);
+				$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
+			}
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$guildsPerPage),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('guilds', $search->results)
+			    ->set('guild_count', $search->rowsFound)
+				->set('pagination', $pgn)
+				->set('page', $this);
+			echo $tpl->render('admin/ragnarok/guild/main');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
+	}
+
+	public function viewguild_action($id = null)
+	{
+		try {
+			if(!$id || !($guild = $this->charmap->guild($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$this->theme->set('return', ac_build_url(array(
+				'path' => array( 'r', $this->server->key, $this->charmap->key ),
+				'action' => 'guild',
+			)));
+			$tpl = new Template;
+			$tpl->set('guild', $guild)
+				->set('page', $this);
+			echo $tpl->render('admin/ragnarok/guild/view');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function gstorage_action($id = null)
+	{
+
 	}
 
 	public function zenylog_action()
 	{
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'zeny-log');
-
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $this->charmap->log->searchZenyLog()
+				->calcRows(true)
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
+				->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      $currentPage);
+			if($search->rowsFound) {
+				$characters = array_unique(array_merge($search->getColumn('char_id'), $search->getColumn('src_id')));
+				array_unshift($characters, Search::SEARCH_IN);
+				$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
+			}
+			$tpl = new Template;
+			$tpl->set('log', $search->results)
+			    ->set('count', $search->rowsFound)
+			    ->set('paginator', $pgn)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/log/zeny-log');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
@@ -1085,6 +1509,16 @@ extends Page
 				->calcRows(true)
 				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
 				->query();
+			if($search->rowsFound !== 0) {
+				$accounts = $search->getColumn('account_id');
+				foreach($accounts as $id) {
+					if(!array_key_exists($id, $this->charmap->server->login->accounts)) {
+						$this->charmap->server->login->accounts[$id] = null;
+					}
+				}
+				array_unshift($accounts, Search::SEARCH_IN);
+				$this->charmap->server->login->search()->where(array( 'id' => $accounts ))->query();
+			}
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
@@ -1153,6 +1587,11 @@ extends Page
 				->query();
 			if($search->rowsFound !== 0) {
 				$characters = $search->getColumn('char_id');
+				foreach($characters as $id) {
+					if(!array_key_exists($id, $this->charmap->characters)) {
+						$this->charmap->characters[$id] = null;
+					}
+				}
 				$items      = $search->getColumn('item_id');
 				array_unshift($characters, Search::SEARCH_IN);
 				array_unshift($items, Search::SEARCH_IN);
@@ -1174,22 +1613,42 @@ extends Page
 		}
 	}
 
-	public function mvplog_action()
+	public function chatlog_action()
 	{
 		try {
-			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'mvp-log');
-
-		} catch(\Exception $exception) {
-			ErrorLog::logSql($exception);
-			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
-		}
-	}
-
-	public function npclog_action()
-	{
-		try {
-			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'npc-log');
-
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'chat-log');
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $this->charmap->log->searchChatLog()
+				->calcRows(true)
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
+				->query();
+			if($search->rowsFound !== 0) {
+				$characters = $search->getColumn('src_char_id');
+				$accounts   = $search->getColumn('src_account_id');
+				foreach($characters as $id) {
+					if(!array_key_exists($id, $this->charmap->characters)) {
+						$this->charmap->characters[$id] = null;
+					}
+				}
+				foreach($accounts as $id) {
+					if(!array_key_exists($id, $this->charmap->server->login->accounts)) {
+						$this->charmap->server->login->accounts[$id] = null;
+					}
+				}
+				array_unshift($characters, Search::SEARCH_IN);
+				array_unshift($accounts, Search::SEARCH_IN);
+				$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
+				$this->charmap->server->login->search()->where(array( 'id' => $accounts ))->query();
+			}
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('log', $search->results)
+			    ->set('count', $search->rowsFound)
+			    ->set('paginator', $pgn)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/log/chat-log');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

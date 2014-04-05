@@ -22,7 +22,6 @@ $baseUrl = $page->charmap->url(array(
 	'arguments' => array( '' )
 ));
 $datetimeFormat = App::settings()->get('datetime_format');
-
 ?>
 <table class="ac-table">
 	<colgroup>
@@ -63,7 +62,15 @@ $datetimeFormat = App::settings()->get('datetime_format');
 			<td><?php echo $pick->id ?></td>
 			<td><?php echo $pick->date($datetimeFormat) ?></td>
 			<td><?php echo htmlspecialchars($pick->map) ?: '--' ?></td>
-			<td><?php echo htmlspecialchars($pick->character()->name) ?></td>
+			<?php if($char = $pick->character()) : ?>
+				<td><a href="<?php echo ac_build_url(array(
+					'path' => array( 'r', $char->charmap->server->key, $char->charmap->key ),
+				    'action' => 'viewchar',
+				    'arguments' => array( $char->id )
+				)) ?>"><?php echo htmlspecialchars($pick->character()->name) ?></a></td>
+			<?php else : ?>
+				<td><?php echo __('ragnarok', 'deleted', $pick->charId) ?></td>
+			<?php endif; ?>
 			<td><?php echo $pick->type() ?></td>
 			<td><?php echo $pick->itemId ?></td>
 			<td><?php echo $pick->item()->name() ?></td>

@@ -13,7 +13,7 @@ $page->theme->set('wrapper', $form->buildTag());
 			</td>
 		</tr>
 	<?php endif ?>
-	<?php echo $form->render(null, false, array( 'name', 'key', 'timezone', 'char-host', 'char-port', 'map-host', 'map-port' )) ?>
+	<?php echo $form->render(null, false, array( 'name', 'key', 'timezone', 'default', 'char-host', 'char-port', 'map-host', 'map-port' )) ?>
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">

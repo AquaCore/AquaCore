@@ -437,8 +437,13 @@ class Form
 			}
 		} while(next($this->content));
 		reset($this->content);
-		if(is_callable($validator) && $validator($this, $this->message) === false) {
-			$this->status = self::VALIDATION_FAIL;
+		if(is_callable($validator)) {
+			$res = $validator($this, $this->message);
+			if($res === false || $res === self::VALIDATION_FAIL) {
+				$this->status = self::VALIDATION_FAIL;
+			} else if($res === self::VALIDATION_INCOMPLETE) {
+				$this->status = self::VALIDATION_INCOMPLETE;
+			}
 			return $this->status;
 		}
 

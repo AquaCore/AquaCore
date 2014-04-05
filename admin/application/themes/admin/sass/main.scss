@@ -1463,3 +1463,30 @@ button.ac-delete-button {
 		float: right;
 	}
 }
+.ac-castles {
+	width: 100%;
+	.ac-delete-button {
+		display: block;
+		position: relative;
+		margin-top: -7px;
+		margin-left: 10px;
+	}
+	.ac-castle-id {
+		width: 95px;
+		input {
+			width: 80px;
+		}
+	}
+	.ac-castle-name {
+		width: 230px;
+		input {
+			width: 215px;
+		}
+	}
+	.ac-castle-options {
+		text-align: left;
+	}
+	.wrapper, .ac-add-castle {
+		width: 390px;
+	}
+}

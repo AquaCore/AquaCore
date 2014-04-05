@@ -1483,6 +1483,7 @@ class CharMap
 			$sth->bindValue(':name', $name, \PDO::PARAM_STR);
 			$sth->execute();
 		}
+		$this->fetchWoeSchedule(true);
 		return $this;
 	}
 
@@ -1498,6 +1499,9 @@ class CharMap
 		$sth->bindValue(4, $end_day + 1, \PDO::PARAM_INT);
 		$sth->bindValue(5, $end_time, \PDO::PARAM_STR);
 		$sth->execute();
+		if(!$sth->rowCount()) {
+			return false;
+		}
 		$id = $this->connection()->lastInsertId();
 		$this->woeSchedule[$id] = array(
 			'name' => $name,
@@ -1507,7 +1511,10 @@ class CharMap
 			'end_time' => $end_time,
 			'castles' => $castles
 		);
-		$this->editWoeCastles($id, $castles);
+		if(!$this->editWoeCastles($id, $castles)) {
+			$this->fetchWoeSchedule(true);
+		}
+		return true;
 	}
 
 	public function editWoeTime($id, $name, $start_day, $start_time, $end_day, $end_time)
@@ -1533,7 +1540,7 @@ class CharMap
 			$this->woeSchedule[$id]['start_time'] = $start_time;
 			$this->woeSchedule[$id]['end_day'] = $end_day;
 			$this->woeSchedule[$id]['end_time'] = $end_time;
-			App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
+			$this->fetchWoeSchedule(true);
 			return true;
 		} else {
 			return false;
@@ -1547,7 +1554,7 @@ class CharMap
 		$sth->execute();
 		if($sth->rowCount()) {
 			unset($this->woeSchedule[$id]);
-			App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
+			$this->fetchWoeSchedule(true);
 			return true;
 		} else {
 			return false;
@@ -1570,7 +1577,7 @@ class CharMap
 			$sth->execute();
 			$this->woeSchedule[$id]['castles'][] = $castle;
 		}
-		App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
+		$this->fetchWoeSchedule(true);
 		return true;
 	}
 
@@ -2246,6 +2253,7 @@ class CharMap
 			");
 			while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 				$schedule = array();
+				$schedule['id'] = (int)$data[0];
 				$schedule['name'] = $data[1];
 				$schedule['start_day'] = (int)$data[2];
 				$schedule['start_time'] = $data[3];

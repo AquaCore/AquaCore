@@ -16,6 +16,10 @@ class Server
 	 */
 	public $name;
 	/**
+	 * @var string
+	 */
+	public $defaultServer;
+	/**
 	 * @var \Aqua\Ragnarok\Server\Login
 	 */
 	public $login;
@@ -53,12 +57,13 @@ class Server
 
 	public function __construct($key, $options)
 	{
-		$this->key          = $key;
-		$this->name         = $options['name'];
-		$this->emulator     = (int)$options['emulator'];
-		$this->login        = new Login($this, $options['login']);
-		$this->charmapCount = count($options['charmap']);
-		$this->uri          = new Uri;
+		$this->key           = $key;
+		$this->name          = $options['name'];
+		$this->emulator      = (int)$options['emulator'];
+		$this->login         = new Login($this, $options['login']);
+		$this->charmapCount  = count($options['charmap']);
+		$this->defaultServer = (isset($options['default_server']) ? $options['default_server'] : '');
+		$this->uri           = new Uri;
 		if(self::$serverCount > 1) {
 			$this->uri->path = array( 'ro', $this->key );
 		} else {
@@ -73,9 +78,15 @@ class Server
 	 * @param $name
 	 * @return \Aqua\Ragnarok\Server\CharMap|null
 	 */
-	public function charmap($name)
+	public function charmap($name = null)
 	{
-		$name = strtolower($name);
+		if($name) {
+			$name = strtolower($name);
+		} else if($this->defaultServer) {
+			$name = $this->defaultServer;
+		} else {
+			$name = key($this->charmap) ?: '';
+		}
 		return isset($this->charmap[$name]) ? $this->charmap[$name] : null;
 	}
 

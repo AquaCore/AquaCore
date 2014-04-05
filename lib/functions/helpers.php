@@ -156,12 +156,12 @@ function ac_build_path(array $options) {
 		'base_dir' => \Aqua\WORKING_DIR,
 	    'script' => \Aqua\SCRIPT_NAME
 	);
-	$url = '';
+	$url = '/';
 	if($options['base_dir']) {
-		$url.= '/' . trim($options['base_dir'], '/');
+		$url.= trim($options['base_dir'], '/') . '/';
 	}
 	if($options['script'] &&  strcasecmp($options['script'], 'index.php') !== 0) {
-		$url.= "/{$options['script']}";
+		$url.= $options['script'];
 	}
 	$url.= ac_build_query($options);
 	return $url;
@@ -209,7 +209,7 @@ function ac_build_query(array $options)
 		}
 	}
 	if(!empty($options['query'])) {
-		$query.= '/?' . http_build_query($options['query']);
+		$query.= '?' . http_build_query($options['query']);
 	}
 	if($options['hash']) {
 		$query.= '#' . $options['hash'];

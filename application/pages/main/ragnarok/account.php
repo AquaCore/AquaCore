@@ -193,15 +193,22 @@ extends Page
 	{
 		try {
 			if($this->server->charmapCount === 1) {
-				$charmap = current($this->server->charmap);
-			} else if(!($charmap = $this->server->charmap($charmap_key))) {
+				$charMap = current($this->server->charmap);
+			} else if($this->server->charmapCount > 1 && !$charmap_key) {
+				$this->response->status(301)->redirect($this->account->url(array(
+					'action'    => 'storage',
+					'arguments' => array( $this->server->charmap()->key )
+				)));
+				return;
+			} else if($this->server->charmapCount === 0 ||
+			          !($charMap = $this->server->charmap($charmap_key))) {
 				$this->error(404);
 				return;
 			}
 			$this->title = __('ragnarok', 'x-storage', htmlspecialchars($this->account->username));
 			$this->theme->head->section = __('ragnarok', 'storage');
 			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$search = $charmap->storageSearch()
+			$search = $charMap->storageSearch()
 				->calcRows(true)
 				->where(array( 'account_id' => $this->account->id ))
 				->limit(($current_page - 1) * self::$storageItemsPerPage, self::$storageItemsPerPage)
@@ -231,7 +238,7 @@ extends Page
 			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$storageItemsPerPage), $current_page, 'page');
 			$tpl = new Template;
 			$tpl->set('server',       $this->server);
-			$tpl->set('charmap',      $charmap);
+			$tpl->set('charmap',      $charMap);
 			$tpl->set('storage',      $search->results);
 			$tpl->set('storage_size', $search->rowsFound);
 			$tpl->set('paginator',    $pgn);
@@ -267,7 +274,14 @@ extends Page
 		try {
 			if($this->server->charmapCount === 1) {
 				$charMap = current($this->server->charmap);
-			} else if(!($charMap = $this->server->charmap($charmap_key))) {
+			} else if($this->server->charmapCount > 1 && !$charmap_key) {
+				$this->response->status(301)->redirect($this->account->url(array(
+					'action'    => 'char',
+					'arguments' => array( $this->server->charmap()->key )
+				)));
+				return;
+			} else if($this->server->charmapCount === 0 ||
+			          !($charMap = $this->server->charmap($charmap_key))) {
 				$this->error(404);
 				return;
 			}

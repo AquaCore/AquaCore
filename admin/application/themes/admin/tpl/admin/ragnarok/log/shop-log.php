@@ -31,7 +31,7 @@ $datetimeFormat = App::settings()->get('datetime_format');
 				'path' => array( 'r', $purchase->charmap->server->key ),
 			    'action' => 'viewaccount',
 			    'arguments' => array( $purchase->accountId )
-			)) ?>"><?php echo htmlspecialchars($purchase->username) ?></a></td>
+			)) ?>"><?php echo htmlspecialchars($purchase->account()->username) ?></a></td>
 			<td><?php echo number_format($purchase->amount) ?></td>
 			<td><?php echo __('donation', 'credit-points', number_format($purchase->total)) ?></td>
 		</tr>
