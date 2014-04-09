@@ -38,7 +38,7 @@ function image_trim(&$img, $color)
 			}
 		}
 	}
-	$new = imagecreatetruecolor($width - ($left + $right), $height - ($top + $bottom));
+	$new = imagecreatetruecolor(max(1, $width - ($left + $right)), max(1, $height - ($top + $bottom)));
 	imagefill($new, 0, 0, $color);
 	imagesavealpha($new, true);
 	imagecopy($new, $img, 0, 0, $left, $top, imagesx($new), imagesy($new));
