@@ -361,32 +361,41 @@ class CharMap
 				break;
 			case Server::EMULATOR_RATHENA:
 				if($this->getOption('renewal')) {
-					$where = array(
-						'attack' => 'SUBSTR(i.`attack:matk`, 1, LOCATE(\':\', i.`attack:matk`) - 1)',
-						'mattack' => 'SUBSTR(i.`attack:matk`, LOCATE(\':\', i.`attack:matk`) + 1)',
-						'equip_level_max' => 'i.`equip_level`',
-					);
-					$columns = array(
-							'atk:matk' => 'i.`attack:matk`',
+					$where = array( 'equip_level_max' => 'i.`equip_level`' );
+					$columns = array();
+					$itemDb->columns(array(
+							'atk:matk'        => 'i.`atk:matk`',
 							'equip_level_max' => 'i.`equip_level`',
-							'equip_level_min' => '0'
-						);
+							'equip_level_min' => '0',
+						))
+						->where(array(
+							'attack'  => 'SUBSTR(i.`atk:matk`, 1, LOCATE(\':\', i.`atk:matk`) - 1)',
+							'mattack' => 'SUBSTR(i.`atk:matk`, LOCATE(\':\', i.`atk:matk`) + 1)',
+						));
+					$itemDb2->columns(array(
+							'atk:matk'        => 'i.attack',
+							'equip_level_max' => 'i.`equip_level`',
+							'equip_level_min' => '0',
+					    ))
+						->where(array( 'attack' => 'i.attack' ));
 				} else {
 					$where = array(
-						'attack' => 'i.`attack`',
+						'attack'          => 'i.`attack`',
 						'equip_level_max' => 'i.`equip_level`',
 					);
 					$columns = array(
-							'attack' => 'i.`attack`',
-							'mattack' => '0',
-							'equip_level_max' => 'i.`equip_level`',
-							'equip_level_min' => '0'
-						);
+						'attack'          => 'i.`attack`',
+						'mattack'         => '0',
+						'equip_level_max' => 'i.`equip_level`',
+						'equip_level_min' => '0'
+					);
 				}
 				break;
 		}
-		$itemDb2->whereOptions($where)->columns($columns);
-		$itemDb->whereOptions($where)->columns($columns);
+		$itemDb->columns($columns);
+		$itemDb2->columns($columns);
+		$itemDb2->whereOptions($where);
+		$itemDb->whereOptions($where);
 		$itemDb2->where = &$search->where;
 		$itemDb->where  = &$search->where;
 		return $search;
@@ -463,29 +472,37 @@ class CharMap
 				break;
 			case Server::EMULATOR_RATHENA:
 				if($this->getOption('renewal')) {
-					$where = array(
-						'attack' => 'SUBSTR(i.`attack:matk`, 1, LOCATE(\':\', i.`attack:matk`) - 1)',
-						'mattack' => 'SUBSTR(i.`attack:matk`, LOCATE(\':\', i.`attack:matk`) + 1)',
-						'equip_level_max' => 'i.`equip_level`',
-					);
-					$columns = array(
-						'attack:matk' => 'i.`attack:matk`',
-						'equip_level_max' => 'i.`equip_level`',
-						'equip_level_min' => '0'
-					);
+					$where = array( 'equip_level_max' => 'i.`equip_level`' );
+					$columns = array();
+					$itemDb->columns(array(
+							'atk:matk'        => 'i.`atk:matk`',
+							'equip_level_max' => 'i.`equip_level`',
+							'equip_level_min' => '0',
+						))
+						->where(array(
+							'attack'  => 'SUBSTR(i.`atk:matk`, 1, LOCATE(\':\', i.`atk:matk`) - 1)',
+							'mattack' => 'SUBSTR(i.`atk:matk`, LOCATE(\':\', i.`atk:matk`) + 1)',
+						));
+					$itemDb2->columns(array(
+							'atk:matk'        => 'i.attack',
+							'equip_level_max' => 'i.`equip_level`',
+							'equip_level_min' => '0',
+						))
+						->where(array( 'attack' => 'i.attack' ));
 				} else {
 					$where = array(
-						'attack' => 'i.`attack`',
+						'attack'          => 'i.`attack`',
 						'equip_level_max' => 'i.`equip_level`',
 					);
 					$columns = array(
-						'attack' => 'i.`attack`',
-						'mattack' => '0',
+						'attack'          => 'i.`attack`',
+						'mattack'         => '0',
 						'equip_level_max' => 'i.`equip_level`',
 						'equip_level_min' => '0'
 					);
 				}
 				break;
+
 		}
 		$itemDb2->whereOptions($where)->columns($columns);
 		$itemDb->whereOptions($where)->columns($columns);
@@ -861,15 +878,21 @@ class CharMap
 				break;
 			case Server::EMULATOR_RATHENA:
 				if($this->getOption('renewal')) {
-					$columns = array(
-						'attack:matk' => 'i.`attack:matk`',
-						'equip_level_max' => 'i.`equip_level`',
-						'equip_level_min' => '0'
-					);
+					$columns = array();
+					$itemDb->columns(array(
+							'atk:matk'        => 'i.`atk:matk`',
+							'equip_level_max' => 'i.`equip_level`',
+							'equip_level_min' => '0',
+						));
+					$itemDb2->columns(array(
+							'atk:matk'        => 'i.attack',
+							'equip_level_max' => 'i.`equip_level`',
+							'equip_level_min' => '0',
+						));
 				} else {
 					$columns = array(
-						'attack' => 'i.`attack`',
-						'mattack' => '0',
+						'attack'          => 'i.`attack`',
+						'mattack'         => '0',
 						'equip_level_max' => 'i.`equip_level`',
 						'equip_level_min' => '0'
 					);
@@ -1785,10 +1808,14 @@ class CharMap
 		$item->scriptUse     = $data['script'];
 		$item->scriptEquip   = $data['equip_script'];
 		$item->scriptUnequip = $data['unequip_script'];
-		if(isset($data['atk:matk'])) {
-			$atk = explode(':', $item['atk:matk'], 2);
-			if(count($atk) > 0) $item->attack = (int)$atk[0];
-			if(count($atk) > 1) $item->mattack = (int)$atk[1];
+		if(array_key_exists('atk:matk', $data)) {
+			if($data['atk:matk'] === null) {
+				$item->attack = $item->mattack = 0;
+			} else {
+				$atk = explode(':', $data['atk:matk'], 2);
+				if(count($atk) > 0) $item->attack = (int)$atk[0];
+				if(count($atk) > 1) $item->mattack = (int)$atk[1];
+			}
 		} else {
 			$item->attack = (int)$data['attack'];
 			if(isset($data['mattack'])) $item->mattack = (int)$data['mattack'];
