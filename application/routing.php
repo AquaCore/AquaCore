@@ -40,15 +40,23 @@ if(Server::$serverCount > 0) {
 		});
 	foreach(Server::$servers as $server) {
 	// /ro/<server>/c/<char server>/*
-		if($server->charmapCount) {
+		if($server->charmapCount > 1) {
 			$charmap = implode('|', array_keys($server->charmap));
-		$router->add('Ragnarok Server Name (' . $server->key . ') - Char')
-			->map("/ro/:server[{$server->key}]/s/:charmap[$charmap]/*", '/main/ragnarok/server/:path')
-			->attach('parse_ok', function($event, $match, Request $request) {
-				if(App::$activeServer = Server::get($match['server'])) {
-					App::$activeCharMapServer = App::$activeServer->charmap($match['charmap']);
-				}
-			});
+			$router->add('Ragnarok Server Name (' . $server->key . ') - Char')
+				->map("/ro/:server[{$server->key}]/s/:charmap[$charmap]/*", '/main/ragnarok/server/:path')
+				->attach('parse_ok', function($event, $match, Request $request) {
+					if(App::$activeServer = Server::get($match['server'])) {
+						App::$activeCharMapServer = App::$activeServer->charmap($match['charmap']);
+					}
+				});
+		} else if($server->charmapCount === 1) {
+			$router->add('Ragnarok Server (' . $server->key . ') - Char')
+			       ->map("/ro/:server[{$server->key}]/server/*", '/main/ragnarok/server/:path')
+			       ->attach('parse_ok', function($event, $match, Request $request) {
+				       if(App::$activeServer = Server::get($match['server'])) {
+					       App::$activeCharMapServer = App::$activeServer->charmap();
+				       }
+			       });
 		}
 	}
 	reset(Server::$servers);
@@ -72,12 +80,19 @@ if(Server::$serverCount > 0) {
 			$router->add('Ragnarok - CharMap')
 				->map("/ragnarok/s/:charmap[$charmap]/*", '/main/ragnarok/server/:path')
 				->attach('parse_ok', function($event, $match, Request $request) {
-					App::$activeCharMapServer = App::$activeServer->charmap($match['charmap']);
+					if(!(App::$activeCharMapServer = App::$activeServer->charmap($match['charmap'])) &&
+					   $match['charmap'] === 'server') {
+						App::$activeCharMapServer = App::$activeServer->charmap();
+					}
 				});
 			$router->add('Ragnarok - Char')
 				->map("/ragnarok/s/:charmap[$charmap]/c/:char/*", '/main/ragnarok/server/char/:path')
 				->attach('parse_ok', function($event, $match, Request $request) {
-					if(App::$activeCharMapServer = App::$activeServer->charmap($match['charmap'])) {
+					if(!(App::$activeCharMapServer = App::$activeServer->charmap($match['charmap'])) &&
+					   $match['charmap'] === 'server') {
+						App::$activeCharMapServer = App::$activeServer->charmap();
+					}
+					if(App::$activeCharMapServer) {
 						App::$activeRagnarokCharacter = App::$activeCharMapServer->character(
 							$match['char'],
 							App::settings()->get('ragnarok')->get('char_name_url', false) ?
