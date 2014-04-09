@@ -69,20 +69,9 @@ if(Server::$serverCount) {
 			} else {
 				$serverMenu['submenu'] = $charmaps;
 			}
-			$servers[] = $serverMenu;
+			$menu->append('ragnarok-' . $server->key, $serverMenu);
 		}
 	}
 	reset(Server::$servers);
-	if(!empty($servers)) {
-		if(Server::$serverCount > 1) {
-			$menu->append('server', array(
-					'title' => __('menu', 'servers'),
-					'url' => '#',
-					'submenu' => $servers
-				));
-		} else {
-			$menu->append('server', current($servers));
-		}
-	}
 }
 echo $menu->render();
