@@ -363,6 +363,7 @@ extends Page
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db.description.sql')); } catch(\PDOException $e) { }
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db_re.description.sql')); } catch(\PDOException $e) { }
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db2.description.sql')); } catch(\PDOException $e) { }
+				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/item_db2_re.description.sql')); } catch(\PDOException $e) { }
 				try { $dbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap/char.ac_options.sql')); } catch(\PDOException $e) { }
 				$ldbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap-log/ac_cash_shop_log.sql'));
 				$ldbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap-log/ac_cash_shop_items.sql'));
@@ -444,9 +445,7 @@ extends Page
 						'tables' => array(),
 						'log_tables' => array()
 					));
-				if(!$this->server->charmapCount ||
-				   !$settings->get('default_server', null) ||
-				   $this->request->getInt('default')) {
+				if(!$this->server->charmapCount || $this->request->getInt('default')) {
 					$settings->get($this->server->key)->set('default_server', $key);
 				}
 				$settings->export($file);
@@ -505,6 +504,7 @@ extends Page
 			if($this->server->charmapCount > 1) {
 				$frm->checkbox('default')
 				    ->value(array( '1' => '' ))
+					->checked($this->server->defaultServer === $this->charmap->key ? '1' : null)
 				    ->setLabel(__('ragnarok-charmap', 'default-label'));
 			}
 			$frm->input('char-host', true)
