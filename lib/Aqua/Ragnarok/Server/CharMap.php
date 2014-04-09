@@ -2262,7 +2262,7 @@ class CharMap
 				$schedule['castles'] = array();
 				$this->woeSchedule[$data[0]] = $schedule;
 			}
-			$sth = App::connection()->query("
+			$sth = $this->connection()->query("
 			SELECT id, `name`
 			FROM {$this->table('ac_woe_castles')}
 			ORDER BY id
@@ -2270,7 +2270,7 @@ class CharMap
 			while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 				$this->woeCastles[$data[0]] = $data[1];
 			}
-			$sth = App::connection()->query("SELECT schedule_id, castle FROM {$this->table('ac_woe_schedule_castles')}");
+			$sth = $this->connection()->query("SELECT schedule_id, castle FROM {$this->table('ac_woe_schedule_castles')}");
 			while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 				if(!isset($this->woeSchedule[$data[0]])) continue;
 				$this->woeSchedule[$data[0]]['castles'][] = (int)$data[1];
