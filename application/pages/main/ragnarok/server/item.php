@@ -5,6 +5,7 @@ use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
 use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Ragnarok;
+use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Ragnarok\Server\Login;
 use Aqua\Site\Page;
 use Aqua\SQL\Query;
@@ -29,7 +30,8 @@ extends Page
 	public function run()
 	{
 		$this->charmap = &App::$activeCharMapServer;
-		if(!$this->charmap) {
+		if(!($this->charmap instanceof CharMap)) {
+			$this->error(404);
 			return;
 		}
 		$base_url = $this->charmap->url(array( 'path' => array( 'item' ), 'action' => '' ));

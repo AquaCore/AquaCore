@@ -3,6 +3,7 @@ namespace Page\Main\Ragnarok\Server;
 
 use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
+use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Site\Page;
 use Aqua\SQL\Search;
 use Aqua\UI\Form;
@@ -26,7 +27,8 @@ extends Page
 	public function run()
 	{
 		$this->charmap = &App::$activeCharMapServer;
-		if(!$this->charmap) {
+		if(!($this->charmap instanceof CharMap)) {
+			$this->error(404);
 			return;
 		}
 		$menu = new Menu;

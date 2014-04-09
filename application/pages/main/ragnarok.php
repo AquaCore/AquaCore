@@ -46,6 +46,18 @@ extends Page
 							'action' => 'register'
 						))
 				));
+			foreach(Server::$servers as $server) {
+				if($server->login->getOption('link-accounts')) {
+					$menu->append('link-account', array(
+						'title' => __('ragnarok', 'link-account'),
+					    'url'   => ac_build_url(array(
+							'path' => array( 'ragnarok' ),
+					        'action' => 'link'
+					    ))
+					));
+					break;
+				}
+			}
 		}
 		$this->theme->set('menu', $menu);
 	}
@@ -66,6 +78,19 @@ extends Page
 		try {
 			$user = App::user();
 			$frm = new Form($this->request);
+			if(!$this->server) {
+				$values = array();
+				foreach(Server::$servers as $server) {
+					$values[$server->key] = $server->name;
+				}
+				reset(Server::$servers);
+				$frm->select('server')
+				    ->required()
+				    ->setLabel(__('ragnarok', 'server'))
+				    ->setDefaultErrorMessage(__('ragnarok', 'invalid-server-selected'),
+				                             Form\Select::VALIDATION_INVALID_OPTION)
+				    ->value($values);
+			}
 			$frm->input('username', true)
 				->type('text')
 				->required()
@@ -85,18 +110,6 @@ extends Page
 				))
 				->checked('male')
 				->setLabel(__('ragnarok', 'gender'));
-			if(!$this->server) {
-				$values = array();
-				foreach(Server::$servers as $server) {
-					$values[$server->key] = $server->name;
-				}
-				reset(Server::$servers);
-				$frm->select('server')
-					->required()
-					->setLabel(__('ragnarok', 'server'))
-					->setWarning(__('ragnarok', 'invalid-server-selected'))
-					->value($values);
-			}
 			$frm->token('ragnarok-registration');
 			$frm->submit();
 			$self = $this;
@@ -180,7 +193,7 @@ extends Page
 	public function link_action()
 	{
 		try {
-			if(!$this->server->login->getOption('link-accounts')) {
+			if($this->server && !$this->server->login->getOption('link-accounts')) {
 				$this->error(404);
 				return;
 			}
@@ -208,8 +221,9 @@ extends Page
 					return;
 				}
 				$frm->select('server')
-			        ->setLabel(__('ragnarok-account', 'server'))
-					->setWarning(__('ragnarok-account', 'invalid-server-selected'))
+			        ->setLabel(__('ragnarok', 'server'))
+					->setDefaultErrorMessage(__('ragnarok', 'invalid-server-selected'),
+					                         Form\Select::VALIDATION_INVALID_OPTION)
 			        ->value($servers);
 			}
 			$pincodeLen = (int)App::settings()->get('ragnarok')->get('pincode_max_len', 4);

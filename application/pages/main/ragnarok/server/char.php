@@ -28,9 +28,10 @@ extends Page
 
 	public function run()
 	{
-		$this->charmap = App::$activeCharMapServer;
+		$this->charmap = &App::$activeCharMapServer;
 		$this->char = App::$activeRagnarokCharacter;
 		if(!$this->charmap || !$this->char) {
+			$this->error(404);
 			return;
 		}
 		$menu = new Menu;

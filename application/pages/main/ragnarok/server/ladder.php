@@ -3,6 +3,7 @@ namespace Page\Main\Ragnarok\Server;
 
 use Aqua\Core\App;
 use Aqua\Ragnarok\Character;
+use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Site\Page;
 use Aqua\SQL\Search;
 use Aqua\UI\Menu;
@@ -56,7 +57,11 @@ extends Page
 
 	public function run()
 	{
-		$this->charmap = App::$activeCharMapServer;
+		$this->charmap = &App::$activeCharMapServer;
+		if(!($this->charmap instanceof CharMap)) {
+			$this->error(404);
+			return;
+		}
 		$menu = new Menu;
 		$base_url = $this->charmap->url(array(
 			'path'   => array( 'ladder' ),

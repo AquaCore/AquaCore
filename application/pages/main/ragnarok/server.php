@@ -16,7 +16,11 @@ use Aqua\Log\ErrorLog;
 class Server
 extends Page
 {
+	/**
+	 * @var \Aqua\Ragnarok\Server
+	 */
 
+	public $server;
 	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
@@ -28,6 +32,7 @@ extends Page
 	{
 		$this->charmap = &App::$activeCharMapServer;
 		if(!($this->charmap instanceof CharMap)) {
+			$this->error(404);
 			return;
 		}
 		$pgn = &$this;
