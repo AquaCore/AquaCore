@@ -118,6 +118,7 @@ try {
 			error_reporting(E_ALL);
 			ini_set('display_errors', 1);
 		default:
+			App::update();
 			include __DIR__ . '/Aqua/UI/Tag.php';
 			include __DIR__ . '/Aqua/UI/Tag/Link.php';
 			include __DIR__ . '/Aqua/UI/Tag/Script.php';

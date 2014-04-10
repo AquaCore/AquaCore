@@ -7,6 +7,7 @@ use Aqua\Captcha\Captcha;
 use Aqua\Core\Exception\CoreException;
 use Aqua\Http\Request;
 use Aqua\Http\Response;
+use Aqua\Log\ErrorLog;
 use Aqua\Storage\StorageFactory;
 
 class App
@@ -75,6 +76,15 @@ class App
 	 * @var \Aqua\Autoloader\Autoloader
 	 */
 	public static $autoloader;
+
+	/**
+	 * Installed version of AquaCore (String)
+	 */
+	const VERSION = '0.1.0';
+	/**
+	 * Installed version of AquaCore (Integer)
+	 */
+	const VERSION_LONG = 100;
 
 	private function __construct() { }
 
@@ -414,5 +424,22 @@ class App
 		else --self::$uidSeed;
 
 		return $id;
+	}
+
+	public static function update()
+	{
+		$oldVersion = file_get_contents(\Aqua\ROOT . '/update/version');
+		if(version_compare(self::VERSION, $oldVersion, '>')) {
+			foreach(glob(\Aqua\ROOT . '/update/version/*.update.php') as $file) {
+				$version = basename($file, '.update.php');
+				if(version_compare($version, $oldVersion, '>')) {
+					include $file;
+				}
+			}
+			$old = umask(0);
+			file_put_contents(\Aqua\ROOT . '/update/version', self::VERSION);
+			chmod(\Aqua\ROOT . '/update/version', \Aqua\PRIVATE_FILE_PERMISSION);
+			umask($old);
+		}
 	}
 }
