@@ -1570,9 +1570,9 @@ class CharMap
 		if(!isset($this->woeSchedule[$id])) {
 			return false;
 		}
-		$sth = $this->connection()->prepare("DELETE FROM {$this->table('ac_woe_castles')} WHERE shecule_id = ?");
+		$sth = $this->connection()->prepare("DELETE FROM {$this->table('ac_woe_schedule_castles')} WHERE shecule_id = ?");
 		$sth->bindValue(1, $id, \PDO::PARAM_INT);
-		$sth = $this->connection()->prepare("REPLACE INTO {$this->table('ac_woe_castles')} (schedule_id, castle) VALUES (? ,?)");
+		$sth = $this->connection()->prepare("REPLACE INTO {$this->table('ac_woe_schedule_castles')} (schedule_id, castle) VALUES (? ,?)");
 		$this->woeSchedule[$id]['castles'] = array();
 		foreach($castles as $castle) {
 			$sth->bindValue(1, $id, \PDO::PARAM_INT);
@@ -2245,7 +2245,7 @@ class CharMap
 	 */
 	public function fetchWoeSchedule($rebuild = false)
 	{
-		if($rebuild || !($this->woeSchedule = App::cache()->fetch("ro.{$this->server->key}.{$this->key}.woe-schedule", false))) {
+		if($rebuild || !($cache = App::cache()->fetch("ro.{$this->server->key}.{$this->key}.woe", false)) || count($cache) !== 2) {
 			$this->woeSchedule = array();
 			$this->woeCastles  = array();
 			$sth = $this->connection()->query("
@@ -2282,7 +2282,9 @@ class CharMap
 				if(!isset($this->woeSchedule[$data[0]])) continue;
 				$this->woeSchedule[$data[0]]['castles'][] = (int)$data[1];
 			}
-			App::cache()->store("ro.{$this->server->key}.{$this->key}.woe-schedule", $this->woeSchedule);
+			App::cache()->store("ro.{$this->server->key}.{$this->key}.woe", array( $this->woeSchedule, $this->woeCastles ));
+		} else {
+			list($this->woeSchedule, $this->woeCastles) = $cache;
 		}
 		return $this->woeSchedule;
 	}
@@ -2333,7 +2335,7 @@ class CharMap
 	public function flushCache($name = null)
 	{
 		if(!$name || $name === 'settings') App::cache()->delete("ro.{$this->server->key}.{$this->key}.settings");
-		if(!$name || $name === 'woe-schedule') App::cache()->delete("ro.{$this->server->key}.{$this->key}.woe-schedule");
+		if(!$name || $name === 'woe') App::cache()->delete("ro.{$this->server->key}.{$this->key}.woe");
 		if(!$name || $name === 'server-status') App::cache()->delete("ro.{$this->server->key}.{$this->key}.shop-categories");
 		if(!$name || $name === 'cache') App::cache()->delete("ro.{$this->server->key}.{$this->key}.cache");
 	}

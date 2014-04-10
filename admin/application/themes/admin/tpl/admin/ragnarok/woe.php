@@ -88,7 +88,7 @@ $page->theme->set('sidebar', $sidebar);
 			<td><input type="checkbox" ac-checkbox-toggle="schedule[]"</td>
 			<td><?php echo __('ragnarok', 'id') ?></td>
 			<td><?php echo __('ragnarok-charmap', 'schedule-name') ?></td>
-			<td><?php echo __('ragnarok-charmap', 'schedule-castles') ?></td>
+			<td><?php echo __('ragnarok', 'castles') ?></td>
 			<td><?php echo __('ragnarok-charmap', 'schedule-startday') ?></td>
 			<td><?php echo __('ragnarok-charmap', 'schedule-starttime') ?></td>
 			<td><?php echo __('ragnarok-charmap', 'schedule-endday') ?></td>
@@ -105,11 +105,11 @@ $page->theme->set('sidebar', $sidebar);
 			<td><?php echo $id ?></td>
 			<td><?php echo htmlspecialchars($time['name']) ?></td>
 			<td><?php
-				$castles = array();
+				$scheduleCastles = array();
 				foreach($time['castles'] as $castleId) {
-					$castles[] = $page->charmap->castleName($id) ?: $id;
+					$scheduleCastles[] = $page->charmap->castleName($castleId) ?: $castleId;
 				}
-				echo implode(', ', $castles);
+				echo implode(', ', $scheduleCastles);
 				?>
 			</td>
 			<td><?php echo __('week', $time['start_day']) ?></td>

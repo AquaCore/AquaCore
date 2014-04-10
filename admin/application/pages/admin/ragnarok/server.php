@@ -31,7 +31,7 @@ extends Page
 	public static $guildsPerPage = 20;
 	public static $logsPerPage = 20;
 
-	const TIME_PATTERN = '/^(((2[0-4])|([01][0-9]))(:[0-5][0-9]){1,2}|((0[0-9])|(1[012]))(:[0-5][0-9]){1,2}(PM|AM))/i';
+	const TIME_PATTERN = '/^(((2[0-4])|([01][0-9]))([\.:][0-5][0-9]){1,2}|((0[0-9])|(1[012]))([\.:][0-5][0-9]){1,2} ?(PM|AM))/i';
 
 	public function run()
 	{
@@ -1008,15 +1008,17 @@ extends Page
 		}
 		$this->response->status(302)->redirect(App::request()->uri->url());
 		try {
-			$castles = array_map(function($x) {
+			$startTime = date('H:i:s', strtotime($this->request->getString('starttime')));
+			$endTime   = date('H:i:s', strtotime($this->request->getString('endtime')));
+			$castles   = array_map(function($x) {
 				return intval(trim($x));
 			}, preg_split('/\s*,\s*/', $this->request->getString('castles')));
 			if($this->charmap->addWoeTime($this->request->getString('name'),
 			                              $castles,
 			                              $this->request->getString('endday'),
-			                              $this->request->getString('endtime'),
+			                              $endTime,
 			                              $this->request->getString('startday'),
-			                              $this->request->getString('starttime'))) {
+			                              $startTime)) {
 				App::user()->addFlash('success', null, __('ragnarok-charmap', 'added-schedule'));
 			}
 		} catch(\Exception $exception) {
@@ -1323,7 +1325,32 @@ extends Page
 	public function char_action()
 	{
 		try {
-
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$where = array();
+			if($x = $this->request->getString('n')) {
+				$where['name'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' );
+			}
+			if($x = $this->request->getString('m')) {
+				$where['map'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' );
+			}
+			if(($x = $this->request->getArray('class', null)) && !empty($x)) {
+				array_unshift($x, Search::SEARCH_IN);
+				$where['class'] = $x;
+			}
+			$search = $this->charmap->charSearch()
+				->calcRows(true)
+				->where($where)
+				->limit(($currentPage - 1) * self::$charactersPerPage, self::$charactersPerPage)
+				->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('characters', $search->results)
+				->set('character_count', $search->rowsFound)
+				->set('paginator', $pgn)
+				->set('page', $this);
+			echo $tpl->render('admin/ragnarok/char/search');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
