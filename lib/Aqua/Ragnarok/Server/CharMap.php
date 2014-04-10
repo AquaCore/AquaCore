@@ -1815,7 +1815,7 @@ class CharMap
 			$item->attack = (int)$data['attack'];
 			if(isset($data['mattack'])) $item->mattack = (int)$data['mattack'];
 		}
-		if($data['shop_price'] !== null && $data['shop_category'] !== null) {
+		if($data['shop_price'] !== null) {
 			$item->shopPrice      = (int)$data['shop_price'];
 			$item->shopSold       = (int)$data['shop_sold'];
 			$item->shopCategoryId = $data['shop_category'];

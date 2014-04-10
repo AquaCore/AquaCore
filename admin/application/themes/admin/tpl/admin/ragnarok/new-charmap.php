@@ -40,7 +40,7 @@ $page->theme->set('wrapper', $form->buildTag());
 			</div>
 		</td>
 	</tr>
-	<?php echo $form->render(null, false, array( 'renewal', 'fame', 'online-stats' )) ?>
+	<?php echo $form->render(null, false, array( 'renewal', 'fame', 'online-stats', 'status-timeout', 'status-cache' )) ?>
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">

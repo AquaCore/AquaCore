@@ -81,7 +81,7 @@ $page->theme->set('sidebar', $sidebar);
 			<td><?php echo __('ragnarok', 'shop-category') ?></td>
 			<td><?php echo __('ragnarok', 'price') ?></td>
 			<td><?php echo __('ragnarok', 'sold') ?></td>
-			<td></td>
+			<td><?php echo __('application', 'action') ?></td>
 		</tr>
 	</thead>
 	<tbody>

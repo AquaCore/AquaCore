@@ -223,6 +223,18 @@ extends Page
 				->required()
 				->value(10, false)
 				->setLabel(__('ragnarok-charmap', 'fame-label'));
+			$frm->input('status-timeout', true)
+			    ->type('number')
+			    ->attr('min', 1)
+			    ->value(3, false)
+			    ->setLabel(__('ragnarok-charmap', 'status-timeout-label'))
+			    ->setDescription(__('ragnarok-charmap', 'status-timeout-desc'));
+			$frm->input('status-cache', true)
+			    ->type('number')
+			    ->attr('min', 1)
+			    ->value(180, false)
+			    ->setLabel(__('ragnarok-charmap', 'status-cache-label'))
+			    ->setDescription(__('ragnarok-charmap', 'status-cache-desc'));
 			$frm->input('default-map', true)
 		        ->type('text')
 		        ->value('prontera', false)
@@ -545,6 +557,18 @@ extends Page
 			    ->required()
 			    ->value($this->charmap->getOption('fame-ladder', 10), false)
 			    ->setLabel(__('ragnarok-charmap', 'fame-label'));
+			$frm->input('status-timeout', true)
+			    ->type('number')
+			    ->attr('min', 1)
+			    ->value($this->charmap->getOption('status-timeout'), false)
+			    ->setLabel(__('ragnarok-charmap', 'status-timeout-label'))
+			    ->setDescription(__('ragnarok-charmap', 'status-timeout-desc'));
+			$frm->input('status-cache', true)
+			    ->type('number')
+			    ->attr('min', 1)
+			    ->value($this->charmap->getOption('status-ttl'), false)
+			    ->setLabel(__('ragnarok-charmap', 'status-cache-label'))
+			    ->setDescription(__('ragnarok-charmap', 'status-cache-desc'));
 			$frm->input('default-map', true)
 			    ->type('text')
 			    ->value($this->charmap->getOption('default-map'), false)
