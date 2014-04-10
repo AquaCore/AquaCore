@@ -61,10 +61,11 @@ $page->theme->set('sidebar', $sidebar);
 		<col>
 		<col>
 		<col>
+		<col>
 	</colgroup>
 	<thead>
 		<tr>
-			<td colspan="7" style="text-align: right">
+			<td colspan="8" style="text-align: right">
 				<select name="action">
 					<option value="order"><?php echo __('application', 'save-order') ?></option>
 					<option value="delete"><?php echo __('application', 'delete') ?></option>
@@ -80,16 +81,17 @@ $page->theme->set('sidebar', $sidebar);
 			<td><?php echo __('ragnarok', 'shop-category') ?></td>
 			<td><?php echo __('ragnarok', 'price') ?></td>
 			<td><?php echo __('ragnarok', 'sold') ?></td>
+			<td></td>
 		</tr>
 	</thead>
 	<tbody>
 	<?php if(empty($items)) : ?>
-		<tr><td class="ac-table-no-result" colspan="7"><?php echo __('application', 'no-search-results') ?></td></tr>
+		<tr><td class="ac-table-no-result" colspan="8"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($items as $item) : ?>
 		<tr>
 			<td>
 				<input type="checkbox" name="items[]" value="<?php echo $item->id ?>">
-				<input type="hidden" name="order" value="<?php echo $item->id ?>">
+				<input type="hidden" name="order[]" value="<?php echo $item->id ?>">
 			</td>
 			<td><img src="<?php echo ac_item_icon($item->id) ?>"></td>
 			<td><?php echo $item->id ?></td>
@@ -97,11 +99,21 @@ $page->theme->set('sidebar', $sidebar);
 			<td><?php echo $item->shopCategoryId ? htmlspecialchars($page->charmap->shopCategory($item->shopCategoryId)->name) : __('application', 'none') ?></td>
 			<td><?php echo __('donation', 'credit-points', number_format($item->shopPrice)) ?></td>
 			<td><?php echo number_format($item->shopSold) ?></td>
+			<td class="ac-actions">
+				<a href="<?php echo ac_build_url(array(
+					'path' => array( 'r', $page->server->key, $page->charmap->key ),
+				    'action' => 'item',
+				    'arguments' => array( $item->id )
+				)) ?>">
+				<button class="ac-action-edit"
+				        type="button"><?php echo __('application', 'edit') ?></button>
+				</a>
+			</td>
 		</tr>
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="7"></td></tr>
+		<tr><td colspan="8"></td></tr>
 	</tfoot>
 </table>
 </form>

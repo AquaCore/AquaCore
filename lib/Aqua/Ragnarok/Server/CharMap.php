@@ -1376,50 +1376,6 @@ class CharMap
 	}
 
 	/**
-	 * Reset shop categories order.
-	 *
-	 * @param array $newOrder Associative array of id => order.
-	 * @return bool
-	 */
-	public function setShopCategoryOrder(array $newOrder)
-	{
-		$newOrder = array_unique($newOrder);
-		$oldOrder = Query::select($this->connection())
-			->columns(array( 'id' => 'id', 'order' => '`order`' ))
-			->setColumnType(array( 'id' => 'integer' , 'order' => 'integer'))
-			->from($this->table('ac_cash_shop_categories'))
-			->query()
-			->getColumn('order', 'id');
-		if(empty($oldOrder)) {
-			return false;
-		}
-		$update = Query::update($this->connection());
-		$table  = $this->table('ac_cash_shop_categories');
-		foreach($newOrder as $id => $slot) {
-			if(!array_key_exists($id, $oldOrder)) {
-				return false;
-			}
-			if($oldOrder[$id] === $slot) {
-				continue;
-			}
-			$update->tables(array( "t$id" => $table ))
-			       ->set(array( "t$id.`order`" => $slot ))
-			       ->where(array( "t$id.id" => $id ));
-			if(($otherId = array_search($slot, $oldOrder)) !== false &&
-			   !array_key_exists($otherId, $newOrder)) {
-				$update->tables(array( "t$otherId" => $table ))
-				       ->set(array( "t$otherId.`order`" => $oldOrder[$id] ))
-				       ->where(array( "t$otherId.id" => $otherId ));
-			}
-		}
-		if(empty($update->set)) {
-			return false;
-		}
-		$update->query();
-		return (bool)$update->rowCount;
-	}
-
-	/**
 	 * Generate a valid shop category slug from a name.
 	 *
 	 * @param string   $name
@@ -1441,6 +1397,65 @@ class CharMap
 		}
 		$select->query();
 		return ac_slug_available($slug, $select->getColumn('slug'));
+	}
+
+	/**
+	 * Reset shop categories order.
+	 *
+	 * @param array $newOrder Associative array of id => order.
+	 * @return bool
+	 */
+	public function setShopCategoryOrder(array $newOrder)
+	{
+		$this->setOrder($this->table('ac_cash_shop_categories'), 'id', '`order`', $newOrder);
+	}
+
+	/**
+	 * Reset shop items order.
+	 *
+	 * @param array $newOrder Associative array of id => order.
+	 * @return bool
+	 */
+	public function setShopItemsOrder(array $newOrder)
+	{
+		return $this->setOrder($this->table('ac_cash_shop'), 'item_id', '`order`', $newOrder);
+	}
+
+	protected function setOrder($table, $idRow, $orderRow, $newOrder)
+	{
+		$newOrder = array_unique($newOrder);
+		$oldOrder = Query::select($this->connection())
+		                 ->columns(array( 'id' => $idRow, 'order' => $orderRow ))
+		                 ->setColumnType(array( 'id' => 'integer' , 'order' => 'integer'))
+		                 ->from($table)
+		                 ->query()
+		                 ->getColumn('order', 'id');
+		if(empty($oldOrder)) {
+			return false;
+		}
+		$update = Query::update($this->connection());
+		foreach($newOrder as $id => $slot) {
+			if(!array_key_exists($id, $oldOrder)) {
+				return false;
+			}
+			if($oldOrder[$id] === $slot) {
+				continue;
+			}
+			$update->tables(array( "t$id" => $table ))
+			       ->set(array( "t$id.$orderRow" => $slot ))
+			       ->where(array( "t$id.$idRow" => $id ));
+			if(($otherId = array_search($slot, $oldOrder)) !== false &&
+			   !array_key_exists($otherId, $newOrder)) {
+				$update->tables(array( "t$otherId" => $table ))
+				       ->set(array( "t$otherId.$orderRow" => $oldOrder[$id] ))
+				       ->where(array( "t$otherId.$idRow" => $otherId ));
+			}
+		}
+		if(empty($update->set)) {
+			return false;
+		}
+		$update->query();
+		return (bool)$update->rowCount;
 	}
 
 	/**

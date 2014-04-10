@@ -1234,6 +1234,32 @@ extends Page
 	public function shop_action()
 	{
 		try {
+			if($this->request->method === 'POST' &&
+			   in_array($this->request->getString('action'), array( 'delete', 'order' ))) {
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				try {
+					if($this->request->getString('action') === 'order') {
+						$this->charmap->setShopItemsOrder(array_flip($this->request->getArray('order')));
+						App::user()->addFlash('success', null, __('ragnarok-charmap', 'shop-updated'));
+					} else {
+						$deleted = 0;
+						foreach($this->request->getArray('items') as $itemId) {
+							if(!($item = $this->charmap->item($itemId)) || !$item->inCashShop) {
+								return;
+							}
+							$item->removeFromShop();
+							++$deleted;
+						}
+						if($deleted) {
+							App::user()->addFlash('success', null, __('ragnarok-charmap', 'shop-removed-' . ($deleted != 1 ? 'p' : 's')), $deleted);
+						}
+					}
+				} catch(\Exception $exception) {
+					ErrorLog::logSql($exception);
+					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+				}
+				return;
+			}
 			$frm = new Form($this->request);
 			$frm->input('item')
 		        ->type('text')
@@ -1316,9 +1342,63 @@ extends Page
 				$this->error(404);
 				return;
 			}
+			$categories = array( '' => __('application', 'none') );
+			foreach($this->charmap
+				        ->shopCategorySearch()
+				        ->order('`name`')
+				        ->query() as $category) {
+				$categories[$category->id] = htmlspecialchars($category->name);
+			}
 			$frm = new Form($this->request);
+			$frm->select('category')
+				->value($categories)
+				->selected($item->shopCategoryId ?: '')
+				->setLabel(__('ragnarok', 'shop-category'));
+			$frm->input('price')
+				->type('number')
+				->attr('min', 1)
+				->value($item->shopPrice)
+				->setLabel(__('ragnarok', 'price'));
+			$frm->submit();
+			$frm->input('delete')
+			    ->type('submit')
+			    ->value(__('application', 'delete'));
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'edit-shop', htmlspecialchars($item->jpName));
+				$this->theme->set('return', ac_build_url(array(
+					'path' => array( 'r', $this->server->key, $this->charmap->key ),
+				    'action' => 'shop'
+				)));
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+					->set('item', $item)
+					->set('page', $this);
+				echo $tpl->render('admin/ragnarok/edit-shop');
+				return;
+			}
+			$this->response->status(302)->redirect(App::request()->uri->url());
+			try {
+				if(!empty($this->request->data['delete'])) {
+					if($item->removeFromShop()) {
+						App::user()->addFlash('success', null, __('ragnarok-charmap',
+						                                          'shop-removed',
+						                                          htmlspecialchars($item->jpName)));
+					}
+				} else {
+					if($item->setShopData($this->request->getInt('price'), $this->request->getInt('category') ?: null)) {
+						App::user()->addFlash('success', null, __('ragnarok-charmap',
+						                                          'shop-updated',
+						                                          htmlspecialchars($item->jpName)));
+					}
+				}
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
 		} catch(\Exception $exception) {
-
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 
