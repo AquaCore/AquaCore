@@ -299,6 +299,15 @@ button.ac-delete-button {
 		}
 		&.menu-depth-2 {
 			top: -3px;
+			margin-left: 1px;
+			li{
+				border-left: 1px solid $bluish-gray-1 !important;
+				&:first-child {
+					border-left: none !important;
+					height: 29px !important;
+				}
+
+			}
 		}
 		li {
 			position: relative;
