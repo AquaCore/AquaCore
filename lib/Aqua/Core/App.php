@@ -8,6 +8,7 @@ use Aqua\Core\Exception\CoreException;
 use Aqua\Http\Request;
 use Aqua\Http\Response;
 use Aqua\Log\ErrorLog;
+use Aqua\Ragnarok\Server;
 use Aqua\Storage\StorageFactory;
 
 class App
@@ -80,11 +81,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.1.0';
+	const VERSION = '0.1.1';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 100;
+	const VERSION_LONG = 101;
 
 	private function __construct() { }
 
@@ -430,16 +431,57 @@ class App
 	{
 		$oldVersion = file_get_contents(\Aqua\ROOT . '/update/version');
 		if(version_compare(self::VERSION, $oldVersion, '>')) {
-			foreach(glob(\Aqua\ROOT . '/update/version/*.update.php') as $file) {
-				$version = basename($file, '.update.php');
-				if(version_compare($version, $oldVersion, '>')) {
-					include $file;
+			foreach(glob(\Aqua\ROOT . '/update/sql/*.sql') as $file) {
+				if(!self::parseUpdateFileName($file, $version, $num, $type) ||
+				   !$type || !version_compare($version, $oldVersion, '>')) { continue; }
+				$query = file_get_contents($file);
+				if($type === 'aquacore') {
+					try { App::connection()->exec($query); } catch(\Exception $e) { }
+				} else {
+					foreach(Server::$servers as $server) {
+						if($type === 'login') {
+							try { $server->login->connection()->exec($query); } catch(\Exception $e) { }
+						} else if($type === 'loginlog') {
+							try { $server->login->log->connection()->exec($query); } catch(\Exception $e) { }
+						} else {
+							foreach($server->charmap as $charmap) {
+								if($type === 'charmap') {
+									try { $charmap->connection()->exec($query); } catch(\Exception $e) { }
+								} else if($type === 'charmaplog') {
+									try { $charmap->log->connection()->exec($query); } catch(\Exception $e) { }
+								}
+							}
+							reset($server->charmap);
+						}
+					}
+					reset(Server::$servers);
 				}
+			}
+			foreach(glob(\Aqua\ROOT . '/update/lang/*.xml') as $file) {
+				if(!self::parseUpdateFileName($file, $version) ||
+				   !version_compare($version, $oldVersion, '>')) { continue; }
+				L10n::import(new \SimpleXMLElement(file_get_contents($file)), null);
+			}
+			foreach(glob(\Aqua\ROOT . '/update/*.php') as $file) {
+				if(!self::parseUpdateFileName($file, $version) ||
+				   !version_compare($version, $oldVersion, '>')) { continue; }
+				include $file;
 			}
 			$old = umask(0);
 			file_put_contents(\Aqua\ROOT . '/update/version', self::VERSION);
 			chmod(\Aqua\ROOT . '/update/version', \Aqua\PRIVATE_FILE_PERMISSION);
 			umask($old);
 		}
+	}
+
+	public static function parseUpdateFileName($file, &$version, &$number = null, &$type = null)
+	{
+		if(!preg_match('/^(\d+\.\d+\.\d+)(?:-([\d\w]+))?(?:\.([^\.]+))?\.\w+/', basename($file), $match)) {
+			return false;
+		}
+		$version = isset($match[1]) ? $match[1] : null;
+		$number  = isset($match[2]) ? $match[2] : null;
+		$type    = isset($match[3]) ? $match[3] : null;
+		return true;
 	}
 }

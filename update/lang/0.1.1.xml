@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup language="en">
+        <word namespace="application" key="edit">Edit</word>
+        <word namespace="ragnarok-charmap" key="status-timeout-label">Status Timeout</word>
+        <word namespace="ragnarok-charmap" key="status-timeout-desc">Time spent to determine whether the server is up (seconds).</word>
+        <word namespace="ragnarok-charmap" key="status-cache-label">Status Cache</word>
+        <word namespace="ragnarok-charmap" key="status-cache-desc">Time to wait before updating the server's status (seconds).</word>
+        <word namespace="ragnarok-charmap" key="default-label">Default Server</word>
+        <word namespace="ragnarok-charmap" key="edit-shop">Edit Item Shop - %s</word>
+        <word namespace="ragnarok-charmap" key="shop-updated">Item shop updated.</word>
+        <word namespace="ragnarok-charmap" key="shop-removed"><![CDATA[<b>%s</b> removed from the item shop.]]></word>
+        <word namespace="ragnarok-charmap" key="castle-name-empty">Castle names cannot be empty.</word>
+        <word namespace="ragnarok-charmap" key="castle-id-number">Castle IDs must be numbers higher than 0.</word>
+        <word namespace="ragnarok-charmap" key="castles-updated"><![CDATA[<b>%s</b> added to woe schedule.]]></word>
+        <word namespace="ragnarok-charmap" key="confirm-delete-sch-s">Are you sure you want to delete this item from the woe schedule?</word>
+        <word namespace="ragnarok-charmap" key="confirm-delete-sch-p">Are you sure you want to delete these items from the woe schedule?</word>
+    </wordgroup>
+</languageimport>

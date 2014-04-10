@@ -4,6 +4,7 @@ use Aqua\Core\L10n;
 use Aqua\Core\Exception\PHP;
 use Aqua\Core\Exception\Assertion;
 use Aqua\Core\Exception\CoreException;
+use Aqua\Event\Event;
 use Aqua\Log\ErrorLog;
 
 $time = microtime(true);
@@ -118,7 +119,9 @@ try {
 			error_reporting(E_ALL);
 			ini_set('display_errors', 1);
 		default:
-			App::update();
+			Event::bind('ragnarok.init', function() {
+				App::update();
+			});
 			include __DIR__ . '/Aqua/UI/Tag.php';
 			include __DIR__ . '/Aqua/UI/Tag/Link.php';
 			include __DIR__ . '/Aqua/UI/Tag/Script.php';

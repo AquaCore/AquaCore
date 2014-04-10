@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\Ragnarok;
 
+use Aqua\Event\Event;
 use Aqua\Http\Uri;
 use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Ragnarok\Server\Login;
@@ -102,6 +103,7 @@ class Server
 		foreach($servers as $key => $data) {
 			self::$servers[$key] = new self($key, $data);
 		}
+		Event::fire('ragnarok.init');
 	}
 
 	public static function get($key)
