@@ -139,6 +139,9 @@ implements \Iterator, \ArrayAccess, \Countable
 				FileSystemException::FILE_NOT_WRITABLE
 			);
 		}
+		if(file_exists($file)) {
+			@unlink($file);
+		}
 		$settings = $this->dump();
 		$old = umask(0);
 		file_put_contents($file, $settings);

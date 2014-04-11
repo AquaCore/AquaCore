@@ -339,6 +339,9 @@ implements StorageInterface,
 	protected function _writeContent($file, $content, $permission = null)
 	{
 		$flag = $this->lock ? LOCK_EX : 0;
+		if(file_exists($file)) {
+			@unlink($file);
+		}
 		if(!file_put_contents($file, $content, $flag)) {
 			throw new FileSystemException(
 				__('exception', 'write-file', $file)

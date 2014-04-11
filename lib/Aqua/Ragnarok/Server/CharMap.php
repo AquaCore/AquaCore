@@ -1546,6 +1546,7 @@ class CharMap
 		    end_time = :et
 		WHERE id = :id
 		");
+		$sth->bindValue(':id', $id, \PDO::PARAM_INT);
 		$sth->bindValue(':name', $name, \PDO::PARAM_STR);
 		$sth->bindValue(':sd', $start_day + 1, \PDO::PARAM_INT);
 		$sth->bindValue(':st', $start_time, \PDO::PARAM_STR);

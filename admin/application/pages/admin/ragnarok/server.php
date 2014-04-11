@@ -548,7 +548,7 @@ extends Page
 			$frm->input('online-stats', true)
 			    ->type('number')
 			    ->attr('min', 0)
-			    ->value(30, false)
+			    ->value($this->charmap->getOption('online-stats'), false)
 			    ->setLabel(__('ragnarok-charmap', 'online-stats-label'))
 			    ->setDescription(__('ragnarok-charmap', 'online-stats-desc'));
 			$frm->input('fame', true)
@@ -666,10 +666,10 @@ extends Page
 					'online-stats' => $this->request->getInt('online-stats'),
 					'renewal' => $this->request->getInt('renewal') ? '1' : '',
 					'fame-ladder' => $this->request->getInt('fame'),
-					'default-map' => $this->request->getInt('default-map'),
+					'default-map' => $this->request->getString('default-map'),
 					'default-map-y' => $this->request->getInt('default-y'),
 					'default-map-x' => $this->request->getInt('default-x'),
-					'map-restriction' => $this->request->getInt('map-restrictions'),
+					'map-restriction' => $this->request->getString('map-restrictions'),
 				));
 				$evt = $this->charmap->table('ac_online_stats_event');
 				if(!$this->request->getInt('online-stats')) {
@@ -1053,68 +1053,118 @@ extends Page
 
 	public function schedule_action($id)
 	{
-		$schedule = $this->charmap->woeSchedule();
-		if(!isset($schedule[$id])) {
-			$this->error(404);
-			return;
+		try {
+			$schedule = $this->charmap->woeSchedule();
+			if(!isset($schedule[$id])) {
+				$this->error(404);
+				return;
+			}
+			$schedule = $schedule[$id];
+			$frm = new Form($this->request);
+			$frm->input('name')
+				->type('text')
+				->required()
+				->value(htmlspecialchars($schedule['name']))
+				->setLabel(__('ragnarok-charmap', 'schedule-name'));
+			$frm->input('castles')
+				->type('text')
+				->required()
+				->value(implode(', ', $schedule['castles']))
+				->setLabel(__('ragnarok-charmap', 'schedule-castles'))
+				->setDescription(__('ragnarok-charmap', 'schedule-castles-desc'));
+			$frm->input('starttime')
+				->type('text')
+				->required()
+				->attr('pattern', self::TIME_PATTERN)
+				->value($schedule['start_time'])
+				->placeholder('HH:MM:SS')
+				->setLabel(__('ragnarok-charmap', 'schedule-starttime'));
+			$frm->select('startday')
+			    ->value(array(
+					0 => __('week', 0),
+					1 => __('week', 1),
+					2 => __('week', 2),
+					3 => __('week', 3),
+					4 => __('week', 4),
+					5 => __('week', 5),
+					6 => __('week', 6)
+				))
+			    ->required()
+				->selected($schedule['start_day'])
+			    ->setLabel(__('ragnarok-charmap', 'schedule-startday'));
+			$frm->input('endtime')
+				->type('text')
+				->required()
+				->attr('pattern', self::TIME_PATTERN)
+				->value($schedule['end_time'])
+				->placeholder('HH:MM:SS')
+				->setLabel(__('ragnarok-charmap', 'schedule-endtime'));
+			$frm->select('endday')
+				->value(array(
+					0 => __('week', 0),
+					1 => __('week', 1),
+					2 => __('week', 2),
+					3 => __('week', 3),
+					4 => __('week', 4),
+					5 => __('week', 5),
+					6 => __('week', 6)
+				))
+				->required()
+				->selected($schedule['end_day'])
+				->setLabel(__('ragnarok-charmap', 'schedule-endday'));
+			$frm->submit();
+			$frm->input('delete')
+				->type('submit')
+				->value(__('application', 'delete'));
+			$frm->validate(function(Form $frm) {
+				$count   = 0;
+				$castles = preg_split('/\s*,\s*/', $frm->request->getString('castles'));
+				foreach($castles as $castle) {
+					if(!ctype_digit(trim($castle))) {
+						$frm->input('castles')->setWarning(__('form', 'invalid-number'));
+						return false;
+					}
+					++$count;
+				}
+				if(!$count) {
+					$frm->input('castles')->setWarning(__('form', 'field-required'));
+					return false;
+				}
+				return true;
+			});
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'edit-schedule',
+				                                                htmlspecialchars($schedule['name']));
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+					->set('schedule', $schedule)
+					->set('page', $this);
+				echo $tpl->render('admin/ragnarok/schedule');
+				return;
+			}
+			$this->response->status(302)->redirect(App::request()->uri->url());
+			try {
+				$startTime = date('H:i:s', strtotime($this->request->getString('starttime')));
+				$endTime   = date('H:i:s', strtotime($this->request->getString('endtime')));
+				$castles   = array_map(function($x) {
+					return intval(trim($x));
+				}, preg_split('/\s*,\s*/', $this->request->getString('castles')));
+				$this->charmap->editWoeCastles($id, $castles);
+				$this->charmap->editWoeTime((int)$id,
+			                               $this->request->getString('name'),
+			                               $this->request->getInt('startday'),
+			                               $startTime,
+			                               $this->request->getInt('endday'),
+			                               $endTime);
+				App::user()->addFlash('success', null, __('ragnarok-charmap', 'schedule-updated'));
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
-		$schedule = $schedule[$id];
-		$frm = new Form($this->request);
-		$frm->input('name')
-			->type('text')
-			->required()
-			->value(htmlspecialchars($schedule['name']))
-			->setLabel(__('ragnarok-charmap', 'schedule-name'));
-		$frm->input('castles')
-			->type('text')
-			->required()
-			->value(implode(', ', $schedule['castles']))
-			->setLabel(__('ragnarok-charmap', 'schedule-castles'))
-			->setDescription(__('ragnarok-charmap', 'schedule-castles-desc'));
-		$frm->input('starttime')
-			->type('text')
-			->required()
-			->attr('pattern', self::TIME_PATTERN)
-			->value($schedule['start_time'])
-			->placeholder('HH:MM:SS')
-			->setLabel(__('ragnarok-charmap', 'schedule-starttime'));
-		$frm->select('startday')
-		    ->value(array(
-				0 => __('week', 0),
-				1 => __('week', 1),
-				2 => __('week', 2),
-				3 => __('week', 3),
-				4 => __('week', 4),
-				5 => __('week', 5),
-				6 => __('week', 6)
-			))
-		    ->required()
-			->selected($schedule['start_day'])
-		    ->setLabel(__('ragnarok-charmap', 'schedule-startday'));
-		$frm->input('endtime')
-			->type('text')
-			->required()
-			->attr('pattern', self::TIME_PATTERN)
-			->value($schedule['end_time'])
-			->placeholder('HH:MM:SS')
-			->setLabel(__('ragnarok-charmap', 'schedule-endtime'));
-		$frm->select('endday')
-			->value(array(
-				0 => __('week', 0),
-				1 => __('week', 1),
-				2 => __('week', 2),
-				3 => __('week', 3),
-				4 => __('week', 4),
-				5 => __('week', 5),
-				6 => __('week', 6)
-			))
-			->required()
-			->selected($schedule['end_day'])
-			->setLabel(__('ragnarok-charmap', 'schedule-endday'));
-		$frm->submit();
-		$frm->validate(function(Form $frm) {
-
-		});
 	}
 
 	public function category_action()

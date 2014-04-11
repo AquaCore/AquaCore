@@ -116,7 +116,16 @@ $page->theme->set('sidebar', $sidebar);
 			<td><?php echo $time['start_time'] ?></td>
 			<td><?php echo __('week', $time['end_day']) ?></td>
 			<td><?php echo $time['end_time'] ?></td>
-			<td></td>
+			<td class="ac-actions">
+				<a href="<?php echo ac_build_url(array(
+					'path' => array( 'r', $page->server->key, $page->charmap->key ),
+				    'action' => 'schedule',
+				    'arguments' => array( $id )
+				)) ?>">
+					<button class="ac-action-edit"
+					        type="button"><?php echo __('application', 'edit') ?></button>
+				</a>
+			</td>
 		</tr>
 	<?php endforeach; endif;?>
 	</tbody>

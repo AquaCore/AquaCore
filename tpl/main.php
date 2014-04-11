@@ -20,7 +20,7 @@ $posts = ContentType::getContentType(ContentType::CTYPE_POST)->featured(5);
 					<?php echo __('news', 'more-posts') ?>
 				</a>
 				<a href="<?php echo ac_build_url(array( 'path' => array( 'news' ), 'action' => 'feed' )) ?>">
-					<?php echo __('news', 'rss-feed') ?>
+					<?php echo __('content', 'rss-feed') ?>
 				</a>
 			</div>
 		</td>
