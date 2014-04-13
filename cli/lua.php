@@ -6,7 +6,7 @@
  * @example php cli/lua.php C:/Path/To/Lua/Files
  */
 
-define('Aqua\ROOT',        str_replace('\\', '/', rtrim(basename(__DIR__), DIRECTORY_SEPARATOR)));
+define('Aqua\ROOT',        str_replace('\\', '/', rtrim(dirname(__DIR__), DIRECTORY_SEPARATOR)));
 define('Aqua\SCRIPT_NAME', basename(__FILE__));
 define('Aqua\ENVIRONMENT', 'CLI');
 define('Aqua\PROFILE',     'CHARGEN');

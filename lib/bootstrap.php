@@ -120,7 +120,7 @@ try {
 			ini_set('display_errors', 1);
 		default:
 			Event::bind('ragnarok.init', function() {
-				App::update();
+				App::upgrade();
 			});
 			include __DIR__ . '/Aqua/UI/Tag.php';
 			include __DIR__ . '/Aqua/UI/Tag/Link.php';

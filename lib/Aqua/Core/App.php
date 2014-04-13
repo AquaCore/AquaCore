@@ -427,12 +427,12 @@ class App
 		return $id;
 	}
 
-	public static function update()
+	public static function upgrade()
 	{
-		$oldVersion = file_get_contents(\Aqua\ROOT . '/update/version');
+		$oldVersion = file_get_contents(\Aqua\ROOT . '/upgrade/version');
 		if(version_compare(self::VERSION, $oldVersion, '>')) {
-			foreach(glob(\Aqua\ROOT . '/update/sql/*.sql') as $file) {
-				if(!self::parseUpdateFileName($file, $version, $num, $type) ||
+			foreach(glob(\Aqua\ROOT . '/upgrade/sql/*.sql') as $file) {
+				if(!ac_parse_upgrade_file_name($file, $version, $num, $type) ||
 				   !$type || !version_compare($version, $oldVersion, '>')) { continue; }
 				$query = file_get_contents($file);
 				if($type === 'aquacore') {
@@ -457,24 +457,24 @@ class App
 					reset(Server::$servers);
 				}
 			}
-			foreach(glob(\Aqua\ROOT . '/update/lang/*.xml') as $file) {
-				if(!self::parseUpdateFileName($file, $version) ||
+			foreach(glob(\Aqua\ROOT . '/upgrade/lang/*.xml') as $file) {
+				if(!ac_parse_upgrade_file_name($file, $version) ||
 				   !version_compare($version, $oldVersion, '>')) { continue; }
 				L10n::import(new \SimpleXMLElement(file_get_contents($file)), null);
 			}
-			foreach(glob(\Aqua\ROOT . '/update/*.php') as $file) {
-				if(!self::parseUpdateFileName($file, $version) ||
+			foreach(glob(\Aqua\ROOT . '/upgrade/*.php') as $file) {
+				if(!ac_parse_upgrade_file_name($file, $version) ||
 				   !version_compare($version, $oldVersion, '>')) { continue; }
 				include $file;
 			}
 			$old = umask(0);
-			file_put_contents(\Aqua\ROOT . '/update/version', self::VERSION);
-			chmod(\Aqua\ROOT . '/update/version', \Aqua\PRIVATE_FILE_PERMISSION);
+			file_put_contents(\Aqua\ROOT . '/upgrade/version', self::VERSION);
+			chmod(\Aqua\ROOT . '/upgrade/version', \Aqua\PRIVATE_FILE_PERMISSION);
 			umask($old);
 		}
 	}
 
-	public static function parseUpdateFileName($file, &$version, &$number = null, &$type = null)
+	public static function parseUgradeFileName($file, &$version, &$number = null, &$type = null)
 	{
 		if(!preg_match('/^(\d+\.\d+\.\d+)(?:-([\d\w]+))?(?:\.([^\.]+))?\.\w+/', basename($file), $match)) {
 			return false;

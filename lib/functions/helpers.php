@@ -629,3 +629,14 @@ function ac_pcre_error_str($errorId = null)
 			return __('exception', 'pcre-bad-utf8-offset');
 	}
 }
+
+function ac_parse_upgrade_file_name($file, &$version, &$number = null, &$type = null)
+{
+	if(!preg_match('/^(\d+\.\d+\.\d+)(?:-([\d\w]+))?(?:\.([^\.]+))?\.\w+/', basename($file), $match)) {
+		return false;
+	}
+	$version = isset($match[1]) ? $match[1] : null;
+	$number  = isset($match[2]) ? $match[2] : null;
+	$type    = isset($match[3]) ? $match[3] : null;
+	return true;
+}

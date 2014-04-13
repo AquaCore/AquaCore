@@ -10,7 +10,7 @@
 define('Aqua\ROOT',        str_replace('\\', '/', rtrim(dirname(__DIR__), DIRECTORY_SEPARATOR)));
 define('Aqua\SCRIPT_NAME', basename(__FILE__));
 define('Aqua\ENVIRONMENT', 'CLI');
-define('Aqua\PROFILE',     'CHARGEN');
+define('Aqua\PROFILE',     'MAIN');
 
 include __DIR__ . '/../lib/bootstrap.php';
 
