@@ -402,6 +402,7 @@ extends Page
 				'rating_disabled'     => !(bool)$this->request->getInt('rating'),
 				'archiving'           => (bool)$this->request->getInt('archiving'),
 				'featured'            => (bool)$this->request->getInt('featured'),
+				'last_editor'         => App::user()->account->id,
 			));
 			if($updated) {
 				App::user()->addFlash('success', null, __('news', 'post-updated'));

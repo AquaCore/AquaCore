@@ -271,6 +271,16 @@ implements \Serializable
 				$values['status'] = $content_data['status'] = $edit['status'];
 				$update .= '_status = ?, ';
 			}
+			if(array_key_exists('publish_date', $edit) && $edit['publish_date'] !== $this->publishDate) {
+				$values['publish_date'] = date('Y-m-d H:i:s', $edit['publish_date']);
+				$content_data['publishDate'] = $edit['publish_date'];
+				$update .= '_publish_date = ?, ';
+			}
+			if(array_key_exists('edit_date', $edit) && $edit['edit_date'] !== $this->editDate) {
+				$values['edit_date'] = date('Y-m-d H:i:s', $edit['edit_date']);
+				$content_data['editDate'] = $edit['edit_date'];
+				$update .= '_edit_date = ?, ';
+			}
 			if(array_key_exists('plain_content', $edit)) {
 				$values['plain_content'] = $edit['plain_content'];
 				$update .= '_plain_content = ?, ';
@@ -300,6 +310,10 @@ implements \Serializable
 				$values['protected']       = ($content_data['protected'] ? 'y' : 'n');
 				$update .= '_protected = ?, ';
 			}
+			if(array_key_exists('options', $edit) && $edit['options'] !== $this->options) {
+				$values['options'] = $content_data['options'] = $edit['options'];
+				$update .= '_options = ?, ';
+			}
 			if(array_key_exists('last_editor', $edit) && $edit['last_editor'] !== $this->lastEditorId) {
 				$values['last_editor'] = $content_data['lastEditorId'] = $edit['last_editor'];
 				$update .= '_editor_id = ?, ';
@@ -322,6 +336,7 @@ implements \Serializable
 			$updated = true;
 			if(array_key_exists('protected', $values)) $values['protected'] = $content_data['protected'];
 			if(array_key_exists('publish_date', $values)) $values['publish_date'] = $content_data['publishDate'];
+			if(array_key_exists('edit_date', $values)) $values['edit_date'] = $content_data['editDate'];
 			foreach($content_data as $key => $value) {
 				$this->$key = $value;
 			}
@@ -331,16 +346,18 @@ implements \Serializable
 		}
 		$feedback = array( &$data, &$values );
 		if($this->applyFilters('afterUpdate', $feedback) || $updated) {
-			$tbl = ac_table('content');
-			$sth = App::connection()->prepare("
-			UPDATE `$tbl`
-			SET _edit_date = NOW()
-			WHERE _uid = ?
-			LIMIT 1
-			");
-			$sth->bindValue(1, $this->uid, \PDO::PARAM_INT);
-			$sth->execute();
-			$values['edit_date'] = $this->editDate = time();
+			if(!isset($values['edit_date'])) {
+				$tbl = ac_table('content');
+				$sth = App::connection()->prepare("
+				UPDATE `$tbl`
+				SET _edit_date = NOW()
+				WHERE _uid = ?
+				LIMIT 1
+				");
+				$sth->bindValue(1, $this->uid, \PDO::PARAM_INT);
+				$sth->execute();
+				$values['edit_date'] = $this->editDate = time();
+			}
 			$feedback = array( $this, $values );
 			Event::fire('content.update', $feedback);
 

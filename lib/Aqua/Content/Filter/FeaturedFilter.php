@@ -18,7 +18,7 @@ extends AbstractFilter
 
 	public function beforeUpdate(ContentData $content, array &$data)
 	{
-		$this->setFeatured($data);
+		$this->setFeatured($content->options, $data);
 	}
 
 	public function afterUpdate(ContentData $content, array $data, array &$values)
@@ -28,7 +28,7 @@ extends AbstractFilter
 
 	public function beforeCreate(array &$data)
 	{
-		$this->setFeatured($data);
+		$this->setFeatured(0, $data);
 	}
 
 	public function afterCreate(ContentData $content, array &$data)
@@ -42,15 +42,15 @@ extends AbstractFilter
 	}
 
 	/**
+	 * @param int   $options
 	 * @param array $data
 	 */
-	public function setFeatured(array &$data)
+	public function setFeatured($options, array &$data)
 	{
 		if(isset($data['featured']) && $data['featured']) {
-			if(!isset($data['options'])) {
-				$data['options'] = 0;
-			}
-			$data['options'] |= self::OPT_FEATURED;
+			$data['options'] = $options | self::OPT_FEATURED;
+		} else {
+			$data['options'] = $options & ~self::OPT_FEATURED;
 		}
 	}
 

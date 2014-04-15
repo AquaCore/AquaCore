@@ -13,7 +13,7 @@ extends AbstractFilter
 	public function parseData(ContentData $content, array &$data)
 	{
 		if((int)$data['status'] === ContentData::STATUS_PUBLISHED &&
-		   !$content->getMeta('disable-archive', false)) {
+		   !$content->getMeta('disable-archiving', false)) {
 			if(!($date = (int)$content->getMeta('archive-date'))) {
 				$date = $data['publish_date'] + ($this->getOption('interval', 20) * 86400);
 			}
