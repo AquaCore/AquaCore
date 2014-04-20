@@ -128,6 +128,7 @@ class AquaCoreSetup
 				$_SERVER['HTTP_HOST'] .
 				rtrim(dirname(dirname(getenv('PHP_SELF'))), '/'));
 		}
+		App::defineConstants();
 	}
 
 	public function setLanguage($lang)
