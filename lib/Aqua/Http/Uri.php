@@ -20,6 +20,30 @@ class Uri
 	 */
 	public $parameters = array();
 
+	public function __construct(array $queryParameters)
+	{
+		if(isset($queryParameters['path']) && !is_array($queryParameters['path'])) {
+			$queryParameters['path'] = str_replace('/', \Aqua\URL_SEPARATOR, urldecode($queryParameters['path']));
+			$path = explode('.', $queryParameters['path']);
+			foreach($path as &$p) {
+				if($p && $p !== 'action') {
+					$this->path[] = strtolower($p);
+				}
+			}
+			unset($queryParameters['path']);
+		}
+		if(isset($queryParameters['action']) && !is_array($queryParameters['action'])) {
+			$this->action = strtolower($queryParameters['action']);
+			unset($queryParameters['action']);
+		}
+		if(isset($queryParameters['arg']) && !is_array($queryParameters['arg'])) {
+			$queryParameters['arg'] = str_replace('/', \Aqua\URL_SEPARATOR, urldecode($queryParameters['arg']));
+			$this->arguments = explode(\Aqua\URL_SEPARATOR, trim($queryParameters['arg'], \Aqua\URL_SEPARATOR . ' '));
+			unset($queryParameters['arg']);
+		}
+		$this->parameters += $queryParameters;
+	}
+
 	/**
 	 * @param string $path
 	 * @return \Aqua\Http\Uri
@@ -167,36 +191,5 @@ class Uri
 	public function sanitize($str)
 	{
 		return $str;
-	}
-
-	/**
-	 * @return \Aqua\Http\Uri
-	 */
-	public static function parseCurrentRequest()
-	{
-		$query_parameters = $_GET;
-		$uri              = new self;
-		if(isset($query_parameters['path']) && !is_array($query_parameters['path'])) {
-			$query_parameters['path'] = str_replace('/', \Aqua\URL_SEPARATOR, urldecode($query_parameters['path']));
-			$path                     = explode('.', $query_parameters['path']);
-			foreach($path as &$p) {
-				if($p && $p !== 'action') {
-					$uri->path[] = strtolower($p);
-				}
-			}
-			unset($query_parameters['path']);
-		}
-		if(isset($query_parameters['action']) && !is_array($query_parameters['action'])) {
-			$uri->action = strtolower($query_parameters['action']);
-			unset($query_parameters['action']);
-		}
-		if(isset($query_parameters['arg']) && !is_array($query_parameters['arg'])) {
-			$query_parameters['arg'] = str_replace('/', \Aqua\URL_SEPARATOR, urldecode($query_parameters['arg']));
-			$uri->arguments = explode(\Aqua\URL_SEPARATOR, trim($query_parameters['arg'], \Aqua\URL_SEPARATOR . ' '));
-			unset($query_parameters['arg']);
-		}
-		$uri->parameters += $query_parameters;
-
-		return $uri;
 	}
 }

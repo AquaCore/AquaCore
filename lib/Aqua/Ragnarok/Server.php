@@ -64,7 +64,7 @@ class Server
 		$this->login         = new Login($this, $options['login']);
 		$this->charmapCount  = count($options['charmap']);
 		$this->defaultServer = (isset($options['default_server']) ? $options['default_server'] : '');
-		$this->uri           = new Uri;
+		$this->uri           = new Uri(array());
 		if(self::$serverCount > 1) {
 			$this->uri->path = array( 'ro', $this->key );
 		} else {

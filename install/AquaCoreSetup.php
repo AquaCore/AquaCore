@@ -59,9 +59,25 @@ class AquaCoreSetup
 
 	public function __construct(Request $request, Response $response)
 	{
-		$this->defineConstants();
+		defined('Aqua\PUBLIC_FILE_PERMISSION') or define('Aqua\PUBLIC_FILE_PERMISSION', 0775);
+		defined('Aqua\PUBLIC_DIRECTORY_PERMISSION') or define('Aqua\PUBLIC_DIRECTORY_PERMISSION', 0775);
+		defined('Aqua\PRIVATE_FILE_PERMISSION') or define('Aqua\PRIVATE_FILE_PERMISSION', 0770);
+		defined('Aqua\PRIVATE_DIRECTORY_PERMISSION') or define('Aqua\PRIVATE_DIRECTORY_PERMISSION', 0770);
 		$this->languagesAvailable = include \Aqua\ROOT . '/install/language/languages-available.php';
 		$this->response           = $response;
+		if($settings = App::cache()->fetch('setup_settings_full')) {
+			App::settings()->merge($settings);
+		}
+		App::settings()->set('cache', array(
+			'storage_adapter' => 'File',
+			'storage_options' => array(
+				'prefix' => '',
+				'hash' => null,
+				'directory' => \Aqua\ROOT . '/tmp/cache',
+				'gc_probability' => 0,
+			)
+		));
+		$this->defineConstants();
 		if(!($lang = $request->cookie(self::LANGUAGE_KEY, null)) || !isset($this->languagesAvailable[$lang])) {
 			$lang = 'en';
 		}

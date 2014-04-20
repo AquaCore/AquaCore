@@ -101,24 +101,28 @@ try {
 	App::defineConstants();
 	App::registrySet('ac_time', $time);
 	L10n::init(App::settings()->get('language', 'en'));
-	switch(\Aqua\ENVIRONMENT) {
-		case 'CLI':
-			$args = array();
-			foreach($argv as $arg) {
-				if(preg_match('/([^\s]+)\s*=(\s*(.*)|\s*"([^"]*)")/', $arg, $match)) {
-					$args[$match[1]] = $match[2];
-				} else {
-					$args[] = $arg;
-				}
+	if(\Aqua\ENVIRONMENT === 'CLI' || php_sapi_name() === 'cli') {
+		$args = array();
+		for($i = 1; $i < $argc; ++$i) {
+			if(preg_match('/([^=]+)=(.*)/', $argv[$i], $match)) {
+				$args[$match[1]] = $match[2];
+			} else {
+				$args[$i] = $argv[$i];
 			}
-			$GLOBALS['argl'] = $args;
-			break;
+		}
+		App::registrySet('arguments', $args);
+		unset($args, $match);
+	}
+	switch(\Aqua\ENVIRONMENT) {
 		case 'MINIMAL':
 			break;
 		case 'DEVELOPMENT':
 			error_reporting(E_ALL);
 			ini_set('display_errors', 1);
 		default:
+			if(App::settings()->get('tasks', false)) {
+				register_shutdown_function(array( 'Aqua\\Schedule\\TaskManager', 'runTasks' ));
+			}
 			Event::bind('ragnarok.init', function() {
 				App::upgrade();
 			});
@@ -129,6 +133,7 @@ try {
 			include __DIR__ . '/Aqua/UI/StyleManager.php';
 			include __DIR__ . '/tags.php';
 	}
+	unset($settings);
 } catch(Exception $exception) {
 	if(!class_exists('Aqua\Log\ErrorLog', false)) {
 		include __DIR__ . '/Aqua/Log/ErrorLog.php';

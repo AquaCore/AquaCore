@@ -1,6 +1,5 @@
 <?php
 use Aqua\Core\App;
-use Aqua\Site\Dispatcher;
 use Aqua\Plugin\Plugin;
 use Aqua\Ragnarok\Server;
 use Aqua\Log\ErrorLog;
@@ -37,10 +36,8 @@ try {
 	} else {
 		App::autoloader('Page')->addDirectory(__DIR__ . '/application/pages');
 		Server::init();
-		$dispatcher = new Dispatcher(include 'application/routing.php', include 'application/permission.php');
-		App::registrySet('ac_dispatcher', $dispatcher);
 		Plugin::init();
-		echo $dispatcher->dispatch(App::user(), App::response());
+		echo App::dispatcher()->dispatch(App::user(), App::response());
 	}
 } catch (Exception $exception) {
 	$error = ErrorLog::logSql($exception);

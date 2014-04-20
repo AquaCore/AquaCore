@@ -33,13 +33,11 @@ try {
 	$setup = new AquaCoreSetup(App::request(), App::response());
 	App::registrySet('setup', $setup);
 	App::autoloader('Page')->addDirectory(__DIR__ . '/application/pages');
-	$perm = new PermissionSet;
-	$perm->set('setup')->allowAll();
+	$permissionSet = new PermissionSet;
+	$permissionSet->set('setup')->allowAll();
 	$router = new Router;
 	$router->add('setup')->map('/*', '/setup/:path');
-	$dispatcher = new Dispatcher($router, $perm);
-	App::registrySet('ac_dispatcher', $dispatcher);
-	echo $dispatcher->dispatch(App::user(), App::response());
+	echo App::dispatcher($router, $permissionSet)->dispatch(App::user(), App::response());
 	$setup->commit();
 } catch(Exception $exception) {
 	$error = ErrorLog::logText($exception);

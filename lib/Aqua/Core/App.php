@@ -8,7 +8,10 @@ use Aqua\Core\Exception\CoreException;
 use Aqua\Http\Request;
 use Aqua\Http\Response;
 use Aqua\Log\ErrorLog;
+use Aqua\Permission\PermissionSet;
 use Aqua\Ragnarok\Server;
+use Aqua\Router\Router;
+use Aqua\Site\Dispatcher;
 use Aqua\Storage\StorageFactory;
 
 class App
@@ -77,15 +80,19 @@ class App
 	 * @var \Aqua\Autoloader\Autoloader
 	 */
 	public static $autoloader;
+	/**
+	 * @var \Aqua\Site\Dispatcher
+	 */
+	public static $dispatcher;
 
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.1.1';
+	const VERSION = '0.1.2';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 101;
+	const VERSION_LONG = 102;
 
 	private function __construct() { }
 
@@ -103,6 +110,8 @@ class App
 			->addDirectory(\Aqua\ROOT . '/lib/PHPMailer');
 		self::$autoloader->map('CharGen')
 			->addDirectory(\Aqua\ROOT . '/lib/CharGen');
+		self::$autoloader->map('Cron')
+			->addDirectory(\Aqua\ROOT . '/lib/Cron');
 		self::$autoloader->register();
 	}
 
@@ -136,7 +145,7 @@ class App
 			 * The path to AquaCore's root directory relative to the web root
 			 * @name \Aqua\DIR
 			 */
-			define('Aqua\DIR' , str_replace('\\', '/', trim($settings->get('base_dir'), '/\\')));
+			define('Aqua\DIR' , str_replace('\\', '/', trim($settings->get('base_dir', ''), '/\\')));
 		}
 		if(!defined('Aqua\WORKING_DIR')) {
 			/**
@@ -157,7 +166,7 @@ class App
 			 * Permission for public files, meant to be viewed by anyone. Defaults to 0644
 			 * @name \Aqua\PUBLIC_FILE_PERMISSION
 			 */
-			define('Aqua\PUBLIC_FILE_PERMISSION', 0774);
+			define('Aqua\PUBLIC_FILE_PERMISSION', 0775);
 		}
 		if(!defined('Aqua\PUBLIC_DIRECTORY_PERMISSION')) {
 			/**
@@ -290,7 +299,7 @@ class App
 						'prefix' => '',
 						'hash' => null,
 						'directory' => \Aqua\ROOT . '/tmp/cache',
-						'gc_probability' => 1
+						'gc_probability' => 0,
 					)
 				),
 			    'account' => array(
@@ -406,6 +415,30 @@ class App
 	}
 
 	/**
+	 * @param string|\Aqua\Router\Router            $router
+	 * @param string|\Aqua\Permission\PermissionSet $permissionSet
+	 * @return \Aqua\Site\Dispatcher
+	 */
+	public static function dispatcher($router = null, $permissionSet = null)
+	{
+		if(!self::$dispatcher) {
+			$appDir = rtrim(\Aqua\ROOT . '/' . \Aqua\WORKING_DIR, '/') . '/application';
+			if(!$router) {
+				$router = include "$appDir/routing.php";
+			} else if(is_string($router)) {
+				$router = include $router;
+			}
+			if(!$permissionSet) {
+				$permissionSet = include "$appDir/permission.php";
+			} else if(is_string($permissionSet)) {
+				$permissionSet = include $permissionSet;
+			}
+			self::$dispatcher = new Dispatcher($router, $permissionSet);
+		}
+		return self::$dispatcher;
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function logo()
@@ -429,12 +462,12 @@ class App
 
 	public static function upgrade()
 	{
-		$oldVersion = file_get_contents(\Aqua\ROOT . '/upgrade/version');
+		$oldVersion = (file_exists(\Aqua\ROOT . '/upgrade/version') ? file_get_contents(\Aqua\ROOT . '/upgrade/version') : '0.1.1');
 		if(version_compare(self::VERSION, $oldVersion, '>')) {
 			foreach(glob(\Aqua\ROOT . '/upgrade/sql/*.sql') as $file) {
 				if(!ac_parse_upgrade_file_name($file, $version, $num, $type) ||
 				   !$type || !version_compare($version, $oldVersion, '>')) { continue; }
-				$query = file_get_contents($file);
+				$query = str_replace('#', \Aqua\TABLE_PREFIX, file_get_contents($file));
 				if($type === 'aquacore') {
 					try { App::connection()->exec($query); } catch(\Exception $e) { }
 				} else {
@@ -470,18 +503,6 @@ class App
 			$old = umask(0);
 			file_put_contents(\Aqua\ROOT . '/upgrade/version', self::VERSION);
 			chmod(\Aqua\ROOT . '/upgrade/version', \Aqua\PRIVATE_FILE_PERMISSION);
-			umask($old);
 		}
-	}
-
-	public static function parseUgradeFileName($file, &$version, &$number = null, &$type = null)
-	{
-		if(!preg_match('/^(\d+\.\d+\.\d+)(?:-([\d\w]+))?(?:\.([^\.]+))?\.\w+/', basename($file), $match)) {
-			return false;
-		}
-		$version = isset($match[1]) ? $match[1] : null;
-		$number  = isset($match[2]) ? $match[2] : null;
-		$type    = isset($match[3]) ? $match[3] : null;
-		return true;
 	}
 }

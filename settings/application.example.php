@@ -9,6 +9,8 @@ return array(
 	'language'           => 'en',
 	'domain'             => '',
 	'base_dir'           => '',
+	'cron_key'           => '',
+	'tasks'              => true,
 	'rewrite_url'        => false,
 	'output_compression' => true,
 	'ragnarok'           => array(

@@ -1,6 +1,8 @@
 <?php
 namespace Aqua\Http;
 
+use Aqua\Core\App;
+
 class Request
 {
 	/**
@@ -165,27 +167,38 @@ class Request
 	{
 		$request           = new self;
 		$request->method   = strtoupper(getenv('REQUEST_METHOD'));
-		$request->uri      = Uri::parseCurrentRequest();
 		$request->cookies  = $_COOKIE;
 		$request->data     = $_POST;
-		do {
-			foreach(array('CLIENT_IP',
-			              'FORWARDED_FOR',
-			              'X_FORWARDED_FOR',
-			              'FORWARDED_FOR_IP',
-			              'FORWARDED',
-			              'VIA') as $header) {
-				if(!($ipAddress = getenv("HTTP_$header")) &&
-				   !($ipAddress = getenv($header))) {
-					continue;
-				}
-				$request->ip       = inet_pton($ipAddress);
-				$request->ipString = $ipAddress;
-				break 2;
+		if(php_sapi_name() === 'cli') {
+			$request->uri = new Uri(App::registryGet('arguments', array()));
+			if($sshClient = getenv('SSL_CLIENT')) {
+				$request->ipString = strstr($sshClient, ' ', true);
+				$request->ip       = inet_pton($request->ipString);
+			} else {
+				$request->ip       = inet_pton('127.0.0.1');
+				$request->ipString = '127.0.0.1';
 			}
-			$request->ip       = inet_pton(getenv('REMOTE_ADDR'));
-			$request->ipString = getenv('REMOTE_ADDR');
-		} while(0);
+		} else {
+			$request->uri = new Uri($_GET);
+			do {
+				foreach(array('CLIENT_IP',
+				              'FORWARDED_FOR',
+				              'X_FORWARDED_FOR',
+				              'FORWARDED_FOR_IP',
+				              'FORWARDED',
+				              'VIA') as $header) {
+					if(!($ipAddress = getenv("HTTP_$header")) &&
+					   !($ipAddress = getenv($header))) {
+						continue;
+					}
+					$request->ip       = inet_pton($ipAddress);
+					$request->ipString = $ipAddress;
+					break 2;
+				}
+				$request->ip       = inet_pton(getenv('REMOTE_ADDR'));
+				$request->ipString = getenv('REMOTE_ADDR');
+			} while(0);
+		}
 		if(function_exists('getallheaders')) {
 			$request->headers = getallheaders();
 		} else {

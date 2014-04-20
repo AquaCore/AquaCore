@@ -16,7 +16,7 @@ use PHPMailer\PHPMailer;
 use PHPMailer\PHPMailerException;
 
 class Setup
-	extends Page
+extends Page
 {
 	public $dbh;
 	/**
@@ -565,7 +565,7 @@ class Setup
 			->type('date')
 			->placeholder('YYYY-MM-DD')
 			->required()
-			->value(htmlspecialchars($settings->get('birthday', '')))
+			->value($settings->exists('birthday') ? date('Y-m-d', $settings->get('birthday')) : null)
 			->setLabel(__setup('acc-birthday-label'));
 		$frm->validate(function(Form $frm) {
 			if(!($date = \DateTime::createFromFormat('Y-m-d', $frm->request->getString('birthday'))) || $date->getTimestamp() > time()) {
@@ -626,16 +626,6 @@ class Setup
 			$this->response->setHeader('Content-Type', 'application/json');
 			$progress = intval($progress);
 			$response = array();
-			if($step !== 'start' && ($settings = App::cache()->fetch('setup_settings_full'))) {
-				App::settings()->merge($settings);
-				defined('Aqua\TABLE_PREFIX') or define('Aqua\TABLE_PREFIX', App::settings()->get('db')->get('prefix', ''));
-				defined('Aqua\DIR') or define('Aqua\DIR' , str_replace('\\', '/', trim(App::settings()->get('base_dir'), '/\\')));
-				defined('Aqua\PUBLIC_FILE_PERMISSION') or define('Aqua\PUBLIC_FILE_PERMISSION', 0644);
-				defined('Aqua\PUBLIC_DIRECTORY_PERMISSION') or define('Aqua\PUBLIC_DIRECTORY_PERMISSION', 0755);
-				defined('Aqua\PRIVATE_FILE_PERMISSION') or define('Aqua\PRIVATE_FILE_PERMISSION', 0600);
-				defined('Aqua\PRIVATE_DIRECTORY_PERMISSION') or define('Aqua\PRIVATE_DIRECTORY_PERMISSION', 0700);
-				defined('Aqua\BLANK') or define('Aqua\BLANK', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
-			}
 			switch($step) {
 				case 'start':
 					App::cache()->delete('setup_settings_full');
@@ -820,6 +810,10 @@ class Setup
 					$response = array( 'progress' => array( 1, 1 ) );
 					break;
 				case 'write-config':
+					if(!file_exists(\Aqua\ROOT . '/upgrade/version')) {
+						file_put_contents(\Aqua\ROOT . '/upgrade/version', App::VERSION);
+					}
+					App::settings()->set('cron_key', bin2hex(secure_random_bytes(32)));
 					App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 					App::cache()->delete('setup_settings_full');
 					$this->setup->clear();

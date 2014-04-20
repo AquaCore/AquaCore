@@ -97,7 +97,7 @@ class Template
 				}
 			}
 			reset(static::$directories);
-			if(!$this->file || !is_readable($this->file)) {
+			if(!$this->file) {
 				continue;
 			}
 			ob_start();

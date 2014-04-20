@@ -172,14 +172,9 @@ try {
 					'url'   => ac_build_url(array( 'path' => array( 'settings' ) ))
 				));
 		}
-		$dispatcher = new Dispatcher(
-			include __DIR__ . '/application/routing.php',
-			include __DIR__ . '/application/permission.php'
-		);
-		App::registrySet('ac_admin_menu', $menu);
-		App::registrySet('ac_dispatcher', $dispatcher);
+		App::registrySet('adminMenu', $menu);
 		Plugin::init();
-		echo $dispatcher->dispatch(App::user(), App::response());
+		echo App::dispatcher()->dispatch(App::user(), App::response());
 	}
 } catch(Exception $exception) {
 	$error = ErrorLog::logSql($exception);
