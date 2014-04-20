@@ -503,6 +503,7 @@ class App
 			$old = umask(0);
 			file_put_contents(\Aqua\ROOT . '/upgrade/version', self::VERSION);
 			chmod(\Aqua\ROOT . '/upgrade/version', \Aqua\PRIVATE_FILE_PERMISSION);
+			umask($old);
 		}
 	}
 }
