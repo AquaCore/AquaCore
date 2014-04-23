@@ -29,9 +29,9 @@ function ac_router_set_active_account($key)
 		return false;
 	}
 	if(App::settings()->get('ragnarok')->get('acc_username_url', false)) {
-		App::$activeRagnarokAccount = App::$activeServer->get($key, 'username');
+		App::$activeRagnarokAccount = App::$activeServer->login->get($key, 'username');
 	} else {
-		App::$activeRagnarokAccount = App::$activeServer->get($key, 'id');
+		App::$activeRagnarokAccount = App::$activeServer->login->get($key, 'id');
 	}
 	return (bool)App::$activeRagnarokAccount;
 }
