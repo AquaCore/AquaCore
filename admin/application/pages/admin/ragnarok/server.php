@@ -10,6 +10,7 @@ use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
+use Aqua\UI\Search\Input;
 use Aqua\UI\Template;
 use Aqua\UI\Theme;
 
@@ -27,11 +28,9 @@ extends Page
 
 	public static $categoriesPerPage = 20;
 	public static $itemsPerPage = 20;
-	public static $charactersPerPage = 20;
+	public static $charactersPerPage = 15;
 	public static $guildsPerPage = 20;
 	public static $logsPerPage = 20;
-
-	const TIME_PATTERN = '/^(((2[0-4])|([01][0-9]))([\.:][0-5][0-9]){1,2}|((0[0-9])|(1[012]))([\.:][0-5][0-9]){1,2} ?(PM|AM))/i';
 
 	public function run()
 	{
@@ -958,15 +957,13 @@ extends Page
 				->required()
 				->setLabel(__('ragnarok-charmap', 'schedule-name'));
 			$scheduleForm->input('starttime')
-				->type('text')
+				->type('time')
 				->required()
-				->attr('pattern', self::TIME_PATTERN)
 				->placeholder('HH:MM:SS')
 				->setLabel(__('ragnarok-charmap', 'schedule-starttime'));
 			$scheduleForm->input('endtime')
-				->type('text')
+				->type('time')
 				->required()
-				->attr('pattern', self::TIME_PATTERN)
 				->placeholder('HH:MM:SS')
 				->setLabel(__('ragnarok-charmap', 'schedule-endtime'));
 			$scheduleForm->select('startday')
@@ -1073,9 +1070,8 @@ extends Page
 				->setLabel(__('ragnarok-charmap', 'schedule-castles'))
 				->setDescription(__('ragnarok-charmap', 'schedule-castles-desc'));
 			$frm->input('starttime')
-				->type('text')
+				->type('time')
 				->required()
-				->attr('pattern', self::TIME_PATTERN)
 				->value($schedule['start_time'])
 				->placeholder('HH:MM:SS')
 				->setLabel(__('ragnarok-charmap', 'schedule-starttime'));
@@ -1093,9 +1089,8 @@ extends Page
 				->selected($schedule['start_day'])
 			    ->setLabel(__('ragnarok-charmap', 'schedule-startday'));
 			$frm->input('endtime')
-				->type('text')
+				->type('time')
 				->required()
-				->attr('pattern', self::TIME_PATTERN)
 				->value($schedule['end_time'])
 				->placeholder('HH:MM:SS')
 				->setLabel(__('ragnarok-charmap', 'schedule-endtime'));
@@ -1135,6 +1130,10 @@ extends Page
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'edit-schedule',
 				                                                htmlspecialchars($schedule['name']));
+				$this->theme->set('return', ac_build_url(array(
+					'path' => array( 'r', $this->server->key, $this->charmap->key ),
+				    'action' => 'woe'
+				)));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('schedule', $schedule)
@@ -1216,9 +1215,6 @@ extends Page
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'shop-categories');
-				$this->theme->set('return', ac_build_url(array(
-					'path' => array( 'r', $this->server->key, $this->charmap->key )
-				)));
 				$search = $this->charmap->shopCategorySearch()
 					->calcRows(true)
 					->order(array( 'order' => 'ASC' ))
@@ -1479,23 +1475,55 @@ extends Page
 	public function char_action()
 	{
 		try {
+			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'characters');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$where = array();
-			if($x = $this->request->getString('n')) {
-				$where['name'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' );
-			}
-			if($x = $this->request->getString('m')) {
-				$where['map'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' );
-			}
-			if(($x = $this->request->getArray('class', null)) && !empty($x)) {
-				array_unshift($x, Search::SEARCH_IN);
-				$where['class'] = $x;
-			}
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+					'id'    => 'id',
+				    'name'  => 'name',
+				    'class' => 'class',
+				    'acc'   => 'account_id',
+				    'blv'   => 'base_level',
+				    'jlv'   => 'job_level',
+				    'zeny'  => 'zeny',
+				    'map'   => 'last_map'
+				))
+				->defaultOrder('id');
+			$frm->input('id')
+			    ->setColumn('id')
+			    ->searchType(Input::SEARCH_EXACT)
+			    ->setLabel(__('ragnarok', 'id'))
+			    ->type('number');
+			$frm->input('name')
+			    ->setColumn('name')
+			    ->searchType(Input::SEARCH_LIKE_BOTH)
+			    ->setLabel(__('ragnarok', 'name'))
+			    ->type('text');
+			$frm->input('map')
+			    ->setColumn('map')
+			    ->searchType(Input::SEARCH_LIKE_RIGHT)
+			    ->setLabel(__('ragnarok', 'map'))
+			    ->type('text');
+			$frm->range('blvl')
+			    ->setColumn('base_level')
+				->setLabel(__('ragnarok', 'base-level'))
+			    ->type('number')
+			    ->attr('min', '0');
+			$frm->range('jlvl')
+			    ->setColumn('job_level')
+				->setLabel(__('ragnarok', 'job-level'))
+			    ->type('number')
+			    ->attr('min', '0');
 			$search = $this->charmap->charSearch()
 				->calcRows(true)
-				->where($where)
-				->limit(($currentPage - 1) * self::$charactersPerPage, self::$charactersPerPage)
-				->query();
+				->limit(($currentPage - 1) * self::$charactersPerPage, self::$charactersPerPage);
+			$frm->apply($search);
+			$search->query();
+			if($search->count()) {
+				$accounts = array_unique($search->getColumn('account_id'));
+				array_unshift($accounts, Search::SEARCH_IN);
+				$this->server->login->search()->where(array( 'id' => $accounts ))->query();
+			}
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
@@ -1503,6 +1531,7 @@ extends Page
 			$tpl->set('characters', $search->results)
 				->set('character_count', $search->rowsFound)
 				->set('paginator', $pgn)
+				->set('search', $frm)
 				->set('page', $this);
 			echo $tpl->render('admin/ragnarok/char/search');
 		} catch(\Exception $exception) {
@@ -1525,7 +1554,7 @@ extends Page
 			$tpl = new Template;
 			$tpl->set('char', $char)
 			    ->set('page', $this);
-			echo $tpl->render('admin/ragnarok/view-char');
+			echo $tpl->render('admin/ragnarok/char/view');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

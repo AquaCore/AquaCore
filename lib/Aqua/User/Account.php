@@ -101,6 +101,8 @@ class Account
 	const CACHE_LATEST_ACCOUNTS           = 5;
 	const CACHE_REGISTRATION_WEEKS        = 2;
 
+	const OPT_ADMIN_NOTIFY_COMMENT_REPORT = 1;
+
 	/**
 	 * @return string
 	 */
@@ -646,7 +648,7 @@ class Account
 				'unban_date'        => 'UNIX_TIMESTAMP(u._unban_date)',
 				'tos'               => 'u._agreed_tos',
 			))->whereOptions(array(
-				'id'                => 'u._id',
+				'id'                => 'u.id',
 				'username'          => 'u._username',
 				'display_name'      => 'u._display_name',
 				'email'             => 'u._email',

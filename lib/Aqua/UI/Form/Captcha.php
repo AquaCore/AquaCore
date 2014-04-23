@@ -3,6 +3,7 @@ namespace Aqua\UI\Form;
 
 use Aqua\Core\App;
 use Aqua\Http\Request;
+use Aqua\UI\AbstractForm;
 use Aqua\UI\Form;
 
 class Captcha
@@ -145,6 +146,7 @@ implements FieldInterface
 </div>
 <script type=\"text/javascript\">
 (function() {
+	\"use strict\";
 	var elements = document.getElementsByClassName(\"ac-captcha-refresh\"),
 		clickFunction = function (e) {
 		var img, i, xmlhttp,
@@ -187,13 +189,14 @@ implements FieldInterface
 	}
 
 	/**
-	 * @param \Aqua\Http\Request $request
-	 * @param                    $message
+	 * @param \Aqua\UI\AbstractForm $form
+	 * @param                       $message
 	 * @return int
 	 */
-	public function validate(Request $request, &$message = null)
+	public function validate(AbstractForm $form, &$message = null)
 	{
-		if(($input = $request->getString('ac_captcha_response', null)) === null || ($key = $request->getString('ac_captcha_key', null)) === null) {
+		if(($input = $form->getString('ac_captcha_response', null)) === null ||
+		   ($key = $form->getString('ac_captcha_key', null)) === null) {
 			return Form::VALIDATION_INCOMPLETE;
 		}
 		switch(App::captcha()->validate($key, App::request()->ip, $input)) {

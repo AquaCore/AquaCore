@@ -488,6 +488,10 @@ button.ac-delete-button {
 	select,
 	textarea,
 	input[type=text],
+	input[type=number],
+	input[type=date],
+	input[type=datetime],
+	input[type=time],
 	input[type=file],
 	input[type=color],
 	input[type=url],
@@ -499,6 +503,16 @@ button.ac-delete-button {
 		resize: vertical;
 		height: 8.4em;
 		max-height: 15em;
+	}
+	.ac-search-range-max.ac-search-range-1, .ac-search-range-min.ac-search-range-1 {
+		float: left;
+		width: 85px;
+	}
+	.ac-search-range-min.ac-search-range-1 {
+		margin-right: 10px;
+	}
+	.ac-search-range-type {
+		margin-bottom: 5px;
 	}
 }
 .content {

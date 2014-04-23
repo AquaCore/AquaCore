@@ -640,3 +640,23 @@ function ac_parse_upgrade_file_name($file, &$version, &$number = null, &$type = 
 	$type    = isset($match[3]) ? $match[3] : null;
 	return true;
 }
+
+function ac_normalize_hex_color($color)
+{
+	if(!preg_match('/#?([a-f0-9]{3,6})/i', $color, $match)) {
+		return false;
+	}
+	$hex = $match[1];
+	switch(strlen($hex)) {
+		case 3:
+			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+			break;
+		case 4:
+			$hex .= $hex[2] . $hex[3];
+			break;
+		case 5:
+			$hex .= '0';
+			break;
+	}
+	return $hex;
+}

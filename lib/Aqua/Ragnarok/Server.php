@@ -83,7 +83,7 @@ class Server
 	{
 		if($name) {
 			$name = strtolower($name);
-		} else if($this->defaultServer) {
+		} else if($this->defaultServer && isset($this->charmap[$this->defaultServer])) {
 			$name = $this->defaultServer;
 		} else {
 			$name = key($this->charmap) ?: '';

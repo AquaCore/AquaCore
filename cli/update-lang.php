@@ -14,6 +14,8 @@ define('Aqua\PROFILE',     'MAIN');
 
 include __DIR__ . '/../lib/bootstrap.php';
 
+$argl = \Aqua\Core\App::registryGet('arguments', array());
+
 if(!array_key_exists('code', $argl)) {
 	$code = 'en';
 } else {

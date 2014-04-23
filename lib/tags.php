@@ -6,11 +6,17 @@ StyleManager::register('jquery-ui')
 	->href(\Aqua\URL . '/assets/scripts/jquery-ui/jquery-ui.css');
 StyleManager::register('bbcode')
 	->href(\Aqua\URL . '/assets/styles/bbcode.css');
+StyleManager::register('codemirror')
+	->href(\Aqua\URL . '/assets/scripts/codemirror/codemirror.css');
 
 ScriptManager::register('number-format')
 	->src(\Aqua\URL . '/assets/scripts/number-format.js');
 ScriptManager::register('sprintf')
 	->src(\Aqua\URL . '/assets/scripts/sprintf/sprintf.min.js');
+// CodeMirror
+ScriptManager::register('codemirror')
+	->src(\Aqua\URL . '/assets/scripts/codemirror/codemirror.min.js')
+	->stylesheet('codemirror');
 // HighSoft
 ScriptManager::register('highsoft.highchart')
 	->src(\Aqua\URL . '/assets/scripts/highsoft/highcharts.js');
@@ -87,3 +93,6 @@ ScriptManager::register('aquacore.cart')
 ScriptManager::register('aquacore.rating')
 	->src(\Aqua\URL . '/assets/scripts/aquacore/rating.js')
 	->dependsOn(array( 'aquacore.aquacore', 'aquacore.build-url' ));
+ScriptManager::register('aquacore.content')
+	->src(\Aqua\URL . '/assets/scripts/aquacore/content.js')
+	->dependsOn(array( 'codemirror', 'jquery' ));

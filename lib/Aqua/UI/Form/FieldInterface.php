@@ -1,7 +1,7 @@
 <?php
 namespace Aqua\UI\Form;
 
-use Aqua\Http\Request;
+use Aqua\UI\AbstractForm;
 
 interface FieldInterface
 {
@@ -15,5 +15,5 @@ interface FieldInterface
 	public function setError($error);
 	public function getError();
 	public function setDefaultErrorMessage($message, $type = 1);
-	public function validate(Request $request, &$errorMessage = null);
+	public function validate(AbstractForm $form, &$errorMessage = null);
 }

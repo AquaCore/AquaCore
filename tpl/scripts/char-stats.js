@@ -2,8 +2,8 @@
 	$("#char-stats").highcharts({
 		chart: {
 			polar: true,
-			height: 230,
-			width: 230,
+			height: AquaCore.settings.statsSize || 230,
+			width: AquaCore.settings.statsSize || 230,
 			backgroundColor: "rgba(255, 255, 255, 0)"
 		},
 		credits: {

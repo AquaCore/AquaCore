@@ -84,3 +84,57 @@ $mid-red-1: #bb2f46;
 .ac-guest {
 	font-style: italic;
 }
+.ac-char-hp, .ac-char-sp {
+	position: relative;
+	width: 75px;
+	margin: 0 auto;
+	text-align: center;
+	height: 4px;
+	border: 1px solid;
+	overflow: hidden;
+	.ac-char-fill {
+		z-index: 1;
+		position: absolute;
+		height: 100%;
+		top: 0;
+		background-color: #e9838b;
+	}
+}
+.ac-char-hp {
+	background-color: #facdd2;
+	color: #c25372;
+	margin-bottom: 2px;
+	.ac-char-fill {
+		background-color: #e9838b;
+	}
+}
+.ac-char-sp {
+	background-color: #c9e2fa;
+	color: #4852cf;
+	margin-bottom: 5px;
+	.ac-char-fill {
+		background-color: #6a83e9;
+	}
+}
+.ac-view-char {
+	display: table;
+	position: relative;
+	width: 100%;
+	margin-bottom: 10px;
+	.wrapper {
+		display: table-row;
+		width: 100%;
+		.ac-char-info, .ac-char-stats {
+			display: table-cell;
+			position: relative;
+			vertical-align: top;
+			padding: 0;
+		}
+		.ac-char-stats {
+			padding-left: 10px;
+		}
+	}
+	.ac-table {
+		margin: 0;
+	}
+}

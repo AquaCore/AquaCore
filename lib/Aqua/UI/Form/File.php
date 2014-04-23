@@ -2,6 +2,7 @@
 namespace Aqua\UI\Form;
 
 use Aqua\Http\Request;
+use Aqua\UI\AbstractForm;
 use Aqua\UI\Form;
 use Aqua\UI\Tag;
 
@@ -170,7 +171,7 @@ implements FieldInterface
 		return $this;
 	}
 
-	public function validate(Request $request, &$message = null)
+	public function validate(AbstractForm $form, &$message = null)
 	{
 		if(!$this->getAttr('name')) {
 			return Form::VALIDATION_SUCCESS;

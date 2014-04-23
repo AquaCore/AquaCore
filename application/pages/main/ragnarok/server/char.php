@@ -29,7 +29,7 @@ extends Page
 	public function run()
 	{
 		$this->charmap = &App::$activeCharMapServer;
-		$this->char = App::$activeRagnarokCharacter;
+		$this->char = &App::$activeRagnarokCharacter;
 		if(!$this->charmap || !$this->char) {
 			$this->error(404);
 			return;
@@ -48,25 +48,15 @@ extends Page
 			'title' => __('ragnarok', 'inventory'),
 			'url' => "{$base_url}inventory"
 		));
-		switch($this->char->class) {
-			case 5:
-			case 10:
-			case 18:
-			case 4011:
-			case 4019:
-			case 4028:
-			case 4033:
-			case 4041:
-			case 4058:
-			case 4064:
-			case 4071:
-			case 4078:
-			case 4100:
-			case 4107:
-				$menu->append('cart', array(
-					'title' => __('ragnarok', 'cart'),
-					'url'   => "{$base_url}cart"
-				));
+		if($this->charmap->getOption('show-cart', '') ||
+		   in_array($this->char->class, array(
+			   5, 10, 18, 4011, 4019, 4028, 4033, 4041,
+			   4058, 4064, 4071, 4078, 4100, 4107
+		   ))) {
+			$menu->append('cart', array(
+				'title' => __('ragnarok', 'cart'),
+				'url'   => "{$base_url}cart"
+			));
 		}
 		$this->theme->set('menu', $menu);
 	}
@@ -134,34 +124,30 @@ extends Page
 
 	public function cart_action()
 	{
-		switch($this->char->class) {
-			case 5:
-			case 10:
-			case 18:
-			case 4011:
-			case 4019:
-			case 4028:
-			case 4033:
-			case 4041:
-			case 4058:
-			case 4064:
-			case 4071:
-			case 4078:
-			case 4100:
-			case 4107:
-				break;
-			default:
-				$this->error(404);
-				return;
+		if(!$this->charmap->getOption('show-cart', '') &&
+		   !in_array($this->char->class, array(
+			   5, 10, 18, 4011, 4019, 4028, 4033, 4041,
+			   4058, 4064, 4071, 4078, 4100, 4107
+		   ))) {
+			$this->error(404);
+			return;
 		}
 		$this->title = __('ragnarok', 'x-cart', htmlspecialchars($this->char->name));
 		$this->theme->head->section = __('ragnarok', 'cart');
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+
+			));
+			$frm->input('name')
+				->setColumn('name')
+				->setLabel(__('ragnarok', 'name'))
+				->type('text');
 			$search = $this->charmap->cartSearch()
 				->calcRows(true)
 				->where(array( 'char_id' => $this->char->id ))
-				->limit(($current_page - 1) * self::$itemsPerPage, self::$itemsPerPage)
+				->limit(($currentPage - 1) * self::$itemsPerPage, self::$itemsPerPage)
 				->order(array( 'name' => 'ASC' ));
 			if(($x = $this->request->uri->getString('s', false))) {
 				$search->where(array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' ));
@@ -185,7 +171,7 @@ extends Page
 				$search->where(array( 'intentify' => 1 ));
 			}
 			$search->query();
-			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$itemsPerPage), $current_page, 'page');
+			$pgn = new Pagination(App::request()->uri, ceil($search->rowsFound / self::$itemsPerPage), $currentPage, 'page');
 			$tpl = new Template;
 			$tpl->set('cart_size', $search->rowsFound)
 				->set('cart', $search->results)

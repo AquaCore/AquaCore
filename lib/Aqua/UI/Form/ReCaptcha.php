@@ -4,6 +4,7 @@ namespace Aqua\UI\Form;
 use Aqua\Captcha\ReCaptcha as _ReCaptcha;
 use Aqua\Core\App;
 use Aqua\Http\Request;
+use Aqua\UI\AbstractForm;
 use Aqua\UI\Form;
 
 class ReCaptcha
@@ -165,13 +166,13 @@ implements FieldInterface
 	}
 
 	/**
-	 * @param \Aqua\Http\Request $request
-	 * @param                    $errorMessage
+	 * @param \Aqua\UI\AbstractForm $form
+	 * @param                       $errorMessage
 	 * @return int
 	 */
-	public function validate(Request $request, &$errorMessage = null)
+	public function validate(AbstractForm $form, &$errorMessage = null)
 	{
-		switch($this->recaptcha->verify($request)) {
+		switch($this->recaptcha->verify($form->request)) {
 			case _ReCaptcha::RECAPTCHA_CORRECT_ANSWER:
 				return Form::VALIDATION_SUCCESS;
 			case _ReCaptcha::RECAPTCHA_INCORRECT_SOL:

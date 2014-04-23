@@ -102,12 +102,12 @@ extends Page
 				if(!($color = $this->request->getString('color'))) {
 					$color = null;
 				} else {
-					$color = hexdec(substr($color, 1));
+					$color = hexdec(ac_normalize_hex_color($color));
 				}
 				if(!($background = $this->request->getString('background'))) {
 					$background = null;
 				} else {
-					$background = hexdec(substr($background, 1));
+					$background = hexdec(ac_normalize_hex_color($background));
 				}
 				$role = R::create(
 					trim($this->request->getString('name')),
@@ -204,14 +204,14 @@ extends Page
 				}
 				if(!$frm->field('color')->getWarning()) {
 					if($color = $this->request->getString('color')) {
-						$update['color'] = hexdec(substr($color, 1));
+						$update['color'] = hexdec(ac_normalize_hex_color($color));
 					} else {
 						$update['color'] = null;
 					}
 				}
 				if(!$frm->field('background')->getWarning()) {
 					if($background = $this->request->getString('background')) {
-						$update['background'] = hexdec(substr($background, 1));
+						$update['background'] = hexdec(ac_normalize_hex_color($background));
 					} else {
 						$update['background'] = null;
 					}

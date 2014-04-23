@@ -10,6 +10,7 @@ use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
+use Aqua\UI\Search\Input;
 use Aqua\UI\Template;
 use Aqua\Ragnarok\Server;
 use Aqua\UI\Theme;
@@ -863,38 +864,78 @@ extends Page
 	{
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-server', 'accounts');
-			$where       = array( 'id' => array(Search::SEARCH_HIGHER, Server\Login::MIN_ACCOUNT_ID - 1) );
-			if($x = $this->request->uri->getString('u')) {
-				$where['username'] = array(Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%');
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+					'id'    => 'id',
+			        'name'  => 'username',
+			        'email' => 'email',
+			        'user'  => 'user_id',
+			        'group' => 'group_id',
+			        'state' => 'state',
+			        'ip'    => 'last_ip_address',
+			        'login' => 'last_login'
+				))
+				->defaultOrder('id');
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'account-id'))
+				->type('number')
+				->attr('min', Server\Login::MIN_ACCOUNT_ID);
+			$frm->input('name')
+				->setColumn('username')
+				->setLabel(__('ragnarok', 'username'))
+				->type('text');
+			$frm->input('email')
+				->setColumn('email')
+				->setLabel(__('ragnarok', 'email'))
+				->type('text');
+			$frm->input('ip')
+			    ->setColumn('last_ip_address')
+				->searchType(Input::SEARCH_LIKE_RIGHT)
+			    ->setLabel(__('ragnarok', 'last-ip'))
+				->type('text');
+			$frm->range('group')
+				->setColumn('group_id')
+				->setLabel(__('ragnarok', 'group'))
+				->type('number');
+			$frm->range('login')
+				->setColumn('last_login')
+				->setLabel(__('ragnarok', 'last-login'))
+				->type('datetime')
+				->attr('placeholder', 'YYY-MM-DD HH:MM:SS');
+			$states = array();
+			foreach(array( 0, 3, 5, 7, 10, 11, 13, 14 ) as $id) {
+				$states[$id] = __('ragnarok-state', $id);
 			}
-			if($x = $this->request->uri->getString('e')) {
-				$where['email'] = array(Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%');
-			}
-			if($x = $this->request->uri->getString('ip')) {
-				$where['last_ip_address'] = array(Search::SEARCH_LIKE, addcslashes($x, '%_\\') . '%');
-			}
-			if(($x = $this->request->uri->getInt('g', false)) !== false) {
-				$where['group_id'] = intval($x);
-			}
-			if(($x = $this->request->uri->getArray('s', false)) && !empty($x)) {
-				$x = array_map('intval', $x);
-				array_unshift($x, Search::SEARCH_IN);
-				$where['state'] = $x;
-			}
-			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$search       = $this->server->login->search()
+			$frm->select('state')
+				->setColumn('state')
+				->setLabel(__('ragnarok', 'state'))
+				->multiple()
+				->value($states);
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $this->server->login->search()
 				->calcRows()
-				->where($where)
-				->order(array('id' => 'ASC'))
-				->limit(($current_page - 1) * self::$accountsPerPage, self::$accountsPerPage)
-				->query();
-			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::$accountsPerPage),
-			                               $current_page);
-			$tpl          = new Template;
+				->limit(($currentPage - 1) * self::$accountsPerPage, self::$accountsPerPage);
+			$frm->apply($search);
+			if(!isset($search->where['id'])) {
+				$search->where(array( 'id' => array( Search::SEARCH_DIFFERENT | Search::SEARCH_LOWER,
+				                                     Server\Login::MIN_ACCOUNT_ID ) ));
+			}
+			$search->query();
+			if($search->count()) {
+				$users = array_unique($search->getColumn('user_id'));
+				array_unshift($users, Search::SEARCH_IN);
+				\Aqua\User\Account::search()->where(array( 'id' => $users ))->query();
+			}
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$accountsPerPage),
+			                      $currentPage);
+			$tpl = new Template;
 			$tpl->set('accounts', $search->results)
 			    ->set('account_count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/account/search');
 		} catch(\Exception $exception) {

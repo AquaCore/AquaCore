@@ -2,6 +2,7 @@
 namespace Aqua\UI\Form;
 
 use Aqua\Http\Request;
+use Aqua\UI\AbstractForm;
 use Aqua\UI\Form;
 use Aqua\UI\Tag;
 
@@ -36,6 +37,8 @@ implements FieldInterface
 	const VALIDATION_EMPTY_VALUE    = 4;
 	const VALIDATION_PATTERN        = 5;
 
+	const TIME_PATTERN = '(((2[0-4])|([01][0-9]))([\.:][0-5][0-9]){1,2}|((0[0-9])|(1[012]))([\.:][0-5][0-9]){1,2} ?(PM|AM))$';
+
 	/**
 	 * @param string|null $name
 	 */
@@ -56,7 +59,7 @@ implements FieldInterface
 	public function type($type)
 	{
 		$this->attributes['type'] = $type;
-
+		$this->_checkExtendedTypes();
 		return $this;
 	}
 
@@ -91,6 +94,7 @@ implements FieldInterface
 	public function required()
 	{
 		$this->bool('required', true);
+		$this->_checkExtendedTypes();
 
 		return $this;
 	}
@@ -184,18 +188,18 @@ implements FieldInterface
 	}
 
 	/**
-	 * @param \Aqua\Http\Request $request
-	 * @param                    $errorMessage
+	 * @param \Aqua\UI\AbstractForm $form
+	 * @param                       $errorMessage
 	 * @return int
 	 */
-	public function validate(Request $request, &$errorMessage = null)
+	public function validate(AbstractForm $form, &$errorMessage = null)
 	{
 		$type = strtolower($this->attributes['type']);
 		if(empty($this->attributes['name']) || $type === 'submit' || $type === 'image' || $type === 'button' || $type === 'reset') {
 			return Form::VALIDATION_SUCCESS;
 		}
 		$error = null;
-		$value = $request->getString($this->getAttr('name'), null);
+		$value = $form->getString($this->getAttr('name'), null);
 		if($value === null) {
 			return Form::VALIDATION_INCOMPLETE;
 		} else if($value === '') {
@@ -217,40 +221,22 @@ implements FieldInterface
 					if(!preg_match('/#?([a-f0-9]{3,6})/i', $value, $match)) {
 						$this->error = self::VALIDATION_INVALID_TYPE;
 						$error       = __('form', 'invalid-color');
-						break;
 					}
-					$hex = $match[1];
-					switch(strlen($hex)) {
-						case 3:
-							$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
-							break;
-						case 4:
-							$hex .= $hex[2] . $hex[3];
-							break;
-						case 5:
-							$hex .= '0';
-							break;
-					}
-					$request->data[$this->attributes['name']] = "#$hex";
+					break;
+				case 'time':
+					$this->_validateTime($value, $this->error, $error);
 					break;
 				case 'date':
-					do {
-						try {
-							$date  = \DateTime::createFromFormat('Y-m-d', $value);
-							$error = \DateTime::getLastErrors();
-							if($date && empty($error['warning_count'])) {
-								$timestamp = strtotime('midnight', $date->getTimestamp());
-								break;
-							}
-						} catch(\Exception $e) { }
+					$this->_validateDate($value, $this->error, $error);
+					break;
+				case 'datetime':
+					$date = explode(' ', $value);
+					if(!count($date) === 2) {
 						$this->error = self::VALIDATION_INVALID_TYPE;
 						$error       = __('form', 'invalid-date');
-						break 2;
-					} while(0);
-					if(($this->getAttr('max') && $timestamp > strtotime($this->getAttr('max'))) ||
-					   ($this->getAttr('min') && $timestamp < strtotime($this->getAttr('min')))) {
-						$this->error = self::VALIDATION_INVALID_RANGE;
-						$error       = __('form', 'invalid-date-range');
+					} else {
+						$this->_validateDate($date[0], $this->error, $error) or
+						$this->_validateTime($date[1], $this->error, $error);
 					}
 					break;
 				case 'email':
@@ -310,5 +296,63 @@ implements FieldInterface
 		} else {
 			$this->setWarning($this->errorMessage[$this->error]);
 		}
+	}
+
+	protected function _checkExtendedTypes()
+	{
+		switch($this->getAttr('type')) {
+			case 'time':
+			case 'datetime':
+				$pattern = self::TIME_PATTERN;
+				if(!$this->getBool('required')) {
+					$pattern.= '|^$';
+				}
+				if($this->getAttr('type') === 'datetime') {
+					$pattern = '(?:\d{3,}-(?:1[0-2]|0[1-9])-(?:3[01]|[0-2][1-9]))) ' . $pattern;
+				}
+				$this->attr('pattern', "/^$pattern/i");
+				break;
+		}
+	}
+
+	protected function _validateDate($value, &$errorId, &$errorMessage)
+	{
+		do {
+			try {
+				$date  = \DateTime::createFromFormat('Y-m-d', $value);
+				$error = \DateTime::getLastErrors();
+				if($date && empty($error['warning_count'])) {
+					$timestamp = strtotime('midnight', $date->getTimestamp());
+					break;
+				}
+			} catch(\Exception $e) { }
+			$errorId      = self::VALIDATION_INVALID_TYPE;
+			$errorMessage = __('form', 'invalid-date');
+			return false;
+		} while(0);
+		if(($this->getAttr('max') && $timestamp > strtotime($this->getAttr('max'))) ||
+		   ($this->getAttr('min') && $timestamp < strtotime($this->getAttr('min')))) {
+			$errorId      = self::VALIDATION_INVALID_RANGE;
+			$errorMessage = __('form', 'invalid-date-range');
+			return true;
+		}
+		return true;
+	}
+
+	protected function _validateTime($value, &$errorId, &$errorMessage)
+	{
+		$timestamp = strtotime("2000-01-01 $value");
+		if(!$timestamp) {
+			$errorId      = self::VALIDATION_INVALID_TYPE;
+			$errorMessage = __('form', 'invalid-date');
+			return false;
+		}
+		if((($min = $this->getAttr('min')) && $timestamp < strtotime("2000-01-01 $min")) ||
+		   (($max = $this->getAttr('max')) && $timestamp > strtotime("2000-01-01 $max"))) {
+			$errorId      = self::VALIDATION_INVALID_RANGE;
+			$errorMessage = __('form', 'invalid-date-range');
+			return false;
+		}
+		return true;
 	}
 }

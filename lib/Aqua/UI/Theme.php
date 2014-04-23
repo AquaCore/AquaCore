@@ -61,8 +61,7 @@ extends Template
 		$this->footer->enqueueScript(ScriptManager::script('aquacore.aquacore'));
 		$this->head->bindStylesheet('aquacore.stylesheet', App::$styleSheet);
 		$thm = & $this;
-		$this->head->attach(
-			'render', function () use (&$thm) {
+		$this->head->attach('render', function () use (&$thm) {
 				foreach($thm->head->script as $key => $script) {
 					unset($thm->footer->script[$key]);
 					if($script instanceof ScriptManager) {
@@ -74,8 +73,7 @@ extends Template
 				foreach($thm->head->link as $key => $link) {
 					unset($thm->footer->link[$key]);
 				}
-			}
-		);
+			});
 		$this->set('head', $this->head);
 		$this->set('footer', $this->footer);
 		$this->bind('body_class', $this->bodyClass);

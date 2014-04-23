@@ -3,6 +3,7 @@ namespace Aqua\UI\Form;
 
 use Aqua\Core\App;
 use Aqua\Http\Request;
+use Aqua\UI\AbstractForm;
 use Aqua\UI\Form;
 use Aqua\UI\Tag;
 
@@ -288,14 +289,14 @@ implements FieldInterface
 	}
 
 	/**
-	 * @param \Aqua\Http\Request $request
-	 * @param                    $message
+	 * @param \Aqua\UI\AbstractForm $form
+	 * @param                       $message
 	 * @return int
 	 */
-	public function validate(Request $request, &$message = null)
+	public function validate(AbstractForm $form, &$message = null)
 	{
-		if(($data = $request->getString($this->name, '')) === '' &&
-		   ($data = $request->getArray($this->name, null)) === null) {
+		if(($data = $form->getString($this->name, '')) === '' &&
+		   ($data = $form->getArray($this->name, null)) === null) {
 			return ($this->required ? Form::VALIDATION_INCOMPLETE : Form::VALIDATION_SUCCESS);
 		}
 		if(!is_array($data)) {
