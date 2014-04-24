@@ -3,26 +3,47 @@
  * @var $log       \Aqua\Ragnarok\Server\Logs\ChatLog[]
  * @var $count     int
  * @var $paginator \Aqua\UI\Pagination
+ * @var $search    \Aqua\UI\Search
  * @var $page      \Page\Admin\Ragnarok\Server
  */
 
 use Aqua\Core\App;
+use Aqua\UI\Sidebar;
 
+$page->theme->template = 'sidebar-right';
 $datetimeFormat = App::settings()->get('datetime_format');
+$sidebar = new Sidebar;
+foreach($search->content as $key => $field) {
+	$content = $field->render();
+	if($desc = $field->getDescription()) {
+		$content.= "<br/><small>$desc</small>";
+	}
+	$sidebar->append($key, array(array(
+		'title' => $field->getLabel(),
+		'content' => $content
+	)));
+}
+$sidebar->append('submit', array('class' => 'ac-sidebar-action', array(
+	'content' => '<input class="ac-sidebar-submit" type="submit" value="' . __('application', 'search') . '">'
+)));
+$sidebar->wrapper($search->buildTag());
+$page->theme->set('sidebar', $sidebar);
 ?>
 <table class="ac-table">
 	<thead>
 	<tr class="alt">
-		<td><?php echo __('ragnarok', 'id') ?></td>
-		<td><?php echo __('ragnarok', 'date') ?></td>
-		<td><?php echo __('ragnarok', 'type') ?></td>
-		<td><?php echo __('ragnarok', 'type-id') ?></td>
-		<td><?php echo __('ragnarok', 'account') ?></td>
-		<td><?php echo __('ragnarok', 'character') ?></td>
-		<td><?php echo __('ragnarok', 'receiver') ?></td>
-		<td><?php echo __('ragnarok', 'map') ?></td>
-		<td><?php echo __('ragnarok', 'x-coord') ?></td>
-		<td><?php echo __('ragnarok', 'y-coord') ?></td>
+		<?php echo $search->renderHeader(array(
+				'id'   => __('ragnarok', 'id'),
+				'date' => __('ragnarok', 'date'),
+				'type' => __('ragnarok', 'type'),
+				'tid'  => __('ragnarok', 'type-id'),
+				'acc'  => __('ragnarok', 'account'),
+				'char' => __('ragnarok', 'character'),
+				'dst'  => __('ragnarok', 'receiver'),
+				'map'  => __('ragnarok', 'map'),
+				'x'    => __('ragnarok', 'x-coord'),
+				'y'    => __('ragnarok', 'y-coord'),
+			)) ?>
 	</tr>
 	</thead>
 	<tbody>
@@ -34,15 +55,13 @@ $datetimeFormat = App::settings()->get('datetime_format');
 			<td><?php echo $chat->date($datetimeFormat) ?></td>
 			<td><?php echo $chat->type() ?></td>
 			<td><?php echo $chat->typeId ?: '--' ?></td>
-			<td><a href="<?php echo ac_build_url(array(
-					'path' => array( 'r', $page->server->key ),
+			<td><a href="<?php echo $chat->charmap->server->url(array(
 			        'action' => 'viewaccount',
 			        'arguments' => array( $chat->srcAccountId )
 				)) ?>"><?php echo htmlspecialchars($chat->account()->username) ?></a></td>
 			<?php if($char = $chat->source()) : ?>
-				<td><a href="<?php echo ac_build_url(array(
-					'path' => array( 'r', $char->charmap->server->key, $char->charmap->key ),
-				    'action' => 'viewchar',
+				<td><a href="<?php echo $char->charmap->url(array(
+					'action' => 'viewchar',
 				    'arguments' => array( $char->id )
 				)) ?>"><?php echo htmlspecialchars($char->name) ?></a></td>
 			<?php else : ?>

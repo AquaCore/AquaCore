@@ -26,8 +26,6 @@ $sidebar->append('submit', array('class' => 'ac-sidebar-action', array(
 )));
 $sidebar->wrapper($search->buildTag());
 $page->theme->set('sidebar', $sidebar);
-$currentOrder   = $search->getOrder(true);
-$currentSorting = $search->getSorting();
 ?>
 <table class="ac-table" style="width: 100%">
 	<colgroup>
@@ -69,13 +67,11 @@ $currentSorting = $search->getSorting();
 			<td></td>
 			<td><?php echo $char->id ?></td>
 			<td><img src="<?php echo ac_char_head($char); ?>"></td>
-			<td><a href="<?php echo ac_build_url(array(
-						'path' => array( 'r', $char->charmap->server->key, $char->charmap->key ),
+			<td><a href="<?php echo $char->charmap->url(array(
 			            'action' => 'viewchar',
 			            'arguments' => array( $char->id )
 					)) ?>"><?php echo htmlspecialchars($char->name) ?></a></td>
-			<td><a href="<?php echo ac_build_url(array(
-						'path' => array( 'r', $char->charmap->server->key ),
+			<td><a href="<?php echo $char->charmap->server->url(array(
 			            'action' => 'viewaccount',
 			            'arguments' => array( $char->accountId )
 					)) ?>"><?php echo htmlspecialchars($char->account()->username) ?></a></td>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-pick-type" key="T">Trade</word>
+    <word namespace="ragnarok-pick-type" key="V">Vending</word>
+    <word namespace="ragnarok-pick-type" key="M">Monster</word>
+    <word namespace="ragnarok-pick-type" key="P">Player</word>
+    <word namespace="ragnarok-pick-type" key="L">Loot</word>
+    <word namespace="ragnarok-pick-type" key="S">NPC Shop</word>
+    <word namespace="ragnarok-pick-type" key="N">NPC Script</word>
+    <word namespace="ragnarok-pick-type" key="C">Item</word>
+    <word namespace="ragnarok-pick-type" key="O">Produce</word>
+    <word namespace="ragnarok-pick-type" key="D">Stolen</word>
+    <word namespace="ragnarok-pick-type" key="U">MVP</word>
+    <word namespace="ragnarok-pick-type" key="A">Administrator</word>
+    <word namespace="ragnarok-pick-type" key="G">Guild Storage</word>
+    <word namespace="ragnarok-pick-type" key="R">Storage</word>
+    <word namespace="ragnarok-pick-type" key="E">Email</word>
+    <word namespace="ragnarok-pick-type" key="B">Buying Store</word>
+    <word namespace="ragnarok-pick-type" key="I">Auction</word>
+    <word namespace="ragnarok-pick-type" key="K">Bank</word>
+    <word namespace="ragnarok-pick-type" key="X">Other</word>
+  </wordgroup>
+</languageimport>

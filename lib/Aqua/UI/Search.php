@@ -99,7 +99,17 @@ extends AbstractForm
 		foreach($this->content as $field) {
 			if($field instanceof SearchFieldInterface && !$field->getWarning() &&
 			   ($column = $field->getColumn()) && ($where = $field->parse($this))) {
-				$search->where(array( $column => $where ));
+				if(is_array($column)) {
+					$x = array();
+					foreach($column as $col) {
+						$x[] = array( $col => $where );
+						$x[] = 'OR';
+					}
+					array_pop($x);
+					$search->where($x);
+				} else {
+					$search->where(array( $column => $where ));
+				}
 			}
 		}
 		return $this;

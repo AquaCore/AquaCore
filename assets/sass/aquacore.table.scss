@@ -68,6 +68,7 @@ $assetsPath: "../" !default;
 	thead tr,
 	tfoot tr {
 		td, th {
+			position: relative;
 			height: 1em;
 			padding: 5px 10px;
 			border-top: 1px solid white;
@@ -87,7 +88,7 @@ $assetsPath: "../" !default;
 				a {
 					display: block;
 					width: auto;
-					height: 100%;
+					height: auto;
 					text-align: center;
 					padding: 5px 10px;
 					color: $mid-gray-1;

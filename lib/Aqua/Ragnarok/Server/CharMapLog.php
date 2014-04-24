@@ -2,7 +2,6 @@
 namespace Aqua\Ragnarok\Server;
 
 use Aqua\Core\App;
-use Aqua\Event\Event;
 use Aqua\Ragnarok\Account;
 use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Character;
@@ -158,7 +157,7 @@ class CharMapLog
 		$columns = array(
 			'id'        => 'pl.id',
 			'char_id'   => 'pl.char_id',
-			'type'      => '(pl.type + 0)',
+			'type'      => 'pl.type',
 			'item_id'   => 'pl.nameid',
 			'amount'    => 'pl.amount',
 			'refine'    => 'pl.refine',
@@ -204,7 +203,7 @@ class CharMapLog
 			'date'      => 'UNIX_TIMESTAMP(z.`time`)',
 			'char_id'   => 'z.char_id',
 			'src_id'    => 'z.src_id',
-			'type'      => '(z.`type` + 0)',
+			'type'      => 'z.`type`',
 			'amount'    => 'z.amount',
 			'map'       => 'z.map'
 		);
@@ -443,7 +442,6 @@ class CharMapLog
 		$log->id        = (int)$data['id'];
 		$log->date      = (int)$data['date'];
 		$log->charId    = (int)$data['char_id'];
-		$log->type      = (int)$data['type'];
 		$log->itemId    = (int)$data['item_id'];
 		$log->amount    = (int)$data['amount'];
 		$log->refine    = (int)$data['refine'];
@@ -451,6 +449,7 @@ class CharMapLog
 		$log->cards[1]  = (int)$data['card1'];
 		$log->cards[2]  = (int)$data['card2'];
 		$log->cards[3]  = (int)$data['card3'];
+		$log->type      = $data['type'];
 		$log->uniqueId  = $data['unique_id'];
 		$log->map       = $data['map'];
 
@@ -469,8 +468,8 @@ class CharMapLog
 		$log->date      = (int)$data['date'];
 		$log->charId    = (int)$data['char_id'];
 		$log->srcId     = (int)$data['src_id'];
-		$log->type      = (int)$data['type'];
 		$log->amount    = (int)$data['amount'];
+		$log->type      = $data['type'];
 		$log->map       = $data['map'];
 
 		return $log;

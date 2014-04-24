@@ -2,6 +2,7 @@
 namespace Aqua\Ragnarok\Server\Logs;
 
 class ZenyLog
+extends AbstractPickLog
 {
 	/**
 	 * Char/Map server
@@ -34,20 +35,6 @@ class ZenyLog
 	 */
 	public $srcId;
 	/**
-	 * Zeny transfer type
-	 *
-	 * @var int
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_MONSTER
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_TRADE
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_VENDING
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_SHOP
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_NPC
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_ADMIN
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_EMAIL
-	 * @see \Aqua\Ragnarok\Server\Log\ZenyLog::TYPE_BUYING_STORE
-	 */
-	public $type;
-	/**
 	 * Amount of zeny transferred
 	 *
 	 * @var int
@@ -60,15 +47,6 @@ class ZenyLog
 	 */
 	public $map;
 
-	const TYPE_MONSTER      = 1;
-	const TYPE_TRADE        = 2;
-	const TYPE_VENDING      = 3;
-	const TYPE_SHOP         = 4;
-	const TYPE_NPC          = 5;
-	const TYPE_ADMIN        = 6;
-	const TYPE_EMAIL        = 7;
-	const TYPE_BUYING_STORE = 8;
-
 	public function date($format)
 	{
 		return strftime($format, $this->date);
@@ -76,7 +54,7 @@ class ZenyLog
 
 	public function type()
 	{
-		return __('ragnarok-zeny-log-type', $this->type);
+		return __('ragnarok-pick-type', $this->type);
 	}
 
 	public function target()
@@ -86,6 +64,15 @@ class ZenyLog
 
 	public function source()
 	{
-		return $this->charmap->character($this->srcId);
+		switch($this->sourceType()) {
+			case self::SOURCE_MOB:
+				return $this->charmap->mob($this->srcId);
+			case self::SOURCE_ITEM:
+				return $this->charmap->item($this->srcId);
+			case self::SOURCE_PC:
+				return $this->charmap->character($this->srcId);
+			default:
+				return null;
+		}
 	}
 }

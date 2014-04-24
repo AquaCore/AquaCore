@@ -4,6 +4,7 @@ namespace Aqua\Ragnarok\Server\Logs;
 use Aqua\Ragnarok\Item;
 
 class PickLog
+extends AbstractPickLog
 {
 	/**
 	 * @var \Aqua\Ragnarok\Server\CharMap
@@ -33,27 +34,7 @@ class PickLog
 	 * @var int
 	 */
 	public $amount;
-	/**
-	 * Transfer type
-	 *
-	 * @var int
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_MONSTER
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_PLAYER
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_LOOT
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_TRADE
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_VENDING
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_SHOP
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_STORAGE
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_GSTORAGE
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_MAIL
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_BUYING_STORE
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_PROCUDE
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_AUCTION
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_OTHER
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_STEAL
-	 * @see \Aqua\Ragnarok\Server\Log\PickLog::TYPE_PRIZE
-	 */
-	public $type;
+
 	/**
 	 * Item's unique ID, if any
 	 *
@@ -86,22 +67,6 @@ class PickLog
 	public $map;
 	protected $_item;
 
-	const TYPE_MONSTER      = 1;
-	const TYPE_PLAYER       = 2;
-	const TYPE_LOOT         = 3;
-	const TYPE_TRADE        = 4;
-	const TYPE_VENDING      = 5;
-	const TYPE_SHOP         = 6;
-	const TYPE_STORAGE      = 7;
-	const TYPE_GSTORAGE     = 8;
-	const TYPE_MAIL         = 9;
-	const TYPE_BUYING_STORE = 10;
-	const TYPE_PRODUCE      = 11;
-	const TYPE_AUCTION      = 12;
-	const TYPE_OTHER        = 13;
-	const TYPE_STEAL        = 14;
-	const TYPE_PRIZE        = 15;
-
 	/**
 	 * Format the transfer date.
 	 *
@@ -120,7 +85,7 @@ class PickLog
 	 */
 	public function type()
 	{
-		return __('ragnarok-pick-log-type', $this->type);
+		return __('ragnarok-pick-type', $this->type);
 	}
 
 	public function item()
@@ -147,6 +112,10 @@ class PickLog
 
 	public function character()
 	{
-		return $this->charmap->character($this->charId);
+		if($this->type === 'M' || $this->type === 'L') {
+			return $this->charmap->mob($this->charId);
+		} else {
+			return $this->charmap->character($this->charId);
+		}
 	}
 }

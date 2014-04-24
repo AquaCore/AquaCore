@@ -89,7 +89,7 @@
     <word namespace="ragnarok" key="iro-name">iRO Name</word>
     <word namespace="ragnarok" key="item">Item</word>
     <word namespace="ragnarok" key="item-db">Item Database</word>
-    <word namespace="ragnarok" key="item-id">Item Id</word>
+    <word namespace="ragnarok" key="item-id">Item ID</word>
     <word namespace="ragnarok" key="item-not-found">Item not found.</word>
     <word namespace="ragnarok" key="job-exp">J. Experience</word>
     <word namespace="ragnarok" key="job-level">J. Level</word>
@@ -268,5 +268,13 @@
     <word namespace="ragnarok" key="parameters">Parameters</word>
     <word namespace="ragnarok" key="type-id">Type ID</word>
     <word namespace="ragnarok" key="receiver">Receiver</word>
+    <word namespace="ragnarok" key="father">Father</word>
+    <word namespace="ragnarok" key="mother">Mother</word>
+    <word namespace="ragnarok" key="partner">Partner</word>
+    <word namespace="ragnarok" key="child">Child</word>
+    <word namespace="ragnarok" key="last-point">Last Position</word>
+    <word namespace="ragnarok" key="save-point">Save Point</word>
+    <word namespace="ragnarok" key="target">Target</word>
+    <word namespace="ragnarok" key="source">Source</word>
   </wordgroup>
 </languageimport>

@@ -3,25 +3,45 @@
  * @var $log       \Aqua\Ragnarok\Server\Logs\AtcommandLog[]
  * @var $count     int
  * @var $paginator \Aqua\UI\Pagination
+ * @var $search    \Aqua\UI\Search
  * @var $page      \Page\Admin\Ragnarok\Server
  */
 
 use Aqua\Core\App;
+use Aqua\UI\Sidebar;
 
+$page->theme->template = 'sidebar-right';
 $datetimeFormat = App::settings()->get('datetime_format');
-
+$sidebar = new Sidebar;
+foreach($search->content as $key => $field) {
+	$content = $field->render();
+	if($desc = $field->getDescription()) {
+		$content.= "<br/><small>$desc</small>";
+	}
+	$sidebar->append($key, array(array(
+		'title' => $field->getLabel(),
+		'content' => $content
+	)));
+}
+$sidebar->append('submit', array('class' => 'ac-sidebar-action', array(
+	'content' => '<input class="ac-sidebar-submit" type="submit" value="' . __('application', 'search') . '">'
+)));
+$sidebar->wrapper($search->buildTag());
+$page->theme->set('sidebar', $sidebar);
 ?>
 <table class="ac-table">
 	<thead>
 	<tr class="alt">
-		<td><?php echo __('ragnarok', 'id') ?></td>
-		<td><?php echo __('ragnarok', 'date') ?></td>
-		<td><?php echo __('ragnarok', 'map') ?></td>
-		<td><?php echo __('ragnarok', 'account') ?></td>
-		<td><?php echo __('ragnarok', 'character-id') ?></td>
-		<td><?php echo __('ragnarok', 'character') ?></td>
-		<td><?php echo __('ragnarok', 'command') ?></td>
-		<td><?php echo __('ragnarok', 'parameters') ?></td>
+		<?php echo $search->renderHeader(array(
+				'id'    => __('ragnarok', 'id'),
+				'date'  => __('ragnarok', 'date'),
+				'map'   => __('ragnarok', 'map'),
+				'acc'   => __('ragnarok', 'account'),
+				'char'  => __('ragnarok', 'character-id'),
+				'name'  => __('ragnarok', 'character'),
+				'cmd'   => __('ragnarok', 'command'),
+				'param' => __('ragnarok', 'parameters'),
+			)) ?>
 	</tr>
 	</thead>
 	<tbody>

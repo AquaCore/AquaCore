@@ -3,25 +3,43 @@
  * @var $log       \Aqua\Ragnarok\Server\Logs\PickLog[]
  * @var $count     int
  * @var $paginator \Aqua\UI\Pagination
+ * @var $search    \Aqua\UI\Search
  * @var $page      \Page\Admin\Ragnarok\Server
  */
 
 use Aqua\Core\App;
+use Aqua\UI\Sidebar;
 
+$page->theme->template = 'sidebar-right';
 $page->theme->footer->enqueueScript('cardbmp')
 	->type('text/javascript')
 	->src(ac_build_url(array(
 		'base_dir' => \Aqua\DIR . '/tpl/scripts',
 		'script'   => 'cardbmp.js'
 	)));
-
 $baseUrl = $page->charmap->url(array(
-	'base_dir' => \Aqua\DIR,
-	'path' => array( 'item' ),
-	'action' => 'view',
-	'arguments' => array( '' )
-));
+		'base_dir' => \Aqua\DIR,
+		'path' => array( 'item' ),
+		'action' => 'view',
+		'arguments' => array( '' )
+	));
 $datetimeFormat = App::settings()->get('datetime_format');
+$sidebar = new Sidebar;
+foreach($search->content as $key => $field) {
+	$content = $field->render();
+	if($desc = $field->getDescription()) {
+		$content.= "<br/><small>$desc</small>";
+	}
+	$sidebar->append($key, array(array(
+		'title' => $field->getLabel(),
+		'content' => $content
+	)));
+}
+$sidebar->append('submit', array('class' => 'ac-sidebar-action', array(
+	'content' => '<input class="ac-sidebar-submit" type="submit" value="' . __('application', 'search') . '">'
+)));
+$sidebar->wrapper($search->buildTag());
+$page->theme->set('sidebar', $sidebar);
 ?>
 <table class="ac-table">
 	<colgroup>
@@ -41,17 +59,19 @@ $datetimeFormat = App::settings()->get('datetime_format');
 	</colgroup>
 	<thead>
 	<tr class="alt">
-		<td><?php echo __('ragnarok', 'id') ?></td>
-		<td></td>
-		<td><?php echo __('ragnarok', 'date') ?></td>
-		<td><?php echo __('ragnarok', 'map') ?></td>
-		<td><?php echo __('ragnarok', 'character') ?></td>
-		<td><?php echo __('ragnarok', 'type') ?></td>
-		<td><?php echo __('ragnarok', 'item-id') ?></td>
-		<td><?php echo __('ragnarok', 'item') ?></td>
-		<td><?php echo __('ragnarok', 'amount') ?></td>
-		<td><?php echo __('ragnarok', 'unique-id') ?></td>
-		<td colspan="3"><?php echo __('ragnarok', 'cards') ?></td>
+		<?php echo $search->renderHeader(array(
+				'id'     => __('ragnarok', 'id'),
+				'icon'   => '',
+				'date'   => __('ragnarok', 'date'),
+				'map'    => __('ragnarok', 'map'),
+				'char'   => __('ragnarok', 'character'),
+				'type'   => __('ragnarok', 'type'),
+				'item'   => __('ragnarok', 'item-id'),
+				'name'   => __('ragnarok', 'item'),
+				'amount' => __('ragnarok', 'amount'),
+				'uniqid' => __('ragnarok', 'unique-id'),
+				'cards'  => array( __('ragnarok', 'cards'), 3),
+			)) ?>
 	</tr>
 	</thead>
 	<tbody>
@@ -62,13 +82,19 @@ $datetimeFormat = App::settings()->get('datetime_format');
 			<td><?php echo $pick->id ?></td>
 			<td><?php echo $pick->date($datetimeFormat) ?></td>
 			<td><?php echo htmlspecialchars($pick->map) ?: '--' ?></td>
-			<?php if($char = $pick->character()) : ?>
+			<?php if($char = $pick->character()) : if($char instanceof \Aqua\Ragnarok\Character) : ?>
 				<td><a href="<?php echo ac_build_url(array(
 					'path' => array( 'r', $char->charmap->server->key, $char->charmap->key ),
 				    'action' => 'viewchar',
 				    'arguments' => array( $char->id )
-				)) ?>"><?php echo htmlspecialchars($pick->character()->name) ?></a></td>
-			<?php else : ?>
+				)) ?>"><?php echo htmlspecialchars($char->name) ?></a></td>
+			<?php elseif($char instanceof \Aqua\Ragnarok\Mob) : ?>
+				<td><a href="<?php echo $char->charmap->url(array(
+					'path' => array( 'mob' ),
+				    'action' => 'view',
+				    'arguments' => array( $char->id )
+				)) ?>"><?php echo htmlspecialchars($char->iName) ?></a></td>
+			<?php endif; else : ?>
 				<td><?php echo __('ragnarok', 'deleted', $pick->charId) ?></td>
 			<?php endif; ?>
 			<td><?php echo $pick->type() ?></td>

@@ -5,6 +5,9 @@ use Aqua\Core\App;
 use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
 use Aqua\Ragnarok\ItemData;
+use Aqua\Ragnarok\Server\Logs\ChatLog;
+use Aqua\Ragnarok\Server\Logs\PickLog;
+use Aqua\Ragnarok\Server\Logs\ZenyLog;
 use Aqua\Site\Page;
 use Aqua\SQL\Search;
 use Aqua\UI\Form;
@@ -1130,10 +1133,7 @@ extends Page
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'edit-schedule',
 				                                                htmlspecialchars($schedule['name']));
-				$this->theme->set('return', ac_build_url(array(
-					'path' => array( 'r', $this->server->key, $this->charmap->key ),
-				    'action' => 'woe'
-				)));
+				$this->theme->set('return', $this->charmap->url(array( 'action' => 'woe' )));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('schedule', $schedule)
@@ -1269,10 +1269,7 @@ extends Page
 					$this->error(204);
 					return;
 				}
-				$this->theme->set('return', ac_build_url(array(
-					'path' => array( 'r', $this->server->key, $this->charmap->key ),
-				    'action' => 'category'
-				)));
+				$this->theme->set('return', $this->charmap->url(array( 'action' => 'category' )));
 				return;
 			}
 			$error = false;
@@ -1436,10 +1433,7 @@ extends Page
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('ragnarok-charmap', 'edit-shop', htmlspecialchars($item->jpName));
-				$this->theme->set('return', ac_build_url(array(
-					'path' => array( 'r', $this->server->key, $this->charmap->key ),
-				    'action' => 'shop'
-				)));
+				$this->theme->set('return', $this->charmap->url(array( 'action' => 'shop' )));
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 					->set('item', $item)
@@ -1492,8 +1486,9 @@ extends Page
 			$frm->input('id')
 			    ->setColumn('id')
 			    ->searchType(Input::SEARCH_EXACT)
-			    ->setLabel(__('ragnarok', 'id'))
-			    ->type('number');
+			    ->setLabel(__('ragnarok', 'character-id'))
+			    ->type('number')
+				->attr('min', 0);
 			$frm->input('name')
 			    ->setColumn('name')
 			    ->searchType(Input::SEARCH_LIKE_BOTH)
@@ -1508,12 +1503,12 @@ extends Page
 			    ->setColumn('base_level')
 				->setLabel(__('ragnarok', 'base-level'))
 			    ->type('number')
-			    ->attr('min', '0');
+			    ->attr('min', 1);
 			$frm->range('jlvl')
 			    ->setColumn('job_level')
 				->setLabel(__('ragnarok', 'job-level'))
 			    ->type('number')
-			    ->attr('min', '0');
+			    ->attr('min', 1);
 			$search = $this->charmap->charSearch()
 				->calcRows(true)
 				->limit(($currentPage - 1) * self::$charactersPerPage, self::$charactersPerPage);
@@ -1568,11 +1563,7 @@ extends Page
 				$this->error(404);
 				return;
 			}
-			$this->theme->set('return', ac_build_url(array(
-				'path' => array( 'r', $this->server->key, $this->charmap->key ),
-				'action' => 'viewchar',
-			    'arguments' => array( $char->id )
-			)));
+			$this->theme->set('return', $this->charmap->url(array( 'action' => 'viewchar', 'argumets' => array( $id) )));
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
@@ -1587,31 +1578,8 @@ extends Page
 				$this->error(404);
 				return;
 			}
-			$this->theme->set('return', ac_build_url(array(
-				'path' => array( 'r', $this->server->key, $this->charmap->key ),
-				'action' => 'viewchar',
-				'arguments' => array( $char->id )
-			)));
+			$this->theme->set('return', $this->charmap->url(array( 'action' => 'viewchar', 'argumets' => array( $id) )));
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-		} catch(\Exception $exception) {
-			ErrorLog::logSql($exception);
-			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
-		}
-	}
-
-	public function editchar_action($id = null)
-	{
-		try {
-			if(!$id || !($char = $this->charmap->character($id, 'id'))) {
-				$this->error(404);
-				return;
-			}
-			$this->theme->set('return', ac_build_url(array(
-				'path' => array( 'r', $this->server->key, $this->charmap->key ),
-				'action' => 'viewchar',
-				'arguments' => array( $char->id )
-			)));
-
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
@@ -1662,10 +1630,7 @@ extends Page
 				$this->error(404);
 				return;
 			}
-			$this->theme->set('return', ac_build_url(array(
-				'path' => array( 'r', $this->server->key, $this->charmap->key ),
-				'action' => 'guild',
-			)));
+			$this->theme->set('return', $this->charmap->url(array( 'action' => 'guild' )));
 			$tpl = new Template;
 			$tpl->set('guild', $guild)
 				->set('page', $this);
@@ -1686,22 +1651,110 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'zeny-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+					'id'   => 'id',
+			        'date' => 'date',
+			        'type' => 'type',
+			        'map'  => 'map',
+			        'tgt'  => 'char_id',
+			        'src'  => 'src_id',
+			        'zeny' => 'amount'
+				))
+				->defaultOrder('id');
+			$frm->input('char')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'character-id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->range('zeny')
+				->setColumn('amount')
+				->setLabel(__('ragnarok', 'amount'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('date')
+				->setColumn('date')
+				->setLabel(__('ragnarok', 'date'))
+				->type('datetime')
+				->attr('placeholder', 'YYYY-MM-DD HH:II:SS');
+			$types = array();
+			foreach(range(1, 8) as $id) {
+				$types[$id] = __('ragnarok-zeny-log-type', $id);
+			}
+			$frm->select('type')
+			    ->setColumn('type')
+			    ->setLabel(__('ragnarok', 'type'))
+			    ->multiple()
+			    ->value($types);
 			$search = $this->charmap->log->searchZenyLog()
 				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
-				->query();
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$frm->apply($search);
+			if(!$frm->field('char')->getWarning() && ($where = $frm->field('char')->parse($frm))) {
+				$search->where(array(
+					'char_id' => $where,
+				    'OR', array(
+					    'src_id' => $where,
+				        'type'   => array( Search::SEARCH_IN, 2, 3, 6, 7, 8 )
+				    )));
+			}
+			$search->query();
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
-			if($search->rowsFound) {
-				$characters = array_unique(array_merge($search->getColumn('char_id'), $search->getColumn('src_id')));
-				array_unshift($characters, Search::SEARCH_IN);
-				$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
+			if($search->count()) {
+				$characters = array();
+				$monsters   = array();
+				$items      = array();
+				foreach($search as $log) {
+					$charId = $log->charId;
+					$srcId  = $log->srcId;
+					$characters[] = $charId;
+					if(!array_key_exists($charId, $this->charmap->characters)) {
+						$this->charmap->characters[$charId] = null;
+					}
+					switch($search->sourceType()) {
+						case ZenyLog::SOURCE_MOB:
+							$monsters[] = $srcId;
+							if(!array_key_exists($srcId, $this->charmap->mobDb)) {
+								$this->charmap->mobDb[$srcId] = null;
+							}
+							break;
+						case ZenyLog::SOURCE_PC:
+						$characters[] = $srcId;
+						if(!array_key_exists($srcId, $this->charmap->characters)) {
+							$this->charmap->characters[$srcId] = null;
+						}
+						break;
+						case ZenyLog::SOURCE_ITEM:
+						$items[] = $srcId;
+						if(!array_key_exists($srcId, $this->charmap->itemDb)) {
+							$this->charmap->itemDb[$srcId] = null;
+						}
+						break;
+					}
+				};
+				if(count($characters)) {
+					$characters = array_unique($characters);
+					array_unshift($characters, Search::SEARCH_IN);
+					$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
+				}
+				if(count($monsters)) {
+					$monsters = array_unique($monsters);
+					array_unshift($monsters, Search::SEARCH_IN);
+					$this->charmap->mobSearch()->where(array( 'id' => $monsters ))->query();
+				}
+				if(count($items)) {
+					$items = array_unique($items);
+					array_unshift($items, Search::SEARCH_IN);
+					$this->charmap->itemSearch()->where(array( 'id' => $items ))->query();
+				}
 			}
 			$tpl = new Template;
 			$tpl->set('log', $search->results)
 			    ->set('count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/zeny-log');
 		} catch(\Exception $exception) {
@@ -1715,11 +1768,43 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'shop-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+					'id'     => 'id',
+			        'date'   => 'date',
+			        'acc'    => 'account_id',
+			        'amount' => 'amount',
+			        'total'  => 'total'
+				))
+				->defaultOrder('id');
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('acc')
+				->setColumn('acount_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'account-id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->range('sub')
+				->setColumn('total')
+				->setLabel(__('ragnarok', 'subtotal'))
+				->type('number')
+				->attr('min', 1);
+			$frm->range('date')
+				->setColumn('date')
+				->setLabel(__('ragnarok', 'date'))
+				->type('datetime')
+				->attr('placeholder', 'YYY-MM-DD HH:II:SS');
 			$search = $this->charmap->log->searchCashShopLog()
 				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
-				->query();
-			if($search->rowsFound !== 0) {
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$frm->apply($search);
+			$search->query();
+			if($search->count()) {
 				$accounts = $search->getColumn('account_id');
 				foreach($accounts as $id) {
 					if(!array_key_exists($id, $this->charmap->server->login->accounts)) {
@@ -1736,6 +1821,7 @@ extends Page
 			$tpl->set('log', $search->results)
 				->set('count', $search->rowsFound)
 				->set('paginator', $pgn)
+				->set('search', $frm)
 				->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/shop-log');
 		} catch(\Exception $exception) {
@@ -1752,6 +1838,7 @@ extends Page
 				return;
 			}
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'view-shop-log');
+			$this->theme->set('return', $this->charmap->url(array( 'action' => 'shoplog' )));
 			$tpl = new Template;
 			$tpl->set('log', $log)
 				->set('page', $this);
@@ -1767,17 +1854,64 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'atcommand-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+					'id'   => 'id',
+				    'date' => 'date',
+				    'map' => 'map',
+				    'acc'  => 'account_id',
+				    'char' => 'char_id',
+				    'name' => 'char_name',
+				    'cmd'  => 'command',
+				))
+				->defaultOrder('id');
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('acc')
+				->setColumn('account_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'account-id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('char')
+				->setColumn(array( 'char_name', 'char_id' ))
+				->setLabel(__('ragnarok', 'character'));
+			$frm->input('cmd')
+				->setColumn('command')
+				->searchType(Input::SEARCH_LIKE_RIGHT)
+				->setLabel(__('ragnarok', 'command'));
+			$frm->range('date')
+				->setColumn('date')
+				->setLabel(__('ragnarok', 'date'))
+				->type('datetime')
+				->attr('placeholder', 'YYY-MM-DD HH:II:SS');
 			$search = $this->charmap->log->searchAtcommandLog()
 				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
-				->query();
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$frm->apply($search);
+			$search->query();
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
+			if($search->count()) {
+				$accounts = $search->getColumn('account_id');
+				foreach($accounts as $id) {
+					if(!array_key_exists($id, $this->charmap->server->login->accounts)) {
+						$this->charmap->server->login->accounts[$id] = null;
+					}
+				}
+				array_unshift($accounts, Search::SEARCH_IN);
+				$this->charmap->server->login->search(array( 'id' => $accounts ))->query();
+			}
 			$tpl = new Template;
 			$tpl->set('log', $search->results)
 			    ->set('count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/atcommand-log');
 		} catch(\Exception $exception) {
@@ -1791,22 +1925,111 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'pick-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+					'id'    => 'id',
+			        'date'   => 'date',
+			        'map'    => 'map',
+			        'char'   => 'char_id',
+			        'type'   => 'type',
+			        'item'   => 'item_id',
+			        'amount' => 'amount',
+			        'uniqid' => 'unique_id'
+				))
+				->defaultOrder('id');
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('char')
+			    ->setColumn('char_id')
+			    ->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'character-id'))
+			    ->type('number')
+			    ->attr('min', 1);
+			$frm->input('iid')
+				->setColumn('item_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'item-id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('uid')
+				->setColumn('unique_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'unique-id'))
+				->type('text');
+			$frm->input('cards')
+				->setColumn(array( 'card0', 'card1', 'card2', 'card3' ))
+				->setLabel(__('ragnarok', 'cards'))
+				->setDescription(__('ragnarok-charmap', 'search-card-desc'))
+				->attr('pattern', '/^(\d+,\s*)*\d+,?\s*$|^$/')
+				->setParser(function($input, $frm, $value) {
+					$cards = preg_split('/\s*,\s*/', $value);
+					foreach($cards as &$card) {
+						if(ctype_digit($card)) {
+							$card = (int)$card;
+						} else {
+							$card = null;
+						}
+					}
+					$cards = array_unique(array_filter($cards));
+					if(empty($cards)) {
+						return false;
+					} else if(count($cards) === 1) {
+						return current($cards);
+					} else {
+						array_unshift($cards, Search::SEARCH_IN);
+						return $cards;
+					}
+				});
+			$frm->range('date')
+				->setColumn('date')
+				->setLabel(__('ragnarok', 'date'))
+				->type('datetime')
+				->attr('placeholder', 'YYYY-MM-DD HH:II:SS');
 			$search = $this->charmap->log->searchPickLog()
 				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
-				->query();
-			if($search->rowsFound !== 0) {
-				$characters = $search->getColumn('char_id');
-				foreach($characters as $id) {
-					if(!array_key_exists($id, $this->charmap->characters)) {
-						$this->charmap->characters[$id] = null;
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$frm->apply($search);
+			$search->query();
+			if($search->count()) {
+				$characters = array();
+				$monsters   = array();
+				$items      = array();
+				foreach($search as $log) {
+					$items[] = $log->itemId;
+					if(!array_key_exists($log->itemId, $this->charmap->itemDb)) {
+						$this->charmap->itemDb[$log->itemId] = null;
+					}
+					if($log->type === 'M' || $log->type === 'L') {
+						$monsters[] = $log->charId;
+						if(!array_key_exists($log->charId, $this->charmap->mobDb)) {
+							$this->charmap->mobDb[$log->charId] = null;
+						}
+					} else {
+						$characters[] = $log->charId;
+						if(!array_key_exists($log->charId, $this->charmap->characters)) {
+							$this->charmap->characters[$log->charId] = null;
+						}
 					}
 				}
-				$items      = $search->getColumn('item_id');
-				array_unshift($characters, Search::SEARCH_IN);
-				array_unshift($items, Search::SEARCH_IN);
-				$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
-				$this->charmap->itemSearch()->where(array( 'id' => $items ))->query();
+				if(count($characters)) {
+					$characters = array_unique($characters);
+					array_unshift($characters, Search::SEARCH_IN);
+					$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
+				}
+				if(count($monsters)) {
+					$monsters = array_unique($monsters);
+					array_unshift($monsters, Search::SEARCH_IN);
+					$this->charmap->mobSearch()->where(array( 'id' => $monsters ))->query();
+				}
+				if(count($items)) {
+					$items = array_unique($items);
+					array_unshift($items, Search::SEARCH_IN);
+					$this->charmap->itemSearch()->where(array( 'id' => $items ))->query();
+				}
 			}
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / self::$logsPerPage),
@@ -1815,6 +2038,7 @@ extends Page
 			$tpl->set('log', $search->results)
 			    ->set('count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/pick-log');
 		} catch(\Exception $exception) {
@@ -1828,11 +2052,64 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'chat-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request());
+			$frm->order(array(
+					'id'   => 'id',
+			        'date' => 'date',
+			        'map'  => 'map',
+			        'type' => 'type',
+			        'tid'  =>'type_id',
+			        'acc'  => 'src_account_id',
+			        'char' => 'src_char_id',
+			        'dst'  => 'dst_char_name',
+				))
+				->defaultOrder('id');
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('acc')
+				->setColumn('src_account_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'src-account-id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('char')
+				->setColumn('src_char_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'src-char-id'))
+				->type('number')
+				->attr('min', 1);
+			$frm->input('dst')
+				->setColumn('srdst_char_name')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'receiver'))
+				->type('number')
+				->attr('min', 1);
+			$frm->range('date')
+			    ->setColumn('date')
+			    ->setLabel(__('ragnarok', 'date'))
+			    ->type('datetime')
+			    ->attr('placeholder', 'YYYY-MM-DD HH:II:SS');
+			$frm->select('type')
+				->setColumn('type')
+				->setLabel(__('ragnarok', 'type'))
+				->multiple()
+				->value(array(
+					ChatLog::TYPE_GLOBAL  => __('ragnarok-chat-log-type', ChatLog::TYPE_GLOBAL),
+					ChatLog::TYPE_WHISPER => __('ragnarok-chat-log-type', ChatLog::TYPE_WHISPER),
+					ChatLog::TYPE_PARTY   => __('ragnarok-chat-log-type', ChatLog::TYPE_PARTY),
+					ChatLog::TYPE_GUILD   => __('ragnarok-chat-log-type', ChatLog::TYPE_GUILD),
+					ChatLog::TYPE_MAIN    => __('ragnarok-chat-log-type', ChatLog::TYPE_MAIN),
+				));
 			$search = $this->charmap->log->searchChatLog()
 				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage)
-				->query();
-			if($search->rowsFound !== 0) {
+				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$frm->apply($search);
+			$search->query();
+			if($search->count()) {
 				$characters = $search->getColumn('src_char_id');
 				$accounts   = $search->getColumn('src_account_id');
 				foreach($characters as $id) {
@@ -1857,6 +2134,7 @@ extends Page
 			$tpl->set('log', $search->results)
 			    ->set('count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/chat-log');
 		} catch(\Exception $exception) {

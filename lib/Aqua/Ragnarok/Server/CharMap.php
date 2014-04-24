@@ -1736,11 +1736,32 @@ class CharMap
 
 	/**
 	 * @param array $options
+	 * @param bool  $admin
 	 * @return string
 	 */
-	public function url(array $options = array())
+	public function url(array $options = array(), $admin = null)
 	{
-		return $this->uri->url($options);
+		if($admin === null) {
+			$admin = \Aqua\PROFILE === 'ADMINISTRATION';
+		}
+		if($admin) {
+			$options += array(
+				'action'    => 'index',
+				'arguments' => array(),
+				'query'     => array()
+			);
+			$options['base_dir'] = \Aqua\DIR . '/admin';
+			$path = array( 'r', $this->server->key, $this->key );
+			if(isset($options['path'])) {
+				$options['path'] = array_merge($path, $options['path']);
+			} else {
+				$options['path'] = $path;
+			}
+			return ac_build_url($options);
+		} else {
+			$options += array( 'base_dir' => \Aqua\DIR );
+			return $this->uri->url($options);
+		}
 	}
 
 	/**
