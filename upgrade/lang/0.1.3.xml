@@ -37,5 +37,10 @@
         <word namespace="range" key="exactly">Exactly</word>
         <word namespace="range" key="higher">Higher than</word>
         <word namespace="range" key="lower">Lower than</word>
+        <word namespace="content" key="tag-title">%s - Tagged %s</word>
+        <word namespace="content" key="category-title">%s - %s</word>
+        <word namespace="content" key="preview-title"><![CDATA[<i>%s [Preview]</i>]]></word>
+        <word namespace="content" key="tags">Tags</word>
+        <word namespace="exception" key="invalid-argument"><![CDATA[%s expects the argument #%s to be %s. "%s" given.]]></word>
     </wordgroup>
 </languageimport>

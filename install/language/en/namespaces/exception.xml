@@ -36,5 +36,6 @@
     <word namespace="exception" key="truncate-file">Failed to truncate file %s.</word>
     <word namespace="exception" key="acquire-lock">Failed to acquire lock for %s.</word>
     <word namespace="exception" key="change-permission">Unable to change file permission for %1$s.</word>
+    <word namespace="exception" key="invalid-argument"><![CDATA[%s expects the argument #%s to be %s. "%s" given.]]></word>
   </wordgroup>
 </languageimport>

@@ -57,6 +57,10 @@ class App
 	 */
 	public static $registry = array();
 	/**
+	 * @var \Aqua\Content\ContentType
+	 */
+	public static $activeContentType;
+	/**
 	 * @var \Aqua\Ragnarok\Server
 	 */
 	public static $activeServer;
@@ -88,11 +92,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.1.2';
+	const VERSION = '0.1.3';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 102;
+	const VERSION_LONG = 103;
 
 	private function __construct() { }
 

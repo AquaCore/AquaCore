@@ -236,14 +236,14 @@ implements SubjectInterface
 		}
 	}
 
-	public function attach($event, \Closure $callback)
+	public function attach($event, $callback)
 	{
 		$this->_dispatcher->attach("bbcode-rule.$event", $callback);
 
 		return $this;
 	}
 
-	public function detach($event, \Closure $callback)
+	public function detach($event, $callback)
 	{
 		$this->_dispatcher->detach("bbcode-rule.$event", $callback);
 

@@ -1,6 +1,8 @@
 <?php
 namespace Aqua\Event;
 
+use Aqua\Core\Exception\InvalidArgumentException;
+
 class EventDispatcher
 implements \Countable
 {
@@ -46,22 +48,30 @@ implements \Countable
 
 	/**
 	 * @param string   $event
-	 * @param \Closure $listener
+	 * @param callable $listener
 	 * @return mixed
+	 * @throws \Aqua\Core\Exception\InvalidArgumentException
 	 */
-	public function eventContains($event, \Closure $listener)
+	public function eventContains($event, $listener)
 	{
-		return array_search(spl_object_hash($listener), $this->events[$event]);
+		if(!is_callable($listener)) {
+			throw new InvalidArgumentException(1, 'callable', $listener);
+		}
+		return array_search($this->getHash($listener), $this->events[$event]);
 	}
 
 	/**
-	 * @param \Closure $listener
+	 * @param callable $listener
 	 * @return array
+	 * @throws \Aqua\Core\Exception\InvalidArgumentException
 	 */
-	public function listenerEvents(\Closure $listener)
+	public function listenerEvents($listener)
 	{
+		if(!is_callable($listener)) {
+			throw new InvalidArgumentException(1, 'callable', $listener);
+		}
 		$events = array();
-		$hash   = spl_object_hash($listener);
+		$hash   = $this->getHash($listener);
 		foreach($this->events as $event => $listeners) {
 			if(array_search($hash, $listeners) !== false) {
 				$events[] = $event;
@@ -72,22 +82,30 @@ implements \Countable
 	}
 
 	/**
-	 * @param \Closure $listener
+	 * @param callable $listener
 	 * @return bool
+	 * @throws \Aqua\Core\Exception\InvalidArgumentException
 	 */
-	public function contains(\Closure $listener)
+	public function contains($listener)
 	{
-		return isset($this->listeners[spl_object_hash($listener)]);
+		if(!is_callable($listener)) {
+			throw new InvalidArgumentException(1, 'callable', $listener);
+		}
+		return isset($this->listeners[$this->getHash($listener)]);
 	}
 
 	/**
 	 * @param string   $event
-	 * @param \Closure $listener
+	 * @param callable $listener
 	 * @return \Aqua\Event\EventDispatcher
+	 * @throws \Aqua\Core\Exception\InvalidArgumentException
 	 */
-	public function attach($event, \Closure $listener)
+	public function attach($event, $listener)
 	{
-		$hash = spl_object_hash($listener);
+		if(!is_callable($listener)) {
+			throw new InvalidArgumentException(2, 'callable', $listener);
+		}
+		$hash = $this->getHash($listener);
 		if(isset($this->events[$event])) {
 			$this->events[$event][] = $hash;
 		} else {
@@ -105,12 +123,16 @@ implements \Countable
 
 	/**
 	 * @param string   $event
-	 * @param \Closure $listener
+	 * @param callable $listener
 	 * @return \Aqua\Event\EventDispatcher
+	 * @throws \Aqua\Core\Exception\InvalidArgumentException
 	 */
-	public function detach($event, \Closure $listener)
+	public function detach($event, $listener)
 	{
-		$hash = spl_object_hash($listener);
+		if(!is_callable($listener)) {
+			throw new InvalidArgumentException(2, 'callable', $listener);
+		}
+		$hash = $this->getHash($listener);
 		if(!$event) {
 			foreach($this->events as $event => $listeners) {
 				if(array_search($hash, $listeners) !== false) {
@@ -159,5 +181,21 @@ implements \Countable
 		}
 
 		return $ret;
+	}
+
+	public function getHash($listener)
+	{
+		if(is_object($listener)) {
+			return 'o::' . spl_object_hash($listener);
+		} else if(is_string($listener)) {
+			return 's::' . $listener;
+		} else if(is_array($listener)) {
+			if(is_object($listener[0])) {
+				return 'o::' . spl_object_hash($listener[0]) . '->' . $listener[1];
+			} else {
+				return 's::' . $listener[0] . '::' . $listener[1];
+			}
+		}
+		return null;
 	}
 }

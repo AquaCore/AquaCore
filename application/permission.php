@@ -47,13 +47,9 @@ $permissions
 	->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_ROLE_PERMISSION)
 	->denyRole(Role::get(Role::ROLE_GUEST));
 $permissions
-	->set('main/news/action/preview')
+	->set('main/content/action/preview')
 	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
-	->allowPermission('publish-posts');
-$permissions
-	->set('main/page/action/preview')
-	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
-	->allowPermission('create-pages');
+	->allowPermission('view-admin-cp');
 if(Server::$serverCount === 0) {
 	$permissions
 		->set("main/ragnarok")

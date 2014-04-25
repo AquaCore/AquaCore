@@ -31,6 +31,10 @@ implements SubjectInterface
 	 */
 	public $dispatchStarted = false;
 	/**
+	 * @var \SplPriorityQueue[]
+	 */
+	public $extend = array();
+	/**
 	 * @var \Aqua\Event\EventDispatcher
 	 */
 	protected $_dispatcher;
@@ -61,7 +65,7 @@ implements SubjectInterface
 			'page_title' => null,
 		);
 		$this->router->route($request);
-		$pages = $request->uri->path;
+		$pages  = $request->uri->path;
 		$class  = 'page';
 		do {
 			$page = current($pages);
@@ -91,6 +95,13 @@ implements SubjectInterface
 		$arguments = $request->uri->arguments;
 		$feedback = array( &$_page, &$action, &$arguments );
 		if($this->notify('render-start', $feedback) !== true) {
+			$path = implode('/', $request->uri->path);
+			if(isset($this->extend[$path])) {
+				$this->extend[$path]->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
+				foreach($this->extend[$path] as $data) {
+					$_page->extend($data['data'], $data['priority']);
+				}
+			}
 			$_page->action($action, $arguments);
 		}
 		$content = ob_get_contents();
@@ -122,6 +133,16 @@ implements SubjectInterface
 		return $this;
 	}
 
+	public function extend($page, $className, $priority = 0)
+	{
+		$page = strtolower(trim($page, '/'));
+		if(!isset($this->extend[$page])) {
+			$this->extend[$page] = new \SplPriorityQueue;
+		}
+		$this->extend[$page]->insert($className, $priority);
+		return $this;
+	}
+
 	public function triggerError($code, $title = null, $message = null)
 	{
 		if(!$this->_currentData) {
@@ -135,13 +156,13 @@ implements SubjectInterface
 		return $this;
 	}
 
-	public function attach($event, \Closure $listener)
+	public function attach($event, $listener)
 	{
 		$this->_dispatcher->attach("dispatcher.$event", $listener);
 		return $this;
 	}
 
-	public function detach($event, \Closure $listener)
+	public function detach($event, $listener)
 	{
 		$this->_dispatcher->detach("dispatcher.$event", $listener);
 		return $this;

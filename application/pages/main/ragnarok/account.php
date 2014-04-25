@@ -39,6 +39,7 @@ extends Page
 		$this->server = App::$activeServer;
 		$this->account = App::$activeRagnarokAccount;
 		if(!$this->server || !$this->account) {
+			$this->error(404);
 			return;
 		}
 		$this->response->setHeader('Cache-Control', 'no-store, co-cache, must-revalidate, max-age=0');

@@ -3,7 +3,7 @@ namespace Aqua\Event;
 
 interface SubjectInterface
 {
-	function attach($event, \Closure $listener);
-	function detach($event, \Closure $listener);
+	function attach($event, $listener);
+	function detach($event, $listener);
 	function notify($event, &$feedback);
 }

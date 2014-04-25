@@ -22,11 +22,23 @@ implements \Serializable, SubjectInterface
 	/**
 	 * @var string
 	 */
+	public $name;
+	/**
+	 * @var string
+	 */
 	public $adapter;
 	/**
 	 * @var string
 	 */
 	public $table;
+	/**
+	 * @var bool
+	 */
+	public $listing;
+	/**
+	 * @var bool
+	 */
+	public $feed;
 	/**
 	 * @var int
 	 */
@@ -47,6 +59,10 @@ implements \Serializable, SubjectInterface
 	 * @var \Aqua\Event\EventDispatcher
 	 */
 	public $dispatcher;
+	/**
+	 * @var \Aqua\Http\Uri
+	 */
+	protected $_uri;
 	/**
 	 * @var \Aqua\Content\ContentType[]
 	 */
@@ -72,8 +88,12 @@ implements \Serializable, SubjectInterface
 		return serialize(array(
 				$this->id,
 				$this->key,
+				$this->name,
 				$this->adapter,
 				$this->fields,
+				$this->listing,
+				$this->feed,
+				$this->pluginId,
 				$filters
 			));
 	}
@@ -84,8 +104,12 @@ implements \Serializable, SubjectInterface
 		list(
 			$this->id,
 			$this->key,
+			$this->name,
 			$this->adapter,
 			$this->fields,
+			$this->listing,
+			$this->feed,
+			$this->pluginId,
 			$filters
 			) = unserialize($serialized);
 		foreach($filters as $name => $filter) {
@@ -128,7 +152,7 @@ implements \Serializable, SubjectInterface
 			))
 			->from(ac_table('content'), 'c')
 			->limit(1)
-			->parser(array( $this, 'parseContentSql' ));
+			->parser(array( __CLASS__, 'parseContentSql' ));
 		if($this->table) {
 			$select->innerJoin($this->table, 't._uid = c._uid', 't');
 			foreach($this->fields as $alias => $field) {
@@ -206,7 +230,7 @@ implements \Serializable, SubjectInterface
 			->from(ac_table('content'), 'c')
 			->groupBy('c._uid')
 			->where(array( 'type' => $this->id, 'AND' ))
-			->parser(array( $this, 'parseContentSql' ));
+			->parser(array( __CLASS__, 'parseContentSql' ));
 
 		return $search;
 	}
@@ -373,14 +397,14 @@ implements \Serializable, SubjectInterface
 		return ac_slug_available($slug, $select->getColumn('slug'));
 	}
 
-	public function attach($event, \Closure $listener)
+	public function attach($event, $listener)
 	{
 		$this->dispatcher->attach("content.$event", $listener);
 
 		return $this;
 	}
 
-	public function detach($event, \Closure $listener)
+	public function detach($event, $listener)
 	{
 		$this->dispatcher->detach("content.$event", $listener);
 
@@ -430,6 +454,23 @@ implements \Serializable, SubjectInterface
 		return $ret;
 	}
 
+	public function url(array $options = array(), $admin = null)
+	{
+		if($admin === null) {
+			$admin = \Aqua\PROFILE === 'ADMINISTRATION';
+		}
+		if(isset($options['path'])) {
+			$options['path'] = array_merge(array( $this->key ), $options['path']);
+		} else {
+			$options['path'] = array( $this->key );
+		}
+		$options['base_dir'] = \Aqua\DIR;
+		if($admin) {
+			$options['base_dir'].= '/admin';
+		}
+		return ac_build_url($options);
+	}
+
 	public function __call($method, array $arguments)
 	{
 		foreach($this->filters as $filter) {
@@ -464,9 +505,11 @@ implements \Serializable, SubjectInterface
 		$search = Query::search(App::connection())
 			->columns($columns)
 			->whereOptions($where)
-			->groupBy('c._uid');
+			->from(ac_table('content'), 'c')
+			->groupBy('c._uid')
+			->parser(array( __CLASS__, 'parseContentSql' ));
 		$ids = array();
-		foreach($contentTypes as $cType) {
+		if($contentTypes) foreach($contentTypes as $cType) {
 			if($cType instanceof self || is_int($cType) && ($cType = self::getContentType($cType))) {
 				$ids[] = $cType->id;
 			}
@@ -524,34 +567,49 @@ implements \Serializable, SubjectInterface
 	 */
 	public static function import(\SimpleXMLElement $xml, $plugin_id = null)
 	{
-		$tbl         = ac_table('content_type');
-		$sth         = App::connection()->prepare("
-		INSERT IGNORE INTO `$tbl` (_key, _adapter, _table, _plugin_id)
-		VALUES (:key, :adapter, NULL, :plugin)
-		");
-		$tbl_sth     = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO `$tbl` (_key, _name, _listing, _feed, _adapter, _table, _plugin_id)
+		VALUES (:key, :name, :list, :feed, :adapter, NULL, :plugin)
+		ON DUPLICATE KEY UPDATE
+		_name = VALUES(_name),
+		_adapter = VALUES(_adapter),
+		_listing = VALUES(_listing),
+		_feed = VALUES(_feed),
+		_pugin_id = VALUES(_plugin_id)
+		', ac_table('content_type')));
+		$tbl = App::connection()->prepare(sprintf('
+		UPDATE `%s`
 		SET _table = :table
 		WHERE id = :id
-		");
-		$tbl         = ac_table('content_type_fields');
-		$fields_sth  = App::connection()->prepare("
-		INSERT INTO `$tbl` (_type, _name, _alias, _field_type)
+		', ac_table('content_type')));
+		$fields = App::connection()->prepare(sprintf('
+		INSERT INTO `%s` (_type, _name, _alias, _field_type)
 		VALUES (:id, :name, :alias, :type)
-		");
-		$tbl         = ac_table('content_type_filters');
-		$filters_sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_type, _name, _options)
+		', ac_table('content_type_fields')));
+		$filters = App::connection()->prepare(sprintf('
+		INSERT INTO `%s` (_type, _name, _options)
 		VALUES (:id, :name, :opt)
-		");
-		$imports     = array();
+		', ac_table('content_type_filters')));
+		$imports = array();
 		foreach($xml->contenttype as $ctype) {
 			$key = (string)$ctype->attributes()->key;
-			if(!strlen($key) || self::getContentType($key, 'key')) {
+			$name = (string)$ctype->name;
+			if(!strlen($key) || !strlen($name) || self::getContentType($key, 'key')) {
 				continue;
 			}
 			$adapter = (string)$ctype->adapter;
 			$sth->bindValue(':key', $key, \PDO::PARAM_STR);
+			$sth->bindValue(':name', $name, \PDO::PARAM_STR);
+			if(!$ctype->listing || filter_var((string)$ctype->listing, FILTER_VALIDATE_BOOLEAN)) {
+				$sth->bindValue(':list', 'y', \PDO::PARAM_STR);
+			} else {
+				$sth->bindValue(':list', 'n', \PDO::PARAM_STR);
+			}
+			if(!$ctype->feed || filter_var((string)$ctype->feed, FILTER_VALIDATE_BOOLEAN)) {
+				$sth->bindValue(':feed', 'y', \PDO::PARAM_STR);
+			} else {
+				$sth->bindValue(':feed', 'n', \PDO::PARAM_STR);
+			}
 			if($adapter) {
 				$sth->bindValue(':adapter', $adapter, \PDO::PARAM_STR);
 			} else {
@@ -570,10 +628,10 @@ implements \Serializable, SubjectInterface
 					continue;
 				}
 				$options = serialize((array)$filter->children());
-				$filters_sth->bindValue(':id', $id, \PDO::PARAM_INT);
-				$filters_sth->bindValue(':name', $name, \PDO::PARAM_STR);
-				$filters_sth->bindValue(':opt', $options, \PDO::PARAM_STR);
-				$filters_sth->execute();
+				$filters->bindValue(':id', $id, \PDO::PARAM_INT);
+				$filters->bindValue(':name', $name, \PDO::PARAM_STR);
+				$filters->bindValue(':opt', $options, \PDO::PARAM_STR);
+				$filters->execute();
 			}
 			if($table = $ctype->table[0]) {
 				$query   = Query::createTable(App::connection(), ac_table("ctype_$id"));
@@ -743,15 +801,15 @@ implements \Serializable, SubjectInterface
 					}
 					$query->query();
 					foreach($columns as $alias => $data) {
-						$fields_sth->bindValue(':id', $id, \PDO::PARAM_INT);
-						$fields_sth->bindValue(':name', $data[0], \PDO::PARAM_STR);
-						$fields_sth->bindValue(':type', $data[1], \PDO::PARAM_STR);
-						$fields_sth->bindValue(':alias', $alias, \PDO::PARAM_STR);
-						$fields_sth->execute();
+						$fields->bindValue(':id', $id, \PDO::PARAM_INT);
+						$fields->bindValue(':name', $data[0], \PDO::PARAM_STR);
+						$fields->bindValue(':type', $data[1], \PDO::PARAM_STR);
+						$fields->bindValue(':alias', $alias, \PDO::PARAM_STR);
+						$fields->execute();
 					}
-					$tbl_sth->bindValue(':id', $id, \PDO::PARAM_INT);
-					$tbl_sth->bindValue(':table', $query->tableName, \PDO::PARAM_STR);
-					$tbl_sth->execute();
+					$tbl->bindValue(':id', $id, \PDO::PARAM_INT);
+					$tbl->bindValue(':table', $query->tableName, \PDO::PARAM_STR);
+					$tbl->execute();
 				}
 			}
 			$imports[] = $id;
@@ -769,18 +827,25 @@ implements \Serializable, SubjectInterface
 		$sth = App::connection()->query("
 		SELECT id,
 		       _key,
+		       _name,
 		       _adapter,
 		       _table,
+		       _listing,
+		       _feed,
 		       _plugin_id
 		FROM `$tbl`
 		");
 		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$type        = new self;
-			$type->id    = (int)$data[0];
-			$type->key   = $data[1];
-			$type->table = $data[3];
-			if($data[2]) {
-				$adapter = "Aqua\\Content\\Adapter\\{$data[2]}";
+			$type           = new self;
+			$type->id       = (int)$data[0];
+			$type->key      = $data[1];
+			$type->name     = $data[2];
+			$type->table    = $data[4];
+			$type->listing  = ($data[5] === 'y');
+			$type->feed     = ($data[6] === 'y');
+			$type->pluginId = (int)$data[7];
+			if($data[3]) {
+				$adapter = "Aqua\\Content\\Adapter\\{$data[3]}";
 				if(class_exists($adapter) && is_subclass_of($adapter, 'Aqua\\Content\\ContentData')) {
 					$type->adapter = $adapter;
 				}
@@ -826,15 +891,16 @@ implements \Serializable, SubjectInterface
 	 * @param array $data
 	 * @return \Aqua\Content\ContentData
 	 */
-	public function parseContentSql(array $data)
+	public static function parseContentSql(array $data)
 	{
-		if($class = $this->adapter) {
+		$cType = self::getContentType($data['type'], 'id');
+		if($class = $cType->adapter) {
 			$content = new $class;
 		} else {
 			$content = new ContentData;
 		}
 		$feedback = array( $content, &$data );
-		$content->contentType  = & $this;
+		$content->contentType  = & $cType;
 		$content->uid          = (int)$data['uid'];
 		$content->status       = (int)$data['status'];
 		$content->authorId     = (int)$data['author'];
@@ -848,7 +914,7 @@ implements \Serializable, SubjectInterface
 		$content->content      = $data['content'];
 		$content->contentPlain = $data['plain_content'];
 		ac_parse_content($data['content'], $content->pages, $content->shortContent);
-		foreach($this->fields as $alias => $field) {
+		foreach($cType->fields as $alias => $field) {
 			if(!array_key_exists($alias, $data)) {
 				continue;
 			}
@@ -866,7 +932,7 @@ implements \Serializable, SubjectInterface
 			}
 			$content->data[$alias] = $data[$alias];
 		}
-		$this->applyFilters('parseData', $feedback);
+		$cType->applyFilters('parseData', $feedback);
 		$content->ready();
 
 		return $content;

@@ -11,11 +11,6 @@ use Aqua\UI\Template;
 class Comment
 extends Page
 {
-	public function index_action()
-	{
-		$this->error(404);
-	}
-
 	public function reply_action($cType = null, $contentId = null, $commentId = null)
 	{
 		try {
@@ -26,7 +21,7 @@ extends Page
 			}
 			if(!$cType || !$contentId ||
 			   !($cType = ContentType::getContentType($cType, 'key')) ||
-			   !$cType->hasFilter('commentFilter') ||
+			   !$cType->hasFilter('CommentFilter') ||
 			   !($content = $cType->get($contentId)) ||
 			   ($commentId && !($comment = $cType->getComment($commentId)))) {
 				$this->error(404);
@@ -70,10 +65,14 @@ extends Page
 			}
 			$this->response->redirect(302);
 			try {
-				if(($url = base64_decode($this->request->uri->getString('return', ''))) && parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
+				if(($url = base64_decode($this->request->uri->getString('return', ''))) &&
+				   parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
 					$this->response->redirect($url);
 				} else {
-					$this->response->redirect(\Aqua\URL);
+					$this->response->redirect($cType->url(array(
+						'path' => array( $content->slug ),
+					    'hash' => 'comments'
+					)));
 				}
 				$arguments = array(
 					App::user()->account,
@@ -139,10 +138,14 @@ extends Page
 			}
 			$this->response->redirect(302);
 			try {
-				if(($url = base64_decode($this->request->uri->getString('return', ''))) && parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
+				if(($url = base64_decode($this->request->uri->getString('return', ''))) &&
+				   parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
 					$this->response->redirect($url);
 				} else {
-					$this->response->redirect(\Aqua\URL);
+					$this->response->redirect($cType->url(array(
+						'path' => array( $comment->content()->slug ),
+						'hash' => 'comments'
+					)));
 				}
 				if($cType->reportComment($comment, App::user()->account, $this->request->getString('report', ''))) {
 					App::user()->addFlash('success', null, __('comment', 'report-sent'));
@@ -157,4 +160,3 @@ extends Page
 		}
 	}
 }
- 

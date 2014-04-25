@@ -40,7 +40,9 @@
     <word namespace="content" key="save">Save Changes</word>
     <word namespace="content" key="slug">Slug</word>
     <word namespace="content" key="status">Status</word>
-    <word namespace="content" key="tagged-x">Tagged %s</word>
+    <word namespace="content" key="tag-title">%s - Tagged %s</word>
+    <word namespace="content" key="category-title">%s - %s</word>
+    <word namespace="content" key="preview-title"><![CDATA[<i>%s [Preview]</i>]]></word>
     <word namespace="content" key="tags">Tags</word>
     <word namespace="content" key="tags-desc">Separate tags with comma.</word>
     <word namespace="content" key="title">Title</word>

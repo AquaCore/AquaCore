@@ -1,13 +1,15 @@
 <?php
 use Aqua\Core\App;
-use Aqua\Http\Request;
-use Aqua\Ragnarok\Server\CharMap;
-use Aqua\Ragnarok\Server\Login;
+use Aqua\Content\ContentType;
 use Aqua\Ragnarok\Server;
 use Aqua\Router\Router;
 
 $router = new Router;
 
+function ac_router_set_active_ctype($e, $match)
+{
+	return (App::$activeContentType = ContentType::getContentType($match['ctype'], 'name'));
+}
 function ac_router_set_active_server($key)
 {
 	return (App::$activeServer = Server::get($key));
@@ -47,17 +49,26 @@ function ac_router_set_active_char($key) {
 	return (bool)App::$activeRagnarokCharacter;
 }
 
+$contentTypes = array();
+foreach(ContentType::contentTypes() as $cType) {
+	$contentTypes[] = $cType->key;
+}
+$contentTypes = implode('|', $contentTypes);
 $router->add('Main Site')
 	->map('/*', '/main/:path');
-$router->add('Pages')
-	->map("/page/:slug/", '/main/page/action/index/:slug');
-$router->add('News')
-	->map("/news/:slug/", '/main/news/action/view/:slug');
-$router->add('News Tags')
-	->map("/news/tagged/:tag/", '/main/news/action/tagged/:tag');
-$router->add('News Categories')
-	->map("/news/category/:category/", '/main/news/action/category/:category');
-$_404 = 'ragnarok/account|ragnarok/server/char';
+$router->add('Content Type')
+	->map("/:ctype[$contentTypes]/*", '/main/content/:path')
+	->attach('parse_ok', 'ac_router_set_active_ctype');
+$router->add('Content')
+	->map("/:ctype[$contentTypes]/:slug/", '/main/content/action/view/:slug')
+	->attach('parse_ok', 'ac_router_set_active_ctype');
+$router->add('Content Tag')
+	->map("/:ctype[$contentTypes]/tagged/:slug/", '/main/content/action/tagged/:slug')
+	->attach('parse_ok', 'ac_router_set_active_ctype');
+$router->add('Content Category')
+	->map("/:ctype[$contentTypes]/category/:category/", '/main/content/action/category/:category')
+	->attach('parse_ok', 'ac_router_set_active_ctype');
+ $_404 = 'ragnarok/account|ragnarok/server/char|content/action/[!search]';
 if(Server::$serverCount > 1) {
 	$servers = implode('|', array_keys(Server::$servers));
 	// /ro/<server>

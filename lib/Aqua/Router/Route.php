@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\Router;
 
+use Aqua\Core\Exception\InvalidArgumentException;
 use Aqua\Event\EventDispatcher;
 use Aqua\Event\SubjectInterface;
 use Aqua\Http\Request;
@@ -62,9 +63,13 @@ implements SubjectInterface
 	/**
 	 * @param callable $function
 	 * @return \Aqua\Router\Route
+	 * @throws \Aqua\Core\Exception\InvalidArgumentException
 	 */
-	public function parser(\Closure $function)
+	public function parser($function)
 	{
+		if(!is_callable($function)) {
+			throw new InvalidArgumentException(2, 'callable', $function);
+		}
 		$this->parser = $function;
 
 		return $this;
@@ -128,7 +133,7 @@ implements SubjectInterface
 		if(isset($match[3])) {
 			$match[3] = '(?:' . $match[3] . ')';
 		} else {
-			$match[3] = '(?:[^/]*)';
+			$match[3] = '(?:[^/]+)';
 		}
 		if(!$match[1]) {
 			$regex .= $match[3];
@@ -141,14 +146,14 @@ implements SubjectInterface
 		return $regex;
 	}
 
-	public function attach($event, \Closure $listener)
+	public function attach($event, $listener)
 	{
 		$this->dispatcher->attach("route.$event", $listener);
 
 		return $this;
 	}
 
-	public function detach($event, \Closure $listener)
+	public function detach($event, $listener)
 	{
 		$this->dispatcher->detach("route.$event", $listener);
 

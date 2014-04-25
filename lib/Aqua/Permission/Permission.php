@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\Permission;
 
+use Aqua\Core\Exception\InvalidArgumentException;
 use Aqua\Core\User;
 use Aqua\Event\EventDispatcher;
 use Aqua\Event\SubjectInterface;
@@ -210,16 +211,19 @@ implements SubjectInterface
 		return $this;
 	}
 
+
 	/**
 	 * @param string   $name
 	 * @param callable $function
 	 * @return \Aqua\Permission\Permission
+	 * @throws \Aqua\Core\Exception\InvalidArgumentException
 	 */
 	public function addFilter($name, $function)
 	{
-		if(is_callable($function)) {
-			$this->filter[$name] = $function;
+		if(!is_callable($function)) {
+			throw new InvalidArgumentException(2, 'callable', $function);
 		}
+		$this->filter[$name] = $function;
 
 		return $this;
 	}
@@ -339,14 +343,14 @@ implements SubjectInterface
 		}
 	}
 
-	public function attach($event, \Closure $listener)
+	public function attach($event, $listener)
 	{
 		$this->dispatcher->attach($event, $listener);
 
 		return $this;
 	}
 
-	public function detach($event, \Closure $listener)
+	public function detach($event, $listener)
 	{
 		$this->dispatcher->detach($event, $listener);
 

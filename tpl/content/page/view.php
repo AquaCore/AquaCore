@@ -1,16 +1,15 @@
 <?php
-use Aqua\UI\Menu;
 /**
- * @var $paginator \Aqua\UI\Pagination
- * @var $content   \Aqua\Content\Adapter\Page
- * @var $page      \Page\Main\Page
+ * @var $content   \Aqua\Content\ContentData
  * @var $rating    \Aqua\UI\Template
+ * @var $comments  \Aqua\UI\Template
+ * @var $paginator \Aqua\UI\Pagination|\Aqua\UI\PaginationPost
+ * @var $page      \Aqua\Site\Page
  */
-$title = '';
-if($parent = $content->parent()) {
-	$page->theme->set('return', ac_build_url(array( 'path' => array( 'page', $parent->slug ) )));
-}
-$title.= '<a href="' . ac_build_url(array( 'path' => array( 'page', $content->slug ) )) . '" style="float: left">';
+
+use Aqua\UI\Menu;
+
+$title = '<a href="' . $content->contentType->url(array( 'path' => array( $content->slug ) )) . '" style="float: left">';
 $title.= htmlspecialchars($content->title);
 $title.= '</a>';
 if(isset($rating)) {
@@ -25,9 +24,9 @@ if(!$content->forged) {
 		$menu = new Menu;
 		foreach($children as $child) {
 			$menu->append($child->id, array(
-					'title' => htmlspecialchars($child->title),
-					'url' => ac_build_url(array( 'path' => array( 'page', $child->slug ) ))
-				));
+				'title' => htmlspecialchars($child->title),
+				'url' => ac_build_url(array( 'path' => array( 'page', $child->slug ) ))
+			));
 		}
 		$page->theme->set('menu', $menu);
 	}
@@ -41,14 +40,15 @@ if($paginator->count > 1) {
 	$paginator->capRange(1, 7);
 	if($paginator->currentPage > 1) {
 		$page->theme->head->enqueueLink('prev-page')
-			->rel('prev')
-			->href($paginator->url($paginator->currentPage - 1));
+		                  ->rel('prev')
+		                  ->href($paginator->url($paginator->currentPage - 1));
 	}
 	if(($paginator->currentPage + 1) <= $paginator->count) {
 		$page->theme->head->enqueueLink('next-page')
-			->rel('next')
-			->href($paginator->url($paginator->currentPage + 1));
+		                  ->rel('next')
+		                  ->href($paginator->url($paginator->currentPage + 1));
 	}
 	echo '<div class="ac-post-pagination">', $paginator->render(), '</div>';
 }
 ?>
+

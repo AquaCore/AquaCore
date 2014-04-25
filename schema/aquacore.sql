@@ -342,8 +342,11 @@ CREATE TABLE IF NOT EXISTS `#transfer_log` (
 CREATE TABLE IF NOT EXISTS `#content_type` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _key VARCHAR(32) COLLATE utf8_bin NOT NULL,
+  _name VARCHAR(255) NOT NULL,
   _table VARCHAR(32) COLLATE utf8_bin NOT NULL,
   _adapter VARCHAR(255),
+  _feed ENUM('y', 'n') NOT NULL DEFAULT 'y',
+  _listing ENUM('y', 'n') NOT NULL DEFAULT 'y',
   _plugin_id INT UNSIGNED,
   PRIMARY KEY ( id ),
   UNIQUE `_#content_type__key_UN` ( _key )

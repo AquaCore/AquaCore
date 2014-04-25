@@ -361,7 +361,7 @@ implements SubjectInterface
 	 * @param callable $listener
 	 * @return \Aqua\Http\Response
 	 */
-	public function attach($event, \Closure $listener)
+	public function attach($event, $listener)
 	{
 		$this->dispatcher->attach("response.$event", $listener);
 
@@ -373,7 +373,7 @@ implements SubjectInterface
 	 * @param callable $listener
 	 * @return \Aqua\Http\Response
 	 */
-	public function detach($event, \Closure $listener)
+	public function detach($event, $listener)
 	{
 		$this->dispatcher->detach("response.$event", $listener);
 

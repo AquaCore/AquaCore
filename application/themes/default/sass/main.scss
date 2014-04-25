@@ -657,9 +657,18 @@ iframe[src="about:blank"]{ display: none !important; }
 		float: left;
 		margin-left: 10px;
 	}
+	.ac-site-search input {
+		font-size: 1.3em;
+		width: 40%;
+		color: $mid-blue-1;
+		border-color: $mid-blue-1;
+		text-align: center;
+	}
 	.ac-headlines-links {
-		float: right;
-		line-height: 1.6em;
+		position: absolute;
+		top: 0;
+		right: 10px;
+		line-height: 2em;
 		a {
 			padding: 0 5px;
 			color: #fff;

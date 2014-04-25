@@ -240,14 +240,14 @@ implements SubjectInterface
 		return $this;
 	}
 
-	public function attach($event, \Closure $listener)
+	public function attach($event, $listener)
 	{
 		$this->_dispatcher->attach("user.$event", $listener);
 
 		return $this;
 	}
 
-	public function detach($event, \Closure $listener)
+	public function detach($event, $listener)
 	{
 		$this->_dispatcher->detach("user.$event", $listener);
 
