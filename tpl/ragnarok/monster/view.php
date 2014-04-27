@@ -40,7 +40,7 @@ if(isset($drops['mvp'])) {
 				</td>
 				<td><?php echo __('ragnarok', 'mob-id')?></td>
 				<td><?php echo $mob->id?></td>
-				<td><?php echo __('ragnarok', 'custom-mob')?></td>
+				<td><?php echo __('ragnarok', 'custom')?></td>
 				<td><?php echo __('application', ($mob->custom ? 'Yes' : 'No'))?></td>
 			</tr>
 			<tr>

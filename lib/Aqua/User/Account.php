@@ -2,6 +2,7 @@
 namespace Aqua\User;
 
 use Aqua\Core\App;
+use Aqua\Core\Meta;
 use Aqua\Log\BanLog;
 use Aqua\Log\ProfileUpdateLog;
 use Aqua\Log\TransferLog;
@@ -62,14 +63,9 @@ class Account
 	 */
 	public $isAvatarUploaded = false;
 	/**
-	 * @var array
+	 * @var \Aqua\Core\Meta
 	 */
-	public $meta = array();
-	/**
-	 * @var bool
-	 * @access protected
-	 */
-	protected $_metaLoaded = false;
+	public $meta;
 	/**
 	 * @var \Aqua\User\Account
 	 */
@@ -182,93 +178,6 @@ class Account
 	public function display()
 	{
 		return $this->role()->display($this->displayName, 'ac-username');
-	}
-
-	/**
-	 * @param string $key
-	 * @return bool
-	 */
-	public function metaExists($key)
-	{
-		$this->_metaLoaded or $this->loadMeta();
-
-		return array_key_exists($key, $this->meta);
-	}
-
-	/**
-	 * @param string $key
-	 * @param mixed  $default
-	 * @return string
-	 */
-	public function getMeta($key, $default = null)
-	{
-		$this->_metaLoaded or $this->loadMeta();
-
-		return ($this->metaExists($key) ? $this->meta[$key] : $default);
-	}
-
-	/**
-	 * @param array|string $keys
-	 * @param string       $value
-	 * @return bool
-	 */
-	public function setMeta($keys, $value = null)
-	{
-		if(!is_array($keys)) $keys = array( $keys => $value );
-		$table = ac_table('user_meta');
-		$sth   = App::connection()->prepare("
-		INSERT INTO `$table` (_user_id, _key, _val)
-		VALUES (:id, :key, :value)
-		ON DUPLICATE KEY UPDATE _val = :value
-		");
-		foreach($keys as $key => $val) {
-			$sth->bindValue(':id', $this->id, \PDO::PARAM_INT);
-			$sth->bindValue(':key', $key, \PDO::PARAM_STR);
-			$sth->bindValue(':value', $val, \PDO::PARAM_STR);
-			$sth->execute();
-		}
-		$this->meta = array_merge($this->meta, $keys);
-
-		return $this;
-	}
-
-	/**
-	 * @param string|array $keys
-	 * @return \Aqua\User\Account
-	 */
-	public function deleteMeta($keys)
-	{
-		if(!is_array($keys)) $keys = array( $keys );
-		$table = ac_table('user_meta');
-		$sth   = App::connection()->prepare("
-		DELETE FROM `$table`
-		WHERE _user_id = ? AND _key = ?
-		");
-		foreach($keys as $key) {
-			$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
-			$sth->bindValue(2, $key, \PDO::PARAM_STR);
-			$sth->execute();
-			unset($this->meta[$key]);
-		}
-
-		return $this;
-	}
-
-	public function loadMeta()
-	{
-		$this->meta = array();
-		$table      = ac_table('user_meta');
-		$sth        = App::connection()->prepare("
-		SELECT _key, _val
-		FROM `$table`
-		WHERE _user_id = ?
-		");
-		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
-		$sth->execute();
-		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$this->meta[$data[0]] = $data[1];
-		}
-		$this->_metaLoaded = true;
 	}
 
 	public function spamFilter()
@@ -1305,7 +1214,8 @@ class Account
 		if(isset(self::$users[$data['id']])) {
 			$acc = self::$users[$data['id']];
 		} else {
-			$acc = new self;
+			$acc       = new self;
+			$acc->meta = new Meta(ac_table('user_meta'), $data['id']);
 		}
 		$acc->id               = (int)$data['id'];
 		$acc->status           = (int)$data['status'];

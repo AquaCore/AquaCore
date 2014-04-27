@@ -170,6 +170,18 @@ class L10n
 		return (bool)$sth->rowCount();
 	}
 
+	public function rangeList($namespace)
+	{
+		$list = array();
+		$count = func_num_args();
+		for($i = 1; $i < $count; ++$i) {
+			foreach(func_get_arg($i) as $name) {
+				$list[$name] = $this->dictionary($namespace, $name) ?: $name;
+			}
+		}
+		return $list;
+	}
+
 	/**
 	 * @param string $namespace
 	 * @access protected

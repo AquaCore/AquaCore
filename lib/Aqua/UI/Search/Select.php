@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\UI\Search;
 
+use Aqua\Core\Exception\InvalidArgumentException;
 use Aqua\Http\Request;
 use Aqua\SQL\Search;
 use Aqua\UI\AbstractForm;
@@ -12,6 +13,7 @@ implements SearchFieldInterface
 {
 	public $column;
 	public $parser;
+	public $parserData = array();
 	public $type = null;
 
 	public function setColumn($column)
@@ -25,9 +27,13 @@ implements SearchFieldInterface
 		return $this->column;
 	}
 
-	public function setParser($parser)
+	public function setParser($parser, array $data = array())
 	{
-		$this->parser = $parser;
+		if(!is_callable($parser)) {
+			throw new InvalidArgumentException(0, 'callable', $parser);
+		}
+		$this->parser     = $parser;
+		$this->parserData = $data;
 
 		return $this;
 	}
@@ -45,14 +51,18 @@ implements SearchFieldInterface
 		}
 		if($this->getAttr('multiple') || $this->getBool('multiple')) {
 			$value = $form->getArray($this->getAttr('name'));
+			if(empty($value)) {
+				return false;
+			}
 		} else {
 			$value = $form->getString($this->getAttr('name'));
-		}
-		if(is_string($value) && $value === '' || empty($value)) {
-			return false;
+			if($value === '') {
+				return false;
+			}
 		}
 		if($this->parser) {
-			return call_user_func($this->parser, $this, $form, $value);
+			$data = array_merge(array( $this, $form, $value ), $this->parserData);
+			return call_user_func_array($this->parser, $data);
 		} else {
 			return $this->_parse($value);
 		}
@@ -74,7 +84,7 @@ implements SearchFieldInterface
 				case Search::SEARCH_XOR:
 					$x = 0;
 					foreach($value as &$y) {
-						if(is_int($y)) $x |= (int)$y;
+						$x |= (int)$y;
 					}
 					return array( $typeFull, $x );
 				default:

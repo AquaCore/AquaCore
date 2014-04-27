@@ -12,6 +12,7 @@ implements SearchFieldInterface
 {
 	public $column;
 	public $parser;
+	public $parserData = array();
 
 	public function setColumn($column)
 	{
@@ -24,21 +25,28 @@ implements SearchFieldInterface
 		return $this->column;
 	}
 
-	public function setParser($parser)
+	public function setParser($parser, array $data = array())
 	{
-		$this->parser = $parser;
+		$this->parser     = $parser;
+		$this->parserData = $data;
 
 		return $this;
 	}
 
 	public function parse(AbstractForm $form)
 	{
-		$range = $form->getArray($this->name, array( 'min' => '', 'max' => '' ));
-		if($range['max'] === '' && $range['min'] === '') {
+		$range = $form->getArray($this->name, array( '0' => '', '1' => '' ));
+		if(!isset($range[0]) || !isset($range[1]) ||
+		   ($range[0] === '' && $range[1] === '')) {
 			return false;
 		}
+		$range = array(
+			'min' => $range[0],
+		    'max' => $range[1]
+		);
 		if($this->parser) {
-			return call_user_func($this->parser, $this, $form, $range);
+			$data = array_merge(array( $this, $form, $range ), $this->parserData);
+			return call_user_func_array($this->parser, $data);
 		} else {
 			return $this->_parse($range);
 		}

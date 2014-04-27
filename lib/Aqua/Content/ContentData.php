@@ -2,6 +2,7 @@
 namespace Aqua\Content;
 
 use Aqua\Core\App;
+use Aqua\Core\Meta;
 use Aqua\Event\Event;
 use Aqua\User\Account;
 
@@ -81,21 +82,19 @@ implements \Serializable
 	 */
 	public $forged = false;
 	/**
-	 * @var array
+	 * @var \Aqua\Core\Meta
 	 */
 	public $meta;
-	/**
-	 * @var bool
-	 */
-	protected $_metaLoaded = false;
 
 	const STATUS_PUBLISHED = 0;
 	const STATUS_DRAFT     = 1;
 
 	public function ready()
 	{
+		$this->meta = new Meta(ac_table('content_meta'), $this->uid);
 		if($this->forged) {
-			$this->_metaLoaded = true;
+			$this->meta->metaLoaded = true;
+			$this->meta->meta       = array();
 		}
 	}
 
@@ -396,95 +395,6 @@ implements \Serializable
 	public function data($key, $default = null)
 	{
 		return (array_key_exists($key, $this->data) ? $this->data[$key] : $default);
-	}
-
-	/**
-	 * @param string $key
-	 * @param mixed  $default
-	 * @return mixed
-	 */
-	public function getMeta($key, $default = null)
-	{
-		$this->_metaLoaded or $this->loadMeta();
-		if(array_key_exists($key, $this->meta)) {
-			return $this->meta[$key];
-		} else {
-			return $default;
-		}
-	}
-
-	/**
-	 * @param array|string $key
-	 * @param string       $value
-	 * @return \Aqua\Content\ContentData
-	 */
-	public function setMeta($key, $value = null)
-	{
-		if($this->forged) return $this;
-		if(!is_array($key)) $key = array( $key => $value );
-		$tbl = ac_table('content_meta');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_content_id, _key, _val)
-		VALUES (:id, :key, :val)
-		ON DUPLICATE KEY UPDATE _val = :val
-		");
-		foreach($key as $k => $val) {
-			$sth->bindValue(':id', $this->uid, \PDO::PARAM_INT);
-			$sth->bindValue(':key', $k, \PDO::PARAM_STR);
-			$sth->bindValue(':val', serialize($val), \PDO::PARAM_LOB);
-			$sth->execute();
-			$sth->closeCursor();
-		}
-		if($this->_metaLoaded) {
-			$this->meta = array_merge($this->meta, $key);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param string|array $key
-	 * @return \Aqua\Content\ContentData
-	 */
-	public function deleteMeta($key)
-	{
-		if($this->forged) return $this;
-		if(!is_array($key)) $key = array( $key );
-		$tbl = ac_table('content_meta');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
-		WHERE _content_id = ? AND _key = ?
-		LIMIT 1
-		");
-		foreach($key as $k) {
-			$sth->bindValue(1, $this->uid, \PDO::PARAM_INT);
-			$sth->bindValue(2, $k, \PDO::PARAM_STR);
-			$sth->execute();
-			$sth->closeCursor();
-			if($this->_metaLoaded) unset($this->meta[$k]);
-		}
-
-		return $this;
-	}
-
-	public function loadMeta()
-	{
-		if($this->forged) return $this;
-		$tbl = ac_table('content_meta');
-		$sth = App::connection()->prepare("
-		SELECT _key, _val
-		FROM `$tbl`
-		WHERE _content_id = ?
-		");
-		$sth->bindValue(1, $this->uid, \PDO::PARAM_INT);
-		$sth->execute();
-		$this->meta = array();
-		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$this->meta[$data[0]] = unserialize($data[1]);
-		}
-		$this->_metaLoaded = true;
-
-		return $this;
 	}
 
 	/**

@@ -36,7 +36,7 @@ if(!empty($comment)) {
 	<div class="ac-comment-submit">
 		<form method="POST">
 			<textarea name="content" id="cke-comment"></textarea>
-			<?php if($content->getMeta('comment-anonymously')) : ?>
+			<?php if($content->meta->get('comment-anonymously')) : ?>
 				<input type="checkbox" name="anonymous" value="1" id="anon-comment">
 				<label for="anon-comment"><?php echo __('comment', 'comment-anonymously') ?></label>
 			<?php endif; ?>

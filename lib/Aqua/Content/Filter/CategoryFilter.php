@@ -6,6 +6,7 @@ use Aqua\Content\ContentData;
 use Aqua\Content\Feed\RssItem;
 use Aqua\Content\Filter\CategoryFilter\Category;
 use Aqua\Core\App;
+use Aqua\Core\Meta;
 use Aqua\Event\Event;
 
 class CategoryFilter
@@ -350,6 +351,8 @@ extends AbstractFilter
 		$this->categories = array();
 		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 			$category                = new Category;
+			$category->meta          = new Meta(ac_table('category_meta'),
+			                                    $data[0]);
 			$category->id            = (int)$data[0];
 			$category->contentTypeId = (int)$data[1];
 			$category->name          = $data[2];

@@ -112,7 +112,8 @@ class Tag
 	 */
 	public function getBool($attr)
 	{
-		return (isset($this->boolean[$attr]) && $this->boolean[$attr]);
+		return (isset($this->boolean[$attr]) && $this->boolean[$attr] ||
+		        isset($this->attributes[$attr]) && $this->attributes[$attr] === $attr);
 	}
 
 	/**

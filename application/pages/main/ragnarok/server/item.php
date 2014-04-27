@@ -2,6 +2,7 @@
 namespace Page\Main\Ragnarok\Server;
 
 use Aqua\Core\App;
+use Aqua\Core\L10n;
 use Aqua\Log\ErrorLog;
 use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Ragnarok;
@@ -13,6 +14,8 @@ use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
+use Aqua\UI\Search\Input;
+use Aqua\UI\Search\Select;
 use Aqua\UI\Template;
 use PHPMailer\POP3;
 
@@ -24,7 +27,6 @@ extends Page
 	 */
 	public $charmap;
 
-	public static $dbItemsPerPage = 10;
 	public static $shopItemsPerPage = 8;
 
 	public function run()
@@ -50,75 +52,166 @@ extends Page
 		}
 	}
 
+	public function validateItemTypeSearch(Select $select, \Aqua\UI\Search $frm, $value, $type) {
+		var_dump($frm->getInt('t'), $type);
+		if($frm->getInt('t') === $type) {
+			return $select->_parse($value);
+		} else {
+			return false;
+		}
+	}
+
 	public function index_action()
 	{
 		$this->theme->head->section = $this->title = __('ragnarok', 'item-db');
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
-			if($x = $this->request->uri->getInt('id', false, 500)) {
-				if($items = $this->charmap->item($x)) {
-					$items = array( $items );
-					$rows = 1;
-				} else {
-					$items = array();
-					$rows = 0;
-				}
-			} else {
-				$search = $this->charmap->itemSearch();
-				// n : Name
-				if($x = $this->request->uri->getString('n', false)) {
-					$search->where(array( 'name' => array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' ) ));
-				}
-				// j : Job
-				if(($x = $this->request->uri->get('j')) && ($x = ac_bitmask($x))) {
-					$search->where(array( 'job' => array( Search::SEARCH_AND, $x ) ));
-				}
-				// u : Upper
-				if(($x = $this->request->uri->get('u')) && ($x = ac_bitmask($x))) {
-					$search->where(array( 'upper' => array( Search::SEARCH_AND, $x ) ));
-				}
-				// l : Location
-				if(($x = $this->request->uri->get('l')) && ($x = ac_bitmask($x))) {
-					$search->where(array( 'job' => array( Search::SEARCH_AND, $x ) ));
-				}
-				// c : Custom
-				if($this->request->uri->get('c')) {
-					$search->where(array( 'custom' => 1 ));
-				}
-				// t : Type
-				if(($x = $this->request->uri->getInt('t', false, 0, 11)) !== false) {
-					$search->where(array( 'type' => $x ));
-				}
-				// v : Equipment Type
-				if(($x = $this->request->uri->getInt('v', false)) !== false) {
-					$search->where(array( 'view' => 1 ));
-				}
-				// lv & lv2 : Equip Level
-				$x = $this->request->uri->getInt('lv', null, 0);
-				$y = $this->request->uri->getInt('lv2', null, 0);
-				if(($x || $y) && ($x = ac_between($x, $y))) {
-					$search->where(array( 'equip_level_max' => $x ));
-				}
-				// lw & lw2 : Weapon Level
-				$x = $this->request->uri->getInt('lw', null, 0, 4);
-				$y = $this->request->uri->getInt('lw2', null, 0, 4);
-				if(($x || $y) && ($x = ac_between($x, $y))) {
-					$search->where(array( 'weapon_level' => $x ));
-				}
-				$search
-					->order(array( 'id' => 'DESC' ))
-				    ->limit(($current_page - 1) * self::$dbItemsPerPage, self::$dbItemsPerPage)
-			        ->calcRows(true)
-					->order(array( 'id' => 'ASC' ))
-			        ->query();
-				$rows = $search->rowsFound;
-				$items = $search->results;
-			}
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::$dbItemsPerPage), $current_page);
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'id'     => 'id',
+			        'name'   => 'name',
+			        'type'   => 'type',
+			        'weight' => 'weight',
+			        'buy'    => 'buying_price',
+			        'sell'   => 'selling_price',
+				))
+				->limit(0, 4, 10, 5)
+				->defaultOrder('id')
+				->defaultLimit(10)
+				->persist("itemDB");
+			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
+			                                           array( 0 ),
+			                                           range(2, 8),
+			                                           range(10, 12));
+			$equipLocations = L10n::getDefault()
+				->rangeList('ragnarok-equip-location',array(
+					0x0001, 0x0002, 0x0004, 0x0008,
+					0x0010, 0x0020, 0x0040, 0x0080,
+					0x0100, 0x0200, 0x0400, 0x0800,
+					0x1000, 0x2000,
+					0x0101, 0x0201, 0x0300, 0x0301,
+				    0x1400, 0x0C00, 0x1800, 0x1C00
+				));
+			$weaponTypes = L10n::getDefault()->rangeList('ragnarok-weapon-type', range(0, 8), range(10, 22));
+			$ammoTypes = L10n::getDefault()->rangeList('ragnarok-ammo-type', range(0, 7));
+			$jobs = L10n::getDefault()->rangeList('ragnarok-equip-job', array(
+				0x0000001, 0x0000002, 0x0000004, 0x0000008,
+				0x0000010, 0x0000020, 0x0000040, 0x0000080,
+				0x0000100, 0x0000200, 0x0000400, 0x0000800,
+				0x0001000,            0x0004000, 0x0008000,
+				0x0010000, 0x0020000, 0x0040000, 0x0080000,
+				           0x0200000, 0x0400000, 0x0800000,
+				0x1000000, 0x2000000
+			));
+			$upper = L10n::getDefault()->rangeList('ragnarok-equip-upper', array( 0x01, 0x02, 0x04, 0x08 ));
+			asort($itemTypes, SORT_STRING);
+			asort($equipLocations, SORT_STRING);
+			asort($weaponTypes, SORT_STRING);
+			asort($ammoTypes, SORT_STRING);
+			$itemTypes = array( '' => __('application', 'any') ) + $itemTypes;
+			$equipLocations = array( '' => __('application', 'any') ) + $equipLocations;
+			$weaponTypes = array( '' => __('application', 'any') ) + $weaponTypes;
+			$ammoTypes = array( '' => __('application', 'any') ) + $ammoTypes;
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'item-id'))
+				->type('number')
+				->attr('min', 0);
+			$frm->input('n')
+				->setColumn('name')
+				->setLabel(__('ragnarok', 'name'))
+				->type('text');
+			$frm->select('t')
+				->setColumn('type')
+				->setLabel(__('ragnarok', 'type'))
+				->value($itemTypes);
+			$frm->select('w')
+				->setColumn('look')
+				->setParser(array( $this, 'validateItemTypeSearch' ), array( 4 ))
+				->setLabel(__('ragnarok', 'weapon-type'))
+				->value($weaponTypes);
+			$frm->select('loc')
+				->setColumn('location')
+				->searchType(Search::SEARCH_AND)
+				->setParser(array( $this, 'validateItemTypeSearch' ), array( 5 ))
+				->setLabel(__('ragnarok', 'equip-locations'))
+				->value($equipLocations);
+			$frm->select('ammo')
+				->setColumn('look')
+				->setParser(array( $this, 'validateItemTypeSearch' ), array( 10 ))
+				->setLabel(__('ragnarok', 'ammo-type'))
+				->value($ammoTypes);
+			$frm->select('job')
+				->setColumn('job')
+				->searchType(Search::SEARCH_AND)
+				->setLabel(__('ragnarok', 'applicable-jobs'))
+				->multiple()
+				->value($jobs);
+			$frm->select('up')
+				->setColumn('upper')
+				->searchType(Search::SEARCH_AND)
+				->setLabel(__('ragnarok', 'upper'))
+				->multiple()
+				->value($upper);
+			$frm->range('atk')
+				->setColumn('attack')
+				->setLabel(__('ragnarok', 'attack'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('def')
+				->setColumn('defence')
+				->setLabel(__('ragnarok', 'defence'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('slt')
+				->setColumn('slots')
+				->setLabel(__('ragnarok', 'slots'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('rng')
+				->setColumn('range')
+				->setLabel(__('ragnarok', 'range'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('buy')
+				->setColumn('buying_price')
+				->setLabel(__('ragnarok', 'buy-price'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('sell')
+				->setColumn('selling_price')
+				->setLabel(__('ragnarok', 'sell-price'))
+				->type('number')
+				->attr('min', 0);
+			$frm->select('r')
+				->setColumn('refineable')
+				->setLabel(__('ragnarok', 'refinable'))
+				->value(array(
+					'' => __('application', 'any'),
+					'1' => __('application', 'yes'),
+					'0' => __('application', 'no'),
+				));
+			$frm->select('c')
+				->setColumn('custom')
+				->setLabel(__('ragnarok', 'custom'))
+				->value(array(
+					'' => __('application', 'any'),
+					'1' => __('application', 'yes'),
+					'0' => __('application', 'no'),
+				));
+			$search = $this->charmap->itemSearch();
+			$frm->apply($search);
+//			echo '<pre>', $search->buildQuery($x), '</pre>'; return;
+			$search->calcRows(true)->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / $frm->getLimit()),
+			                      $currentPage);
 			$tpl = new Template;
-			$tpl->set('items', $items)
-				->set('item_count', $rows)
+			$tpl->set('items', $search->results)
+				->set('item_count', $search->rowsFound)
 				->set('paginator', $pgn)
+				->set('search', $frm)
 				->set('page', $this);
 			echo $tpl->render('ragnarok/item/database');
 		} catch(\Exception $exception) {

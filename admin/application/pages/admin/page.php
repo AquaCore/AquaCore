@@ -170,7 +170,7 @@ extends Site\Page
 				->setLabel(__('page', 'publish-date'));
 			$frm->checkbox('rating')
 			    ->value(array( '1' => '' ))
-			    ->checked($page->getMeta('rating-disabled', false) ? null : '1', false)
+			    ->checked($page->meta->get('rating-disabled', false) ? null : '1', false)
 			    ->setLabel(__('content', 'enable-rating'));
 			$frm->textarea('content', true)
 				->append($this->request->getString('content', null) ?: $page->content);

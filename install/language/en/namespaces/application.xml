@@ -12,7 +12,9 @@
     <word namespace="application" key="prev">Prev</word>
     <word namespace="application" key="previous">Previous</word>
     <word namespace="application" key="submit">Submit</word>
+    <word namespace="application" key="reset">Reset</word>
     <word namespace="application" key="search">Search</word>
+    <word namespace="application" key="advanced-search">Advanced Search</word>
     <word namespace="application" key="confirm">Confirm</word>
     <word namespace="application" key="action">Action</word>
     <word namespace="application" key="apply">Apply</word>
@@ -34,5 +36,8 @@
     <word namespace="application" key="save-order">Save order</word>
     <word namespace="application" key="delete">Delete</word>
     <word namespace="application" key="add">Add</word>
+    <word namespace="application" key="or">or</word>
+    <word namespace="application" key="and">and</word>
+    <word namespace="application" key="any">Any</word>
   </wordgroup>
 </languageimport>

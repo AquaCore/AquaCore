@@ -10,28 +10,31 @@ use Aqua\Core\App;
 use Aqua\Event\Event;
 use Aqua\SQL\Query;
 use Aqua\SQL\Search;
+use Aqua\UI\Tag\Meta;
 use Aqua\User\Account;
 
 class CommentFilter
 extends AbstractFilter
 {
+	public static $cache;
+
 	public function afterUpdate(ContentData $content, array $data, array &$values)
 	{
 		$updated = 0;
 		if(array_key_exists('comments_disabled', $data)) {
 			if($data['comments_disabled']) {
-				$content->setMeta('comments-disabled', true);
+				$content->meta->set('comments-disabled', true);
 			} else {
-				$content->deleteMeta('comments-disabled');
+				$content->meta->delete('comments-disabled');
 			}
 			$values['comments_disabled'] = (bool)$data['comments_disabled'];
 			++$updated;
 		}
 		if(array_key_exists('comment_anonymously', $data)) {
 			if($data['comment_anonymously']) {
-				$content->setMeta('comment-anonymously', true);
+				$content->meta->set('comment-anonymously', true);
 			} else {
-				$content->deleteMeta('comment-anonymously');
+				$content->meta->delete('comment-anonymously');
 			}
 			$values['comment_anonymously'] = (bool)$data['comment_anonymously'];
 			++$updated;
@@ -43,10 +46,10 @@ extends AbstractFilter
 	public function afterCreate(ContentData $content, array &$data)
 	{
 		if(array_key_exists('comments_disabled', $data) && $data['comments_disabled'] === true) {
-			$content->setMeta('comments-disabled', true);
+			$content->meta->set('comments-disabled', true);
 		}
 		if(array_key_exists('comment_anonymously', $data) && $data['comment_anonymously'] === true) {
-			$content->setMeta('comment-anonymously', true);
+			$content->meta->set('comment-anonymously', true);
 		}
 	}
 
@@ -78,8 +81,8 @@ extends AbstractFilter
 		Comment $parent = null
 	) {
 		if($content->forged) return null;
-		if($content->getMeta('comments-disabled', false)) return null;
-		if(!$content->getMeta('comment-anonymously', false)) $anon = false;
+		if($content->meta->get('comments-disabled', false)) return null;
+		if(!$content->meta->get('comment-anonymously', false)) $anon = false;
 		$html = $this->parseCommentContent($bbcode);
 		$tbl  = ac_table('comments');
 		$sth  = App::connection()->prepare("
@@ -572,6 +575,7 @@ extends AbstractFilter
 	public function parseCommentSql(array $data)
 	{
 		$comment               = new Comment;
+		$comment->meta         = new Meta(ac_table('comment_meta'), $data['id']);
 		$comment->contentType  = & $this->contentType;
 		$comment->contentId    = (int)$data['content_id'];
 		$comment->parentId     = (int)$data['parent_id'];
@@ -622,5 +626,61 @@ extends AbstractFilter
 		$bbcode->defaults();
 
 		return $bbcode->parse($content);
+	}
+
+	public static function fetchCache()
+	{
+
+	}
+
+	public static function rebuildCache($name = null)
+	{
+		if($name === null || $name === 'last_comments') {
+			self::$cache['last_comments'] = Query::select(App::connection())
+				->columns(array(
+					'id'           => 'c.id',
+				    'content_id'   => 'c._content_id',
+				    'status'       => 'c._status',
+				    'anonymous'    => 'c._anonymous',
+				    'content'      => 'c._html_content',
+				    'publish_date' => 'c._publish_date',
+				    'user_id'      => 'c._author_id',
+				    'display_name' => 'u._display_name',
+				    'role_id'      => 'u._role_id',
+				    'title'        => 'cd._title',
+				    'content_type' => 'cd._type'
+				))
+				->setColumnType(array(
+					'id'           => 'integer',
+				    'content_id'   => 'integer',
+				    'content_type' => 'integer',
+				    'status'       => 'integer',
+				    'role_id'      => 'integer',
+				    'publish_date' => 'timestamp'
+				))
+				->from(ac_table('comments'), 'c')
+				->innerJoin(ac_table('users'), 'u.id = c._author_id', 'u')
+				->innerJoin(ac_table('content'), 'cd._uid = c._content_id', 'cd')
+				->order('c._publish_date')
+				->groupBy('id')
+				->query()
+				->results;
+		}
+		if($name === null || $name === 'last_reports') {
+			self::$cache['last_reports'] = Query::select(App::connection())
+				->columns(array(
+					'id'         => 'r.id',
+				    'comment_id' => 'r._comment_id',
+				    'date'       => 'r._date',
+				    'content'    => 'r._content',
+				    'user_id'    => 'r._user_id',
+				))
+				->setColumnType(array(
+
+				))
+				->from(ac_table('comment_reports'), 'r')
+				->innerJoin(ac_table('comments'), 'r._comment_id = c.id', 'c')
+				->innerJoin(ac_table('users'), 'u.id = r._user_id');
+		}
 	}
 }

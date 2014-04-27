@@ -5,6 +5,7 @@ use Aqua\Core\App;
 /**
  * @var $page \Page\Main
  */
+
 $date_format = App::settings()->get('date_format');
 $time_format = App::settings()->get('time_format');
 $posts = ContentType::getContentType(ContentType::CTYPE_POST)->featured(5);

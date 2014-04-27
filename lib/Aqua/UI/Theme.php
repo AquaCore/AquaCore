@@ -190,6 +190,12 @@ extends Template
 		$lang    = L10n::getDefault();
 		$json    = array(
 			'URL'         => \Aqua\URL,
+			'URI'         => array(
+				'path' => App::request()->uri->path,
+				'action' => App::request()->uri->action,
+				'arguments' => App::request()->uri->arguments,
+				'query' => App::request()->uri->parameters,
+			),
 			'TIME_OFFSET' => $tz->getOffset($now),
 			'REWRITE'     => \Aqua\REWRITE,
 			'BASE_DIR'    => App::settings()->get('base_dir'),

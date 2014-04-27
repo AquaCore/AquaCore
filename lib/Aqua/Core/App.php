@@ -92,11 +92,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.1.3';
+	const VERSION = '0.1.4';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 103;
+	const VERSION_LONG = 104;
 
 	private function __construct() { }
 

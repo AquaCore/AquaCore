@@ -46,8 +46,8 @@ implements FieldInterface
 	public function __construct($name, $type = 'number')
 	{
 		$this->name = $name;
-		$this->min = new Input("{$name}[min]");
-		$this->max = new Input("{$name}[max]");
+		$this->min = new Input("{$name}[0]");
+		$this->max = new Input("{$name}[1]");
 		$this->min->type($type)->attr('class', 'ac-search-range-min ac-search-range-1');
 		$this->max->type($type)->attr('class', 'ac-search-range-max ac-search-range-1');
 	}
@@ -181,7 +181,7 @@ implements FieldInterface
 		return "
 <div id=\"$id\">
 	<select class=\"ac-script ac-search-range-type\">
-		<option value=\"1\" selected>$between</option>
+		<option value=\"1\">$between</option>
 		<option value=\"2\">$exactly</option>
 		<option value=\"3\">$higherThan</option>
 		<option value=\"4\">$lowerThan</option>
@@ -196,37 +196,40 @@ implements FieldInterface
 	var rangeDiv     = document.getElementById(\"$id\"),
 		rangeType    = rangeDiv.getElementsByClassName(\"ac-search-range-type\")[0],
 		rangeMin     = rangeDiv.getElementsByClassName(\"ac-search-range-min\")[0],
-		rangeMax     = rangeDiv.getElementsByClassName(\"ac-search-range-max\")[0];
+		rangeMax     = rangeDiv.getElementsByClassName(\"ac-search-range-max\")[0],
+		setRagneType = function(value) {
+			switch(value) {
+				case \"1\":
+					rangeMin.style.display = \"\";
+					rangeMax.style.display = \"\";
+					break;
+				case \"2\":
+					rangeMin.style.display = \"\";
+					rangeMax.style.display = \"none\";
+					break;
+				case \"3\":
+					rangeMin.style.display = \"\";
+					rangeMax.style.display = \"none\";
+					break;
+				case \"4\":
+					rangeMin.style.display = \"none\";
+					rangeMax.style.display = \"\";
+					break;
+			}
+			rangeMin.className = rangeMin.className.replace(/(?!^|\s+)ac-search-range-\d(?=$|\s+)/, \"ac-search-range-\" + value);
+			rangeMax.className = rangeMax.className.replace(/(?!^|\s+)ac-search-range-\d(?=$|\s+)/, \"ac-search-range-\" + value);
+		};
 	rangeMin.onchange = function() {
 		if(rangeType.options[rangeType.selectedIndex].value === \"2\") {
 			rangeMax.value = this.value;
 		}
 	};
 	rangeType.onchange = function(e) {
-		var value = this.options[this.selectedIndex].value;
-		switch(value) {
-			case \"1\":
-				rangeMin.style.display = \"\";
-				rangeMax.style.display = \"\";
-				break;
-			case \"2\":
-				rangeMin.style.display = \"\";
-				rangeMax.style.display = \"none\";
-				break;
-			case \"3\":
-				rangeMin.style.display = \"\";
-				rangeMax.style.display = \"none\";
-				break;
-			case \"4\":
-				rangeMin.style.display = \"none\";
-				rangeMax.style.display = \"\";
-				break;
-		}
-		rangeMin.className = rangeMin.className.replace(/(?!^|\s+)ac-search-range-\d(?=$|\s+)/, \"ac-search-range-\" + value);
-		rangeMax.className = rangeMax.className.replace(/(?!^|\s+)ac-search-range-\d(?=$|\s+)/, \"ac-search-range-\" + value);
+		setRagneType(this.options[this.selectedIndex].value);
 		rangeMin.value = \"\";
 		rangeMax.value = \"\";
 	};
+	setRagneType(rangeType.options[rangeType.selectedIndex].value);
 })();
 </script>
 ";
@@ -235,16 +238,16 @@ implements FieldInterface
 	public function validate(AbstractForm $form, &$errorMessage = null)
 	{
 		if(!($range = $form->getArray($this->name, null)) ||
-		   !isset($range['min']) || !isset($range['max']) ||
-		   !is_string($range['min']) || is_string($range['max'])) {
+		   !isset($range[0]) || !isset($range[1]) ||
+		   !is_string($range[0]) || is_string($range[1])) {
 			return Form::VALIDATION_INCOMPLETE;
 		}
-		$form->set("{$this->name}[min]", $range['min'])->set("{$this->name}[max]", $range['max']);
+		$form->set("{$this->name}[0]", $range[0])->set("{$this->name}[1]", $range[1]);
 		if(($status = $this->min->validate($form, $errorMessage)) !== Form::VALIDATION_SUCCESS ||
 		   ($status = $this->max->validate($form, $errorMessage)) !== Form::VALIDATION_SUCCESS) {
 			$this->setWarning($this->min->getWarning() ?: $this->max->getWarning());
 		}
-		$form->delete("{$this->name}[min]")->delete("{$this->name}[max]");
+		$form->delete("{$this->name}[0]")->delete("{$this->name}[1]");
 		return $status;
 	}
 }

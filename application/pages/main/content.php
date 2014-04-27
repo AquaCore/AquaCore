@@ -133,7 +133,7 @@ extends Page
 				->set('paginator', $pgn)
 			    ->set('page', $this);
 			if($this->contentType->hasFilter('CommentFilter') &&
-			   !$content->getMeta('comments-disabled', false)) {
+			   !$content->meta->get('comments-disabled', false)) {
 				$currentPage = $this->request->uri->getInt('comments', 1, 1);
 				list( $comments, $rowsFound ) = $content->getComments(
 					$this->request->uri->getInt('root', null),
@@ -162,7 +162,7 @@ extends Page
 				$tpl->set('comments', $commentsTpl);
 			}
 			if($this->contentType->hasFilter('RatingFilter') &&
-			   !$content->getMeta('rating-disabled', false)) {
+			   !$content->meta->get('rating-disabled', false)) {
 				$ratingTpl = new Template;
 				$ratingTpl
 					->set('content', $content)
@@ -214,7 +214,7 @@ extends Page
 				->set('paginator', $pgn)
 				->set('page', $this);
 			if($this->contentType->hasFilter('CommentFilter') &&
-			   !($content->getMeta('comments-disabled', false))) {
+			   !($content->meta->get('comments-disabled', false))) {
 				$comments = array();
 				$commentsPgn = new Pagination(App::request()->uri, 0, 1, 'comments');
 				$commentsTpl = new Template;
@@ -227,7 +227,7 @@ extends Page
 				$tpl->set('comments', $commentsTpl);
 			}
 			if($this->contentType->hasFilter('RatingFilter') &&
-			   !$content->getMeta('rating-disabled', false)) {
+			   !$content->meta->get('rating-disabled', false)) {
 				$ratingTpl = new Template;
 				$ratingTpl
 					->set('content', $content)

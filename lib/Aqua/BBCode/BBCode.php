@@ -64,7 +64,7 @@ class BBCode
 		$this->addRule('indent', new IndentRule());
 		$this->addRule('list', new ListRule());
 		$this->addRule('video', new VideoRule());
-		//$this->addRule('quote', new QuoteRule());
+		$this->addRule('quote', new QuoteRule());
 		$this->addRule('spoiler', new SpoilerRule());
 		$this->addFilter('smiley', new SmileyFilter(), 0);
 		$this->addFilter('clickable', new ClickableFilter(), 1);

@@ -2,16 +2,18 @@
 <languageimport>
   <wordgroup language="en">
     <word namespace="ragnarok-mob-mode" key="16384">Target Weak</word>
+    <word namespace="ragnarok-mob-mode" key="12288">Change Target</word>
     <word namespace="ragnarok-mob-mode" key="8192">Change Target (Chase)</word>
     <word namespace="ragnarok-mob-mode" key="4096">Change Target (Attack)</word>
     <word namespace="ragnarok-mob-mode" key="2048">Angry</word>
     <word namespace="ragnarok-mob-mode" key="1024">Change Chase</word>
+    <word namespace="ragnarok-mob-mode" key="528">Cast Sensor</word>
     <word namespace="ragnarok-mob-mode" key="512">Cast Sensor (Chase)</word>
     <word namespace="ragnarok-mob-mode" key="256">Detector</word>
     <word namespace="ragnarok-mob-mode" key="128">Can Attack</word>
     <word namespace="ragnarok-mob-mode" key="64">Plant</word>
-    <word namespace="ragnarok-mob-mode" key="48">Boss</word>
-    <word namespace="ragnarok-mob-mode" key="32">Cas Sensor (Idle)</word>
+    <word namespace="ragnarok-mob-mode" key="32">Boss</word>
+    <word namespace="ragnarok-mob-mode" key="16">Cast Sensor (Idle)</word>
     <word namespace="ragnarok-mob-mode" key="8">Assist</word>
     <word namespace="ragnarok-mob-mode" key="4">Aggressive</word>
     <word namespace="ragnarok-mob-mode" key="2">Looter</word>

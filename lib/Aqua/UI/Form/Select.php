@@ -102,7 +102,7 @@ implements FieldInterface
 			if(!is_array($key)) {
 				$key = array( $key );
 			}
-			$this->selected = $key;
+			$this->selected = array_map('strval', $key);
 		}
 
 		return $this;
@@ -212,15 +212,22 @@ implements FieldInterface
 	 */
 	public function render()
 	{
+		$name = $this->getAttr('name');
+		if($this->getBool('multiple')) {
+			$this->attr('name', "{$name}[]");
+		}
 		$html = $this->_renderOpenTag() . $this->_renderContent();
 		foreach($this->values as $key => $option) {
-			if(array_search($key, $this->selected) !== false) {
+			if(array_search(strval($key), $this->selected, true) !== false) {
 				$option->attr('selected', 'selected');
 			}
 			$html .= $option->render();
 			$option->attr('selected', false);
 		}
 		$html .= $this->_renderCloseTag();
+		if($this->getBool('multiple')) {
+			$this->attr('name', $name);
+		}
 
 		return $html;
 	}

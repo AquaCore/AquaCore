@@ -19,7 +19,7 @@
     <word namespace="ragnarok" key="attack-motion">Attack Motion</word>
     <word namespace="ragnarok" key="attack-range">Attack Range</word>
     <word namespace="ragnarok" key="avg-level">Avg. Level</word>
-    <word namespace="ragnarok" key="base-exp">B. Experience</word>
+    <word namespace="ragnarok" key="base-exp">Base Exp</word>
     <word namespace="ragnarok" key="base-level">B. Level</word>
     <word namespace="ragnarok" key="buy-price">Buying Price</word>
     <word namespace="ragnarok" key="card">Card</word>
@@ -53,8 +53,7 @@
     <word namespace="ragnarok" key="clear-cart">Clear Cart</word>
     <word namespace="ragnarok" key="current-password">Current Password</word>
     <word namespace="ragnarok" key="current-pincode">Pincode</word>
-    <word namespace="ragnarok" key="custom-item">Custom item</word>
-    <word namespace="ragnarok" key="custom-mob">Custom Monster</word>
+    <word namespace="ragnarok" key="custom">Custom</word>
     <word namespace="ragnarok" key="defence">Defence</word>
     <word namespace="ragnarok" key="delay-motion">Delay Motion</word>
     <word namespace="ragnarok" key="dexterity">Dexterity</word>
@@ -66,6 +65,7 @@
     <word namespace="ragnarok" key="equip-locations">Equip Locations</word>
     <word namespace="ragnarok" key="equip-script">Equip Script</word>
     <word namespace="ragnarok" key="experience">Experience</word>
+    <word namespace="ragnarok" key="ammo-type">Ammo Type</word>
     <word namespace="ragnarok" key="fame">Fame</word>
     <word namespace="ragnarok" key="female">Female</word>
     <word namespace="ragnarok" key="gender">Gender</word>
@@ -91,7 +91,7 @@
     <word namespace="ragnarok" key="item-db">Item Database</word>
     <word namespace="ragnarok" key="item-id">Item ID</word>
     <word namespace="ragnarok" key="item-not-found">Item not found.</word>
-    <word namespace="ragnarok" key="job-exp">J. Experience</word>
+    <word namespace="ragnarok" key="job-exp">Job Exp</word>
     <word namespace="ragnarok" key="job-level">J. Level</word>
     <word namespace="ragnarok" key="karma">Karma</word>
     <word namespace="ragnarok" key="kro-name">kRO Name</word>
@@ -116,7 +116,7 @@
     <word namespace="ragnarok" key="min-attack">Min Attack</word>
     <word namespace="ragnarok" key="min-lvl">Min Level</word>
     <word namespace="ragnarok" key="mob-db">Monster Database</word>
-    <word namespace="ragnarok" key="mob-id">Monster Id</word>
+    <word namespace="ragnarok" key="mob-id">Mob ID</word>
     <word namespace="ragnarok" key="mob-not-found">Monster not found.</word>
     <word namespace="ragnarok" key="monster">Monster</word>
     <word namespace="ragnarok" key="mvp-exp">MVP Experience</word>

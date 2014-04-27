@@ -4,9 +4,9 @@ $assetsPath: "../" !default;
 	width: 100%;
 	margin-bottom: 15px;
 	padding: 0;
-	border: 1px solid $bluish-gray-1;
+	border: 1px solid $bluishGray-1;
 	border-spacing: 0;
-	@include box-shadow($bluish-gray-1 0 1px 3px 0);
+	@include box-shadow($bluishGray-1 0 1px 3px 0);
 	@include border-radius(5px);
 	thead, tfoot {
 		margin: 0;
@@ -33,7 +33,7 @@ $assetsPath: "../" !default;
 	tbody {
 		tr {
 			td {
-				background: #e9eef4;
+				background: $lightGray-2;
 				padding: 5px;
 				border-top: 1px solid white;
 				border-bottom: 1px solid #d9e1e9;
@@ -72,18 +72,21 @@ $assetsPath: "../" !default;
 			height: 1em;
 			padding: 5px 10px;
 			border-top: 1px solid white;
-			border-bottom: 1px solid $mid-gray-1;
-			color: $mid-gray-1;
+			border-bottom: 1px solid $midGray-1;
+			color: $midGray-1;
 			font-weight: normal;
 			font-size: 0.9375em;
 			@include text-shadow(1px 1px 0 white);
-			@include background(linear-gradient($light-gray-3, $mid-gray-2));
-			border-left: 1px solid $mid-gray-2;
-			border-right: 1px solid $light-gray-3;
+			@include background(linear-gradient($lightGray-3, $midGray-2));
+			border-left: 1px solid $midGray-2;
+			border-right: 1px solid $lightGray-3;
 			&.ac-table-order {
 				padding: 0;
 				&:hover, &.ac-table-order-active {
-					@include background(linear-gradient($light-gray-3, $mid-gray-2));
+					@include background(linear-gradient(
+							scale_lightness($lightGray-3, 30),
+							scale_saturation($midGray-2, 30)
+					));
 				}
 				a {
 					display: block;
@@ -91,19 +94,19 @@ $assetsPath: "../" !default;
 					height: auto;
 					text-align: center;
 					padding: 5px 10px;
-					color: $mid-gray-1;
+					color: $midGray-1;
 					@include text-shadow(1px 1px 0 white);
 				}
 			}
 		}
 		&.alt td, &.alt th {
-			color: $light-gray-2;
-			border-top: 1px solid $light-blue-2;
+			color: $lightGray-2;
+			border-top: 1px solid $lightBlue-2;
 			border-bottom: 1px solid #4586d0;
-			@include text-shadow(-1px -1px 0 $mid-blue-2);
-			@include background(linear-gradient(#68e2f2, #52aae0));
-			border-left: 1px solid #52aae0;
-			border-right: 1px solid #68e2f2;
+			@include text-shadow(-1px -1px 0 $midBlue-2);
+			@include background(linear-gradient($lightBlue-3, $midBlue-3));
+			border-left: 1px solid $midBlue-3;
+			border-right: 1px solid $lightBlue-3;
 			&.ac-table-order {
 				.ac-table-bullet {
 					width: 10px;
@@ -121,11 +124,14 @@ $assetsPath: "../" !default;
 					&.ac-table-sorting-desc .ac-table-bullet {
 						background-image: url(#{$assetsPath}images/icons/bullet-down.png) !important;
 					}
-					@include background(linear-gradient(#8cf3ff, #56b4ec));
+					@include background(linear-gradient(
+							scale_lightness($lightBlue-3, 30),
+							scale_saturation($midBlue-3, 30)
+					));
 				}
 				a {
-					color: $light-gray-2;
-					@include text-shadow(-1px -1px 0 $mid-blue-2);
+					color: $lightGray-2;
+					@include text-shadow(-1px -1px 0 $midBlue-2);
 				}
 			}
 		}
@@ -153,11 +159,11 @@ $assetsPath: "../" !default;
 	display: block;
 	width: 100%;
 	text-align: right;
-	color: $bluish-gray-4;
+	color: $bluishGray-4;
 	font-style: italic;
 }
 .ac-table-no-result {
 	text-align: center;
 	font-style: italic;
-	color: $bluish-gray-4;
+	color: $bluishGray-4;
 }

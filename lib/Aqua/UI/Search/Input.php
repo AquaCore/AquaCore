@@ -11,6 +11,7 @@ implements SearchFieldInterface
 {
 	public $column;
 	public $parser;
+	public $parserData = array();
 	public $type = self::SEARCH_LIKE_BOTH;
 
 	const SEARCH_LIKE_LEFT  = 0;
@@ -29,9 +30,10 @@ implements SearchFieldInterface
 		return $this->column;
 	}
 
-	public function setParser($parser)
+	public function setParser($parser, array $data = array())
 	{
-		$this->parser = $parser;
+		$this->parser     = $parser;
+		$this->parserData = $data;
 
 		return $this;
 	}
@@ -50,7 +52,8 @@ implements SearchFieldInterface
 			return false;
 		}
 		if($this->parser) {
-			return call_user_func($this->parser, $this, $form, $value);
+			$data = array_merge(array( $this, $form, $value ), $this->parserData);
+			return call_user_func_array($this->parser, $data);
 		} else {
 			return $this->_parse($value);
 		}

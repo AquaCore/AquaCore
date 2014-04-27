@@ -6,6 +6,10 @@ use Aqua\BBCode\AbstractRule;
 class QuoteRule
 extends AbstractRule
 {
+	public $settings = array(
+		'idPattern' => '/^\d+$/'
+	);
+
 	public function __construct(array $settings = array())
 	{
 		parent::__construct($settings);
@@ -13,6 +17,12 @@ extends AbstractRule
 				'trimLineBreaks' => 1,
 				'template' => 'quote',
 				'attributes' => array(
+					'$' => array(
+						'map' => 'commentid',
+					    'optional' => true,
+					    'encode' => false,
+					    'pattern' =>  &$this->settings['idPattern']
+					),
 					'author' => array(
 						'map' => 'author',
 						'optional' => true,

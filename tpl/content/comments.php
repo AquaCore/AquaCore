@@ -27,7 +27,7 @@ if($content->forged || App::user()->role()->hasPermission('comment')) {
 		->addSettings('contentData', array(
 			'ID' => $content->uid,
 		    'cType' => $content->contentType->id,
-		    'allowAnonymous' => (bool)$content->getMeta('comment-anonymously')
+		    'allowAnonymous' => (bool)$content->meta->get('comment-anonymously')
 		))
 		->addSettings('commentRatings', $ratings)
 		->addSettings('base64Url', base64_encode(App::request()->uri->url()))
@@ -63,7 +63,7 @@ $tpl = new \Aqua\UI\Template;
 			    'query' => array( 'return' => $page->theme->jsSettings['base64Url'] )
 			)) ?>">
 				<textarea name="content" id="cke-comment"></textarea>
-				<?php if($content->getMeta('comment-anonymously')) : ?>
+				<?php if($content->meta->get('comment-anonymously')) : ?>
 					<input type="checkbox" name="anonymous" value="1" id="anon-comment">
 					<label for="anon-comment"><?php echo __('comment', 'comment-anonymously') ?></label>
 				<?php endif; ?>

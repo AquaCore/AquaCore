@@ -1,4 +1,8 @@
 <?php
 return array (
-  'en' => array( 'English', 'LTR' ),
+  'en' => 
+  array (
+    0 => 'English',
+    1 => 'LTR',
+  ),
 );

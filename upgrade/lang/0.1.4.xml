@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup language="en">
+        <word namespace="application" key="reset">Reset</word>
+        <word namespace="application" key="advanced-search">Advanced Search</word>
+        <word namespace="application" key="or">or</word>
+        <word namespace="application" key="and">and</word>
+        <word namespace="application" key="any">Any</word>
+        <word namespace="content" key="quote-author">%s said:</word>
+        <word namespace="content" key="quote-date">on %s</word>
+        <word namespace="ragnarok" key="base-exp">Base Exp</word>
+        <word namespace="ragnarok" key="custom">Custom</word>
+        <word namespace="ragnarok" key="ammo-type">Ammo Type</word>
+        <word namespace="ragnarok" key="job-exp">Job Exp</word>
+        <word namespace="ragnarok" key="mob-id">Mob ID</word>
+        <word namespace="ragnarok-mob-mode" key="12288">Change Target</word>
+        <word namespace="ragnarok-mob-mode" key="528">Cast Sensor</word>
+        <word namespace="ragnarok-mob-mode" key="32">Boss</word>
+        <word namespace="ragnarok-mob-mode" key="16">Cast Sensor (Idle)</word>
+    </wordgroup>
+</languageimport>

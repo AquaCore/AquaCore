@@ -932,8 +932,8 @@ implements \Serializable, SubjectInterface
 			}
 			$content->data[$alias] = $data[$alias];
 		}
-		$cType->applyFilters('parseData', $feedback);
 		$content->ready();
+		$cType->applyFilters('parseData', $feedback);
 
 		return $content;
 	}

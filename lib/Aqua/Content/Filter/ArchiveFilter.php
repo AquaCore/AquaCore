@@ -13,8 +13,8 @@ extends AbstractFilter
 	public function parseData(ContentData $content, array &$data)
 	{
 		if((int)$data['status'] === ContentData::STATUS_PUBLISHED &&
-		   !$content->getMeta('disable-archiving', false)) {
-			if(!($date = (int)$content->getMeta('archive-date'))) {
+		   !$content->meta->get('disableArchiving', false)) {
+			if(!($date = (int)$content->meta->get('archiveDate'))) {
 				$date = $data['publish_date'] + ($this->getOption('interval', 20) * 86400);
 			}
 			if($date > time()) {
@@ -53,20 +53,20 @@ extends AbstractFilter
 	public function archive(ContentData $content, array &$data)
 	{
 		if(array_key_exists('archiving', $data) && !$data['archiving']) {
-			$content->setMeta('disable-archiving', true);
+			$content->meta->set('disableArchiving', true);
 			return null;
 		}
 		if(array_key_exists('archive_date', $data) && $data['archive_date']) {
-			$content
-				->deleteMeta('disable-archiving')
-				->setMeta('archive-date', (int)$data['archive_date']);
+			$content->meta
+				->delete('disableArchiving')
+				->set('archiveDate', (int)$data['archive_date']);
 			if($data['archive_date'] <= $data['publish_date'] &&
 			   (int)$data['status'] === ContentData::STATUS_PUBLISHED) {
 				$data['status'] = self::STATUS_ARCHIVED;
 				return true;
 			}
 		} else {
-			$content->deleteMeta('archive-date');
+			$content->meta->delete('archiveDate');
 		}
 		return null;
 	}

@@ -147,10 +147,11 @@ CREATE TABLE IF NOT EXISTS `#users` (
   COLLATE = utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#user_meta` (
-  _user_id INT UNSIGNED NOT NULL,
+  _id INT UNSIGNED NOT NULL,
   _key VARCHAR(30) NOT NULL,
-  _val TEXT NOT NULL,
-  PRIMARY KEY ( _user_id, _key )
+  _val TEXT,
+  _type ENUM('S', 'I', 'F', 'B', 'X') NOT NULL,
+  PRIMARY KEY ( _id, _key )
 ) ENGINE = MyIsam
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_bin;
@@ -397,10 +398,11 @@ CREATE TABLE IF NOT EXISTS `#content` (
   COLLATE = utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#content_meta` (
-  _content_id INT UNSIGNED NOT NULL,
+  _id INT UNSIGNED NOT NULL,
   _key VARCHAR(32) NOT NULL,
   _val TEXT,
-  PRIMARY KEY ( _content_id, _key )
+  _type ENUM('S', 'I', 'F', 'B', 'X') NOT NULL,
+  PRIMARY KEY ( _id, _key )
 ) ENGINE = MyIsam
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_bin;
@@ -441,10 +443,11 @@ CREATE TABLE IF NOT EXISTS `#categories` (
   COLLATE = utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#category_meta` (
-  _category_id INT UNSIGNED NOT NULL,
+  _id INT UNSIGNED NOT NULL,
   _key VARCHAR(32) NOT NULL,
   _val TEXT,
-  PRIMARY KEY ( _category_id, _key )
+  _type ENUM('S', 'I', 'F', 'B', 'X') NOT NULL,
+  PRIMARY KEY ( _id, _key )
 ) ENGINE = MyIsam
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_bin;
@@ -523,10 +526,11 @@ CREATE TABLE IF NOT EXISTS `#comment_reports` (
   COLLATE = utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#comment_meta` (
-  _comment_id INT UNSIGNED NOT NULL,
+  _id INT UNSIGNED NOT NULL,
   _key VARCHAR(32) NOT NULL,
   _val TEXT,
-  PRIMARY KEY ( _comment_id, _key )
+  _type ENUM('S', 'I', 'F', 'B', 'X') NOT NULL,
+  PRIMARY KEY ( _id, _key )
 ) ENGINE = MyIsam
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_bin;

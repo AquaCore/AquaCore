@@ -311,7 +311,7 @@ extends Page
 				->attr('timestamp', $post->publishDate)
 				->value(date('Y-m-d H:i:s', $post->publishDate))
 				->setLabel(__('content', 'publish-date'));
-			$archiveDate = $post->getMeta('archive-date') ?: '';
+			$archiveDate = $post->meta->get('archive-date') ?: '';
 			$frm->input('archive_date', true)
 			    ->type('text')
 				->attr('timestamp', $archiveDate)
@@ -326,19 +326,19 @@ extends Page
 				->setDescription(__('content', 'featured-desc'));
 			$frm->checkbox('comments', true)
 				->value(array( '1' => '' ))
-				->checked($post->getMeta('comments-disabled') ? null : '1')
+				->checked($post->meta->get('comments-disabled') ? null : '1')
 				->setLabel(__('content', 'comments-enabled'));
 			$frm->checkbox('anonymous', true)
 				->value(array( '1' => '' ))
-				->checked($post->getMeta('comment-anonymously') ? '1' : null)
+				->checked($post->meta->get('comment-anonymously') ? '1' : null)
 				->setLabel(__('content', 'anonymous-enabled'));
 			$frm->checkbox('rating', true)
 				->value(array( '1' => '' ))
-				->checked($post->getMeta('rating-disabled') ? null : '1')
+				->checked($post->meta->get('rating-disabled') ? null : '1')
 				->setLabel(__('content', 'enable-rating'));
 			$frm->checkbox('archiving', true)
 			    ->value(array( '1' => '' ))
-			    ->checked($post->getMeta('disable-archiving') ? null : '1')
+			    ->checked($post->meta->get('disable-archiving') ? null : '1')
 			    ->setLabel(__('content', 'enable-archiving'));
 			$frm->textarea('content', true)
 				->append(htmlspecialchars($post->content));

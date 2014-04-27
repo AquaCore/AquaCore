@@ -41,7 +41,7 @@ extends Page
 			$frm = new Form($this->request);
 			$frm->textarea('content')
 				->required();
-			if($content->getMeta('comment-anonymously')) {
+			if($content->meta->get('comment-anonymously')) {
 				$frm->checkbox('anonymous')
 					->value(array( '1' => '' ))
 					->setLabel(__('comment', 'comment-anonymously'));
@@ -77,7 +77,7 @@ extends Page
 				$arguments = array(
 					App::user()->account,
 					$this->request->getString('content'),
-					$content->getMeta('comment-anonymously') && $this->request->getInt('anonymous'),
+					$content->meta->get('comment-anonymously') && $this->request->getInt('anonymous'),
 					0,
 					\Aqua\Content\Filter\CommentFilter\Comment::STATUS_PUBLISHED
 				);

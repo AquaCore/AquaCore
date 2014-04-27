@@ -41,23 +41,23 @@ extends AbstractQuery
 					}
 					$query .= 'AND ';
 				}
-				if(!is_int($column)) {
+				if(is_int($column)) {
+					if(is_string($value)) {
+						$query .= "$value ";
+						++$i;
+					} else if($q = $this->parseSearch($value, $values)) {
+						$query .=  "$q ";
+						++$i;
+					}
+				} else {
 					if(!is_array($value)) {
 						$value = array( self::SEARCH_NATURAL, $value );
 					}
-					if($this->parseSearchFlags($value, $q, $values, $column)) {
-						$query .= "$q ";
+					if($this->parseSearchFlags($value, $w, $values, $column)) {
+						$query .= "$w ";
+						++$i;
 					}
-				} else if(is_string($value)) {
-						$query .= "$value ";
-				} else if(is_array($value)) {
-					$q = $this->parseSearch($value, $values);
-					if($q === null) {
-						continue;
-					}
-					$query .= "$q ";
 				}
-				++$i;
 			}
 		}
 		if($i === 0) {
@@ -153,22 +153,38 @@ extends AbstractQuery
 				} else {
 					$where        = "$column ~ $key";
 					$values[$key] = $options[1];
+					if(isset($options[2])) {
+						$where = "($where) = {$key}_x";
+						$values["{$key}_x"] = $options[2];
+					}
 					$this->setDataType($key, $dataType);
 				}
 				break;
 			case self::SEARCH_AND:
 				$where        = ($not ? "NOT ($column & $key)" : "$column & $key");
 				$values[$key] = $options[1];
+				if(isset($options[2])) {
+					$where = "($where) = {$key}_x";
+					$values["{$key}_x"] = $options[2];
+				}
 				$this->setDataType($key, $dataType);
 				break;
 			case self::SEARCH_OR:
 				$where        = ($not ? "NOT ($column | $key)" : "$column | $key");
 				$values[$key] = $options[1];
+				if(isset($options[2])) {
+					$where = "($where) = {$key}_x";
+					$values["{$key}_x"] = $options[2];
+				}
 				$this->setDataType($key, $dataType);
 				break;
 			case self::SEARCH_XOR:
 				$where        = ($not ? "NOT ($column ^ $key)" : "$column ^ $key");
 				$values[$key] = $options[1];
+				if(isset($options[2])) {
+					$where = "($where) = {$key}_x";
+					$values["{$key}_x"] = $options[2];
+				}
 				$this->setDataType($key, $dataType);
 				break;
 			default:

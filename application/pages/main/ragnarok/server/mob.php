@@ -2,6 +2,7 @@
 namespace Page\Main\Ragnarok\Server;
 
 use Aqua\Core\App;
+use Aqua\Core\L10n;
 use Aqua\Log\ErrorLog;
 use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Site\Page;
@@ -9,6 +10,7 @@ use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
+use Aqua\UI\Search\Input;
 use Aqua\UI\Template;
 
 class Mob
@@ -18,11 +20,6 @@ extends Page
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
-
-	/**
-	 * @var int
-	 */
-	public static $dbMobsPerPage = 10;
 
 	public function run()
 	{
@@ -41,79 +38,132 @@ extends Page
 
 	public function index_action()
 	{
-		$this->theme->head->section = $this->title = __('ragnarok', 'mob-db');
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
-			if($x = $this->request->uri->getInt('id', false)) {
-				if($monsters = $this->charmap->mob($x)) {
-					$monsters = array( $monsters );
-					$rows = 1;
-				} else {
-					$monsters = array();
-					$rows = 0;
+			$this->theme->head->section = $this->title = __('ragnarok', 'mob-db');
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'id'      => 'id',
+			        'name'    => 'name',
+			        'lvl'     => 'level',
+			        'bxp'     => 'base_exp',
+			        'jxp'     => 'job_exp',
+			        'race'    => 'race',
+			        'element' => 'element',
+			        'size'    => 'scale',
+				))
+				->limit(0, 4, 10, 5)
+				->defaultOrder('id')
+				->defaultLimit(10)
+				->persist('mobDB');
+			$races = L10n::getDefault()->rangeList('ragnarok-race', range(0, 9));
+			$elements = L10n::getDefault()->rangeList('ragnarok-element', range(0, 9));
+			asort($races);
+			asort($elements);
+			$elements = array( '' => __('application', 'any') ) + $elements;
+			$races    = array( '' => __('application', 'any') ) + $races;
+			$modes    = array(
+				0x0001,
+			    0x0002,
+			    0x0004,
+			    0x0008,
+			    0x0010 | 0x0200,
+			    0x0020,
+			    0x0040,
+			    0x0080,
+			    0x0100,
+			    0x0400,
+			    0x0800,
+			    0x1000 | 0x2000,
+			    0x4000
+			);
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'mob-id'))
+				->type('number')
+				->attr('min', 0);
+			$frm->input('n')
+				->setColumn('name')
+				->setLabel(__('ragnarok', 'name'))
+				->type('text');
+			$frm->select('size')
+				->setColumn('scale')
+				->setLabel(__('ragnarok', 'size'))
+				->value(array(
+					'' => __('application', 'any'),
+				    '0' => __('ragnarok-size', 0),
+				    '1' => __('ragnarok-size', 1),
+				    '2' => __('ragnarok-size', 2),
+				));
+			$frm->select('race')
+				->setColumn('race')
+				->setLabel(__('ragnarok', 'race'))
+				->value($races);
+			$frm->select('el')
+				->setColumn('el')
+				->setLabel(__('ragnarok', 'element'))
+				->value($elements);
+			$frm->range('lv')
+				->setColumn('level')
+				->setLabel(__('ragnarok', 'level'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('bxp')
+				->setColumn('base_exp')
+				->setLabel(__('ragnarok', 'base-exp'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('jxp')
+				->setColumn('job_exp')
+				->setLabel(__('ragnarok', 'job-exp'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('ar')
+				->setColumn('attack_range')
+				->setLabel(__('ragnarok', 'attack-range'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('sr')
+				->setColumn('skill_range')
+				->setLabel(__('ragnarok', 'spell-range'))
+				->type('number')
+				->attr('min', 0);
+			$include = 0;
+			$exclude = 0;
+			foreach($modes as $key => $mode) {
+				$frm->select("m$key")
+					->setLabel(__('ragnarok-mob-mode', $mode))
+					->value(array(
+						'' => __('application', 'any'),
+					    '1' => __('application', 'yes'),
+					    '0' => __('application', 'no')
+					));
+				if(($val = $frm->getInt("m$key", null)) !== null) {
+					if($val) {
+						$include |= $mode;
+					} else {
+						$exclude |= $mode;
+					}
 				}
-			} else {
-				$search = $this->charmap->mobSearch()
-					->calcRows(true)
-					->limit(($current_page - 1) * self::$dbMobsPerPage, self::$dbMobsPerPage)
-					->order(array( 'id' => 'ASC' ));
-				// n : Name
-				if($x = $this->request->uri->getString('n', false)) {
-					$search->where(array( 'name' => array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' ) ));
-				}
-				// m : Mode
-				if(($x = $this->request->uri->get('j')) && ($x = ac_bitmask($x))) {
-					$search->where(array( 'mode' => array( Search::SEARCH_AND, $x ) ));
-				}
-				// c : Custom
-				if($this->request->uri->get('c')) {
-					$search->where(array( 'custom' => 1 ));
-				}
-				// s : Size
-				if(($x = $this->request->uri->getInt('s', false, 0, 2)) !== false) {
-					$search->where(array( 'scale' => $x ));
-				}
-				// r : Race
-				if(($x = $this->request->uri->getInt('r', false, 0, 9)) !== false) {
-					$search->where(array( 'race' => $x ));
-				}
-				// e : Element
-				if(($x = $this->request->uri->getInt('e', false, 0, 9)) !== false) {
-					$search->where(array( 'element' => $x ));
-				}
-				// el & el2 : Element Level
-				$x = $this->request->uri->getInt('el', null, 1, 4);
-				$y = $this->request->uri->getInt('el2', null, 1, 4);
-				if(($x || $y) && ($x = ac_between($x, $y))) {
-					$search->where(array( 'element_level' => $x ));
-				}
-				// lv & lv2 : Level
-				$x = $this->request->uri->getInt('lv', null, 0);
-				$y = $this->request->uri->getInt('lv2', null, 0);
-				if(($x || $y) && ($x = ac_between($x, $y))) {
-					$search->where(array( 'level' => $x ));
-				}
-				// be & be2 : Base Experience
-				$x = $this->request->uri->getInt('be', null, 0);
-				$y = $this->request->uri->getInt('be2', null, 0);
-				if(($x || $y) && ($x = ac_between($x, $y))) {
-					$search->where(array( 'base_experience' => $x ));
-				}
-				// je & je2 : Job Experience
-				$x = $this->request->uri->getInt('je', null, 0);
-				$y = $this->request->uri->getInt('je2', null, 0);
-				if(($x || $y) && ($x = ac_between($x, $y))) {
-					$search->where(array( 'job_experience' => $x ));
-				}
-				$search->query();
-				$monsters = $search->results;
-				$rows     = $search->rowsFound;
 			}
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::$dbMobsPerPage), $current_page);
+			$search = $this->charmap->mobSearch();
+			$frm->apply($search);
+			if($include) {
+				$search->where(array( array( 'mode' => array( Search::SEARCH_AND, $include, $include ) ) ));
+			}
+			if($exclude) {
+				$search->where(array( array( 'mode' => array( Search::SEARCH_AND | Search::SEARCH_DIFFERENT, $exclude ) ) ));
+			}
+			$search->calcRows(true)->query();
+			$pgn = new Pagination(App::user()->request->uri,
+			                      ceil($search->rowsFound / $frm->getLimit()),
+			                      $currentPage);
 			$tpl = new Template;
-			$tpl->set('mobs', $monsters)
-				->set('mob_count', $rows)
+			$tpl->set('mobs', $search->results)
+				->set('mob_count', $search->rowsFound)
 				->set('paginator', $pgn)
+				->set('search', $frm)
 				->set('page', $this);
 			echo $tpl->render('ragnarok/monster/database');
 		} catch(\Exception $exception) {

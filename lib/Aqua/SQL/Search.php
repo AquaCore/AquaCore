@@ -79,8 +79,8 @@ extends Select
 					if(is_string($value)) {
 						$query .= "$value ";
 						++$i;
-					} else {
-						$query .= $this->parseSearch($value, $values, $type) . ' ';
+					} else if($q = $this->parseSearch($value, $values, $type)) {
+						$query .=  "$q ";
 						++$i;
 					}
 				} else if(array_key_exists($alias, $columns)) {
@@ -89,8 +89,8 @@ extends Select
 					}
 					if($this->parseSearchFlags($value, $w, $values, $columns[$alias], $alias)) {
 						$query .= "$w ";
+						++$i;
 					}
-					++$i;
 				}
 			}
 		}

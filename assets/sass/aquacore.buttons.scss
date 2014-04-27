@@ -1,12 +1,12 @@
-button, input[type=submit], .ac-button {
+button, input[type=submit], input[type=reset], .ac-button {
 	padding: 3px 10px;
 	font-weight: bold;
-	border: 1px solid $mid-blue-2;
-	color: $light-gray-3;
+	border: 1px solid $midBlue-2;
+	color: $lightGray-3;
 	cursor: pointer;
-	@include text-shadow(-1px -1px 0 $mid-blue-2);
-	@include box-shadow($light-blue-2 1px 1px 0 0 inset, $light-blue-2 0 0 4px 0 inset);
-	@include background(linear-gradient($light-blue-3, $mid-blue-3));
+	@include text-shadow(-1px -1px 0 $midBlue-2);
+	@include box-shadow($lightBlue-2 1px 1px 0 0 inset, $lightBlue-2 0 0 4px 0 inset);
+	@include background(linear-gradient($lightBlue-3, $midBlue-3));
 	@include border-radius(10px);
 	a {
 		display: block;
@@ -15,11 +15,11 @@ button, input[type=submit], .ac-button {
 		height: 100%;
 	}
 	&:disabled, &.disabled, &.gray {
-		color: $bluish-gray-4;
-		border: 1px solid $bluish-gray-4;
+		color: $bluishGray-4;
+		border: 1px solid $bluishGray-4;
 		@include text-shadow(1px 1px 0 white);
 		@include box-shadow(white 1px 1px 0 0 inset, white 0 0 4px 0 inset);
-		@include background(linear-gradient($light-gray-3, $mid-gray-2));
+		@include background(linear-gradient($lightGray-3, $midGray-2));
 	}
 	&.red {
 		color: #ffe8f7;

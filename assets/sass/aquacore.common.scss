@@ -1,0 +1,95 @@
+$assetsPath: "../" !default;
+
+.ac-checkbox-group,
+.ac-radio-group {
+	.ac-checkbox, .ac-radio {
+		clear: both;
+		display: table;
+	}
+	label {
+		display: table-cell;
+		width: 100%;
+		padding-left: 5px;
+		font-weight: bold;
+		font-size: .85em;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+}
+.ac_captcha_refresh {
+	width: 16px;
+	height: 16px;
+	background: transparent url(#{$assetsPath}images/icons/refresh.png) center center no-repeat;
+	cursor: pointer;
+}
+.ac-username {
+	display: inline;
+	&.has-background {
+		padding: 2px 7px;
+		@include border-radius(3px);
+	}
+	&.has-color {
+		font-weight: bold;
+	}
+}
+.ac-guest {
+	font-style: italic;
+}
+.ac-char-hp, .ac-char-sp {
+	position: relative;
+	width: 75px;
+	margin: 0 auto;
+	text-align: center;
+	height: 4px;
+	border: 1px solid;
+	overflow: hidden;
+	.ac-char-fill {
+		z-index: 1;
+		position: absolute;
+		height: 100%;
+		top: 0;
+		background-color: #e9838b;
+	}
+}
+.ac-char-hp {
+	background-color: #facdd2;
+	color: #c25372;
+	margin-bottom: 2px;
+	.ac-char-fill {
+		background-color: #e9838b;
+	}
+}
+.ac-char-sp {
+	background-color: #c9e2fa;
+	color: #4852cf;
+	margin-bottom: 5px;
+	.ac-char-fill {
+		background-color: #6a83e9;
+	}
+}
+.ac-view-char {
+	display: table;
+	position: relative;
+	width: 100%;
+	margin-bottom: 10px;
+	.wrapper {
+		display: table-row;
+		width: 100%;
+		.ac-char-info, .ac-char-stats {
+			display: table-cell;
+			position: relative;
+			vertical-align: top;
+			padding: 0;
+		}
+		.ac-char-stats {
+			padding-left: 10px;
+		}
+	}
+	.ac-table {
+		margin: 0;
+	}
+}

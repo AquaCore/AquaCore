@@ -1,5 +1,9 @@
 var AquaCore = AquaCore || {};
 (function($) {
+	AquaCore.parsePath = function(path) {
+
+	};
+	console.log(window.location.pathname);
 	AquaCore.buildUrl = function(options) {
 		var url = "";
 		options = $.extend({
@@ -53,9 +57,11 @@ var AquaCore = AquaCore || {};
 				}
 			}
 		} else {
-			if(options.path.length) options.query.path = options.path.join(".");
-			if(options.action && options.action !== "index") options.query.action = options.action;
-			if(options.arguments.length) options.query.args = options.arguments.join(".");
+			var pathQuery = {};
+			if(options.path.length) pathQuery.path = options.path.join(".");
+			if(options.action && options.action !== "index") pathQuery.action = options.action;
+			if(options.arguments.length) pathQuery.args = options.arguments.join(".");
+			options.query = $.extend(pathQuery, options.query);
 		}
 		path = path.replace(/\/+$/g, "");
 		path+= this.buildQuery(options.query).replace(/&+$/g, "");

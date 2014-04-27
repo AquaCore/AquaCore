@@ -549,7 +549,7 @@ extends Page
 		if($settings->get('email_validation', false)) {
 			try {
 				$key = bin2hex(secure_random_bytes(32));
-				$account->setMeta(self::REGISTRATION_KEY, $key);
+				$account->meta->set(self::REGISTRATION_KEY, $key);
 				$this->sendValidationEmail($account, $key);
 				$user->addFlash('success', __('registration', 'completed'), __('registration', 'email-sent'));
 			} catch(\Exception $exception) {
@@ -585,11 +585,11 @@ extends Page
 						                                       ->get('registration')
 			                                                   ->get('validation_time', 48) * 3600)) ||
 			   // Wrong validation key
-			   $account->getMeta(self::REGISTRATION_KEY) !== $key) {
+			   $account->meta->get(self::REGISTRATION_KEY) !== $key) {
 				$this->error(404);
 				return;
 			}
-			$account->deleteMeta(self::REGISTRATION_KEY);
+			$account->meta->delete(self::REGISTRATION_KEY);
 			$account->update(array( 'status' => UserAccount::STATUS_NORMAL ));
 			App::user()->addFlash('success', null, __('registration', 'account-activated'));
 			if($account->spamFilter()) {
@@ -685,9 +685,9 @@ extends Page
 			} else {
 				$account = UserAccount::get($username, 'username');
 			}
-			if(!($key = $account->getMeta(self::REGISTRATION_KEY))) {
+			if(!($key = $account->meta->get(self::REGISTRATION_KEY))) {
 				$key = bin2hex(secure_random_bytes(32));
-				$account->setMeta(self::REGISTRATION_KEY, $key);
+				$account->meta->set(self::REGISTRATION_KEY, $key);
 			}
 			$this->sendValidationEmail($account, $key);
 			$host = strrchr($account->email, '@');
