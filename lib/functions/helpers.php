@@ -153,7 +153,7 @@ function ac_build_url(array $options)
 
 function ac_build_path(array $options) {
 	$options+= array(
-		'base_dir' => \Aqua\WORKING_DIR,
+		'base_dir' => \Aqua\DIR . '/' . \Aqua\WORKING_DIR,
 	    'script' => \Aqua\SCRIPT_NAME
 	);
 	$url = '/';
@@ -659,4 +659,68 @@ function ac_normalize_hex_color($color)
 			break;
 	}
 	return $hex;
+}
+
+function ac_time_elapsed($timestamp)
+{
+	$timeElapsed = array();
+	$now  = time();
+	$diff = abs($now - $timestamp);
+	if($timestamp === $now) {
+		$timeElapsed[] = __('time-elapsed', 'none');
+	} else {
+		$intervals = array(
+			1,      // second
+			60,     // minute
+			3600,   // hour
+			86400,  // day
+			2073600 // month
+		);
+		$intervalNames = array( 'second', 'minute', 'hour', 'day', 'month' );
+		$format = array(
+			array( 0 ),
+		    array( 2, 1 ),
+		    array( 3 ),
+		);
+		foreach($format as $time) {
+			$match = 0;
+			foreach($time as $key) {
+				$count = floor($diff / $intervals[$key]);
+				if($count && $count < ($intervals[$key + 1] / $intervals[$key])) {
+					$timeElapsed[] = __('time-elapsed',
+					                    $intervalNames[$key] . ($count === 1 ? '' : 's'),
+					                    $count);
+					$diff -= $count * $intervals[$key];
+					++$match;
+				}
+			}
+			if($match) {
+				break;
+			}
+		}
+		if(empty($timeElapsed)) {
+			$now  = new DateTime();
+			$then = clone $now;
+			$then->setTimestamp($timestamp);
+			$diff = $now->diff($then);
+			if($diff->y) {
+				$timeElapsed[] = __('time-elapsed',
+				                    'year' . ($diff->y === 1 ? '' : 's'),
+				                    $diff->y);
+			}
+			if($diff->m) {
+				$timeElapsed[] = __('time-elapsed',
+				                    'month' . ($diff->m === 1 ? '' : 's'),
+				                    $diff->m);
+			}
+		}
+	}
+	if(count($timeElapsed) === 1) {
+		return $timeElapsed[0];
+	} else {
+		$last = array_pop($timeElapsed);
+		$timeElapsed = implode(', ', $timeElapsed);
+		$timeElapsed.= ' ' . __('application', 'and') . ' ' . $last;
+		return $timeElapsed;
+	}
 }

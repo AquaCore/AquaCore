@@ -4,8 +4,6 @@ use Aqua\Core\App;
 use Aqua\UI\StyleManager;
 use Aqua\UI\ScriptManager;
 /**
- * @var $__url      string
- * @var $__file     string
  * @var $body_class string
  * @var $head       \Aqua\UI\Theme\Head
  * @var $footer     \Aqua\UI\Theme\Footer
@@ -32,8 +30,8 @@ $head->enqueueScript(ScriptManager::script('jquery-ui'));
 	$head->enqueueLink(StyleManager::style('aquacore-ui'));
 	echo $head->render()
 	?>
-	<link type="text/css" href="<?php echo $__url?>/stylesheets/main.css" rel="stylesheet" />
-	<script src="<?php echo $__url?>/scripts/main.js"></script>
+	<link type="text/css" href="<?php echo $this->url ?>/stylesheets/main.css" rel="stylesheet" />
+	<script src="<?php echo $this->url ?>/scripts/main.js"></script>
 </head>
 <body class="<?php echo $body_class?>">
 <div id="main">

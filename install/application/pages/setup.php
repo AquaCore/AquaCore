@@ -118,7 +118,7 @@ extends Page
 		    ->setLabel(__setup('url-domain-label'));
 		$frm->input('base-dir')
 		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('base_dir', '')))
+		    ->value(htmlspecialchars($settings->get('base_dir', \Aqua\DIR)))
 		    ->setLabel(__setup('url-base-dir-label'))
 		    ->setDescription(__setup('url-base-dir-desc'));
 		$frm->checkbox('rewrite')
@@ -289,6 +289,9 @@ extends Page
 		    ->value($settings->get('timezone', ''))
 		    ->setLabel(__setup('app-timezone-label'))
 		    ->setDescription(__setup('app-timezone-desc'));
+		if(!ini_get('date.timezone')) {
+			$frm->input('timezone')->required();
+		}
 		$frm->checkbox('ob')
 		    ->value(array('1' => ''))
 		    ->checked($settings->get('output_compression', true) ? '1' : null)
@@ -786,6 +789,7 @@ extends Page
 					$response = array( 'progress' => array( $progress, 3 ) );
 					break;
 				case 'insert-namespaces':
+					set_time_limit(120);
 					L10n::init(App::settings()->get('language', 'en'));
 					$dir = \Aqua\ROOT . '/install/language/' . App::settings()->get('language', 'en');
 					$namespaces = glob("$dir/namespaces/*.xml");

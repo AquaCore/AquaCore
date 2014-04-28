@@ -4,8 +4,6 @@ use Aqua\Core\App;
 use Aqua\UI\ScriptManager;
 use Aqua\UI\Tag;
 /**
- * @var $__url      string
- * @var $__file     string
  * @var $body_class string
  * @var $head       \Aqua\UI\Theme\Head
  * @var $footer     \Aqua\UI\Theme\Footer
@@ -31,7 +29,7 @@ use Aqua\UI\Tag;
 	$head->enqueueScript(ScriptManager::script('jquery-ui'));
 	echo $head->render();
 	?>
-	<link type="text/css" href="<?php echo $__url?>/stylesheets/main.css" rel="stylesheet" />
+	<link type="text/css" href="<?php echo $this->url?>/stylesheets/main.css" rel="stylesheet" />
 </head>
 <body class="<?php echo $body_class?> noscript">
 <div id="main">
@@ -65,6 +63,6 @@ use Aqua\UI\Tag;
 	?>
 </div>
 <?php echo $footer->render()?>
-<script type="text/javascript" src="<?php echo $__url?>/scripts/main.js"></script>
+<script type="text/javascript" src="<?php echo $this->url?>/scripts/main.js"></script>
 </body>
 </html>

@@ -81,8 +81,8 @@ REPLACE INTO `#role_permissions` VALUES
 ;
 
 INSERT IGNORE INTO `#content_type` VALUES
- (@CTYPE_POST, 'news', NULL, 'Post', NULL)
-,(@CTYPE_PAGE, 'page', NULL, 'Page', NULL)
+ (@CTYPE_POST, 'news', 'Post', NULL, NULL, 'y', 'y', NULL)
+,(@CTYPE_PAGE, 'page', 'Page', NULL, NULL, 'n', 'n', NULL)
 ;
 
 TRUNCATE `#content_type_filters`;

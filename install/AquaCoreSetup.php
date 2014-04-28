@@ -121,9 +121,12 @@ class AquaCoreSetup
 		if(!defined('Aqua\HTTPS')) {
 			define('Aqua\HTTPS', ($https = getenv('HTTPS')) && ($https === 'on' || $https === '1'));
 		}
+		if(!defined('Aqua\DIR')) {
+			define('Aqua\DIR', trim(substr(\Aqua\ROOT, strlen(getenv('DOCUMENT_ROOT'))), '/\\'));
+		}
 		if(!defined('Aqua\WORKING_DIR')) {
 			define('Aqua\WORKING_DIR', trim(substr(dirname(getenv('SCRIPT_FILENAME')),
-			                                       strlen(getenv('DOCUMENT_ROOT'))),
+			                                       strlen(\Aqua\ROOT)),
 			                                '/\\'));
 		}
 		if(!defined('Aqua\WORKING_URL')) {

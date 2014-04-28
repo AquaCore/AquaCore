@@ -89,9 +89,17 @@ try {
 	} else if(\Aqua\PROFILE === 'INSTALLER') {
 		return;
 	} else if(\Aqua\PROFILE === 'MAIN') {
-		$url = (($https = getenv('HTTPS')) && ($https === 'on' || $https === '1') ? 'https://' : 'http://') .
-		       getenv('HTTP_HOST') . trim(substr(dirname(getenv('SCRIPT_FILENAME')), strlen(getenv('DOCUMENT_ROOT'))), '/\\') .
-		       '/install';
+		$url = 'http';
+		$https = getenv('HTTPS');
+		if($https === 'on' || $https === '1') {
+			$url.= 's';
+		}
+		$url.= '://' . getenv(HTTP_HOST);
+		$path = trim(substr(dirname(getenv('SCRIPT_FILENAME')), strlen(getenv('DOCUMENT_ROOT'))), '/\\');
+		if($path) {
+			$url.= '/' . $path;
+		}
+		$url .= '/install';
 		App::response()->status(302)->redirect($url)->send();
 		die;
 	} else {

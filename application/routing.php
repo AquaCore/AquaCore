@@ -68,7 +68,7 @@ $router->add('Content Tag')
 $router->add('Content Category')
 	->map("/:ctype[$contentTypes]/category/:category/", '/main/content/action/category/:category')
 	->attach('parse_ok', 'ac_router_set_active_ctype');
- $_404 = 'ragnarok/account|ragnarok/server/char|content/action/[!search]';
+ $_404 = 'ragnarok/account|ragnarok/server/char';
 if(Server::$serverCount > 1) {
 	$servers = implode('|', array_keys(Server::$servers));
 	// /ro/<server>
