@@ -3,12 +3,15 @@
  * @var $comment \Aqua\Content\Filter\CommentFilter\Comment
  * @var $reports \Aqua\Content\Filter\CommentFilter\Report[]
  * @var $form    \Aqua\UI\Form
- * @var $page    \Page\Admin\News\Comments
+ * @var $page    \Page\Admin\Content\Comments
  */
 
+use Aqua\Core\App;
 use Aqua\UI\Sidebar;
 use Aqua\UI\ScriptManager;
 
+
+$dateTimeFormat = App::settings()->get('datetime_format');
 $page->theme->template = 'sidebar-right';
 $page->theme->addSettings('ckeComments',include \Aqua\ROOT . '/settings/ckeditor.php');
 $page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
@@ -22,7 +25,8 @@ $page->theme->footer->enqueueScript('theme.comment')
 })(jQuery);
 ');
 $sidebar = new Sidebar;
-ob_start() ?>
+ob_start()
+?>
 <div class="ac-form-warning"><?php echo $form->field('anonymous')->getWarning() ?></div>
 <div style="float: left; width: 50%">
 	<input id="anon-comment" type="radio" name="anonymous" value="1" <?php if($comment->anonymous) echo 'checked' ?>>
@@ -35,16 +39,16 @@ ob_start() ?>
 <div style="clear: both"></div>
 <?php
 $sidebar->append('anon', array(array(
-	'title' => $form->field('anonymous')->getLabel(),
-    'content' => ob_get_contents()
+		'title' => $form->field('anonymous')->getLabel(),
+		'content' => ob_get_contents()
 	)));
 ob_clean(); ?>
 <div class="ac-form-warning"><?php echo $form->field('status')->getWarning() ?></div>
 <?php
 echo $form->field('status')->render();
 $sidebar->append('status', array(array(
-	'title' => $form->field('status')->getLabel(),
-	'content' => ob_get_contents()
+		'title' => $form->field('status')->getLabel(),
+		'content' => ob_get_contents()
 	)));
 ob_clean();
 ?>
@@ -52,7 +56,7 @@ ob_clean();
 <?php
 $sidebar->append('submit', array( 'class' => 'ac-sidebar-action', array(
 	'content' => ob_get_contents()
-	)));
+)));
 ob_end_clean();
 $page->theme
 	->set('sidebar', $sidebar)
@@ -61,15 +65,15 @@ $page->theme
 <?php echo $form->field('content')->attr('id', 'ckeditor')->render() ?>
 <table class="ac-table" style="margin-top: 15px">
 	<thead>
-		<tr>
-			<td colspan="4"><?php echo __('comment', 'reports') ?></td>
-		</tr>
-		<tr class="alt">
-			<td><?php echo __('content', 'user') ?></td>
-			<td><?php echo __('content', 'ip-address') ?></td>
-			<td><?php echo __('content', 'date') ?></td>
-			<td><?php echo __('content', 'message') ?></td>
-		</tr>
+	<tr>
+		<td colspan="4"><?php echo __('comment', 'reports') ?></td>
+	</tr>
+	<tr class="alt">
+		<td><?php echo __('profile', 'user') ?></td>
+		<td><?php echo __('profile', 'ip-address') ?></td>
+		<td><?php echo __('comment', 'date') ?></td>
+		<td><?php echo __('comment', 'report-message') ?></td>
+	</tr>
 	</thead>
 	<tbody>
 	<?php if(empty($reports)) : ?>
@@ -78,7 +82,7 @@ $page->theme
 		<tr>
 			<td><?php echo $report->user()->display() ?></td>
 			<td><?php echo $report->ipAddress ?></td>
-			<td><?php echo $report->date ?></td>
+			<td><?php echo $report->date($dateTimeFormat) ?></td>
 			<td style="text-align: justify"><?php echo htmlspecialchars($report->report) ?></td>
 		</tr>
 		<?php if($report->report) : ?>
@@ -86,6 +90,6 @@ $page->theme
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="4"></td></tr>
+	<tr><td colspan="4"></td></tr>
 	</tfoot>
 </table>

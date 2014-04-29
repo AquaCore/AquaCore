@@ -763,14 +763,14 @@ iframe[src="about:blank"]{ display: none !important; }
 		padding-left: 35px;
 	}
 	.ac-comment-info {
-		margin-bottom: 10px;
+		margin-bottom: 5px;
 		position: relative;
+		font-size: .9em;
 	}
-	.ac-comment-author {
-		font-size: .90em;
-	}
-	.ac-comment-date {
-		font-size: .80em;
+	.ac-comment-edited {
+		font-size: .9em;
+		font-style: italic;
+		margin-top: 5px;
 	}
 	.ac-comment-actions {
 		margin-top: 15px;

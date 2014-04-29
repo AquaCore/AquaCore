@@ -1,7 +1,6 @@
 <?php
-namespace Page\Admin\News;
+namespace Page\Admin\Content;
 
-use Aqua\Content\ContentType;
 use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
 use Aqua\Site\Page;
@@ -23,7 +22,7 @@ extends Page
 
 	public function run()
 	{
-		$this->contentType = ContentType::getContentType(ContentType::CTYPE_POST);
+		$this->contentType = &App::$activeContentType;
 	}
 
 	public function index_action()
@@ -49,7 +48,7 @@ extends Page
 			return;
 		} else if(isset($this->request->data['x-bulk-action']) &&
 		          ($ids = $this->request->getArray('categories', false))) {
-		  $this->response->status(302)->redirect(App::request()->uri->url());
+			$this->response->status(302)->redirect(App::request()->uri->url());
 			try {
 				if(empty($ids)) {
 					return;
@@ -79,31 +78,32 @@ extends Page
 			$frm = new Form($this->request);
 			$frm->enctype = "multipart/form-data";
 			$frm->file('image')
-				->attr('accept', 'image/jpeg, image/png, image/gif')
-				->setLabel(__('content', 'category-image'));
+			    ->attr('accept', 'image/jpeg, image/png, image/gif')
+			    ->setLabel(__('content', 'category-image'));
 			$frm->input('name', true)
-				->required()
-				->attr("maxlength", 255)
-				->setLabel(__('content', 'category-name'));
+			    ->required()
+			    ->attr("maxlength", 255)
+			    ->setLabel(__('content', 'category-name'));
 			$frm->textarea('description', true)
-				->setLabel(__('content', 'category-description'));
+			    ->setLabel(__('content', 'category-description'));
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				$this->theme->head->section = $this->title = __('content', 'categories');
-				$current_page = $this->request->uri->getInt('page', 1, 1);
+				$this->theme->head->section = $this->title = __('content', 'categories', htmlspecialchars($this->contentType->name));
+				$currentPage = $this->request->uri->getInt('page', 1, 1);
 				$categories = $this->contentType->categories();
 				$count = count($categories);
 				$categories = array_slice($categories,
-				                          ($current_page - 1) * self::CATEGORIES_PER_PAGE,
+				                          ($currentPage - 1) * self::CATEGORIES_PER_PAGE,
 				                          self::CATEGORIES_PER_PAGE);
-				$pgn = new Pagination(App::request()->uri, ceil($count / self::CATEGORIES_PER_PAGE), $current_page);
+				$pgn = new Pagination(App::request()->uri, ceil($count / self::CATEGORIES_PER_PAGE), $currentPage);
 				$tpl = new Template;
 				$tpl->set('form', $frm)
-					->set('categories', $categories)
-					->set('category_count', $count)
-					->set('paginator', $pgn)
-					->set('page', $this);
-				echo $tpl->render('admin/news/category');
+				    ->set('categories', $categories)
+				    ->set('categoryCount', $count)
+				    ->set('paginator', $pgn)
+				    ->set('page', $this);
+				echo $tpl->render("admin/category/{$this->contentType->key}/main",
+				                  'admin/category/main');
 				return;
 			}
 		} catch(\Exception $exception) {
@@ -160,13 +160,13 @@ extends Page
 					$this->theme = new Theme;
 					$this->response->setHeader('Content-Type', 'application/json');
 					echo json_encode(array(
-							'message' => $message,
-							'error'   => $error,
-							'data'    => array(
-								'image_url' => $category->imageUrl,
-								'image' => $category->image
-							)
-						));
+						'message' => $message,
+						'error'   => $error,
+						'data'    => array(
+							'image_url' => $category->imageUrl,
+							'image' => $category->image
+						)
+					));
 				} else {
 					$this->response->status(302)->redirect(App::request()->uri->url());
 					App::user()->addFlash($error ? 'error' : 'success', null, $message);
@@ -175,16 +175,16 @@ extends Page
 			}
 			$frm = new Form($this->request);
 			$frm->file('image')
-		        ->attr('accept', 'image/jpeg, image/png, image/gif')
-				->setLabel(__('content', 'category-image'));
+			    ->attr('accept', 'image/jpeg, image/png, image/gif')
+			    ->setLabel(__('content', 'category-image'));
 			$frm->input('name', true)
-				->required()
-		        ->attr('maxlength', 255)
-				->value(htmlspecialchars($category->name))
-		        ->setLabel(__('content', 'category-name'));
+			    ->required()
+			    ->attr('maxlength', 255)
+			    ->value(htmlspecialchars($category->name))
+			    ->setLabel(__('content', 'category-name'));
 			$frm->textarea('description', true)
-				->append(htmlspecialchars($category->description))
-		        ->setLabel(__('content', 'category-description'));
+			    ->append(htmlspecialchars($category->description))
+			    ->setLabel(__('content', 'category-description'));
 			$frm->submit();
 			$frm->validate(null, $this->request->ajax);
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
@@ -193,9 +193,10 @@ extends Page
 				$this->theme->set('return', ac_build_url(array( 'path' => array( 'news', 'category' ) )));
 				$tpl = new Template;
 				$tpl->set('category', $category)
-					->set('form', $frm)
-					->set('page', $this);
-				echo $tpl->render('admin/news/edit-category');
+				    ->set('form', $frm)
+				    ->set('page', $this);
+				echo $tpl->render("admin/category/{$this->contentType->key}/edit",
+				                  'admin/category/edit');
 				return;
 			}
 		} catch(\Exception $exception) {

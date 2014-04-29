@@ -130,6 +130,7 @@ implements \ArrayAccess,
 				if($this->metaLoaded && $sth->rowCount()) {
 					$this->meta[$key] = $val;
 				}
+				$sth->closeCursor();
 			}
 		}
 		return $this;
@@ -157,6 +158,7 @@ implements \ArrayAccess,
 				if($this->metaLoaded && $sth->rowCount()) {
 					unset($this->meta[$key]);
 				}
+				$sth->closeCursor();
 			}
 		}
 
@@ -173,7 +175,7 @@ implements \ArrayAccess,
 			', $this->_table));
 			$sth->bindValue(1, $this->_id, \PDO::PARAM_INT);
 			$sth->execute();
-			while($data = $sth->fetch(\PDO::FETCH_NUM)) {
+			foreach($sth->fetchAll(\PDO::FETCH_NUM) as $data) {
 				switch($data[2]) {
 					case 'I': $data[1] = intval($data[1]); break;
 					case 'F': $data[1] = floatval($data[1]); break;

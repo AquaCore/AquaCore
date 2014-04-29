@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup language="en">
+        <word namespace="application" key="now">Now</word>
+        <word namespace="comment" key="id">Comment ID</word>
+        <word namespace="comment" key="date">Date</word>
+        <word namespace="comment" key="edited-by"><![CDATA[Edited %2$s by <i>%1$s</i>]]></word>
+        <word namespace="comment" key="info">%s said %s:</word>
+        <word namespace="comment" key="view-comment">View Comment</word>
+        <word namespace="comment" key="reports">Reports</word>
+        <word namespace="comment" key="report-message">Report Message</word>
+        <word namespace="content" key="enable-anonymous">Anon Comments</word>
+        <word namespace="content" key="enable-comments">Comments</word>
+        <word namespace="content" key="enable-featured">Featured</word>
+        <word namespace="content" key="preview-title">%s [Preview]</word>
+        <word namespace="content" key="content">Content</word>
+        <word namespace="content" key="confirm-delete-s"><![CDATA[Are you sure you want to delete \"%s\"?]]></word>
+        <word namespace="content" key="confirm-delete-p">Are you sure you want to delete those items?</word>
+        <word namespace="content" key="content-create-success"><![CDATA[%s <b>"%s"</b> created successfuly.]]></word>
+        <word namespace="content" key="content-create-fail"><![CDATA[Failed to create %s <b>"%s"</b>.]]></word>
+        <word namespace="content" key="content-updated"><![CDATA[<b>"%2$s"</b> updated.]]></word>
+        <word namespace="content-status" key="0">Published</word>
+        <word namespace="content-status" key="1">Draft</word>
+        <word namespace="content-status" key="2">Scheduled</word>
+        <word namespace="content-status" key="3">Archived</word>
+        <word namespace="dashboard" key="last-comments">Latest Comments</word>
+        <word namespace="dashboard" key="last-reports">Latest Comment Reports</word>
+        <word namespace="ragnarok" key="owner">AquaCore User</word>
+        <word namespace="time-elapsed" key="minute">%d minute</word>
+        <word namespace="time-elapsed" key="minutes">%d minutes</word>
+        <word namespace="time-elapsed" key="second">%d second</word>
+        <word namespace="time-elapsed" key="seconds">%d seconds</word>
+        <word namespace="time-elapsed" key="hour">%d hour</word>
+        <word namespace="time-elapsed" key="hours">%d hours</word>
+        <word namespace="time-elapsed" key="day">%d day</word>
+        <word namespace="time-elapsed" key="days">%d days</word>
+        <word namespace="time-elapsed" key="week">%d week</word>
+        <word namespace="time-elapsed" key="weeks">%d weeks</word>
+        <word namespace="time-elapsed" key="month">%d month</word>
+        <word namespace="time-elapsed" key="months">%d months</word>
+        <word namespace="time-elapsed" key="year">%d year</word>
+        <word namespace="time-elapsed" key="years">%d years</word>
+        <word namespace="time-elapsed" key="none">A moment</word>
+        <word namespace="time-elapsed" key="ago">%s ago</word>
+    </wordgroup>
+</languageimport>

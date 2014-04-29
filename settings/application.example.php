@@ -132,8 +132,15 @@ return array(
 		'gc_probability'   => 1
 	),
 	'cms'                => array(
-		'enable_comments_by_default'  => true,
-		'enable_anonymous_by_default' => false,
+		'post' => array (
+				'enable_archiving_by_default' => false,
+				'enable_anonymous_by_default' => false,
+				'enable_comments_by_default'  => true,
+				'enable_rating_by_default'    => true,
+			),
+		'page' => array (
+				'enable_rating_by_default' => true,
+			),
 	),
 	'rss'                => array(
 		'title'       => 'AquaCore News',

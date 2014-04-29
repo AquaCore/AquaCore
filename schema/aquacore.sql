@@ -474,6 +474,7 @@ CREATE TABLE IF NOT EXISTS `#tags` (
 CREATE TABLE IF NOT EXISTS `#comments` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _content_id INT UNSIGNED NOT NULL,
+  _content_type INT UNSIGNED NOT NULL,
   _root_id INT UNSIGNED NOT NULL DEFAULT '0',
   _parent_id INT UNSIGNED NOT NULL DEFAULT '0',
   _nesting_level INT UNSIGNED NOT NULL DEFAULT '0',
@@ -491,7 +492,7 @@ CREATE TABLE IF NOT EXISTS `#comments` (
   _reports INT NOT NULL DEFAULT '0',
   _options INT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY ( id ),
-  INDEX `_#comments__content_id_IN` ( _content_id ),
+  INDEX `_#comments__content_id_IN` ( _content_type, _content_id ),
   INDEX `_#comments__nesting_IN` ( _root_id, _nesting_level ),
   INDEX `_#comments__status_IN` ( _status ),
   INDEX `_#comments__publish_date_IN` ( _publish_date )

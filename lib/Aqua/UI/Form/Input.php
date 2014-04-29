@@ -308,7 +308,7 @@ implements FieldInterface
 					$pattern.= '|^$';
 				}
 				if($this->getAttr('type') === 'datetime') {
-					$pattern = '(?:\d{3,}-(?:1[0-2]|0[1-9])-(?:3[01]|[0-2][1-9]))) ' . $pattern;
+					$pattern = '(?:\d{4,}-(?:1[0-2]|0[1-9])-(?:3[01]|[12][0-9]|0[1-9])) ' . $pattern;
 				}
 				$this->attr('pattern', "/^$pattern/i");
 				break;

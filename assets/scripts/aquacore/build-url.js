@@ -1,9 +1,5 @@
 var AquaCore = AquaCore || {};
 (function($) {
-	AquaCore.parsePath = function(path) {
-
-	};
-	console.log(window.location.pathname);
 	AquaCore.buildUrl = function(options) {
 		var url = "";
 		options = $.extend({

@@ -150,10 +150,16 @@ extends Page
 				->value($jobs);
 			$frm->select('up')
 				->setColumn('upper')
-				->searchType(Search::SEARCH_AND)
 				->setLabel(__('ragnarok', 'upper'))
 				->multiple()
-				->value($upper);
+				->value($upper)
+				->setParser(function($field, $frm, $value) {
+					$upper = 0;
+					foreach($value as &$x) {
+						$upper |= (int)$x;
+					}
+					return array( Search::SEARCH_AND, $upper, $upper );
+				});
 			$frm->range('atk')
 				->setColumn('attack')
 				->setLabel(__('ragnarok', 'attack'))
@@ -202,7 +208,6 @@ extends Page
 				));
 			$search = $this->charmap->itemSearch();
 			$frm->apply($search);
-//			echo '<pre>', $search->buildQuery($x), '</pre>'; return;
 			$search->calcRows(true)->query();
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / $frm->getLimit()),

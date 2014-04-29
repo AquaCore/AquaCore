@@ -54,6 +54,10 @@ implements \Iterator, \Countable
 	 */
 	public $parser;
 	/**
+	 * @var array
+	 */
+	public $parserData = array();
+	/**
 	 * @var int
 	 */
 	public $rowsFound = 0;
@@ -485,11 +489,13 @@ implements \Iterator, \Countable
 
 	/**
 	 * @param callable $func
+	 * @param array    $data
 	 * @return static
 	 */
-	public function parser($func = null)
+	public function parser($func = null, array $data = array())
 	{
 		$this->parser = $func;
+		$this->parserData = $data;
 
 		return $this;
 	}
@@ -533,8 +539,11 @@ implements \Iterator, \Countable
 			}
 			if(!$this->parser) {
 				$result = $data;
-			} else if(!($result = call_user_func($this->parser, $data))) {
-				continue;
+			} else {
+				$data = array_merge($data, $this->parserData);
+				if(!($result = call_user_func($this->parser, $data))) {
+					continue;
+				}
 			}
 			if($this->resultsKey) {
 				$this->results[$data[$this->resultsKey]] = $result;

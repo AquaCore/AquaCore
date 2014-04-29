@@ -8,6 +8,8 @@
     <word namespace="dashboard" key="last-users">Recently Registered</word>
     <word namespace="dashboard" key="last-donations">Latest Donations</word>
     <word namespace="dashboard" key="last-transfers">Latest Credit Transfers</word>
+    <word namespace="dashboard" key="last-comments">Latest Comments</word>
+    <word namespace="dashboard" key="last-reports">Latest Comment Reports</word>
     <word namespace="dashboard" key="registration-stats">Registration Statistics</word>
     <word namespace="dashboard" key="txn-info">(Transaction Info)</word>
     <word namespace="dashboard" key="donation-goal-tooltip">%3$s goal: %1$s %2$s</word>

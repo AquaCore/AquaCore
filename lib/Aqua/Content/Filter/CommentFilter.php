@@ -4,6 +4,7 @@ namespace Aqua\Content\Filter;
 use Aqua\BBCode\BBCode;
 use Aqua\Content\AbstractFilter;
 use Aqua\Content\ContentData;
+use Aqua\Content\ContentType;
 use Aqua\Content\Filter\CommentFilter\Comment;
 use Aqua\Content\Filter\CommentFilter\Report;
 use Aqua\Core\App;
@@ -17,6 +18,11 @@ class CommentFilter
 extends AbstractFilter
 {
 	public static $cache;
+
+	const CACHE_KEY              = 'general_cache.comments';
+	const CACHE_TTL              = 86400;
+	const CACHE_RECENT_COMMENTS  = 4;
+	const CACHE_RECENT_REPORTS   = 5;
 
 	public function afterUpdate(ContentData $content, array $data, array &$values)
 	{
@@ -293,7 +299,7 @@ extends AbstractFilter
 	 */
 	public function contentData_commentSearch(ContentData $content)
 	{
-		return $this->commentSearch()
+		return self::commentSearch()
 			->where(array( 'content_id' => $content->uid ));
 	}
 
@@ -349,9 +355,7 @@ extends AbstractFilter
 	 */
 	public function contentType_commentSearch()
 	{
-		return $this->commentSearch()
-			->innerJoin(ac_table('content'), 'co._content_id = c._uid', 'c')
-			->whereOptions(array( 'content_type' => 'c._type' ))
+		return self::commentSearch()
 			->where(array( 'content_type' => $this->contentType->id ));
 	}
 
@@ -361,31 +365,11 @@ extends AbstractFilter
 	 */
 	public function contentType_getComment($id)
 	{
-		$select = Query::select(App::connection())
-			->columns(array(
-				'id'            => 'c.id',
-				'content_id'    => 'c._content_id',
-				'parent_id'     => 'c._parent_id',
-				'root_id'       => 'c._root_id',
-				'nesting_level' => 'c._nesting_level',
-				'children'      => 'c._children',
-				'author'        => 'c._author_id',
-				'last_editor'   => 'c._editor_id',
-				'ip_address'    => 'c._ip_address',
-				'status'        => 'c._status',
-				'anonymous'     => 'c._anonymous',
-				'publish_date'  => 'UNIX_TIMESTAMP(c._publish_date)',
-				'edit_date'     => 'UNIX_TIMESTAMP(c._edit_date)',
-				'rating'        => 'c._rating',
-				'reports'       => 'c._reports',
-				'options'       => 'c._options',
-				'html'          => 'c._html_content',
-				'bbcode'        => 'c._bbc_content'
+		$select = self::commentSearch()
+			->where(array(
+				'id' => $id,
+			    'content_type' => $this->contentType->id
 			))
-			->from(ac_table('comments'), 'c')
-			->where(array( 'c.id' => $id ))
-			->limit(1)
-			->parser(array( $this, 'parseCommentSql' ))
 			->query();
 
 		return ($select->valid() ? $select->current() : null);
@@ -496,87 +480,26 @@ extends AbstractFilter
 	}
 
 	/**
-	 * @return \Aqua\SQL\Search
+	 * @param string $content
+	 * @return string
 	 */
-	public function commentSearch()
+	public static function parseCommentContent($content)
 	{
-		return Query::search(App::connection())
-			->parser(array( $this, 'parseCommentSql' ))
-			->from(ac_table('comments'), 'co')
-			->groupBy('co.id')
-			->columns(array(
-				'id'            => 'co.id',
-				'content_id'    => 'co._content_id',
-				'parent_id'     => 'co._parent_id',
-				'root_id'       => 'co._root_id',
-				'nesting_level' => 'co._nesting_level',
-				'children'      => 'co._children',
-				'author'        => 'co._author_id',
-				'last_editor'   => 'co._editor_id',
-				'ip_address'    => 'co._ip_address',
-				'status'        => 'co._status',
-				'anonymous'     => 'co._anonymous',
-				'publish_date'  => 'UNIX_TIMESTAMP(co._publish_date)',
-				'edit_date'     => 'UNIX_TIMESTAMP(co._edit_date)',
-				'rating'        => 'co._rating',
-				'reports'       => 'co._reports',
-				'options'       => 'co._options',
-				'html'          => 'co._html_content',
-				'bbcode'        => 'co._bbc_content'
-			))->whereOptions(array(
-				'id'            => 'co.id',
-				'content_id'    => 'co._content_id',
-				'parent_id'     => 'co._parent_id',
-				'root_id'       => 'co._root_id',
-				'nesting_level' => 'co._nesting_level',
-				'children'      => 'co._children',
-				'author'        => 'co._author',
-				'last_editor'   => 'co._editor_id',
-				'ip_address'    => 'co._ip_address',
-				'status'        => 'co._status',
-				'anonymous'     => 'co._anonymous',
-				'publish_date'  => 'co._publish_date',
-				'edit_date'     => 'co._edit_date',
-				'rating'        => 'co._rating',
-				'reports'       => 'co._reports',
-				'options'       => 'co._options',
-			));
-	}
+		$bbcode = new BBCode;
+		$bbcode->defaults();
 
-	/**
-	 * @return \Aqua\SQL\Search
-	 */
-	public function reportSearch()
-	{
-		return Query::search(App::connection())
-			->parser(array( $this, 'parseReportSql' ))
-			->from(ac_table('comment_reports'), 'cr')
-			->groupBy('cr.id')
-			->columns(array(
-				'id'         => 'cr.id',
-				'comment_id' => 'cr._comment_id',
-				'user_id'    => 'cr._user_id',
-				'ip_address' => 'cr._ip_address',
-				'date'       => 'UNIX_TIMESTAMP(cr._date)',
-				'report'     => 'cr._content',
-			))->whereOptions(array(
-				'id'         => 'cr.id',
-				'comment_id' => 'cr._comment_id',
-				'user_id'    => 'cr._user_id',
-				'ip_address' => 'cr._ip_address',
-				'date'       => 'cr._date',
-			));
+		return $bbcode->parse($content);
 	}
 
 	/**
 	 * @param array $data
 	 * @return \Aqua\Content\Filter\CommentFilter\Comment
 	 */
-	public function parseCommentSql(array $data)
+	public static function parseCommentSql(array $data)
 	{
 		$comment               = new Comment;
 		$comment->meta         = new Meta(ac_table('comment_meta'), $data['id']);
-		$comment->contentType  = & $this->contentType;
+		$comment->contentType  = ContentType::getContentType($data['content_type']);
 		$comment->contentId    = (int)$data['content_id'];
 		$comment->parentId     = (int)$data['parent_id'];
 		$comment->rootId       = (int)$data['root_id'];
@@ -603,7 +526,7 @@ extends AbstractFilter
 	 * @param array $data
 	 * @return \Aqua\Content\Filter\CommentFilter\Report
 	 */
-	public function parseReportSql(array $data)
+	public static function parseReportSql(array $data)
 	{
 		$report            = new Report;
 		$report->id        = (int)$data['id'];
@@ -616,21 +539,123 @@ extends AbstractFilter
 		return $report;
 	}
 
-	/**
-	 * @param string $content
-	 * @return string
-	 */
-	public function parseCommentContent($content)
+	public static function commentSearch()
 	{
-		$bbcode = new BBCode;
-		$bbcode->defaults();
-
-		return $bbcode->parse($content);
+		return Query::search(App::connection())
+			->parser(array( __CLASS__, 'parseCommentSql' ))
+			->from(ac_table('comments'), 'co')
+			->groupBy('co.id')
+			->columns(array(
+				'id'            => 'co.id',
+				'content_id'    => 'co._content_id',
+				'content_type'  => 'co._content_type',
+				'parent_id'     => 'co._parent_id',
+				'root_id'       => 'co._root_id',
+				'nesting_level' => 'co._nesting_level',
+				'children'      => 'co._children',
+				'author'        => 'co._author_id',
+				'last_editor'   => 'co._editor_id',
+				'ip_address'    => 'co._ip_address',
+				'status'        => 'co._status',
+				'anonymous'     => 'co._anonymous',
+				'publish_date'  => 'UNIX_TIMESTAMP(co._publish_date)',
+				'edit_date'     => 'UNIX_TIMESTAMP(co._edit_date)',
+				'rating'        => 'co._rating',
+				'reports'       => 'co._reports',
+				'options'       => 'co._options',
+				'html'          => 'co._html_content',
+				'bbcode'        => 'co._bbc_content'
+			))->whereOptions(array(
+				'id'            => 'co.id',
+				'content_id'    => 'co._content_id',
+				'content_type'  => 'co._content_type',
+				'parent_id'     => 'co._parent_id',
+				'root_id'       => 'co._root_id',
+				'nesting_level' => 'co._nesting_level',
+				'children'      => 'co._children',
+				'author'        => 'co._author',
+				'last_editor'   => 'co._editor_id',
+				'ip_address'    => 'co._ip_address',
+				'status'        => 'co._status',
+				'anonymous'     => 'co._anonymous',
+				'publish_date'  => 'co._publish_date',
+				'edit_date'     => 'co._edit_date',
+				'rating'        => 'co._rating',
+				'reports'       => 'co._reports',
+				'options'       => 'co._options',
+			));
 	}
 
-	public static function fetchCache()
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public static function reportSearch()
 	{
+		return Query::search(App::connection())
+			->parser(array( __CLASS__, 'parseReportSql' ))
+			->from(ac_table('comment_reports'), 'cr')
+			->groupBy('cr.id')
+			->columns(array(
+				'id'         => 'cr.id',
+				'comment_id' => 'cr._comment_id',
+				'user_id'    => 'cr._user_id',
+				'ip_address' => 'cr._ip_address',
+				'date'       => 'UNIX_TIMESTAMP(cr._date)',
+				'report'     => 'cr._content',
+			))->whereOptions(array(
+				'id'         => 'cr.id',
+				'comment_id' => 'cr._comment_id',
+				'user_id'    => 'cr._user_id',
+				'ip_address' => 'cr._ip_address',
+				'date'       => 'cr._date',
+			));
+	}
 
+	/**
+	 * @param int $id
+	 * @return \Aqua\Content\Filter\CommentFilter\Comment|null
+	 */
+	public static function getComment($id)
+	{
+		$search = self::commentSearch()
+			->where(array( 'id' => $id ))
+			->query();
+
+		return ($search->valid() ? $search->current() : null);
+	}
+
+	/**
+	 * @param int $id
+	 * @return \Aqua\Content\Filter\CommentFilter\Report|null
+	 */
+	public static function getReport($id)
+	{
+		$search = self::reportSearch()->where(array( 'id' => $id ));
+
+		return ($search->valid() ? $search->current() : null);
+	}
+
+	/**
+	 * @param string|null $name
+	 * @param bool        $internal
+	 * @return mixed
+	 */
+	public static function fetchCache($name = null, $internal = false)
+	{
+		self::$cache !== null or (self::$cache = App::cache()->fetch(self::CACHE_KEY, array()));
+		if($internal) {
+			return null;
+		}
+		if(empty(self::$cache)) {
+			self::rebuildCache();
+		}
+		if($name === null) {
+			return self::$cache;
+		} else if(isset(self::$cache[$name])) {
+			return self::$cache[$name];
+		} else {
+			return null;
+		}
 	}
 
 	public static function rebuildCache($name = null)
@@ -646,8 +671,10 @@ extends AbstractFilter
 				    'publish_date' => 'c._publish_date',
 				    'user_id'      => 'c._author_id',
 				    'display_name' => 'u._display_name',
+				    'avatar'       => 'u._avatar',
 				    'role_id'      => 'u._role_id',
 				    'title'        => 'cd._title',
+				    'slug'         => 'cd._slug',
 				    'content_type' => 'cd._type'
 				))
 				->setColumnType(array(
@@ -661,26 +688,50 @@ extends AbstractFilter
 				->from(ac_table('comments'), 'c')
 				->innerJoin(ac_table('users'), 'u.id = c._author_id', 'u')
 				->innerJoin(ac_table('content'), 'cd._uid = c._content_id', 'cd')
-				->order('c._publish_date')
-				->groupBy('id')
+				->order(array( 'c._publish_date' => 'DESC' ))
+				->groupBy('c.id')
+				->limit(self::CACHE_RECENT_COMMENTS)
 				->query()
 				->results;
+			foreach(self::$cache['last_comments'] as &$cache) {
+				if(substr($cache['avatar'], 0, 16) === '/uploads/avatar/') {
+					$cache['avatar'] = \Aqua\URL . $cache['avatar'];
+				} else if(empty($cache['avatar'])) {
+					$path = App::settings()->get('account')->get('default_avatar', '');
+					if($path) {
+						$cache['avatar'] = \Aqua\URL . $path;
+					} else {
+						$cache['avatar'] = \Aqua\BLANK;
+					}
+				}
+			}
 		}
 		if($name === null || $name === 'last_reports') {
 			self::$cache['last_reports'] = Query::select(App::connection())
 				->columns(array(
-					'id'         => 'r.id',
-				    'comment_id' => 'r._comment_id',
-				    'date'       => 'r._date',
-				    'content'    => 'r._content',
-				    'user_id'    => 'r._user_id',
+					'id'           => 'r.id',
+				    'comment_id'   => 'r._comment_id',
+				    'date'         => 'r._date',
+				    'content'      => 'r._content',
+				    'user_id'      => 'r._user_id',
+				    'display_name' => 'u._display_name',
+				    'role_id'      => 'u._role_id',
 				))
 				->setColumnType(array(
-
+					'id'           => 'integer',
+				    'comment_id'   => 'integer',
+				    'user_id'      => 'integer',
+				    'role_id'      => 'integer',
+				    'date'         => 'timestamp'
 				))
 				->from(ac_table('comment_reports'), 'r')
-				->innerJoin(ac_table('comments'), 'r._comment_id = c.id', 'c')
-				->innerJoin(ac_table('users'), 'u.id = r._user_id');
+				->innerJoin(ac_table('users'), 'u.id = r._user_id', 'u')
+				->order(array( 'r._date' => 'DESC' ))
+				->groupBy('r.id')
+				->limit(self::CACHE_RECENT_REPORTS)
+				->query()
+				->results;
 		}
+		App::cache()->store(self::CACHE_KEY, self::$cache, self::CACHE_TTL);
 	}
 }

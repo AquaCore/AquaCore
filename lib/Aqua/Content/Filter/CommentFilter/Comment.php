@@ -192,6 +192,11 @@ class Comment
 		return strftime($format, $this->publishDate);
 	}
 
+	public function timeElapsedPublishDate()
+	{
+		return __('time-elapsed', 'ago', ac_time_elapsed($this->editDate));
+	}
+
 	/**
 	 * @param string $format
 	 * @return string
@@ -199,6 +204,11 @@ class Comment
 	public function editDate($format)
 	{
 		return strftime($format, $this->editDate);
+	}
+
+	public function timeElapsedEditDate()
+	{
+		return __('time-elapsed', 'ago', ac_time_elapsed($this->editDate));
 	}
 
 	/**

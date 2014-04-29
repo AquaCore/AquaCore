@@ -136,6 +136,11 @@ implements \Serializable
 		return strftime($format, $this->editDate);
 	}
 
+	public function status()
+	{
+		return __('content-status', $this->status);
+	}
+
 	/**
 	 * @param int    $max
 	 * @param string $append
@@ -380,6 +385,7 @@ implements \Serializable
 		");
 		$sth->bindValue(':id', $this->uid, \PDO::PARAM_INT);
 		$sth->execute();
+		$sth->closeCursor();
 		$this->applyFilters('afterDelete');
 		$feedback = array( $this );
 		Event::fire('content.delete', $feedback);

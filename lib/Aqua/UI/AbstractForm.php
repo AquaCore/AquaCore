@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\UI;
 
+use Aqua\Core\Exception\InvalidArgumentException;
 use Aqua\Http\Request;
 use Aqua\UI\Form\FieldInterface;
 
@@ -74,23 +75,33 @@ class AbstractForm
 	}
 
 	/**
+	 * @param mixed $key
 	 * @param mixed $content
 	 * @return \Aqua\UI\Form
 	 */
-	public function append($content)
+	public function append($key, $content = null)
 	{
-		$this->content[] = $content;
+		if($content === null) {
+			$this->content[] = $key;
+		} else {
+			$this->content[$key] = $content;
+		}
 
 		return $this;
 	}
 
 	/**
+	 * @param mixed $key
 	 * @param mixed $content
 	 * @return \Aqua\UI\Form
 	 */
-	public function prepend($content)
+	public function prepend($key, $content = null)
 	{
-		array_unshift($this->content, $content);
+		if($content === null) {
+			array_unshift($this->content, $content);
+		} else {
+			$this->content = array( $key => $content ) + $this->content;
+		}
 
 		return $this;
 	}

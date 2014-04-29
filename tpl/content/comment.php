@@ -10,7 +10,6 @@ use Aqua\Core\App;
   * @var $page    \Aqua\Site\Page
   */
 
-$datetimeFormat = \Aqua\Core\App::settings()->get('datetime_format');
 $isArchived = ($content->contentType->hasFilter('ArchiveFilter') &&
                $content->isArchived());
 ?>
@@ -29,12 +28,9 @@ if($comment->authorId === $content->authorId && !$comment->anonymous) {
 	<div class="ac-comment-body">
 		<div class="ac-comment-info">
 			<div class="ac-comment-info-header">
-				<div class="ac-comment-author">
-					<?php echo $comment->authorDisplay() ?>
-				</div>
-				<div class="ac-comment-date">
-					<?php echo $comment->publishDate($datetimeFormat) ?>
-				</div>
+				<?php echo __('comment', 'info',
+				              $comment->authorDisplay(),
+				              $comment->timeElapsedPublishDate()) ?>
 			</div>
 			<?php if($content->contentType->filter('CommentFilter')->getOption('rating', false)) : ?>
 				<div class="ac-comment-rating">
@@ -59,7 +55,7 @@ if($comment->authorId === $content->authorId && !$comment->anonymous) {
 				<?php echo __('comment',
 				              'edited-by',
 				              $comment->lastEditorDisplay(),
-				              $comment->editDate($datetimeFormat)); ?>
+				              $comment->timeElapsedEditDate()); ?>
 			</div>
 		<?php endif; ?>
 		<div class="ac-comment-actions">

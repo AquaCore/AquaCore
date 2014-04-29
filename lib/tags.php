@@ -17,6 +17,9 @@ ScriptManager::register('sprintf')
 ScriptManager::register('codemirror')
 	->src(\Aqua\URL . '/assets/scripts/codemirror/codemirror.min.js')
 	->stylesheet('codemirror');
+// CodeMirror
+ScriptManager::register('moment')
+	->src(\Aqua\URL . '/assets/scripts/moment/moment.min.js');
 // HighSoft
 ScriptManager::register('highsoft.highchart')
 	->src(\Aqua\URL . '/assets/scripts/highsoft/highcharts.js');

@@ -946,6 +946,11 @@ button.ac-delete-button {
 				border: 1px solid #1174cb;
 				@include text-shadow(-1px -1px 0 #1174cb);
 			}
+			&.ui-datepicker-unselectable,
+			&.ui-datepicker-unselectable a,
+			&.ui-datepicker-unselectable a.ui-state-hover {
+				background: #e4e7f2;
+			}
 		}
 	}
 }

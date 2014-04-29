@@ -18,7 +18,5 @@
     <word namespace="news" key="posts">Posts</word>
     <word namespace="news" key="post">Post</word>
     <word namespace="news" key="view-post">View Post</word>
-    <word namespace="news" key="confirm-delete-s">Are you sure you want to delete this post?</word>
-    <word namespace="news" key="confirm-delete-p">Are you sure you want to delete these posts?</word>
   </wordgroup>
 </languageimport>

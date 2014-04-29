@@ -32,9 +32,11 @@ while(current($content)) : $items = 0; ?>
 						<tbody>
 						<?php foreach($item['content'] as $row) : ?>
 							<tr>
-								<?php if(is_array($row)) : foreach($row as $col) : ?>
+								<?php if(is_array($row)) : foreach($row as $col) : if(is_array($col)) : ?>
+									<td colspan="<?php echo $col[1] ?>"><?php echo $col[0] ?></td>
+								<?php else : ?>
 									<td><?php echo $col ?></td>
-								<?php endforeach; else : ?>
+								<?php endif; endforeach; else : ?>
 									<td colspan="<?php echo $item['colspan'] ?>"><?php echo $row ?></td>
 								<?php endif; ?>
 							</tr>

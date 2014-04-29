@@ -68,9 +68,8 @@ abstract class Page
 			}
 		} else if($this->actionExists($name)) {
 			return array( $this, "{$name}_action" );
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public function action($action, $arguments)
@@ -91,6 +90,18 @@ abstract class Page
 		}
 	}
 
+	public function call($method, array $arguments = array(), $extendedOnly = false)
+	{
+		if($this->extend->count()) foreach(clone $this->extend as $page) {
+			if(method_exists($page, $method)) {
+				return call_user_func_array( array( $page, $method ), $arguments );
+			}
+		} else if(!$extendedOnly && method_exists($this, $method)) {
+			return call_user_func_array( array( $this, $method ), $arguments );
+		}
+		return null;
+	}
+
 	public function onCallAction($action, $parameters)
 	{
 		$this->error(404);
@@ -107,6 +118,14 @@ abstract class Page
 			}
 			throw new InvalidArgumentException(1, __CLASS__, $page);
 		} while(0);
+		$page->dispatcher  = &$this->dispatcher;
+		$page->theme       = &$this->theme;
+		$page->request     = &$this->request;
+		$page->response    = &$this->response;
+		$page->title       = &$this->title;
+		$page->layout      = &$this->layout;
+		$page->_depth      = &$this->_depth;
+		$page->_dispatcher = &$this->_dispatcher;
 		$this->extend->insert($page, $priority);
 
 		return $this;

@@ -1,5 +1,7 @@
 <?php
 use Aqua\Core\App;
+use Aqua\Content\ContentType;
+use Aqua\Content\Filter\CommentFilter;
 use Aqua\Log\PayPalLog;
 use Aqua\Log\TransferLog;
 use Aqua\UI\ScriptManager;
@@ -45,7 +47,8 @@ $dash->get('account')
 		'title' => __('dashboard', 'registration-stats'),
 		'class' => 'ac-reg-stats',
 		'content' => '<div id="reg-stats"></div>'
-	))->append('new-users', array(
+	))
+	->append('new-users', array(
 		'title' => __('dashboard', 'last-users'),
 		'class' => 'ac-user-stats',
 		'content' => $user_stats
@@ -125,7 +128,8 @@ $dash->get('donation')
 		'title' => __('dashboard', 'last-donations'),
 		'class' => 'ac-donation',
 		'content' => $donations
-	))->append('transfer', array(
+	))
+	->append('transfer', array(
 		'span' => 2,
 		'title' => __('dashboard', 'last-transfers'),
 		'class' => 'ac-credit-xfer',
@@ -136,5 +140,69 @@ $dash->get('donation')
 			__('donation', 'xfer-date')
 		),
 		'content' => $transfers
+	));
+$commentCache = CommentFilter::fetchCache();
+$comments = $reports = array();
+if(empty($commentCache['last_comments'])) {
+	$comments = '<div style="text-align: center">' . __('application', 'no-search-results') . '</div>';
+} else for($i = 0; $i < CommentFilter::CACHE_RECENT_COMMENTS; ++$i) {
+	if(empty($commentCache['last_comments'][$i])) {
+		$comments[] = '';
+	} else {
+		$comment = $commentCache['last_comments'][$i];
+		$cType = ContentType::getContentType($comment['content_type']);
+		$comments[] = '<div class="ac-comment"><div class="ac-comment-avatar"><img src="' . $comment['avatar'] . '"></div>' .
+		              '<div class="ac-comment-header">' .
+		              __('comment', 'info', '<a href="' . $base_acc_url . $comment['user_id'] . '">' .
+		              Role::get($comment['role_id'])->display($comment['display_name'], 'ac-username') .
+		              '</a>', __('time-elapsed', 'ago', ac_time_elapsed($comment['publish_date']))) . '</div>' .
+		              '<div class="ac-comment-content">' . $comment['content'] . '<div class="ac-comment-padding"></div></div><div class="ac-comment-url">' .
+		              '<a href="' . $cType->url(array(
+	                        'path' => array( $comment['slug'] ),
+	                        'query' => array( 'root' => $comment['id'] ),
+	                        'hash' => 'comments'
+	                    ), false) . '">' . htmlspecialchars($comment['title']) . ' #' . $comment['id'] . '</a>' .
+		              '</div></div>';
+	}
+}
+if(empty($commentCache['last_reports'])) {
+	$comments = '<div style="text-align: center">' . __('application', 'no-search-results') . '</div>';
+} else for($i = 0; $i < CommentFilter::CACHE_RECENT_REPORTS; ++$i) {
+	if(empty($commentCache['last_reports'][$i])) {
+		$reports[] = '';
+	} else {
+		$report = $commentCache['last_reports'][$i];
+		$reports[] = array(
+			'<a href="' . ac_build_url(array(
+				'path' => array( 'comments' ),
+			    'action' => 'edit',
+			    'arguments' => array( $report['comment_id'] )
+			)) . '">' . $report['comment_id'] . '</a>',
+			Role::get($report['role_id'])->display($report['display_name'], 'ac-username'),
+		    strftime($datetime_format, $report['date'])
+		);
+		if($report['content']) {
+			$reports[] = array(
+				'<b>' . __('comment', 'report-message') . ':</b>',
+				array( '<div class="ac-report-message">' . htmlspecialchars($report['content']) . '</div>', 2 )
+			);
+		}
+	}
+}
+$dash->get('comment')
+	->append('comments', array(
+		'title' => __('dashboard', 'last-comments'),
+	    'class' => 'ac-comments',
+	    'content' => $comments
+	))
+	->append('reports', array(
+		'title' => __('dashboard', 'last-reports'),
+	    'class' => 'ac-reports',
+	    'content' => $reports,
+	    'header' => array(
+		    __('comment', 'id'),
+		    __('profile', 'user'),
+		    __('comment', 'date')
+	    )
 	));
 echo '<div class="ac-dashboard">', $dash->render(), '</div>';

@@ -2,6 +2,7 @@
 namespace Page\Admin;
 
 use Aqua\Core\App;
+use Aqua\Core\L10n;
 use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
 use Aqua\Ragnarok\Account;
@@ -864,7 +865,8 @@ extends Page
 	{
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-server', 'accounts');
-			$frm = new \Aqua\UI\Search(App::request());
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id'    => 'id',
 			        'name'  => 'username',
@@ -875,13 +877,15 @@ extends Page
 			        'ip'    => 'last_ip_address',
 			        'login' => 'last_login'
 				))
-				->defaultOrder('id');
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20);
 			$frm->input('id')
 				->setColumn('id')
 				->searchType(Input::SEARCH_EXACT)
 				->setLabel(__('ragnarok', 'account-id'))
 				->type('number')
-				->attr('min', Server\Login::MIN_ACCOUNT_ID);
+				->attr('min', 0);
 			$frm->input('name')
 				->setColumn('username')
 				->setLabel(__('ragnarok', 'username'))
@@ -898,12 +902,13 @@ extends Page
 			$frm->range('group')
 				->setColumn('group_id')
 				->setLabel(__('ragnarok', 'group'))
-				->type('number');
+				->type('number')
+				->attr('min', 0);
 			$frm->range('login')
 				->setColumn('last_login')
 				->setLabel(__('ragnarok', 'last-login'))
 				->type('datetime')
-				->attr('placeholder', 'YYY-MM-DD HH:MM:SS');
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
 			$states = array();
 			foreach(array( 0, 3, 5, 7, 10, 11, 13, 14 ) as $id) {
 				$states[$id] = __('ragnarok-state', $id);
@@ -913,23 +918,20 @@ extends Page
 				->setLabel(__('ragnarok', 'state'))
 				->multiple()
 				->value($states);
-			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$search = $this->server->login->search()
-				->calcRows()
-				->limit(($currentPage - 1) * self::$accountsPerPage, self::$accountsPerPage);
+			$search = $this->server->login->search();
 			$frm->apply($search);
 			if(!isset($search->where['id'])) {
 				$search->where(array( 'id' => array( Search::SEARCH_DIFFERENT | Search::SEARCH_LOWER,
 				                                     Server\Login::MIN_ACCOUNT_ID ) ));
 			}
-			$search->query();
+			$search->calcRows(true)->query();
 			if($search->count()) {
 				$users = array_unique($search->getColumn('user_id'));
 				array_unshift($users, Search::SEARCH_IN);
 				\Aqua\User\Account::search()->where(array( 'id' => $users ))->query();
 			}
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$accountsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$tpl = new Template;
 			$tpl->set('accounts', $search->results)
@@ -947,20 +949,53 @@ extends Page
 	public function loginlog_action()
 	{
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$search       = $this->server->login->log->searchLogin()
-				->calcRows()
-				->limit(($current_page - 1) * self::$logsPerPage, self::$logsPerPage)
-				->order(array('date' => 'DESC'))
-				->query();
-			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::$logsPerPage),
-			                               $current_page);
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'date' => 'date',
+			        'ip'   => 'ip_address',
+			        'usr'  => 'username',
+			        'code' => 'code',
+			        'msg'  => 'message'
+				))
+				->limit(0, 6, 20, 5)
+				->defaultOrder('date')
+				->defaultLimit(20);
+			$responseCodes = array();
+			foreach(array_merge(array( -3 ), range(0, 15), range(99, 104)) as $code) {
+				$responseCodes[$code] = $code . ' - ' . __('ragnarok-login-response', $code);
+			}
+			$frm->input('usr')
+				->setColumn('username')
+				->setLabel(__('ragnarok-login-log', 'username'))
+				->type('text');
+			$frm->input('ip')
+				->setColumn('ip_address')
+				->searchType(Input::SEARCH_LIKE_RIGHT)
+				->setLabel(__('ragnarok-login-log', 'ip-address'))
+				->type('text');
+			$frm->range('date')
+				->setColumn('date')
+				->setLabel(__('ragnarok-login-log', 'date'))
+				->type('datetime')
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
+			$frm->select('code')
+				->setColumn('code')
+				->setLabel(__('ragnarok-login-log', 'response'))
+				->multiple()
+				->value($responseCodes);
+			$search = $this->server->login->log->searchLogin();
+			$frm->apply($search);
+			$search->calcRows(true)->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / $frm->getLimit()),
+			                      $currentPage);
 			$this->title  = $this->theme->head->section = __('ragnarok-server', 'login-log');
-			$tpl          = new Template;
+			$tpl = new Template;
 			$tpl->set('logs', $search->results)
 			    ->set('log_count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/login-log');
 		} catch(\Exception $exception) {
@@ -972,20 +1007,58 @@ extends Page
 	public function banlog_action()
 	{
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$search       = $this->server->login->log->searchBan()
-				->calcRows()
-				->limit(($current_page - 1) * self::$logsPerPage, self::$logsPerPage)
-				->order(array('ban_date' => 'DESC'))
-				->query();
-			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::$logsPerPage),
-			                               $current_page);
-			$this->title  = $this->theme->head->section = __('ragnarok-server', 'ban-log');
-			$tpl          = new Template;
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'id'   => 'id',
+					'acc'  => 'banned_id',
+					'ban'  => 'account_id',
+					'type' => 'type',
+					'date' => 'ban_date',
+					'uban' => 'unban_date'
+				))
+			    ->limit(0, 6, 20, 5)
+			    ->defaultOrder('id')
+			    ->defaultLimit(20);
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok-ban-log', 'id'))
+				->type('namber')
+				->attr('min', 0);
+			$frm->input('acc')
+				->setColumn('banned_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'account-id'))
+				->type('number')
+				->attr('min', 0);
+			$frm->range('date')
+				->setColumn('date')
+				->setLabel(__('ragnarok-ban-log', 'date'))
+				->type('datetime')
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
+			$frm->range('unban')
+				->setColumn('unban_date')
+				->setLabel(__('ragnarok-ban-log', 'unban-date'))
+				->type('datetime')
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
+			$frm->select('type')
+				->setColumn('type')
+				->setLabel(__('ragnarok-ban-log', 'type'))
+				->multiple()
+				->value(L10n::getDefault()->rangeList('ragnarok-ban-type', range(1, 3)));
+			$search = $this->server->login->log->searchBan();
+			$frm->apply($search);
+			$search->calcRows(true)->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / $frm->getLimit()),
+			                      $currentPage);
+			$this->title = $this->theme->head->section = __('ragnarok-server', 'ban-log');
+			$tpl = new Template;
 			$tpl->set('logs', $search->results)
 			    ->set('log_count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/ban-log');
 		} catch(\Exception $exception) {
@@ -997,20 +1070,56 @@ extends Page
 	public function pwlog_action()
 	{
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
-			$search       = $this->server->login->log->searchPasswordReset()
-				->calcRows()
-				->limit(($current_page - 1) * self::$logsPerPage, self::$logsPerPage)
-				->order(array('request_date' => 'DESC'))
-				->query();
-			$pgn          = new Pagination(App::request()->uri,
-			                               ceil($search->rowsFound / self::$logsPerPage),
-			                               $current_page);
-			$this->title  = $this->theme->head->section = __('ragnarok-server', 'ban-log');
-			$tpl          = new Template;
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'id' => 'id',
+			        'acc' => 'account_id',
+			        'ip' => 'ip_address',
+			        'key' => 'key',
+			        'req' => 'request_date',
+			        'res' => 'reset_date'
+				))
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20);
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok-password-reset-log', 'id'))
+				->type('namber')
+				->attr('min', 0);
+			$frm->input('acc')
+				->setColumn('account_id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'account-id'))
+				->type('number')
+				->attr('min', 0);
+			$frm->input('ip')
+				->setColumn('ip_address')
+				->searchType(Input::SEARCH_LIKE_RIGHT)
+				->setLabel(__('ragnarok-password-reset-log', 'ip-address'))
+				->type('text');
+			$frm->range('date')
+				->setColumn('date')
+				->setLabel(__('ragnarok-password-reset-log', 'request-date'))
+				->type('datetime')
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
+			$frm->range('reset')
+				->setColumn('reset_date')
+				->setLabel(__('ragnarok-password-reset-log', 'reset-date'))
+				->type('datetime')
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
+			$search = $this->server->login->log->searchPasswordReset();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      $currentPage);
+			$this->title = $this->theme->head->section = __('ragnarok-server', 'ban-log');
+			$tpl = new Template;
 			$tpl->set('logs', $search->results)
 			    ->set('log_count', $search->rowsFound)
 			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
 			    ->set('page', $this);
 			echo $tpl->render('admin/ragnarok/log/password-reset-log');
 		} catch(\Exception $exception) {

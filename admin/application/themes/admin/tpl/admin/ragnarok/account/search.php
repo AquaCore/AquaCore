@@ -10,7 +10,10 @@ use Aqua\UI\Sidebar;
  * @var $page          \Page\Admin\Ragnarok
  */
 
+use Aqua\UI\ScriptManager;
+
 $page->theme->template = 'sidebar-right';
+$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 $datetime_format = App::settings()->get('datetime_format');
 $base_acc_url = ac_build_url(array(
 		'path' => array( 'r', $page->server->key ),
@@ -58,7 +61,7 @@ $currentSorting = $search->getSorting();
 		</tr>
 	</thead>
 	<tbody>
-	<?php if($account_count === 0) : ?>
+	<?php if(!count($accounts)) : ?>
 		<tr><td colspan="9" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($accounts as $acc) : ?>
 		<tr>
@@ -79,7 +82,16 @@ $currentSorting = $search->getSorting();
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="9"><?php echo $paginator->render() ?></td></tr>
+		<tr>
+			<td colspan="9">
+				<div style="position: relative">
+					<div style="position: absolute; right: 0;">
+						<?php echo $search->limit()->attr('class', 'ac-search-limit')->render() ?>
+					</div>
+					<?php echo $paginator->render() ?>
+				</div>
+			</td>
+		</tr>
 	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('application', 'search-results-' . ($account_count === 1 ? 's' : 'p'), number_format($account_count)) ?></span>

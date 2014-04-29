@@ -11,18 +11,16 @@ use Aqua\Ragnarok\Account as RagnarokAccount;
 
 $permissions = new PermissionSet;
 
-$filter_active_account = function (User $user)
+$filterActiveAccount = function (User $user)
 {
 	return ($user->loggedIn() && $user->account->status === Account::STATUS_NORMAL);
 };
-
-$filter_owned_account = function (User $user)
+$filterOwnedAccount = function (User $user)
 {
 	return ($user->loggedIn() && App::$activeRagnarokAccount instanceof RagnarokAccount &&
 	        App::$activeRagnarokAccount->owner === $user->account->id);
 };
-
-$filter_owned_character = function (User $user)
+$filterOwnedCharacter = function (User $user)
 {
 	return ($user->loggedIn() && App::$activeRagnarokCharacter instanceof Character &&
 	        App::$activeRagnarokCharacter->account()->owner === $user->account->id);
@@ -60,15 +58,15 @@ if(Server::$serverCount === 0) {
 		->set("main/ragnarok/action/[register|link|index]")
 		->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_PERMISSION_ROLE)
 		->allowPermission('register-account')
-		->addFilter('check_status_active', $filter_active_account);
+		->addFilter('check_status_active', $filterActiveAccount);
 	$permissions
 		->set("main/ragnarok/account")
 		->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_ROLE_PERMISSION)
-		->addFilter('check_owns_account', $filter_owned_account);
+		->addFilter('check_owns_account', $filterOwnedAccount);
 	$permissions
 		->set("main/ragnarok/server/char")
 		->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_ROLE_PERMISSION)
-		->addFilter('check_owns_account', $filter_owned_character);
+		->addFilter('check_owns_account', $filterOwnedCharacter);
 	$permissions
 		->set("main/ragnarok/server/item/action/[cart|buy]")
 		->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_ROLE_PERMISSION)

@@ -39,5 +39,6 @@
     <word namespace="application" key="or">or</word>
     <word namespace="application" key="and">and</word>
     <word namespace="application" key="any">Any</word>
+    <word namespace="application" key="now">Now</word>
   </wordgroup>
 </languageimport>

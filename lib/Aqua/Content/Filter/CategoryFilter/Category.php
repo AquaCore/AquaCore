@@ -53,6 +53,11 @@ class Category
 	 */
 	public $meta;
 
+	public function contentType()
+	{
+		return ContentType::getContentType($this->contentTypeId, 'id');
+	}
+
 	/**
 	 * @return string
 	 */

@@ -29,10 +29,7 @@
 		if(data["data"].hasOwnProperty("slug")) {
 			$("[ac-field=slug]", context)
 				.html(data["data"]["slug"])
-				.attr("href", AquaCore.buildUrl({
-					"baseDir": AquaCore.BASEDIR,
-					"path": [ "news", "category", data["data"]["slug"] ]
-				}));
+				.attr("href", data["data"]["url"]);
 		}
 		formSuccess.call(this, data);
 	};
@@ -53,8 +50,11 @@
 			success: success
 		});
 	});
-	$(".ac-action-edit").bind("click", function() {
-		$("#category-settings-" + $(this).val()).dialog("open");
+	$(".edit-category").bind("click", function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		$("#category-settings-" + $("button", this).val()).dialog("open");
+		return false;
 	});
 	$("button[name=x-delete]").bind("click", function(e) {
 		if(!confirm(AquaCore.l("content", "confirm-delete-category"))) {

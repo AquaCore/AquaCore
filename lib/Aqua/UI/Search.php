@@ -35,7 +35,11 @@ extends AbstractForm
 	const CLAUSE_WHERE  = 0;
 	const CLAUSE_HAVING = 1;
 
-	public function __construct(Request $request, $currentPage = null, $orderKey = 'order', $sortingKey = 'sort', $limitKey = 'limit')
+	public function __construct(Request $request,
+	                            $currentPage = null,
+	                            $orderKey = 'order',
+	                            $sortingKey = 'sort',
+	                            $limitKey = 'limit')
 	{
 		$this->currentPage = $currentPage;
 		$this->orderKey = $orderKey;
@@ -96,15 +100,10 @@ extends AbstractForm
 		return $this;
 	}
 
-	public function defaultOrder($order)
+	public function defaultOrder($order, $sorting = null)
 	{
 		$this->defaultOrder = $order;
-		return $this;
-	}
-
-	public function defaultSorting($sort)
-	{
-		$this->defaultSorting = $sort;
+		$this->defaultSorting = $sorting;
 		return $this;
 	}
 
@@ -242,7 +241,7 @@ extends AbstractForm
 		   ($sort = App::user()->account->meta->getArray(self::META_KEY, $this->persistKey, 2)) &&
 		   ($sort === self::SORT_DESC || $sort === self::SORT_ASC)) {
 			return $sort;
-		} else if($this->sortingKey && ($sorting = array_search(strtolower($this->getString($this->sortingKey)), array('asc', 'desc')))) {
+		} else if($this->sortingKey && ($sorting = array_search(strtolower($this->getString($this->sortingKey)), array('asc', 'desc'))) !== false) {
 			return $sorting;
 		} else {
 			return $this->defaultSorting;
@@ -285,8 +284,8 @@ extends AbstractForm
 			$url = $class = null;
 			if(isset($this->order[$key])) {
 				if($currentOrder === $key) {
-					$url = $this->buildUrl($key, $currentSorting ? 'asc' : 'desc');
-					$class = 'ac-table-order-active ac-table-sorting-' . ($currentSorting ? 'desc' : 'asc');
+					$url = $this->buildUrl($key, $currentSorting === self::SORT_ASC ? 'desc' : 'asc');
+					$class = 'ac-table-order-active ac-table-sorting-' . ($currentSorting === self::SORT_ASC ? 'asc' : 'desc');
 				} else {
 					$url = $this->buildUrl($key, 'asc');
 					$class = 'ac-table-sorting-asc';

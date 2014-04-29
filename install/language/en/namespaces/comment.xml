@@ -2,6 +2,8 @@
 <languageimport>
   <wordgroup language="en">
     <word namespace="comment" key="comment">Comment</word>
+    <word namespace="comment" key="id">Comment ID</word>
+    <word namespace="comment" key="date">Date</word>
     <word namespace="comment" key="comment-count-s">%s Comment</word>
     <word namespace="comment" key="comment-count-p">%s Comments</word>
     <word namespace="comment" key="submit-comment">Submit Comment</word>
@@ -9,7 +11,7 @@
     <word namespace="comment" key="anonymous">Anonymous</word>
     <word namespace="comment" key="confirm-delete">Are you sure you want to delete this comment?</word>
     <word namespace="comment" key="login-to-comment">Login to leave a comment</word>
-    <word namespace="comment" key="edited-by"><![CDATA[Last edited by <i>%s</i> at %s]]></word>
+    <word namespace="comment" key="edited-by"><![CDATA[Edited %2$s by <i>%1$s</i>]]></word>
     <word namespace="comment" key="toggle-children">Toggle child comments</word>
     <word namespace="comment" key="report-sent">Your report has been sent.</word>
     <word namespace="comment" key="report-placeholder">Report reason (Optional)</word>
@@ -26,5 +28,9 @@
     <word namespace="comment" key="archived">This post is archived. Rating and commenting is disabled.</word>
     <word namespace="comment" key="saved">Your comment has been saved.</word>
     <word namespace="comment" key="flagged">Your comment has been flagged as spam! It will be hidden until it is determined to be a legitimate comment by a moderator.</word>
+    <word namespace="comment" key="info">%s said %s:</word>
+    <word namespace="comment" key="view-comment">View Comment</word>
+    <word namespace="comment" key="reports">Reports</word>
+    <word namespace="comment" key="report-message">Report Message</word>
   </wordgroup>
 </languageimport>

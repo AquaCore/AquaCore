@@ -242,15 +242,19 @@ implements FieldInterface
 		if(!$this->getAttr('name', null)) {
 			return Form::VALIDATION_SUCCESS;
 		}
-		if(($data = $form->getString($this->getAttr('name'), null)) === null &&
-			($data = $form->getArray($this->getAttr('name'), null)) === null) {
-			return Form::VALIDATION_INCOMPLETE;
-		}
-		if(is_array($data) && !$this->getBool('multiple')) {
-			$this->error = self::VALIDATION_INVALID_OPTION;
-			$this->_setWarning(__('form', 'invalid-value-selected'));
+		if($this->getBool('multiple')) {
+			$data = $form->getArray($this->getAttr('name'), array());
+			if(empty($data) && $this->getBool('required')) {
+				$this->error = self::VALIDATION_FIELD_REQUIRED;
+				$this->_setWarning(__('form', 'field-required'));
 
-			return Form::VALIDATION_FAIL;
+				return Form::VALIDATION_FAIL;
+			}
+		} else {
+			$data = $form->getString($this->getAttr('name'), null);
+		}
+		if($data === null) {
+			return Form::VALIDATION_INCOMPLETE;
 		}
 		if(!is_array($data)) {
 			$data = array( $data );

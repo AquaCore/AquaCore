@@ -33,6 +33,6 @@
 	$(".ac-search-limit").on("change", function() {
 		var query = {};
 		query[$(this).attr("name")] = $(this).val();
-		window.location = AquaCore.buildUrl($.extend(AquaCore.URI, { query: query }));
+		window.location = AquaCore.buildUrl($.extend(true, {}, AquaCore.URI, { query: query }));
 	});
 })(jQuery);

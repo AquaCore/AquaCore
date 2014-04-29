@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="time-elapsed" key="minute">%d minute</word>
+    <word namespace="time-elapsed" key="minutes">%d minutes</word>
+    <word namespace="time-elapsed" key="second">%d second</word>
+    <word namespace="time-elapsed" key="seconds">%d seconds</word>
+    <word namespace="time-elapsed" key="hour">%d hour</word>
+    <word namespace="time-elapsed" key="hours">%d hours</word>
+    <word namespace="time-elapsed" key="day">%d day</word>
+    <word namespace="time-elapsed" key="days">%d days</word>
+    <word namespace="time-elapsed" key="week">%d week</word>
+    <word namespace="time-elapsed" key="weeks">%d weeks</word>
+    <word namespace="time-elapsed" key="month">%d month</word>
+    <word namespace="time-elapsed" key="months">%d months</word>
+    <word namespace="time-elapsed" key="year">%d year</word>
+    <word namespace="time-elapsed" key="years">%d years</word>
+    <word namespace="time-elapsed" key="none">A moment</word>
+    <word namespace="time-elapsed" key="ago">%s ago</word>
+  </wordgroup>
+</languageimport>
