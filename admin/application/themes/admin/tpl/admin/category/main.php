@@ -102,11 +102,7 @@ $page->theme->set('sidebar', $sidebar);
 				<td><input type="checkbox" name="categories[]" value="<?php echo $category->id ?>"></td>
 				<td><?php echo $category->id ?></td>
 				<td class="ac-category-image">
-					<?php if($category->image): ?>
-						<img class="category-image-<?php echo $category->id ?>" src="<?php echo $category->imageUrl ?>">
-					<?php else: ?>
-						<img class="category-image-<?php echo $category->id ?>" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" style="display: none">
-					<?php endif; ?>
+					<img class="category-image-<?php echo $category->id ?>" src="<?php echo $category->image() ?>">
 				</td>
 				<td class="ac-category-name" ac-field="name"><?php echo htmlspecialchars($category->name) ?></td>
 				<td class="ac-category-description" ac-field="description"><?php echo htmlspecialchars($category->description) ?></td>
@@ -127,7 +123,7 @@ $page->theme->set('sidebar', $sidebar);
 								<tr>
 									<td colspan="2" style="text-align: center">
 										<div class="ac-delete-wrapper">
-											<img class="category-image-<?php echo $category->id ?>" src="<?php echo $category->imageUrl ?>">
+											<img class="category-image-<?php echo $category->id ?>" src="<?php echo $category->image() ?>">
 											<input type="submit" class="ac-delete-button" name="x-delete-image" value="" <?php if(!$category->image) echo ' style="display: none"' ?>>
 										</div>
 									</td>

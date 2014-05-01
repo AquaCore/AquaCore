@@ -175,16 +175,17 @@ extends AbstractFilter
 	public function contentType_deleteCategory(Category $category)
 	{
 		if($category->protected) return false;
-		$content_tbl  = ac_table('categories');
-		$category_tbl = ac_table('content_categories');
+		$category_tbl = ac_table('categories');
+		$content_tbl  = ac_table('content_categories');
 		$meta_tbl     = ac_table('category_meta');
 		$sth          = App::connection()->prepare("
 		DELETE FROM `$content_tbl` WHERE _category_id = :id;
-		DELETE FROM `$meta_tbl` WHERE _category_id = :id;
+		DELETE FROM `$meta_tbl` WHERE _id = :id;
 		DELETE FROM `$category_tbl` WHERE id = :id;
 		");
 		$sth->bindValue(':id', $category->id, \PDO::PARAM_INT);
 		$sth->execute();
+		$sth->closeCursor();
 		$feedback = array( $category );
 		Event::fire('category.delete', $feedback);
 		$this->rebuildCache();

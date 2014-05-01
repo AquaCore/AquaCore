@@ -63,7 +63,7 @@ class Category
 	 */
 	public function image()
 	{
-		if($this->image === null) {
+		if(empty($this->image)) {
 			return \Aqua\BLANK;
 		} else {
 			return $this->imageUrl;

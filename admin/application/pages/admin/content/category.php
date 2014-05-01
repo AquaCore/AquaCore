@@ -151,7 +151,7 @@ extends Page
 				try {
 					$category->removeImage(true);
 					$error = false;
-					$message = __('content', 'category-updated');
+					$message = __('content', 'category-updated', htmlspecialchars($category->name));
 				} catch(\Exception $exception) {
 					$error = true;
 					$message = __('application', 'unexpected-error');
@@ -227,7 +227,7 @@ extends Page
 				$frm->field('image')->setWarning($error_str);
 			}
 			if($category->update($options)) {
-				$message = __('news', 'category-updated');
+				$message = __('content', 'category-updated', htmlspecialchars($category->name));
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
