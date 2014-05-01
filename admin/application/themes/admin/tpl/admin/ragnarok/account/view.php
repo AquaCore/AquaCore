@@ -5,7 +5,7 @@ use Aqua\Core\App;
  * @var $characters \Aqua\Ragnarok\Character[]
  * @var $page       \Page\Admin\Ragnarok
  */
-$datetime_format = App::$settings->get('datetime_format', '');
+$datetimeFormat = App::$settings->get('datetime_format', '');
 ?>
 <table class="ac-table">
 	<thead>
@@ -42,11 +42,11 @@ $datetime_format = App::$settings->get('datetime_format', '');
 		</tr>
 		<tr>
 			<td><b><?php echo __('ragnarok', 'last-login') ?></b></td>
-			<td><?php echo $account->lastLogin($datetime_format) ?></td>
+			<td><?php echo $account->lastLogin($datetimeFormat) ?></td>
 			<td><b><?php echo __('ragnarok', 'last-ip') ?></b></td>
 			<td><?php echo ($account->lastIp ? htmlspecialchars($account->lastIp) : '--') ?></td>
 			<td colspan="2"><b><?php echo __('ragnarok', 'unban-time') ?></b></td>
-			<td><?php echo ($account->unbanTime ? $account->unbanTime($datetime_format) : '--') ?></td>
+			<td><?php echo ($account->unbanTime ? $account->unbanTime($datetimeFormat) : '--') ?></td>
 		</tr>
 		<?php
 		$row = array();

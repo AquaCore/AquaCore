@@ -2,7 +2,7 @@
 use Aqua\Core\App;
 /**
  * @var $logs      \Aqua\Ragnarok\Server\Logs\PasswordResetLog[]
- * @var $log_count int
+ * @var $logCount int
  * @var $paginator \Aqua\UI\Pagination
  * @var $search    \Aqua\UI\Search
  * @var $page      \Page\Admin\Ragnarok
@@ -45,7 +45,7 @@ $page->theme->set('sidebar', $sidebar);
 	</tr>
 	</thead>
 	<tbody>
-	<?php if($log_count === 0) : ?>
+	<?php if(empty($logs)) : ?>
 		<tr><td colspan="6" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($logs as $log) : ?>
 		<tr>
@@ -74,4 +74,4 @@ $page->theme->set('sidebar', $sidebar);
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($log_count === 1 ? 's' : 'p'), number_format($log_count)) ?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($logCount === 1 ? 's' : 'p'), number_format($logCount)) ?></span>

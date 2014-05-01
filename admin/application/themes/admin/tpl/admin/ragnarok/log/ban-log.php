@@ -3,7 +3,7 @@ use Aqua\Core\App;
 use Aqua\Ragnarok\Server\Logs\BanLog;
 /**
  * @var $logs      \Aqua\Ragnarok\Server\Logs\BanLog[]
- * @var $log_count int
+ * @var $logCount int
  * @var $paginator \Aqua\UI\Pagination
  * @var $search    \Aqua\UI\Search
  * @var $page      \Page\Admin\Ragnarok
@@ -45,13 +45,13 @@ $page->theme->set('sidebar', $sidebar);
 		</tr>
 	</thead>
 	<tbody>
-	<?php if($log_count === 0) : ?>
+	<?php if(empty($logs)) : ?>
 		<tr><td colspan="6" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($logs as $log) : ?>
 	<tr>
 		<td><?php echo $log->id ?></td>
-		<td><?php echo $log->account()->display() ?></td>
 		<td><?php echo htmlspecialchars($log->banned()->username) ?></td>
+		<td><?php echo $log->account()->display() ?></td>
 		<td class="ac-ban-type <?php if($log->type === BanLog::TYPE_UNBAN) echo 'ac-unban' ?>"><?php echo $log->type() ?></td>
 		<td><?php echo $log->banDate($datetimeFormat) ?></td>
 		<td><?php echo $log->unbanDate($datetimeFormat) ?></td>
@@ -71,4 +71,4 @@ $page->theme->set('sidebar', $sidebar);
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($log_count === 1 ? 's' : 'p'), number_format($log_count)) ?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($logCount === 1 ? 's' : 'p'), number_format($logCount)) ?></span>

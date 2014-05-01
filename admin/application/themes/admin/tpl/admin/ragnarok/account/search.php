@@ -3,28 +3,18 @@ use Aqua\Core\App;
 use Aqua\UI\Tag;
 use Aqua\UI\Sidebar;
 /**
- * @var $accounts      \Aqua\Ragnarok\Account[]
- * @var $account_count int
- * @var $paginator     \Aqua\UI\Pagination
- * @var $search        \Aqua\UI\Search
- * @var $page          \Page\Admin\Ragnarok
+ * @var $accounts     \Aqua\Ragnarok\Account[]
+ * @var $accountCount int
+ * @var $paginator    \Aqua\UI\Pagination
+ * @var $search       \Aqua\UI\Search
+ * @var $page         \Page\Admin\Ragnarok
  */
 
 use Aqua\UI\ScriptManager;
 
 $page->theme->template = 'sidebar-right';
 $page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
-$datetime_format = App::settings()->get('datetime_format');
-$base_acc_url = ac_build_url(array(
-		'path' => array( 'r', $page->server->key ),
-		'action' => 'viewaccount',
-		'arguments' => array( '' )
-	));
-$base_user_url = ac_build_url(array(
-		'path' => array( 'user' ),
-		'action' => 'view',
-		'arguments' => array( '' )
-	));
+$datetimeFormat = App::settings()->get('datetime_format');
 $sidebar = new Sidebar;
 foreach($search->content as $key => $field) {
 	$content = $field->render();
@@ -66,10 +56,17 @@ $currentSorting = $search->getSorting();
 	<?php else : foreach($accounts as $acc) : ?>
 		<tr>
 			<td><?php echo $acc->id ?></td>
-			<td><a href="<?php echo $base_acc_url . $acc->id ?>"><?php echo htmlspecialchars($acc->username) ?></a></td>
+			<td><a href="<?php echo $acc->server->url(array(
+					'action' => 'viewaccount',
+			        'arguments' => array( $acc->id )
+				)) ?>"><?php echo htmlspecialchars($acc->username) ?></a></td>
 			<td><?php echo htmlspecialchars($acc->email) ?></td>
 			<?php if($acc->owner) : ?>
-				<td><a href="<?php echo $base_user_url . $acc->owner ?>"><?php echo $acc->user()->display() ?></a></td>
+				<td><a href="<?php echo ac_build_query(array(
+						'path' => array( 'user' ),
+				        'action' => 'view',
+				        'arguments' => array( $acc->owner )
+					)) ?>"><?php echo $acc->user()->display() ?></a></td>
 			<?php else : ?>
 				<td>--</td>
 			<?php endif; ?>
@@ -77,7 +74,7 @@ $currentSorting = $search->getSorting();
 			<td><?php echo $acc->groupName() ?> <small>(<?php echo $acc->groupId ?>)</small></td>
 			<td><?php echo $acc->state() ?></td>
 			<td><?php echo ($acc->lastIp ? htmlspecialchars($acc->lastIp) : '--') ?></td>
-			<td><?php echo $acc->lastLogin($datetime_format) ?></td>
+			<td><?php echo $acc->lastLogin($datetimeFormat) ?></td>
 		</tr>
 	<?php endforeach; endif; ?>
 	</tbody>
@@ -94,4 +91,4 @@ $currentSorting = $search->getSorting();
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($account_count === 1 ? 's' : 'p'), number_format($account_count)) ?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($accountCount === 1 ? 's' : 'p'), number_format($accountCount)) ?></span>

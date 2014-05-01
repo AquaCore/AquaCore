@@ -2,7 +2,7 @@
 use Aqua\Core\App;
 /**
  * @var $logs      \Aqua\Ragnarok\Server\Logs\LoginLog[]
- * @var $log_count int
+ * @var $logCount int
  * @var $paginator \Aqua\UI\Pagination
  * @var $search    \Aqua\UI\Search
  * @var $page      \Page\Admin\Ragnarok
@@ -38,14 +38,15 @@ $page->theme->set('sidebar', $sidebar);
 				'usr'  => __('ragnarok-login-log', 'username'),
 				'ip'   => __('ragnarok-login-log', 'ip-address'),
 				'code' => __('ragnarok-login-log', 'response'),
+				'status' => __('ragnarok-login-log', 'status'),
 				'msg'  => __('ragnarok-login-log', 'message'),
 				'date' => __('ragnarok-login-log', 'date'),
 			)) ?>
 		</tr>
 	</thead>
 	<tbody>
-	<?php if($log_count === 0) : ?>
-		<tr><td colspan="5" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
+	<?php if(empty($logs)) : ?>
+		<tr><td colspan="6" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($logs as $log) : ?>
 	<tr>
 		<td><?php echo htmlspecialchars($log->username) ?></td>
@@ -59,7 +60,7 @@ $page->theme->set('sidebar', $sidebar);
 	</tbody>
 	<tfoot>
 		<tr>
-			<td colspan="5">
+			<td colspan="6">
 				<div style="position: relative">
 					<div style="position: absolute; right: 0;">
 						<form method="GET">
@@ -72,4 +73,4 @@ $page->theme->set('sidebar', $sidebar);
 		</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($log_count === 1 ? 's' : 'p'), number_format($log_count)) ?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($logCount === 1 ? 's' : 'p'), number_format($logCount)) ?></span>

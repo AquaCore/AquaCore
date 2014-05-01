@@ -15,6 +15,7 @@ use Aqua\UI\Search\Input;
 use Aqua\UI\Template;
 use Aqua\Ragnarok\Server;
 use Aqua\UI\Theme;
+use Aqua\Util\DataPreload;
 
 class Ragnarok
 extends Page
@@ -925,17 +926,15 @@ extends Page
 				                                     Server\Login::MIN_ACCOUNT_ID ) ));
 			}
 			$search->calcRows(true)->query();
-			if($search->count()) {
-				$users = array_unique($search->getColumn('user_id'));
-				array_unshift($users, Search::SEARCH_IN);
-				\Aqua\User\Account::search()->where(array( 'id' => $users ))->query();
-			}
+			$load = new DataPreload('Aqua\\User\\Account::search', \Aqua\User\Account::$users);
+			$load->add($search, array( 'user_id' ));
+			$load->run();
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$tpl = new Template;
 			$tpl->set('accounts', $search->results)
-			    ->set('account_count', $search->rowsFound)
+			    ->set('accountCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);
@@ -993,7 +992,7 @@ extends Page
 			$this->title  = $this->theme->head->section = __('ragnarok-server', 'login-log');
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
-			    ->set('log_count', $search->rowsFound)
+			    ->set('logCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);
@@ -1050,13 +1049,21 @@ extends Page
 			$search = $this->server->login->log->searchBan();
 			$frm->apply($search);
 			$search->calcRows(true)->query();
+			$load = new DataPreload(array( $this->server->login, 'search' ),
+			                        $this->server->login->accounts);
+			$load->add($search, array( 'banned_id' ));
+			$load->run();
+			$load = new DataPreload('Aqua\\User\\Account::search',
+			                        \Aqua\User\Account::$users);
+			$load->add($search, array( 'account_id' ));
+			$load->run();
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$this->title = $this->theme->head->section = __('ragnarok-server', 'ban-log');
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
-			    ->set('log_count', $search->rowsFound)
+			    ->set('logCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);
@@ -1111,13 +1118,17 @@ extends Page
 				->type('datetime')
 				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
 			$search = $this->server->login->log->searchPasswordReset();
+			$load = new DataPreload(array( $this->server->login, 'search' ),
+			                        $this->server->login->accounts);
+			$load->add($search, array( 'account_id' ));
+			$load->run();
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
 			$this->title = $this->theme->head->section = __('ragnarok-server', 'ban-log');
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
-			    ->set('log_count', $search->rowsFound)
+			    ->set('logCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);

@@ -2,6 +2,7 @@
 namespace Page\Admin\ragnarok;
 
 use Aqua\Core\App;
+use Aqua\Core\L10n;
 use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
 use Aqua\Ragnarok\ItemData;
@@ -1043,7 +1044,8 @@ extends Page
 			                              $endTime,
 			                              $this->request->getString('startday'),
 			                              $startTime)) {
-				App::user()->addFlash('success', null, __('ragnarok-charmap', 'added-schedule'));
+				App::user()->addFlash('success', null, __('ragnarok-charmap', 'schedule-added',
+				                                          htmlspecialchars($this->request->getString('name'))));
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
@@ -1565,6 +1567,40 @@ extends Page
 			}
 			$this->theme->set('return', $this->charmap->url(array( 'action' => 'viewchar', 'argumets' => array( $id) )));
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'id' => 'id',
+			        'name' => 'name'
+				))
+				->defaultOrder('id')
+				->limit(0, 6, 20, 5)
+				->persist('admin.intentory');
+			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
+			                                           array( 0 ),
+			                                           range(2, 8),
+			                                           range(10, 12));
+			asort($itemTypes, SORT_STRING);
+			$itemTypes = array( '' => __('application', 'any') ) + $itemTypes;
+			$frm->input('name')
+				->setColumn('name')
+				->setLabel(__('ragnarok', 'name'));
+			$frm->select('type')
+				->setColumn('type')
+				->setLabel(__('ragnarok', 'type'))
+				->value($itemTypes);
+			$search = $this->charmap->inventorySearch();
+			$frm->apply($search);
+			$search->calcRows(true)->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($currentPage / $frm->getLimit()),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('items', $search->results)
+				->set('itemCount', $search->rowsFound)
+				->set('paginator', $pgn)
+				->set('search', $frm)
+				->set('page', $this);
+			echo $tpl->render('admin/ragnarok/intentory');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
@@ -1751,8 +1787,8 @@ extends Page
 				}
 			}
 			$tpl = new Template;
-			$tpl->set('log', $search->results)
-			    ->set('count', $search->rowsFound)
+			$tpl->set('logs', $search->results)
+			    ->set('logCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);
@@ -1818,8 +1854,8 @@ extends Page
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
 			$tpl = new Template;
-			$tpl->set('log', $search->results)
-				->set('count', $search->rowsFound)
+			$tpl->set('logs', $search->results)
+				->set('logCount', $search->rowsFound)
 				->set('paginator', $pgn)
 				->set('search', $frm)
 				->set('page', $this);
@@ -1908,8 +1944,8 @@ extends Page
 				$this->charmap->server->login->search(array( 'id' => $accounts ))->query();
 			}
 			$tpl = new Template;
-			$tpl->set('log', $search->results)
-			    ->set('count', $search->rowsFound)
+			$tpl->set('logs', $search->results)
+			    ->set('logCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);
@@ -2035,8 +2071,8 @@ extends Page
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
 			$tpl = new Template;
-			$tpl->set('log', $search->results)
-			    ->set('count', $search->rowsFound)
+			$tpl->set('logs', $search->results)
+			    ->set('logCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);
@@ -2131,8 +2167,8 @@ extends Page
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
 			$tpl = new Template;
-			$tpl->set('log', $search->results)
-			    ->set('count', $search->rowsFound)
+			$tpl->set('logs', $search->results)
+			    ->set('logCount', $search->rowsFound)
 			    ->set('paginator', $pgn)
 			    ->set('search', $frm)
 			    ->set('page', $this);

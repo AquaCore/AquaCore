@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $log       \Aqua\Ragnarok\Server\Logs\ZenyLog[]
- * @var $count     int
+ * @var $logs      \Aqua\Ragnarok\Server\Logs\ZenyLog[]
+ * @var $logCount  int
  * @var $paginator \Aqua\UI\Pagination
  * @var $search    \Aqua\UI\Search
  * @var $page      \Page\Admin\Ragnarok\Server
@@ -45,9 +45,9 @@ $page->theme->set('sidebar', $sidebar);
 	</tr>
 	</thead>
 	<tbody>
-	<?php if(empty($log)) : ?>
+	<?php if(empty($logs)) : ?>
 		<tr><td colspan="7" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
-	<?php else : foreach($log as $zeny) : ?>
+	<?php else : foreach($logs as $zeny) : ?>
 		<tr>
 			<td><?php echo $zeny->id ?></td>
 			<td><?php echo $zeny->date($datetimeFormat) ?></td>
@@ -97,5 +97,5 @@ $page->theme->set('sidebar', $sidebar);
 	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('application',
-                                             'search-results-' . ($count === 1 ? 's' : 'p'),
-                                             number_format($count)) ?></span>
+                                             'search-results-' . ($logCount === 1 ? 's' : 'p'),
+                                             number_format($logCount)) ?></span>
