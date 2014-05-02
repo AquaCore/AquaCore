@@ -2,10 +2,10 @@
 <languageimport>
   <wordgroup language="en">
     <word namespace="ragnarok-ban-log" key="id">ID</word>
-    <word namespace="ragnarok-ban-log" key="account">Banned account</word>
-    <word namespace="ragnarok-ban-log" key="banned-by">Banned by</word>
-    <word namespace="ragnarok-ban-log" key="type">Ban type</word>
-    <word namespace="ragnarok-ban-log" key="date">Ban date</word>
-    <word namespace="ragnarok-ban-log" key="unban-date">Unban date</word>
+    <word namespace="ragnarok-ban-log" key="account">Banned Account</word>
+    <word namespace="ragnarok-ban-log" key="banned-by">Banned By</word>
+    <word namespace="ragnarok-ban-log" key="type">Ban Type</word>
+    <word namespace="ragnarok-ban-log" key="date">Ban Date</word>
+    <word namespace="ragnarok-ban-log" key="unban-date">Unban Date</word>
   </wordgroup>
 </languageimport>

@@ -64,4 +64,14 @@
 		query[$(this).attr("name")] = $(this).val();
 		window.location = AquaCore.buildUrl($.extend(true, {}, AquaCore.URI, { query: query }));
 	});
+	$(".ac-select-server").on("change", function() {
+		var options = $.extend({}, AquaCore.URI),
+			num = parseInt($(this).attr("name"));
+		options.arguments = options.arguments || [];
+		for(var i = 0; i < num; ++i) {
+			options.arguments[i] = options.arguments[i] || "";
+		}
+		options.arguments[num] = $(this).val();
+		window.location = AquaCore.buildUrl(options);
+	});
 })(jQuery);

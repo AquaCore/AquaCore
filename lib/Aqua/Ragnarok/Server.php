@@ -73,6 +73,9 @@ class Server
 		foreach($options['charmap'] as $k => $charmap) {
 			$this->charmap[$k] = new CharMap($k, $this, $charmap);
 		}
+		if(!$this->defaultServer || !array_key_exists($this->defaultServer, $this->charmap)) {
+			$this->defaultServer = key($this->charmap);
+		}
 	}
 
 	/**
@@ -83,12 +86,10 @@ class Server
 	{
 		if($name) {
 			$name = strtolower($name);
-		} else if($this->defaultServer && isset($this->charmap[$this->defaultServer])) {
-			$name = $this->defaultServer;
 		} else {
-			$name = key($this->charmap) ?: '';
+			$name = $this->defaultServer;
 		}
-		return isset($this->charmap[$name]) ? $this->charmap[$name] : null;
+		return (isset($this->charmap[$name]) ? $this->charmap[$name] : null);
 	}
 
 	public function url(array $options = array(), $admin = null)

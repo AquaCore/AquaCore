@@ -56,7 +56,7 @@ var AquaCore = AquaCore || {};
 			var pathQuery = {};
 			if(options.path.length) pathQuery.path = options.path.join(".");
 			if(options.action && options.action !== "index") pathQuery.action = options.action;
-			if(options.arguments.length) pathQuery.args = options.arguments.join(".");
+			if(options.arguments.length) pathQuery.arg = options.arguments.join(".");
 			options.query = $.extend(pathQuery, options.query);
 		}
 		path = path.replace(/\/+$/g, "");

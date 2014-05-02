@@ -276,5 +276,8 @@
     <word namespace="ragnarok" key="save-point">Save Point</word>
     <word namespace="ragnarok" key="target">Target</word>
     <word namespace="ragnarok" key="source">Source</word>
+    <word namespace="ragnarok" key="expire-time">Expire Time</word>
+    <word namespace="ragnarok" key="bound">Bound</word>
+    <word namespace="ragnarok" key="identified">Identified</word>
   </wordgroup>
 </languageimport>

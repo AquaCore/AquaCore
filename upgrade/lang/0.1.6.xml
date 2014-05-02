@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup language="en">
+        <word namespace="content" key="category-deleted"><![CDATA[Category <b>%s</b> deleted.]]></word>
+        <word namespace="content" key="content-updated"><![CDATA[<b>"%2$s"</b> has been updated.]]></word>
+        <word namespace="ragnarok-ban-log" key="account">Banned Account</word>
+        <word namespace="ragnarok-ban-log" key="banned-by">Banned By</word>
+        <word namespace="ragnarok-ban-log" key="type">Ban Type</word>
+        <word namespace="ragnarok-ban-log" key="date">Ban Date</word>
+        <word namespace="ragnarok-ban-log" key="unban-date">Unban Date</word>
+        <word namespace="ragnarok-charmap" key="castles-updated">Castles updated.</word>
+        <word namespace="ragnarok-charmap" key="schedule-added"><![CDATA[<b>%s</b> added to woe schedule.]]></word>
+        <word namespace="ragnarok-login-log" key="ip-address">IP Address</word>
+        <word namespace="ragnarok-login-log" key="response">Response Code</word>
+        <word namespace="ragnarok-login-log" key="message">Response Message</word>
+        <word namespace="ragnarok-login-log" key="status">Status</word>
+        <word namespace="ragnarok-password-reset-log" key="request-date">Request Date</word>
+        <word namespace="ragnarok-password-reset-log" key="reset-date">Reset Date</word>
+        <word namespace="ragnarok-password-reset-log" key="reset-key">Reset Key</word>
+        <word namespace="ragnarok-password-reset-log" key="ip-address">IP Address</word>
+        <word namespace="ragnarok" key="expire-time">Expire Time</word>
+        <word namespace="ragnarok" key="bound">Bound</word>
+        <word namespace="ragnarok" key="identified">Identified</word>
+        <word namespace="ragnarok-bind-type" key="1">Account</word>
+        <word namespace="ragnarok-bind-type" key="2">Guild</word>
+        <word namespace="ragnarok-bind-type" key="3">Party</word>
+        <word namespace="ragnarok-bind-type" key="4">Character</word>
+    </wordgroup>
+</languageimport>

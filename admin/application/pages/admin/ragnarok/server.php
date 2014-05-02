@@ -1544,6 +1544,7 @@ extends Page
 				$this->error(404);
 				return;
 			}
+			$this->title = $this->theme->head->section = __('ragnarok', 'viewing-x-character', htmlspecialchars($char->name));
 			$this->theme->set('return', ac_build_url(array(
 				'path' => array( 'r', $this->server->key, $this->charmap->key ),
 			    'action' => 'char'
@@ -1565,15 +1566,17 @@ extends Page
 				$this->error(404);
 				return;
 			}
-			$this->theme->set('return', $this->charmap->url(array( 'action' => 'viewchar', 'argumets' => array( $id) )));
+			$this->title = $this->theme->head->section = __('ragnarok', 'x-inventory', htmlspecialchars($char->name));
+			$this->theme->set('return', $this->charmap->url(array( 'action' => 'viewchar', 'arguments' => array( $id) )));
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id' => 'id',
 			        'name' => 'name'
 				))
-				->defaultOrder('id')
 				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20)
 				->persist('admin.intentory');
 			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
 			                                           array( 0 ),
@@ -1588,7 +1591,7 @@ extends Page
 				->setColumn('type')
 				->setLabel(__('ragnarok', 'type'))
 				->value($itemTypes);
-			$search = $this->charmap->inventorySearch();
+			$search = $this->charmap->inventorySearch()->where(array( 'char_id' => $id ));
 			$frm->apply($search);
 			$search->calcRows(true)->query();
 			$pgn = new Pagination(App::request()->uri,
@@ -1600,7 +1603,7 @@ extends Page
 				->set('paginator', $pgn)
 				->set('search', $frm)
 				->set('page', $this);
-			echo $tpl->render('admin/ragnarok/intentory');
+			echo $tpl->render('admin/ragnarok/inventory');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
@@ -1614,8 +1617,44 @@ extends Page
 				$this->error(404);
 				return;
 			}
-			$this->theme->set('return', $this->charmap->url(array( 'action' => 'viewchar', 'argumets' => array( $id) )));
+			$this->title = $this->theme->head->section = __('ragnarok', 'x-cart', htmlspecialchars($char->name));
+			$this->theme->set('return', $this->charmap->url(array( 'action' => 'viewchar', 'arguments' => array( $id ) )));
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+				            'id' => 'id',
+				            'name' => 'name'
+			            ))
+			    ->limit(0, 6, 20, 5)
+			    ->defaultOrder('id')
+			    ->defaultLimit(20)
+			    ->persist('admin.intentory');
+			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
+			                                           array( 0 ),
+			                                           range(2, 8),
+			                                           range(10, 12));
+			asort($itemTypes, SORT_STRING);
+			$itemTypes = array( '' => __('application', 'any') ) + $itemTypes;
+			$frm->input('name')
+			    ->setColumn('name')
+			    ->setLabel(__('ragnarok', 'name'));
+			$frm->select('type')
+			    ->setColumn('type')
+			    ->setLabel(__('ragnarok', 'type'))
+			    ->value($itemTypes);
+			$search = $this->charmap->cartSearch()->where(array( 'char_id' => $id ));
+			$frm->apply($search);
+			$search->calcRows(true)->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($currentPage / $frm->getLimit()),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('items', $search->results)
+			    ->set('itemCount', $search->rowsFound)
+			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/inventory');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));

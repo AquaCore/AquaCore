@@ -2,9 +2,10 @@
 <languageimport>
   <wordgroup language="en">
     <word namespace="ragnarok-login-log" key="username">Username</word>
-    <word namespace="ragnarok-login-log" key="ip-address">IP address</word>
-    <word namespace="ragnarok-login-log" key="response">Response code</word>
-    <word namespace="ragnarok-login-log" key="message">Response message</word>
+    <word namespace="ragnarok-login-log" key="ip-address">IP Address</word>
+    <word namespace="ragnarok-login-log" key="response">Response Code</word>
+    <word namespace="ragnarok-login-log" key="message">Response Message</word>
+    <word namespace="ragnarok-login-log" key="status">Status</word>
     <word namespace="ragnarok-login-log" key="date">Login date</word>
   </wordgroup>
 </languageimport>

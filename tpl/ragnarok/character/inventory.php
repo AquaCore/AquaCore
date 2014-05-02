@@ -13,11 +13,6 @@ $page->theme->footer->enqueueScript('cardbmp')
 		'script'   => 'cardbmp.js'
 	)));
 $search_type = $page->request->uri->getString('t');
-$base_url = $page->charmap->url(array(
-	'path' => array( 'item' ),
-	'action' => 'view',
-	'arguments' => array( '' )
-));
 ?>
 <table class="ac-table">
 	<thead>
@@ -60,24 +55,36 @@ $base_url = $page->charmap->url(array(
 	<tbody>
 <?php if(empty($inventory)) : ?>
 		<tr>
-			<td colspan="7" style="text-align: center; font-style: italic;"><?php echo __('application', 'no-search-results')?></td>
+			<td colspan="7"><?php echo __('application', 'no-search-results')?></td>
 		</tr>
 <?php else : foreach($inventory as $item) : ?>
 		<tr>
 <?php if($item->identified) : ?>
 			<td class="ac-item-icon"><img src="<?php echo ac_item_icon($item->itemId)?>"></td>
-			<td class="ac-item-name"><a href="<?php echo $base_url . $item->itemId?>"><?php echo $item->name(false)?></a></td>
+			<td class="ac-item-name"><a href="<?php echo $item->charmap->url(array(
+					'path'      => array( 'item' ),
+					'action'    => 'view',
+					'arguments' => array( $item->itemId )
+				), false) ?>"><?php echo $item->name(false)?></a></td>
 			<td class="ac-item-amount"><?php echo number_format($item->amount)?></td>
 			<?php
 			for($i = 0; $i < 4; ++$i) {
-				$item->card($i, $card_id, $enchanted);
+				$item->card($i, $cardId, $enchanted);
 				if($enchanted) { ?>
-					<a href="<?php echo $base_url . $card_id ?>"><img src="<?php echo ac_item_icon($card_id)?>"></a>
+					<a href="<?php echo $item->charmap->url(array(
+						'path'      => array( 'item' ),
+						'action'    => 'view',
+						'arguments' => array( $cardId )
+					), false) ?>"><img src="<?php echo ac_item_icon($cardId)?>"></a>
 				<?php } else if($item->slots < ($i + 1)) { ?>
 					<td class="ac-card-slot ac-slot-disabled"></td>
-				<?php } else if($card_id) { ?>
-					<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($card_id)?>">
-						<a href="<?php echo $base_url . $card_id?>"></a>
+				<?php } else if($cardId) { ?>
+					<td class="ac-card-slot" ac-ro-card="<?php echo ac_item_cardbmp($cardId)?>">
+						<a href="<?php echo $item->charmap->url(array(
+							'path'      => array( 'item' ),
+							'action'    => 'view',
+							'arguments' => array( $cardId )
+						), false) ?>"></a>
 					</td>
 				<?php } else { ?>
 					<td class="ac-card-slot ac-slot-empty"></td>

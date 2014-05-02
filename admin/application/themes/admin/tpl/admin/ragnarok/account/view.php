@@ -111,13 +111,20 @@ $datetimeFormat = App::$settings->get('datetime_format', '');
 	<tfoot>
 		<tr>
 			<td colspan="7">
-				<?php if($account->owner !== 1 || App::user()->account->id === 1) : ?>
-				<a class="ac-edit-account" href="<?php echo ac_build_url(array(
+				<div style="float: right">
+					<a class="ac-edit-account" href="<?php echo ac_build_url(array(
 						'path' => array( 'r', $account->server->key ),
 						'action' => 'editaccount',
 						'arguments' => array( $account->id )
-					)) ?>"><button class="ac-button"><?php echo __('ragnarok', 'edit-account') ?></button></a>
+					)) ?>"><button><?php echo __('ragnarok', 'edit-account') ?></button></a>
+				<?php if($account->owner !== 1 || App::user()->account->id === 1) : ?>
+					<a class="ac-edit-account" href="<?php echo ac_build_url(array(
+							'path' => array( 'r', $account->server->key ),
+							'action' => 'storage',
+							'arguments' => array( $account->id )
+						)) ?>"><button><?php echo __('ragnarok', 'storage') ?></button></a>
 				<?php endif; ?>
+				</div>
 			</td>
 		</tr>
 	</tfoot>

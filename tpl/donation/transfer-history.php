@@ -18,7 +18,7 @@ $datetime_format = App::settings()->get('datetime_format');
 		</tr>
 	</thead>
 	<tbody>
-	<?php if($transfer_count < 1) : ?>
+	<?php if(empty($transfers)) : ?>
 		<tr><td colspan="4" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($transfers as $t) : ?>
 		<tr>

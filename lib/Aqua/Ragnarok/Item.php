@@ -161,4 +161,14 @@ class Item
 			$type = ($num >= ($this->slots -1) && $this->cards[$num] >= 4700 && $this->cards[$num] <= 4899);
 		}
 	}
+
+	public function expireTime($format)
+	{
+		return strftime($format, $this->expire);
+	}
+
+	public function bindType()
+	{
+		return __('ragnarok-bind-type', $this->bound);
+	}
 }

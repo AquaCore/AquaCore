@@ -19,7 +19,7 @@ $datetime_format = App::settings()->get('datetime_format');
 	</tr>
 	</thead>
 	<tbody>
-	<?php if($transaction_count < 1) : ?>
+	<?php if(empty($transactions)) : ?>
 		<tr><td colspan="5" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($transactions as $t) : ?>
 		<tr>
