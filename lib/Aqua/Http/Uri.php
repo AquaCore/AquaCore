@@ -143,18 +143,7 @@ class Uri
 	 */
 	public function url(array $options = array())
 	{
-		$options += array(
-			'action'    => $this->action,
-			'arguments' => $this->arguments,
-			'query'     => $this->parameters
-		);
-		if(isset($options['path'])) {
-			$options['path'] = array_merge($this->path, $options['path']);
-		} else {
-			$options['path'] = $this->path;
-		}
-
-		return ac_build_url($options);
+		return ac_build_url($this->mergeUrl($options));
 	}
 
 	/**
@@ -163,11 +152,7 @@ class Uri
 	 */
 	public function path(array $options = array())
 	{
-		return ac_build_path(array_replace_recursive(array(
-				'path'      => $this->path,
-				'action'    => $this->action,
-				'arguments' => $this->arguments
-			), $options));
+		return ac_build_path($this->mergeUrl($options));
 	}
 
 	/**
@@ -177,9 +162,9 @@ class Uri
 	public function query(array $options = array())
 	{
 		return ac_build_query(array_replace_recursive(array(
-				'path'      => $this->path,
-				'action'    => $this->action,
-				'arguments' => $this->arguments,
+				//'path'      => $this->path,
+				//'action'    => $this->action,
+				//'arguments' => $this->arguments,
 				'query'     => $this->parameters
 			), $options));
 	}
@@ -191,5 +176,20 @@ class Uri
 	public function sanitize($str)
 	{
 		return $str;
+	}
+
+	protected function mergeUrl($options)
+	{
+		$options += array(
+			'action'    => $this->action,
+			'arguments' => $this->arguments,
+			'query'     => $this->parameters
+		);
+		if(isset($options['path'])) {
+			$options['path'] = array_merge($this->path, $options['path']);
+		} else {
+			$options['path'] = $this->path;
+		}
+		return $options;
 	}
 }

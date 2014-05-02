@@ -153,24 +153,34 @@ function ac_build_url(array $options)
 
 function ac_build_path(array $options) {
 	$options+= array(
-		'base_dir' => \Aqua\DIR . '/' . \Aqua\WORKING_DIR,
-	    'script' => \Aqua\SCRIPT_NAME
+		'url_rewrite' => \Aqua\REWRITE,
+		'base_dir'    => \Aqua\DIR . '/' . \Aqua\WORKING_DIR,
+	    'script'      => \Aqua\SCRIPT_NAME
 	);
 	$url = '/';
-	if($options['base_dir']) {
-		$url.= trim($options['base_dir'], '/') . '/';
+	if(strcasecmp($options['script'], 'index.php') === 0) {
+		$options['script'] = null;
 	}
-	if($options['script'] &&  strcasecmp($options['script'], 'index.php') !== 0) {
+	if($options['base_dir'] && ($baseDir = trim($options['base_dir'], '/'))) {
+		$url.= "$baseDir/";
+	}
+	if($options['script']) {
 		$url.= $options['script'];
 	}
-	$url.= ac_build_query($options);
+	if($query = ac_build_query($options)) {
+		if($query[0] === '/' && !$options['script']) {
+			$url.= substr($query, 1);
+		} else {
+			$url.= $query;
+		}
+	}
 	return $url;
 }
 
 function ac_build_query(array $options)
 {
 	$options+= array(
-		'url_rewrite' => \Aqua\REWRITE,
+		'url_rewrite' => false,
 		'path'        => array(),
 		'action'      => 'index',
 		'arguments'   => array(),
