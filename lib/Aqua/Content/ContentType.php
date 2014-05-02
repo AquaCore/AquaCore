@@ -563,41 +563,22 @@ implements \Serializable, SubjectInterface
 
 	/**
 	 * @param \SimpleXMLElement $xml
-	 * @param int               $plugin_id
+	 * @param int               $pluginId
 	 */
-	public static function import(\SimpleXMLElement $xml, $plugin_id = null)
+	public static function import(\SimpleXMLElement $xml, $pluginId = null)
 	{
-		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `$tbl` (_key, _name, _listing, _feed, _adapter, _table, _plugin_id)
-		VALUES (:key, :name, :list, :feed, :adapter, NULL, :plugin)
-		ON DUPLICATE KEY UPDATE
-		_name = VALUES(_name),
-		_adapter = VALUES(_adapter),
-		_listing = VALUES(_listing),
-		_feed = VALUES(_feed),
-		_pugin_id = VALUES(_plugin_id)
-		', ac_table('content_type')));
-		$tbl = App::connection()->prepare(sprintf('
-		UPDATE `%s`
-		SET _table = :table
-		WHERE id = :id
-		', ac_table('content_type')));
-		$fields = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_type, _name, _alias, _field_type)
-		VALUES (:id, :name, :alias, :type)
-		', ac_table('content_type_fields')));
-		$filters = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_type, _name, _options)
-		VALUES (:id, :name, :opt)
-		', ac_table('content_type_filters')));
 		$imports = array();
 		foreach($xml->contenttype as $ctype) {
-			$key = (string)$ctype->attributes()->key;
+			$key  = (string)$ctype->attributes()->key;
 			$name = (string)$ctype->name;
-			if(!strlen($key) || !strlen($name) || self::getContentType($key, 'key')) {
+			if(!strlen($key) || strlen($name) || self::getContentType($key, 'key')) {
 				continue;
 			}
 			$adapter = (string)$ctype->adapter;
+			$sth = App::connection()->prepare(sprintf('
+			INSERT INTO `%s` (_key, _name, _listing, _feed, _adapter, _table, _plugin_id)
+			VALUES (:key, :name, :listing, :feed, :adapter, NULL, :plugin)
+			', ac_table('content_type')));
 			$sth->bindValue(':key', $key, \PDO::PARAM_STR);
 			$sth->bindValue(':name', $name, \PDO::PARAM_STR);
 			if(!$ctype->listing || filter_var((string)$ctype->listing, FILTER_VALIDATE_BOOLEAN)) {
@@ -615,209 +596,107 @@ implements \Serializable, SubjectInterface
 			} else {
 				$sth->bindValue(':adapter', null, \PDO::PARAM_NULL);
 			}
-			if($plugin_id) {
-				$sth->bindValue(':plugin', $plugin_id, \PDO::PARAM_INT);
+			if($pluginId) {
+				$sth->bindValue(':plugin', $pluginId, \PDO::PARAM_INT);
 			} else {
 				$sth->bindValue(':plugin', null, \PDO::PARAM_NULL);
 			}
 			$sth->execute();
-			$id = App::connection()->lastInsertId();
-			foreach($ctype->filter as $filter) {
-				$name = (string)$filter->attributes()->name;
-				if(!strlen($name)) {
-					continue;
-				}
-				$options = serialize((array)$filter->children());
-				$filters->bindValue(':id', $id, \PDO::PARAM_INT);
-				$filters->bindValue(':name', $name, \PDO::PARAM_STR);
-				$filters->bindValue(':opt', $options, \PDO::PARAM_STR);
-				$filters->execute();
+			$ctypeId = (int)App::connection()->lastInsertId();
+			$filters = $ctype->filter;
+			$table   = $ctype->table[0];
+			if($filters) {
+				self::_importFilters($filters, $ctypeId);
 			}
-			if($table = $ctype->table[0]) {
-				$query   = Query::createTable(App::connection(), ac_table("ctype_$id"));
-				$columns = array();
-				$i       = 0;
-				foreach($table->column as $field) {
-					$attributes = $field->attributes();
-					$name       = (string)$attributes->name;
-					switch($name) {
-						case '':
-						case 'uid':
-						case 'type':
-						case 'status':
-						case 'title':
-						case 'slug':
-						case 'content':
-						case 'plain_content':
-						case 'author':
-						case 'editor':
-						case 'publish_date':
-						case 'edit_date':
-						case 'protected':
-						case 'options':
-						case 'keyword':
-						case 'score':
-							continue;
-					}
-					$column_type = strtoupper((string)$attributes->type);
-					switch($column_type) {
-						case 'TIMESTAMP':
-						case 'DATETIME':
-						case 'DATE':
-							$type = 'date';
-							break;
-						case 'TIME':
-						case 'YEAR':
-							$type = 'time';
-							break;
-						case 'TINYINT':
-						case 'SMALLINT':
-						case 'MEDIUMINT':
-						case 'BIGINT':
-							$type = 'number';
-							break;
-						case 'DECIMAL':
-						case 'NUMBER':
-						case 'FLOAT':
-						case 'REAL':
-						case 'DOUBLE':
-							$length    = (string)$attributes->length;
-							$precision = (string)$attributes->precision;
-							if(($length && !ctype_digit($length)) ||
-							   !ctype_digit($precision) ||
-							   intval($precision) < 1
-							) {
-								continue;
-							}
-							$type = 'float';
-							break;
-						case 'VARCHAR':
-						case 'CHAR':
-							if(!($length = (string)$attributes->length) ||
-							   !ctype_digit($length)
-							) {
-								continue;
-							}
-							$type = 'string';
-							break;
-						case 'BINARY':
-						case 'VARBINARY':
-							if(!($length = (string)$attributes->length) ||
-							   !ctype_digit($length) ||
-							   intval($length) < 1
-							) {
-								continue;
-							}
-							$type = 'binary';
-							break;
-						case 'TINYBLOB':
-						case 'MEDIUMBLOB':
-						case 'BLOB':
-						case 'LONGBLOB':
-							$type = 'blob';
-							break;
-						case 'TINYTEXT':
-						case 'MEDIUMTEXT':
-						case 'TEXT':
-						case 'LONGTEXT':
-							$type = 'text';
-							break;
-						case 'ENUM':
-						case 'SET':
-							$type = strtolower($column_type);
-							break;
-						default:
-							continue;
-					}
-					++$i;
-					$default = (string)$attributes->default;
-					$query->columns(array(
-							"c_$i" => array(
-								'type'      => $column_type,
-								'length'    => (int)$attributes->length,
-								'precision' => (int)$attributes->precision,
-								'charset'   => (string)$attributes->charset,
-								'collation' => (string)$attributes->collation,
-								'format'    => (string)$attributes->format,
-								'storage'   => (string)$attributes->storage,
-								'default'   => ($default === 'NULL' ? null : $default),
-								'unsigned'  => filter_var((string)$attributes->unsigned,
-								                          FILTER_VALIDATE_BOOLEAN),
-								'zeroFill'  => filter_var((string)$attributes->zerofill,
-								                          FILTER_VALIDATE_BOOLEAN),
-								'null'      => filter_var((string)$attributes->null,
-								                          FILTER_VALIDATE_BOOLEAN),
-								'primary'   => filter_var((string)$attributes->primary,
-								                          FILTER_VALIDATE_BOOLEAN),
-								'unique'    => filter_var((string)$attributes->unique,
-								                          FILTER_VALIDATE_BOOLEAN),
-								'values'    => (array)$field->value,
-								'reference' => (array)$field->reference[0],
-							)
-						));
-					$columns[$name] = array( "_c$i", $type );
-				}
-				if(!empty($columns)) {
-					$query->column(array(
-						'_uid' => array(
-							'type'     => 'INT',
-							'unsigned' => true,
-							'null'     => false,
-							'primary'  => true
-							)
-						));
-					$i = 0;
-					foreach($table->index as $index) {
-						$attributes = $index->attributes();
-						$name       = (string)$attributes->name;
-						if(!$name) {
-							$name = "_ctype_{$id}__index_{$i}";
-							++$i;
-						}
-						$query->index(array(
-							$name => array(
-								'type'         => (string)$attributes->type,
-								'using'        => (string)$attributes->using,
-								'match'        => (string)$attributes->match,
-								'onDelete'     => (string)$attributes->ondelete,
-								'onUpdate'     => (string)$attributes->onupdate,
-								'keyBlockSize' => (int)$attributes->keyblocksize,
-								'columns'      => (array)$index->column,
-								)
-							));
-					}
-					$attributes = $table->attributes();
-					if($engine = (string)$attributes->engine) {
-						$query->engine($engine);
-					}
-					if($format = (string)$attributes->rowformat) {
-						$query->rowFormat($format);
-					}
-					if($collation = (string)$attributes->collation) {
-						$query->collation($collation);
-					}
-					if($charset = (string)$attributes->charset) {
-						$query->charset($charset);
-					}
-					$query->query();
-					foreach($columns as $alias => $data) {
-						$fields->bindValue(':id', $id, \PDO::PARAM_INT);
-						$fields->bindValue(':name', $data[0], \PDO::PARAM_STR);
-						$fields->bindValue(':type', $data[1], \PDO::PARAM_STR);
-						$fields->bindValue(':alias', $alias, \PDO::PARAM_STR);
-						$fields->execute();
-					}
-					$tbl->bindValue(':id', $id, \PDO::PARAM_INT);
-					$tbl->bindValue(':table', $query->tableName, \PDO::PARAM_STR);
-					$tbl->execute();
-				}
+			if($table) {
+				self::_importTable($table, $ctypeId);
 			}
-			$imports[] = $id;
+			$imports[] = $ctypeId;
 		}
 		self::rebuildCache();
 		foreach($imports as $id) {
 			$feedback = array( self::getContentType($id) );
 			Event::fire('content-type.import', $feedback);
+		}
+	}
+
+	protected static function _importTable(\SimpleXMLElement $xml, $ctypeId = null)
+	{
+		$query   = Query::createTable(App::connection(), ac_table(uniqid("ctype_{$ctypeId}_")));
+		$columns = array();
+		$id      = 1;
+		foreach($xml->column as $field) {
+			$name       = "_c$id";
+			$query->parseColumnXml($field, $name);
+			$columns[(string)$field->attributes()->name] = array( $name, $query->getType($name) );
+			++$id;
+		}
+		if(empty($columns)) {
+			return;
+		}
+		$query->columns(array(
+			'_uid' => array(
+				'type'     => 'INT',
+			    'unsigned' => true,
+			    'null'     => false,
+			    'primary'  => true
+			)
+		));
+		$id = 0;
+		foreach($xml->index as $index) {
+			$name = (string)$index->attributes()->name;
+			if(!$name) {
+				$name = "_ctype_{$ctypeId}_index_{$id}";
+			}
+			$query->parseIndexXml($index, $name);
+		}
+		$attributes = $xml->attributes();
+		if($engine = (string)$attributes->engine) {
+			$query->engine($engine);
+		}
+		if($format = (string)$attributes->rowformat) {
+			$query->rowFormat($format);
+		}
+		if($collation = (string)$attributes->collation) {
+			$query->collation($collation);
+		}
+		if($charset = (string)$attributes->charset) {
+			$query->charset($charset);
+		}
+		$query->query();
+		App::connection()->prepare(sprintf('
+		UPDATE INTO `%s`
+		SET _table = ?
+		WHERE id = ?
+		', ac_table('content_type')))->execute(array( $query->tableName, $ctypeId ));
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO `%s` (_type, _name, _alias, _field_type)
+		VALUES (:id, :name, :alias, :type)
+		', ac_table('content_type_fields')));
+		foreach($columns as $column) {
+			$sth->bindValue(':id', $ctypeId, \PDO::PARAM_INT);
+			$sth->bindValue(':alias', $column[0], \PDO::PARAM_STR);
+			$sth->bindValue(':type', $column[1], \PDO::PARAM_STR);
+			$sth->execute();
+		}
+	}
+
+	protected static function _importFilters(\SimpleXMLElement $xml, $ctypeId = null)
+	{
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO `%s` (_type, _name, _options)
+		VALUES (:id, :name, :opt)
+		', ac_table('content_type_filters')));
+		foreach($xml as $filter) {
+			$name = (string)$filter->attributes()->name;
+			if(!strlen($name)) {
+				continue;
+			}
+			$options = serialize((array)$filter->children());
+			$sth->bindValue(':id', $ctypeId, \PDO::PARAM_INT);
+			$sth->bindValue(':name', $name, \PDO::PARAM_STR);
+			$sth->bindValue(':opt', $options, \PDO::PARAM_STR);
+			$sth->execute();
 		}
 	}
 

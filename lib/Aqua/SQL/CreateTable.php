@@ -458,4 +458,102 @@ extends AbstractQuery
 
 		return $fk;
 	}
+
+	public function parseColumnXml(\SimpleXMLElement $xml, $name = null)
+	{
+		$attributes = $xml->attributes();
+		$default = (string)$attributes->default;
+		$column = array(
+			'type'          => strtoupper((string)$attributes->type),
+			'length'        => (int)$attributes->length,
+			'precision'     => (int)$attributes->precision,
+			'charset'       => (string)$attributes->charset,
+			'collation'     => (string)$attributes->collation,
+			'format'        => (string)$attributes->format,
+			'storage'       => (string)$attributes->storage,
+			'default'       => ($default === 'NULL' ? null : $default),
+			'unsigned'      => filter_var((string)$attributes->unsigned,
+			                              FILTER_VALIDATE_BOOLEAN),
+			'zeroFill'      => filter_var((string)$attributes->zerofill,
+			                              FILTER_VALIDATE_BOOLEAN),
+			'null'          => filter_var((string)$attributes->null,
+			                              FILTER_VALIDATE_BOOLEAN),
+			'autoIncrement' => filter_var((string)$attributes->autoincrement,
+			                              FILTER_VALIDATE_BOOLEAN),
+			'primary'       => filter_var((string)$attributes->primary,
+			                              FILTER_VALIDATE_BOOLEAN),
+			'unique'        => filter_var((string)$attributes->unique,
+			                              FILTER_VALIDATE_BOOLEAN),
+			'values'        => (array)$xml->value,
+			'reference'     => (array)$xml->reference[0],
+		);
+		$name = $name ?: (string)$attributes->name;
+		$this->columns(array( $name => $column ));
+		return $this;
+	}
+
+	public function parseIndexXml(\SimpleXMLElement $xml, $name = null)
+	{
+		$attributes = $xml->attributes();
+		$index = array(
+			'type'         => (string)$attributes->type,
+			'using'        => (string)$attributes->using,
+			'match'        => (string)$attributes->match,
+			'onDelete'     => (string)$attributes->ondelete,
+			'onUpdate'     => (string)$attributes->onupdate,
+			'keyBlockSize' => (int)$attributes->keyblocksize,
+			'columns'      => (array)$xml->column,
+		);
+		$name = $name ?: (string)$attributes->name;
+		$this->indexes(array( $name => $index ));
+		return $this;
+	}
+
+	public function getType($column)
+	{
+		if(!isset($this->columns[$column])) {
+			return null;
+		} else if(!isset($this->columns[$column]['type'])) {
+			return 'string';
+		} else switch(strtoupper($this->columns[$column]['type'])) {
+			case 'TIMESTAMP':
+			case 'DATETIME':
+			case 'DATE':
+				return 'date';
+				break;
+			case 'TIME':
+			case 'YEAR':
+				return 'time';
+				break;
+			case 'TINYINT':
+			case 'SMALLINT':
+			case 'MEDIUMINT':
+			case 'BIGINT':
+				return 'number';
+				break;
+			case 'DECIMAL':
+			case 'NUMBER':
+			case 'FLOAT':
+			case 'REAL':
+			case 'DOUBLE':
+				return 'float';
+				break;
+			case 'BINARY':
+			case 'VARBINARY':
+				return 'binary';
+				break;
+			case 'TINYBLOB':
+			case 'MEDIUMBLOB':
+			case 'BLOB':
+			case 'LONGBLOB':
+				return 'blob';
+				break;
+			case 'ENUM':
+				return 'enum';
+			case 'SET':
+				return 'set';
+			default:
+				return 'text';
+		}
+	}
 }
