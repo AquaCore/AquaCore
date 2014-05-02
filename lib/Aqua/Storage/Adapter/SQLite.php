@@ -429,7 +429,7 @@ implements StorageInterface,
 	{
 		$sth = $this->dbh->prepare("
 		DELETE FROM `{$this->table}`
-		WHERE ttl >= ?
+		WHERE ttl <= ?
 		");
 		$sth->bindValue(1, time(), \PDO::PARAM_INT);
 		$sth->execute();

@@ -228,12 +228,22 @@ implements StorageInterface,
 	 */
 	public function delete($key)
 	{
+		if(is_array($key)) {
+			$deleted = array();
+			foreach($key as $k) {
+				if($this->delete($k)) {
+					$deleted[] = $k;
+				}
+			}
+			return $deleted;
+		}
 		$cacheFile = $this->_getCacheFile($key);
 		if(file_exists($cacheFile)) {
 			unlink($cacheFile);
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -287,16 +297,19 @@ implements StorageInterface,
 		if($this->extension) {
 			$directory .= '.' . $this->extension;
 		}
-		$directory .= '.info';
-		$iterator    =
-			new \GlobIterator($directory, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::KEY_AS_PATHNAME);
+		$iterator = new \GlobIterator($directory,
+		                              \FilesystemIterator::SKIP_DOTS |
+		                              \FilesystemIterator::KEY_AS_PATHNAME);
 		$deletedKeys = array();
 		foreach($iterator as $file) {
-			$meta = json_decode($this->_readContent($file));
-			if(!json_last_error() && preg_match($meta[0], $regex)) {
+			$data = explode("\r\n\r\n", $this->_readContent($file), 2);
+			if(count($data) !== 2) {
+				continue;
+			}
+			$meta = json_decode($data[0], true);
+			if(!json_last_error() && preg_match($regex, $meta['key'])) {
 				unlink($file);
-				unlink(substr($file, 0, -5));
-				$deletedKeys[] = $meta[0];
+				$deletedKeys[] = $meta['key'];
 			}
 		}
 
@@ -312,21 +325,16 @@ implements StorageInterface,
 		if($this->extension) {
 			$directory .= '.' . $this->extension;
 		}
-		$directory .= '.info';
-		$iterator    =
-			new \GlobIterator($directory, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::KEY_AS_PATHNAME);
-		$deletedKeys = array();
+		$iterator = new \GlobIterator($directory,
+		                              \FilesystemIterator::SKIP_DOTS |
+		                              \FilesystemIterator::KEY_AS_PATHNAME);
 		foreach($iterator as $file) {
-			$meta = json_decode($this->_readContent($file));
-			if($meta[1] && $meta[1] < time()) {
-				$cacheFile = substr($file, 0, -5);
+			$data = explode("\r\n\r\n", $this->_readContent($file), 2);
+			if(count($data) !== 2 || !($meta = json_decode($data[0], true)) ||
+			   json_last_error() || ((int)$meta['ttl'] && (int)$meta['ttl'] <= time())) {
 				unlink($file);
-				unlink($cacheFile);
-				$deletedKeys[] = $meta[0];
 			}
 		}
-
-		return $deletedKeys;
 	}
 
 	/**
