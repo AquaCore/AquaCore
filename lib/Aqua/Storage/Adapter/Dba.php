@@ -22,17 +22,17 @@ implements StorageInterface,
 	 */
 	public $dba;
 	/**
-	 * @var string
-	 */
-	public $prefix = '';
-	/**
 	 * @var int
 	 */
-	public $serializer;
+	public $serializer = self::SERIALIZER_PHP;
 	/**
 	 * @var string
 	 */
 	public $handler;
+	/**
+	 * @var string
+	 */
+	public $mode = 'c';
 	/**
 	 * @var string
 	 */
@@ -62,21 +62,12 @@ implements StorageInterface,
 		foreach($options as $opt => $value) {
 			$this->setOption($opt, $value);
 		}
-		if($this->persistent) {
-			$this->dba = dba_popen($this->file, 'c', $this->handler);
-		} else {
-			$this->dba = dba_open($this->file, 'c', $this->handler);
-		}
-		if(!$this->dba) {
-			throw new StorageException;
-		}
+		$this->_open();
 	}
 
 	public function __destruct()
 	{
-		if(is_resource($this->dba)) {
-			dba_close($this->dba);
-		}
+		$this->_close();
 	}
 
 	/**
@@ -96,6 +87,12 @@ implements StorageInterface,
 			case 'file':
 				$this->file = $value;
 				break;
+			case 'mode':
+				$this->mode = $value;
+				break;
+			case 'serializer':
+				$this->serializer = (int)$value;
+				break;
 		}
 		return true;
 	}
@@ -113,6 +110,8 @@ implements StorageInterface,
 				return $this->handler;
 			case 'file':
 				return $this->file;
+			case 'mode':
+				return $this->mode;
 			default:
 				return null;
 		}
@@ -124,7 +123,7 @@ implements StorageInterface,
 	 */
 	public function exists($key)
 	{
-		return (dba_exists($this->prefix . $key, $this->dba) && $this->_fetch($key));
+		return (dba_exists($key, $this->dba) && $this->_fetch($key));
 	}
 
 	/**
@@ -134,7 +133,7 @@ implements StorageInterface,
 	 */
 	public function fetch($key, $default = null)
 	{
-		if($this->_fetch($this->prefix . $key, $meta, $value)) {
+		if($this->_fetch($key, $meta, $value)) {
 			return $value;
 		} else {
 			return $default;
@@ -170,6 +169,9 @@ implements StorageInterface,
 			$type = 'i';
 		} else if(is_float($value)) {
 			$type = 'f';
+		} else if(is_bool($value)) {
+			$type = 'b';
+			$value = ($value ? '1' : '');
 		} else if(is_string($value)) {
 			$type = 's';
 		} else {
@@ -178,13 +180,13 @@ implements StorageInterface,
 		}
 		if($this->exists($key)) {
 			return dba_replace(
-				$this->prefix . $key,
+				$key,
 				json_encode(array( 'type' => $type, 'ttl' => $ttl )) . "\r\n\r\n$value",
 				$this->dba
 			);
 		} else {
 			return dba_insert(
-				$this->prefix . $key,
+				$key,
 				json_encode(array( 'type' => $type, 'ttl' => $ttl )) . "\r\n\r\n$value",
 				$this->dba
 			);
@@ -205,7 +207,7 @@ implements StorageInterface,
 			if(is_float($value)) {
 				$meta['type'] = 'f';
 			}
-			if(dba_replace($this->prefix . $key, json_encode($meta) . "\r\n\r\n$value", $this->dba)) {
+			if(dba_replace($key, json_encode($meta) . "\r\n\r\n$value", $this->dba)) {
 				return $value;
 			} else {
 				return false;
@@ -241,15 +243,15 @@ implements StorageInterface,
 		if(is_array($key)) {
 			$keys = array();
 			foreach($key as $k) {
-				if(dba_delete($this->prefix . $k, $this->dba)) {
-					$keys[] = $this->prefix . $k;
+				if(dba_delete($k, $this->dba)) {
+					$keys[] = $k;
 				}
 			}
 
 			return $keys;
 		}
 
-		return dba_delete($this->prefix . $key, $this->dba);
+		return dba_delete($key, $this->dba);
 	}
 
 	/**
@@ -257,11 +259,11 @@ implements StorageInterface,
 	 */
 	public function flush()
 	{
-		if($this->prefix) {
-			return $this->flushPrefix($this->prefix);
-		} else {
-			return unlink($this->file);
-		}
+		$this->_close();
+		unlink($this->file);
+		touch($this->file);
+		$this->_open();
+		return true;
 	}
 
 	/**
@@ -270,10 +272,11 @@ implements StorageInterface,
 	 */
 	public function flushPrefix($prefix)
 	{
-		$prefix  = $this->prefix . $prefix;
 		$len     = strlen($prefix);
 		$deleted = array();
-		for($key = dba_firstkey($this->dba); $key !== false; $key = dba_nextkey($this->dba)) {
+		for($key = dba_firstkey($this->dba);
+		    $key !== false && $key !== null;
+		    $key = dba_nextkey($this->dba)) {
 			if(substr($key, 0, $len) === $prefix) {
 				if(dba_delete($key, $this->dba)) {
 					$deleted[] = $key;
@@ -298,7 +301,9 @@ implements StorageInterface,
 	public function gc()
 	{
 		$keys = array();
-		for($key = dba_firstkey($this->dba); $key !== false; dba_nextkey($this->dba)) {
+		for($key = dba_firstkey($this->dba);
+		    $key !== false && $key !== null;
+		    $key = dba_nextkey($this->dba)) {
 			if(!$this->_fetch($key, $meta)) {
 				$keys[] = $key;
 			}
@@ -353,7 +358,7 @@ implements StorageInterface,
 	 */
 	protected function _fetch($key, &$meta = null, &$value = null)
 	{
-		if(($data = dba_fetch($this->prefix . $key, $this->dba)) === false) {
+		if(($data = dba_fetch($key, $this->dba)) === false) {
 			return false;
 		}
 		$data = explode("\r\n\r\n", $data, 2);
@@ -362,7 +367,7 @@ implements StorageInterface,
 		}
 		list($meta, $value) = $data;
 		$meta = json_decode($meta, true);
-		if(json_last_error() || ($meta['ttl'] && $meta['ttl'] > time())) {
+		if(json_last_error() || ($meta['ttl'] && $meta['ttl'] <= time())) {
 			return false;
 		}
 		switch($meta['type']) {
@@ -372,11 +377,33 @@ implements StorageInterface,
 			case 'f':
 				$value = floatval($value);
 				break;
+			case 'b':
+				$value = boolval($value);
+				break;
 			case 'x':
 				$value = $this->_unserialize($value);
 				break;
 		}
 
 		return true;
+	}
+
+	protected function _close()
+	{
+		if($this->dba) {
+			dba_close($this->dba);
+		}
+	}
+
+	protected function _open()
+	{
+		if($this->persistent) {
+			$this->dba = dba_popen($this->file, $this->mode, $this->handler);
+		} else {
+			$this->dba = dba_open($this->file, $this->mode, $this->handler);
+		}
+		if(!$this->dba) {
+			throw new StorageException;
+		}
 	}
 }

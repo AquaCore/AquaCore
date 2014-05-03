@@ -114,8 +114,7 @@ implements StorageInterface,
 			foreach($key as &$k) {
 				$k = $this->prefix . $k;
 			}
-		}
-		else {
+		} else {
 			$key = $this->prefix . $key;
 		}
 
@@ -132,9 +131,8 @@ implements StorageInterface,
 	public function increment($key, $step = 1, $defaultValue = 0, $ttl = 0)
 	{
 		if($this->exists($key)) {
-			return \apc_inc($key, $step);
-		}
-		else {
+			return \apc_inc($this->prefix . $key, $step);
+		} else {
 			$value = $defaultValue + $step;
 
 			return ($this->add($key, $value, $ttl) ? $value : false);
@@ -151,9 +149,8 @@ implements StorageInterface,
 	public function decrement($key, $step = 1, $defaultValue = 0, $ttl = 0)
 	{
 		if($this->exists($key)) {
-			return \apc_dec($key, $step);
-		}
-		else {
+			return \apc_dec($this->prefix . $key, $step);
+		} else {
 			$value = $defaultValue - $step;
 
 			return ($this->add($key, $value, $ttl) ? $value : false);
@@ -183,12 +180,16 @@ implements StorageInterface,
 	{
 		$deletedKeys = array();
 		$regex       = preg_quote($this->prefix . $prefix, '/');
-		$iterator    = new \APCIterator('user', "/^$regex/", \APC_ITER_KEY);
-		foreach($iterator as $key) {
+		foreach($this->_iterator("/^$regex/") as $key) {
 			\apc_delete($key);
 			$deletedKeys[] = $key;
 		}
 
 		return $deletedKeys;
+	}
+
+	protected function _iterator($search)
+	{
+		return new \APCIterator('user', $search, \APC_ITER_KEY);
 	}
 }

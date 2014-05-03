@@ -208,6 +208,9 @@ implements StorageInterface,
 		} else if(is_float($value)) {
 			$type  = 'f';
 			$value = (string)$value;
+		} else if(is_bool($value)) {
+			$type  = 'b';
+			$value = ($value ? '1' : '');
 		} else if(is_string($value)) {
 			$type = 's';
 		} else {
@@ -489,6 +492,9 @@ implements StorageInterface,
 					break;
 				case 'f':
 					$value = floatval($value);
+					break;
+				case 'b':
+					$value = boolval($value);
 					break;
 				case 'x':
 					$value = $this->_unserialize($value);

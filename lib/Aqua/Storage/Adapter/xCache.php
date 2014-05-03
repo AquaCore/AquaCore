@@ -17,6 +17,16 @@ implements StorageInterface,
 	 * @var string
 	 */
 	public $prefix = '';
+	/**
+	 * @var int
+	 */
+	public $serializer = self::SERIALIZER_PHP;
+
+
+	const SERIALIZER_NONE     = 0;
+	const SERIALIZER_PHP      = 1;
+	const SERIALIZER_JSON     = 2;
+	const SERIALIZER_IGBINARY = 3;
 
 	/**
 	 * @param array $options
@@ -43,6 +53,8 @@ implements StorageInterface,
 	{
 		if($option === 'prefix') {
 			$this->prefix = (string)$value;
+		} else if($option === 'serializer') {
+			$this->serializer = (int)$value;
 		}
 
 		return true;
@@ -56,6 +68,8 @@ implements StorageInterface,
 	{
 		if($option === 'prefix') {
 			return $this->prefix;
+		} else if($option === 'serializer') {
+			return $this->serializer;
 		}
 
 		return null;
@@ -78,8 +92,11 @@ implements StorageInterface,
 	public function fetch($key, $default = null)
 	{
 		$key = $this->prefix . $key;
-
-		return (\xcache_isset($key) ? \xcache_get($key) : $default);
+		if(\xcache_isset($key)) {
+			return $this->_unserialize(\xcache_get($key));
+		} else {
+			return $default;
+		}
 	}
 
 	/**
@@ -91,8 +108,11 @@ implements StorageInterface,
 	public function add($key, $value, $ttl = 0)
 	{
 		$key = $this->prefix . $key;
-
-		return (!\xcache_isset($key) ? \xcache_set($key, $value, $ttl) : false);
+		if(\xcache_isset($key)) {
+			return false;
+		} else {
+			return \xcache_set($key, $this->_serialize($value), $ttl);
+		}
 	}
 
 	/**
@@ -103,7 +123,7 @@ implements StorageInterface,
 	 */
 	public function store($key, $value, $ttl = 0)
 	{
-		return \xcache_set($this->prefix . $key, $value, $ttl);
+		return \xcache_set($this->prefix . $key, $this->_serialize($value), $ttl);
 	}
 
 	/**
@@ -121,8 +141,7 @@ implements StorageInterface,
 			}
 
 			return $status;
-		}
-		else {
+		} else {
 			return \xcache_unset($this->prefix . $key);
 		}
 	}
@@ -137,13 +156,10 @@ implements StorageInterface,
 	public function increment($key, $step = 1, $defaultValue = 0, $ttl = 0)
 	{
 		$key = $this->prefix . $key;
-		if($defaultValue !== 0 && !\xcache_isset($key)) {
-			$v = $defaultValue + $step;
-			\xcache_set($key, $v, $ttl);
-
-			return $v;
-		}
-		else {
+		if(!\xcache_isset($key)) {
+			$value = $defaultValue + $step;
+			return (\xcache_set($key, $value, $ttl) ? $value : false);
+		} else {
 			return \xcache_inc($key, $step, $ttl);
 		}
 	}
@@ -163,8 +179,7 @@ implements StorageInterface,
 			\xcache_set($key, $defaultValue - $step, $ttl);
 
 			return $v;
-		}
-		else {
+		} else {
 			return \xcache_dec($key, $step, $ttl);
 		}
 	}
@@ -184,5 +199,49 @@ implements StorageInterface,
 	public function flushPrefix($prefix)
 	{
 		return \xcache_unset_by_prefix($this->prefix . $prefix);
+	}
+
+	/**
+	 * @param string $data
+	 * @return string
+	 */
+	protected function _serialize($data)
+	{
+		if(is_int($data) || is_float($data)) {
+			return $data;
+		}
+		switch($this->serializer) {
+			default:
+			case self::SERIALIZER_NONE:
+				return (string)$data;
+			case self::SERIALIZER_PHP:
+				return serialize($data);
+			case self::SERIALIZER_JSON:
+				return json_encode($data);
+			case self::SERIALIZER_IGBINARY:
+				return igbinary_serialize($data);
+		}
+	}
+
+	/**
+	 * @param string $data
+	 * @return mixed
+	 */
+	protected function _unserialize($data)
+	{
+		if(is_int($data) || is_float($data)) {
+			return $data;
+		}
+		switch($this->serializer) {
+			default:
+			case self::SERIALIZER_NONE:
+				return $data;
+			case self::SERIALIZER_PHP:
+				return unserialize($data);
+			case self::SERIALIZER_JSON:
+				return json_decode($data, true);
+			case self::SERIALIZER_IGBINARY:
+				return igbinary_unserialize($data);
+		}
 	}
 }

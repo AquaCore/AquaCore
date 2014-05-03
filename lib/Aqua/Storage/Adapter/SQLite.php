@@ -240,6 +240,9 @@ implements StorageInterface,
 				case 'f':
 					$value = floatval($data[0]);
 					break;
+				case 'b':
+					$value = boolval($data[0]);
+					break;
 				case 'x':
 					$value = $this->_unserialize($data[0]);
 					break;
@@ -481,6 +484,7 @@ implements StorageInterface,
 	{
 		if(is_int($value)) return 'i';
 		if(is_float($value)) return 'f';
+		if(is_bool($value)) return 'b';
 		if(is_string($value)) return 's';
 
 		return 'x';

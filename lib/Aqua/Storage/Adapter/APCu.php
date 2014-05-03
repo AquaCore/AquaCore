@@ -80,8 +80,7 @@ extends APC
 			foreach($key as &$k) {
 				$k = $this->prefix . $k;
 			}
-		}
-		else {
+		} else {
 			$key = $this->prefix . $key;
 		}
 
@@ -98,9 +97,8 @@ extends APC
 	public function increment($key, $step = 1, $defaultValue = 0, $ttl = 0)
 	{
 		if($this->exists($key)) {
-			return \apcu_inc($key, $step);
-		}
-		else {
+			return \apcu_inc($this->prefix . $key, $step);
+		} else {
 			$value = $defaultValue + $step;
 
 			return ($this->add($key, $value, $ttl) ? $value : false);
@@ -117,9 +115,8 @@ extends APC
 	public function decrement($key, $step = 1, $defaultValue = 0, $ttl = 0)
 	{
 		if($this->exists($key)) {
-			return \apcu_dec($key, $step);
-		}
-		else {
+			return \apcu_dec($this->prefix . $key, $step);
+		} else {
 			$value = $defaultValue - $step;
 
 			return ($this->add($key, $value, $ttl) ? $value : false);
@@ -132,12 +129,16 @@ extends APC
 	public function flush()
 	{
 		if(!$this->prefix) {
-			return \apcu_clear_cache('user');
-		}
-		else {
+			return \apcu_clear_cache();
+		} else {
 			$deletedKeys = $this->flushPrefix('');
 
 			return !empty($deletedKeys);
 		}
+	}
+
+	protected function _iterator($search)
+	{
+		return new \APCIterator($search, \APC_ITER_KEY);
 	}
 }

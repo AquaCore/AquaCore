@@ -165,7 +165,21 @@ implements StorageInterface,
 	 */
 	public function add($key, $value, $ttl = 0)
 	{
-		if($ttl === 0) {
+		if(is_int($value) || is_float($value)) {
+			if($this->exists($key)) {
+				return false;
+			} else if(is_float($value)) {
+				$this->redis->incrByFloat($key, $value);
+			} else if($value > 0) {
+				$this->redis->incr($key, $value);
+			} else {
+				$this->redis->decr($key, $value);
+			}
+			if($ttl) {
+				$this->redis->expire($key, $ttl);
+			}
+			return true;
+		} else if($ttl === 0) {
 			return $this->redis->setnx($key, $value);
 		} else if(!$this->exists($key)) {
 			return $this->redis->setex($key, $ttl, $value);
@@ -182,7 +196,22 @@ implements StorageInterface,
 	 */
 	public function store($key, $value, $ttl = 0)
 	{
-		if($ttl > 0) {
+		if(is_int($value) || is_float($value)) {
+			if($this->exists($key)) {
+				$this->redis->del($key);
+			}
+			if(is_float($value)) {
+				$this->redis->incrByFloat($key, $value);
+			} else if($value > 0) {
+				$this->redis->incr($key, $value);
+			} else {
+				$this->redis->decr($key, $value);
+			}
+			if($ttl) {
+				$this->redis->expire($key, $ttl);
+			}
+			return true;
+		} else if($ttl > 0) {
 			return $this->redis->setex($key, $ttl, $value);
 		} else {
 			return $this->redis->set($key, $value);
@@ -199,11 +228,19 @@ implements StorageInterface,
 	function increment($key, $step = 1, $defaultValue = 0, $ttl = 0)
 	{
 		if($this->exists($key)) {
-			return (is_float($step) ? $this->redis->incrByFloat($key, $step) : $this->redis->incrBy($key, $step));
+			$ttl = null;
 		} else {
-			$val = $defaultValue + $step;
-			return ($this->store($key, $val, $ttl) ? $val : false);
+			$step += $defaultValue;
 		}
+		if(is_float($step)) {
+			$value = $this->redis->incrByFloat($key, $step);
+		} else {
+			$value = $this->redis->incrBy($key, $step);
+		}
+		if($ttl) {
+			$this->redis->expire($key, $ttl);
+		}
+		return $value;
 	}
 
 	/**
@@ -216,11 +253,19 @@ implements StorageInterface,
 	function decrement($key, $step = 1, $defaultValue = 0, $ttl = 0)
 	{
 		if($this->exists($key)) {
-			return (is_float($step) ? $this->redis->incrByFloat($key, -$step) : $this->redis->decrBy($key, $step));
+			$ttl = null;
 		} else {
-			$val = $defaultValue - $step;
-			return ($this->store($key, $val, $ttl) ? $val : false);
+			$step = $defaultValue + $step;
 		}
+		if(is_float($step)) {
+			$value = $this->redis->incrByFloat($key, -$step);
+		} else {
+			$value = $this->redis->decrBy($key, $step);
+		}
+		if($ttl) {
+			$this->redis->expire($key, $ttl);
+		}
+		return $value;
 	}
 
 	/**
