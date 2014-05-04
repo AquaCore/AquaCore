@@ -1237,6 +1237,7 @@ class Account
 		} else {
 			$acc->roleId = Role::ROLE_USER;
 		}
+		self::$users[$acc->id] = $acc;
 
 		return $acc;
 	}
