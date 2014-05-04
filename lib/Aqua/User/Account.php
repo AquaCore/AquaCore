@@ -310,9 +310,9 @@ class Account
 		$acc_data = array();
 		$update = '';
 		$options = array_intersect_key($options, array_flip(array(
-				'username', 'credits', 'email', 'status',
-				'password', 'birthday', 'unban_date',
-				'role', 'avatar', 'display_name'
+				'username', 'credits', 'email', 'status', 'password',
+				'password_hashed', 'birthday', 'unban_date', 'role',
+				'avatar', 'display_name',
 			)));
 		if(empty($options)) {
 			return false;
@@ -336,12 +336,11 @@ class Account
 			$values['status'] = $acc_data['status'] = $options['status'];
 			$update .= '_status = ?, ';
 		}
-		if(array_key_exists('password', $options)) {
-			if(array_key_exists('password_hashed', $options)) {
-				$values['password'] = $options['password_hashed'];
-			} else {
-				$values['password'] = self::hashPassword($options['password']);
-			}
+		if(array_key_exists('password_hashed', $options)) {
+			$values['password'] = $options['password_hashed'];
+			$update .= '_password = ?, ';
+		} else if(array_key_exists('password', $options)) {
+			$values['password'] = self::hashPassword($options['password']);
 			$update .= '_password = ?, ';
 		}
 		if(array_key_exists('birthday', $options) && $options['birthday'] !== $this->birthDate) {
@@ -393,7 +392,7 @@ class Account
 		array_pop($values);
 		if(array_key_exists('unbanDate', $acc_data)) $values['unban_date'] = $acc_data['unbanDate'];
 		if(array_key_exists('birthDate', $acc_data)) $values['birthday'] = $acc_data['birthDate'];
-		if(array_key_exists('password', $acc_data)) $values['plain_password'] = $acc_data['password'];
+		if(array_key_exists('password', $options)) $values['plain_password'] = $options['password'];
 		unset($options['password']);
 		$feedback = array( $this, $values );
 		Event::fire('account.update', $feedback);
@@ -402,8 +401,7 @@ class Account
 		}
 		self::$cache !== null or self::fetchCache(null, true);
 		if(!empty(self::$cache) && (array_key_exists('role', $values) || array_key_exists('avatar', $values) ||
-		                            array_key_exists('display_name', $values))
-		) {
+		                            array_key_exists('display_name', $values))) {
 			$update = 0;
 			foreach(self::$cache['last_user'] as &$data) {
 				if($data['id'] !== $this->id) continue;
