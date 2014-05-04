@@ -710,8 +710,8 @@ class Account
 
 			return self::FIELD_INVALID_SIZE;
 		}
-		if($regex && preg_match($regex, $username, $match)) {
-			$error_message = __('profile', 'username-invalid-character', implode(', ', $match[0]));
+		if($regex && preg_match_all($regex, $username, $match)) {
+			$error_message = __('profile', 'username-invalid-character', implode(', ', array_unique($match[0])));
 
 			return self::FIELD_INVALID_CHARACTERS;
 		}
@@ -743,8 +743,8 @@ class Account
 
 			return self::FIELD_INVALID_SIZE;
 		}
-		if($regex && preg_match($regex, $display_name, $match)) {
-			$error_message = __('profile', 'display-name-invalid-character', implode(', ', $match[0]));
+		if($regex && preg_match_all($regex, $display_name, $match)) {
+			$error_message = __('profile', 'display-name-invalid-character', implode(', ', array_unique($match[0])));
 
 			return self::FIELD_INVALID_CHARACTERS;
 		}
@@ -776,8 +776,8 @@ class Account
 
 			return self::FIELD_INVALID_SIZE;
 		}
-		if($regex && preg_match($regex, $password, $match)) {
-			$error_message = __('profile', 'password-invalid-character', implode(', ', $match[0]));
+		if($regex && preg_match_all($regex, $password, $match)) {
+			$error_message = __('profile', 'password-invalid-character', implode(', ', array_unique($match[0])));
 
 			return self::FIELD_INVALID_CHARACTERS;
 		}
@@ -825,12 +825,12 @@ class Account
 	 */
 	public static function checkValidBirthday($timestamp, &$error_message)
 	{
-		$settings = App::settings()->get('account')->get('email');
+		$settings = App::settings()->get('account')->get('birthday');
 		$error_id = self::FIELD_OK;
 		$feedback = array( $timestamp, &$error_id, &$error_message );
 		if(Event::fire('account.validate-birthday', $feedback) === false) return $error_id;
 		$min_date    = $settings->get('min_date', 0);
-		$max_date    = $settings->get('max_date', PHP_INT_MAX);
+		$max_date    = $settings->get('max_date', 0);
 		$date_format = App::settings()->get('date_format', '');
 		if($timestamp < $min_date || ($max_date && $timestamp > $max_date)) {
 			if($max_date == 0)

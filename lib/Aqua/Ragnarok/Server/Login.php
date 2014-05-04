@@ -350,8 +350,8 @@ class Login
 
 			return self::FIELD_INVALID_SIZE;
 		}
-		if($regex && preg_match($regex, $password, $match)) {
-			$message = __('ragnarok', 'password-invalid-character', implode(', ', $match[0]));
+		if($regex && preg_match_all($regex, $password, $match)) {
+			$message = __('ragnarok', 'password-invalid-character', implode(', ', array_unique($match[0])));
 
 			return self::FIELD_INVALID_CHARACTERS;
 		}
