@@ -133,7 +133,7 @@ class Plugin
 		$feedback = array( $this );
 		self::rebuildCache(true);
 		L10n::rebuildCache();
-		Role::rebuildCache();
+		Role::rebuildRoleCache();
 		Event::fire('plugin.disable', $feedback);
 
 		return true;

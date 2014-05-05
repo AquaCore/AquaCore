@@ -3,6 +3,8 @@ namespace Aqua\User;
 
 use Aqua\Core\App;
 use Aqua\Event\Event;
+use Aqua\SQL\Query;
+use Aqua\SQL\Search;
 use Aqua\UI\Tag;
 
 class Role
@@ -44,9 +46,14 @@ class Role
 	 * @var \Aqua\User\Role[]
 	 */
 	public static $roles;
+	/**
+	 * @var array
+	 */
+	public static $permissions;
 
-	const CACHE_KEY  = 'roles';
-	const CACHE_TTL  = 0;
+	const ROLE_CACHE_KEY        = 'roles';
+	const PERMISSION_CACHE_KEY  = 'permissions';
+	const CACHE_TTL             = 0;
 
 	const ROLE_GUEST = 1;
 	const ROLE_USER  = 2;
@@ -123,7 +130,7 @@ class Role
 		}
 		array_pop($values);
 		Event::fire('role.update', $feedback);
-		self::rebuildCache($this->id);
+		self::rebuildRoleCache($this->id);
 
 		return true;
 	}
@@ -158,41 +165,35 @@ class Role
 			$permissions = array( $permissions );
 		}
 		$protected   = ($protected ? 'y' : 'n');
+		$xprotected  = ($protected ? 2 : 1 );
 		$added       = array();
+		$permissionList = array_flip(self::permissions());
 		$permissions = array_unique($permissions);
-		$table       = ac_table('permissions');
-		$p_sth       = App::connection()->prepare("
-		SELECT id
-		FROM `$table`
-		WHERE _permission = ?
-		LIMIT 1
-		");
-		$table       = ac_table('role_permissions');
-		$rp_sth      = App::connection()->prepare("
-		REPLACE INTO `$table` (_role_id, _permission, _protected)
-		VALUES (?, ?, ?)
-		");
+		$sth = App::connection()->prepare(sprintf('
+		REPLACE INTO `%s` (_role_id, _permission, _protected)
+		VALUES (:role, :permission, :protected)
+		', ac_table('role_permissions')));
 		foreach($permissions as $name) {
-			$p_sth->bindValue(1, $name, \PDO::PARAM_STR);
-			$p_sth->execute();
-			if(!($id = $p_sth->fetchColumn(0))) {
+			if(!array_key_exists($name, $permissionList) ||
+			   array_key_exists($name, $this->permission) &&
+			   $this->permission[$name] !== $xprotected) {
 				continue;
 			}
-			$rp_sth->bindValue(1, $this->id, \PDO::PARAM_INT);
-			$rp_sth->bindValue(2, $id, \PDO::PARAM_INT);
-			$rp_sth->bindValue(3, $protected, \PDO::PARAM_STR);
-			$rp_sth->execute();
-			$rp_sth->closeCursor();
+			$sth->bindValue(':role', $this->id, \PDO::PARAM_INT);
+			$sth->bindValue(':permission', $permissionList[$name], \PDO::PARAM_INT);
+			$sth->bindValue(':protected', $protected, \PDO::PARAM_STR);
+			$sth->execute();
+			$sth->closeCursor();
 			$added[] = $name;
 		}
 		if(!count($added)) {
 			return false;
 		}
-		self::rebuildCache($this->id);
+		self::rebuildRoleCache($this->id);
 		$feedback = array( $this, $added );
 		Event::fire('role.add-permission', $feedback);
 
-		return $permissions;
+		return $added;
 	}
 
 	/**
@@ -204,48 +205,40 @@ class Role
 		if(!is_array($permissions)) {
 			$permissions = array( $permissions );
 		}
-		$deleted     = array();
+		$deleted = array();
+		$permissionList = array_flip(self::permissions());
 		$permissions = array_unique($permissions);
-		$table       = ac_table('permissions');
-		$p_sth       = App::connection()->prepare("
-		SELECT id
-		FROM `$table`
-		WHERE _permission = ?
-		LIMIT 1
-		");
-		$table       = ac_table('role_permissions');
-		$rp_sth      = App::connection()->prepare("
-		DELETE FROM `$table`
-		WHERE _role_id = ?
-		AND _permission = ?
-		AND _protected = 'n'
-		");
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM `%s`
+		WHERE _role_id = :role
+		AND _permission = :permission
+		AND _protected = \'n\'
+		', ac_table('role_permissions')));
 		foreach($permissions as $name) {
-			$p_sth->bindValue(1, $name, \PDO::PARAM_STR);
-			$p_sth->execute();
-			if(!($id = $p_sth->fetchColumn(0))) {
+			if(!array_key_exists($name, $this->permission)) {
 				continue;
 			}
-			$rp_sth->bindValue(1, $this->id, \PDO::PARAM_INT);
-			$rp_sth->bindValue(2, $id, \PDO::PARAM_INT);
-			$rp_sth->execute();
-			$rp_sth->closeCursor();
-			$deleted[] = $name;
+			$sth->bindValue(':role', $this->id, \PDO::PARAM_INT);
+			$sth->bindValue(':permission', $permissionList[$name], \PDO::PARAM_INT);
+			if($sth->execute() && $sth->rowCount()) {
+				$deleted[] = $name;
+			}
+			$sth->closeCursor();
 		}
 		if(!count($deleted)) {
 			return false;
 		}
-		self::rebuildCache($this->id);
+		self::rebuildRoleCache($this->id);
 		$feedback = array( $this, $deleted );
 		Event::fire('role.remove-permission', $feedback);
 
-		return $permissions;
+		return $deleted;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function permissions()
+	public function getPermissions()
 	{
 		return array_keys(array_filter($this->permission));
 	}
@@ -278,27 +271,11 @@ class Role
 	/**
 	 * @return array
 	 */
-	public static function permissionList()
+	public static function permissions()
 	{
-		$tbl = ac_table('permissions');
-		$sth = App::connection()->query("
-		SELECT id, _permission
-		FROM `$tbl`
-		ORDER BY id
-		");
-		$permissions = array();
-		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$permissions[$data[0]] = $data[1];
-		}
+		self::$permissions !== null or self::loadPermissions();
 
-		return $permissions;
-	}
-
-	public static function loadRoles()
-	{
-		if((self::$roles = App::cache()->fetch(self::CACHE_KEY, false)) === false) {
-			self::rebuildCache();
-		}
+		return self::$permissions;
 	}
 
 	/**
@@ -330,7 +307,7 @@ class Role
 	{
 		self::$roles !== null or self::loadRoles();
 
-		return self::exists($id) ? self::$roles[$id] : null;
+		return (self::exists($id) ? self::$roles[$id] : null);
 	}
 
 	/**
@@ -353,51 +330,54 @@ class Role
 		$editable = true
 	) {
 		self::$roles !== null or self::loadRoles();
-		$table = ac_table('roles');
-		$sth   = App::connection()->prepare("
-		INSERT INTO `$table` (_name, _description, _color, _background, _protected, _editable)
-		VALUES (?, ?, ?, ?, ?, ?)
-		");
-		$sth->bindValue(1, trim($name), \PDO::PARAM_STR);
-		$sth->bindValue(2, trim($description), \PDO::PARAM_LOB);
+		$sth   = App::connection()->prepare(sprintf('
+		INSERT INTO `%s` (_name, _description, _color, _background, _protected, _editable)
+		VALUES (:name, :description, :color, :background, :protected, :editable)
+		', ac_table('roles')));
+		$sth->bindValue(':name', trim($name), \PDO::PARAM_STR);
+		$sth->bindValue(':description', trim($description), \PDO::PARAM_LOB);
+		$sth->bindValue(':protected', $protected ? 'y' : 'n', \PDO::PARAM_STR);
+		$sth->bindValue(':editable', $editable ? 'y' : 'n', \PDO::PARAM_STR);
 		if($color === null) {
-			$sth->bindValue(3, null, \PDO::PARAM_NULL);
+			$sth->bindValue(':color', null, \PDO::PARAM_NULL);
+		} else {
+			$sth->bindValue(':color', $color, \PDO::PARAM_INT);
 		}
-		else $sth->bindValue(3, $color, \PDO::PARAM_INT);
-		if($background === null) $sth->bindValue(4, null, \PDO::PARAM_NULL);
-		else $sth->bindValue(4, $background, \PDO::PARAM_INT);
-		$sth->bindValue(5, $protected ? 'y' : 'n', \PDO::PARAM_STR);
-		$sth->bindValue(6, $editable ? 'y' : 'n', \PDO::PARAM_STR);
+		if($background === null) {
+			$sth->bindValue(':background', null, \PDO::PARAM_NULL);
+		} else {
+			$sth->bindValue(':background', $background, \PDO::PARAM_INT);
+		}
 		$sth->execute();
-		$id = (int)App::connection()->lastInsertId();
+		$roleId = (int)App::connection()->lastInsertId();
 		$sth->closeCursor();
-		if(!$id) {
+		if(!$roleId) {
 			return false;
 		}
-		$table                = ac_table('role_permissions');
-		$sth                  = App::connection()->prepare("
-		INSERT INTO `$table` (_role_id, _permission, _protected)
-		VALUES (? , ?, ?)
-		");
-		$existing_permissions = self::permissionList();
-		foreach($permissions as $perm) {
-			if(is_array($perm)) {
-				$_protected = ($perm[1] ? 'y' : 'n');
-				$perm       = $perm[0];
+		unset($protected);
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO `%s` (_role_id, _permission, _protected)
+		VALUES (:role , :permission, :protected)
+		', ac_table('role_permissions')));
+		$existingPermissions = self::permissions();
+		foreach($permissions as $permission) {
+			if(is_array($permission)) {
+				$protected  = ($permission[1] ? 'y' : 'n');
+				$permission = $permission[0];
 			} else {
-				$_protected = 'n';
+				$protected = 'n';
 			}
-			if(($perm = array_search($perm, $existing_permissions, true)) === false) {
+			if(($permission = array_search($permission, $existingPermissions, true)) === false) {
 				continue;
 			}
-			$sth->bindValue(1, $id, \PDO::PARAM_INT);
-			$sth->bindValue(2, $perm, \PDO::PARAM_INT);
-			$sth->bindValue(3, $_protected, \PDO::PARAM_STR);
+			$sth->bindValue(':role', $roleId, \PDO::PARAM_INT);
+			$sth->bindValue(':permission', $permission, \PDO::PARAM_INT);
+			$sth->bindValue(':protected', $protected, \PDO::PARAM_STR);
 			$sth->execute();
 			$sth->closeCursor();
 		}
-		self::rebuildCache($id);
-		$role     = self::get($id);
+		self::rebuildRoleCache($roleId);
+		$role     = self::get($roleId);
 		$feedback = array( $role );
 		Event::fire('role.create', $feedback);
 
@@ -413,146 +393,207 @@ class Role
 		if($role->protected) {
 			return false;
 		}
-		$table = ac_table('users');
-		$sth   = App::connection()->prepare("
-		UPDATE `$table`
-		SET _role_id = ?
-		WHERE _role_id = ?
-		");
-		$sth->bindValue(1, self::ROLE_USER, \PDO::PARAM_INT);
-		$sth->bindValue(2, $role->id, \PDO::PARAM_INT);
+
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _role_id = :newrole
+		WHERE _role_id = :oldrole
+		', ac_table('users')));
+		$sth->bindValue(':newrole', self::ROLE_USER, \PDO::PARAM_INT);
+		$sth->bindValue(':oldrole', $role->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$sth->closeCursor();
-		$table = ac_table('roles');
-		$sth   = App::connection()->prepare("
-		DELETE FROM `$table`
+
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM `%s`
 		WHERE id = ?
 		LIMIT 1
-		");
+		', ac_table('roles')));
 		$sth->bindValue(1, $role->id, \PDO::PARAM_INT);
 		$sth->execute();
-		$table = ac_table('role_permissions');
-		$sth   = App::connection()->prepare("
-		DELETE FROM `$table`
+
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM `%s`
 		WHERE _role_id = ?
-		");
+		', ac_table('role_permissions')));
 		$sth->bindValue(1, $role->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$sth->closeCursor();
 		$feedback = array( $role );
 		Event::fire('role.delete', $feedback);
-		self::rebuildCache();
+		self::rebuildRoleCache();
 
 		return true;
 	}
 
-	/**
-	 * @param \SimpleXmlElement $xml
-	 * @param int               $plugin_id
-	 */
-	public static function importPermissions(\SimpleXMLElement $xml, $plugin_id = null)
+	public static function loadRoles()
 	{
-		$tbl               = ac_table('permissions');
-		$tblx              = ac_table('role_permissions');
-		$permisson_sth     =App::connection()->prepare("
-		INSERT IGNORE INTO `$tbl` (_permission, _plugin_id)
-		VALUES (?, ?)
-		");
-		$permission_id_sth = App::connection()->prepare("
-		SELECT id
-		FROM `$tbl`
-		WHERE _permission = ?
-		");
-		$role_sth          = App::connection()->prepare("
-		REPLACE INTO `$tblx` (_role_id, _permission, _protected)
-		VALUE (?, ?, ?)
-		");
-		foreach($xml->permission as $perm) {
-			if(!($key = (string)$perm->attributes()->key)) continue;
-			$permisson_sth->bindValue(1, $key, \PDO::PARAM_STR);
-			if($plugin_id) $permisson_sth->bindValue(2, $plugin_id, \PDO::PARAM_INT);
-			else $permisson_sth->bindValue(2, null, \PDO::PARAM_NULL);
-			$permisson_sth->execute();
-			$id = App::connection()->lastInsertId();
-			if(!$id) {
-				$permission_id_sth->bindValue(1, $key, \PDO::PARAM_STR);
-				$id = (int)$permission_id_sth->fetchColumn(0);
-			}
-			foreach($perm->role as $role) {
-				if(!self::get((string)$role)) continue;
-				$role_sth->bindValue(1, $role, \PDO::PARAM_INT);
-				$role_sth->bindValue(2, $id, \PDO::PARAM_INT);
-				$role_sth->bindValue(3,
-					(filter_var((string)$role->attributes()->protected, FILTER_VALIDATE_BOOLEAN) ? 'y' : 'n'),
-					                 \PDO::PARAM_STR);
-				$role_sth->execute();
-				$role_sth->closeCursor();
-			}
+		self::$roles = App::cache()->fetch(self::ROLE_CACHE_KEY, false);
+		if(self::$roles === false) {
+			self::rebuildRoleCache();
 		}
-		self::rebuildCache();
 	}
 
-	public static function rebuildCache($id = null)
+	public static function loadPermissions()
 	{
-		App::cache()->delete(self::CACHE_KEY);
-		if(!$id) {
-			self::$roles = array();
+		self::$permissions = App::cache()->fetch(self::PERMISSION_CACHE_KEY, false);
+		if(self::$permissions === false) {
+			self::rebuildPermissionCache();
 		}
-		$table = ac_table('roles');
-		$query = "
-		SELECT id,
-		       _name,
-		       _color,
-		       _background,
-		       _protected,
-		       _editable,
-		       _description
-		FROM `$table`
-		";
-		if($id) {
-			$query .= 'WHERE id = ' . (int)$id;
-		}
-		$res = App::connection()->query($query)->fetchAll(\PDO::FETCH_NUM);
-		foreach($res as $row) {
-			$role_id = (int)$row[0];
-			if(!isset(self::$roles[$role_id])) {
-				$role = new self;
+	}
+
+	/**
+	 * @param \SimpleXmlElement $xml
+	 * @param int               $pluginId
+	 */
+	public static function importPermissions(\SimpleXMLElement $xml, $pluginId = null)
+	{
+		$insertPermission = App::connection()->prepare(sprintf('
+		INSERT IGNORE INTO `%s` (_permission, _plugin_id)
+		VALUES (:name, :plugin)
+		', ac_table('permissions')));
+		$getPermissionId = App::connection()->prepare(sprintf('
+		SELECT id FROM `%s`
+		WHERE _permission = :name
+		', ac_table('permissions')));
+		$addToRole = App::connection()->prepare(sprintf('
+		REPLACE INTO `%s` (_role_id, _permission, _protected)
+		VALUE (:role, :permission, :protected)
+		', ac_table('role_permissions')));
+		foreach($xml->permission as $permission) {
+			if(!($key = (string)$permission->attributes()->key)) {
+				continue;
+			}
+			$insertPermission->bindValue(':name', $key, \PDO::PARAM_STR);
+			if($pluginId) {
+				$insertPermission->bindValue(':plugin', $pluginId, \PDO::PARAM_INT);
 			} else {
-				$role = self::$roles[$role_id];
+				$insertPermission->bindValue(':plugin', null, \PDO::PARAM_NULL);
 			}
-			$role->id          = $role_id;
-			$role->name        = $row[1];
-			$role->protected   = ($row[4] === 'y');
-			$role->editable    = ($row[5] === 'y');
-			$role->description = $row[6];
+			$insertPermission->execute();
+			$permissionId = App::connection()->lastInsertId();
+			if(!$permissionId) {
+				$getPermissionId->bindValue(':name', $key, \PDO::PARAM_STR);
+				$permissionId = (int)$getPermissionId->fetchColumn(0);
+			}
+			foreach($permission->role as $role) {
+				$protected = (string)$role->attributes()->protected;
+				$protected = ($protected && filter_var($protected, FILTER_VALIDATE_BOOLEAN));
+				switch(strtolower((string)$role->attributes()->id)) {
+					case 'admin':
+					case 'administrator':
+					case self::ROLE_ADMIN:
+						$role = self::ROLE_ADMIN;
+						break;
+					case 'user':
+					case self::ROLE_USER:
+						$role = self::ROLE_USER;
+						break;
+					case 'guest':
+					case self::ROLE_GUEST:
+						$role = self::ROLE_GUEST;
+						break;
+				}
+				$addToRole->bindValue(':role', $role, \PDO::PARAM_INT);
+				$addToRole->bindValue(':permission', $permissionId, \PDO::PARAM_INT);
+				$addToRole->bindValue(':protected', ($protected ? 'y' : 'n'), \PDO::PARAM_STR);
+				$addToRole->execute();
+				$addToRole->closeCursor();
+			}
+		}
+		self::rebuildRoleCache(array( self::ROLE_ADMIN, self::ROLE_USER, self::ROLE_GUEST ));
+		self::rebuildPermissionCache();
+	}
+
+	public static function rebuildRoleCache($roleId = null)
+	{
+		if(!$roleId) {
+			self::$roles = array();
+		} else if(is_array($roleId)) {
+			$roleId = array( Search::SEARCH_IN, $roleId );
+		}
+		$select = Query::select(App::connection())
+			->columns(array(
+				'id' => 'id',
+			    'name' => '_name',
+			    'color' => '_color',
+			    'background' => '_background',
+			    'protected' => '_protected',
+			    'editable' => '_editable',
+			    'description' => '_description',
+			))
+			->setColumnType(array(
+				'id' => 'integer',
+			    'color' => 'integer',
+			    'background' => 'integer',
+			))
+			->from(ac_table('roles'))
+			->query();
+		if($roleId) {
+			$select->where(array( 'id' => $roleId ));
+		}
+		while($select->valid()) {
+			if(array_key_exists($select->get('id'), self::$roles)) {
+				$role = self::$roles[$select->get('id')];
+			} else {
+				$role = new self;
+			}
+			$role->id          = $select->get('id');
+			$role->name        = $select->get('name');
+			$role->color       = $select->get('color');
+			$role->background  = $select->get('background');
+			$role->protected   = ($select->get('protected') === 'y');
+			$role->editable    = ($select->get('editable') === 'y');
+			$role->description = $select->get('description');
 			$role->permission  = array();
-			if($row[2] !== null) $role->color = (int)$row[2];
-			else $role->color = null;
-			if($row[3] !== null) $role->background = (int)$row[3];
-			else $role->background = null;
-			self::$roles[$role_id] = $role;
+			self::$roles[$role->id] = $role;
+			$select->next();
 		}
-		$role_perm_tbl = ac_table('role_permissions');
-		$perm_tbl      = ac_table('permissions');
-		$query         = "
-		SELECT p._permission permission,
-		       rp._protected  protected,
-		       r.id        	 id
-		FROM `$role_perm_tbl` rp
-		RIGHT JOIN `$table` r
-		ON rp._role_id = r.id
-		RIGHT JOIN `$perm_tbl` p
-		ON rp._permission = p.id
-		";
-		if($id) {
-			$query .= 'WHERE r.id = ' . (int)$id;
+
+		$select = Query::select(App::connection())
+			->columns(array(
+				'id'         => 'rp._role_id',
+				'permission' => 'p._permission',
+				'protected'  => 'rp._protected'
+			))
+			->setColumnType(array( 'id' => 'interger' ))
+			->from(ac_table('role_permissions'), 'rp')
+			->rightJoin(ac_table('permissions'), 'rp._permission = p.id', 'p')
+			->query();
+		if($roleId) {
+			$select->where(array( 'rp._role_id' => $roleId ));
 		}
-		$res = App::connection()->query($query)->fetchAll(\PDO::FETCH_ASSOC);
-		foreach($res as $row) {
-			if(isset(self::$roles[$row['id']])) {
-				self::$roles[$row['id']]->permission[$row['permission']] = ($row['protected'] === 'y' ? 2 : 1);
+		while($select->valid()) {
+			$roleId = $select->get('id');
+			if(!array_key_exists($roleId, self::$roles)) {
+				$select->next();
+				continue;
 			}
+			if($select->get('protected') === 'y') {
+				self::$roles[$roleId]->permission[$select->get('permission')] = 2;
+			} else {
+				self::$roles[$roleId]->permission[$select->get('permission')] = 1;
+			}
+			$select->next();
 		}
-		App::cache()->store(self::CACHE_KEY, self::$roles, self::CACHE_TTL);
+		App::cache()->store(self::ROLE_CACHE_KEY, self::$roles, self::CACHE_TTL);
+	}
+
+	public static function rebuildPermissionCache()
+	{
+		self::$permissions = array();
+		$select = Query::select(App::connection())
+			->columns(array(
+				'id'   => 'id',
+				'name' => '_permission'
+			))
+			->setColumnType(array( 'id' => 'interger' ))
+			->from(ac_table('permissions'))
+			->query();
+		while($select->valid()) {
+			self::$permissions[$select->get('id')] = $select->get('name');
+			$select->next();
+		}
+		App::cache()->store(self::PERMISSION_CACHE_KEY, self::$permissions, self::CACHE_TTL);
 	}
 }

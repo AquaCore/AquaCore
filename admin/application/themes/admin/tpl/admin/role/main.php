@@ -142,7 +142,7 @@ $form->append('<div class="ac-form-response"></div><input type="submit" value="'
 							$opt->bool('disabled', false);
 						}
 					}
-					$frm->field('permission')->checked($role->permissions());
+					$frm->field('permission')->checked($role->getPermissions());
 					$frm->field('color')->value($role->color === null ? '' : sprintf('#%06x', $role->color));
 					$frm->field('background')->value($role->background === null ? '' : sprintf('#%06x', $role->background));
 					$frm->field('description')->attr("rows", 6)->content = array( htmlspecialchars($role->description) );

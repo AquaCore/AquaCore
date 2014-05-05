@@ -69,7 +69,7 @@ extends Page
 			$permission = $frm->checkbox('permission')
 				->multiple(true)
 				->setLabel(__('role', 'permissions'));
-			foreach(R::permissionList() as $name) {
+			foreach(R::permissions() as $name) {
 				$permission->value(array( $name => htmlspecialchars(__('permission-name', $name)) ));
 				$desc = htmlspecialchars(__('permission-desc', $name));
 				$permission->label($name)
@@ -157,7 +157,7 @@ extends Page
 			$permission = $frm->checkbox('permission')
 				->multiple(true)
 				->setLabel(__('role', 'permissions'));
-			foreach(R::permissionList() as $name) {
+			foreach(R::permissions() as $name) {
 				$permission->value(array( $name => htmlspecialchars(__('permission-name', $name)) ));
 				$desc = htmlspecialchars(__('permission-desc', $name));
 				$permission->label($name)
@@ -168,7 +168,7 @@ extends Page
 					$permission->option($name)->bool('disabled', true);
 				}
 			}
-			$permission->checked($role->permissions());
+			$permission->checked($role->getPermissions());
 			$frm->textarea('description', true)
 				->setLabel(__('role', 'description'));
 			$frm->submit();
@@ -222,7 +222,7 @@ extends Page
 				file_put_contents(\Aqua\ROOT . '/test.txt', print_r($update, true));
 				if(!$frm->field('permission')->getWarning()) {
 					$newPermissions    = $this->request->getArray('permission');
-					$oldPermissions    = $role->permissions();
+					$oldPermissions    = $role->getPermissions();
 					$removePermissions = array_diff($oldPermissions, $newPermissions);
 					$addPermissions    = array_diff($newPermissions, $oldPermissions);
 					if(!empty($removePermissions) && $role->removePermission($removePermissions)) {

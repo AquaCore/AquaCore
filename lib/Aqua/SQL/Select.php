@@ -524,7 +524,7 @@ implements \Iterator, \Countable
 		}
 		foreach($results as $data) {
 			foreach($this->columnTypes as $column => $type) {
-				if(array_key_exists($column, $data)) switch($type) {
+				if(array_key_exists($column, $data) && $data[$column] !== null) switch($type) {
 					case 'integer':
 					case 'timestamp':
 						$data[$column] = intval($data[$column]);

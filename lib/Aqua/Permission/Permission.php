@@ -325,7 +325,7 @@ implements SubjectInterface
 	 */
 	public function checkPermissions(Role $role)
 	{
-		$permissions = $role->permissions();
+		$permissions = $role->getPermissions();
 		if($this->options & self::ORDER_DENY_ALLOW) {
 			return (!empty($this->permissions['deny']) &&
 			        count(array_intersect($this->permissions['deny'], $permissions)) ===
