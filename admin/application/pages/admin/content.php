@@ -97,11 +97,13 @@ extends Page
 				foreach($this->contentType->categories() as $category) {
 					$categories[$category->id] = htmlspecialchars($category->name);
 				}
-				$frm->select('cat')
-					->setColumn('category_id')
-					->setLabel(__('content', 'category'))
-					->multiple()
-					->value($categories);
+				if(!empty($categories)) {
+					$frm->select('cat')
+						->setColumn('category_id')
+						->setLabel(__('content', 'category'))
+						->multiple()
+						->value($categories);
+				}
 			}
 			$status = array(
 				ContentData::STATUS_PUBLISHED => __('content-status', ContentData::STATUS_PUBLISHED),

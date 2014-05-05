@@ -94,7 +94,7 @@ try {
 		if($https === 'on' || $https === '1') {
 			$url.= 's';
 		}
-		$url.= '://' . getenv(HTTP_HOST);
+		$url.= '://' . getenv('HTTP_HOST');
 		$path = trim(substr(dirname(getenv('SCRIPT_FILENAME')), strlen(getenv('DOCUMENT_ROOT'))), '/\\');
 		if($path) {
 			$url.= '/' . $path;

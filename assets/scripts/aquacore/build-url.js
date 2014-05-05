@@ -26,7 +26,7 @@ var AquaCore = AquaCore || {};
 		var path = "/";
 		options = $.extend({
 			"urlRewrite": AquaCore.REWRITE,
-			"baseDir": AquaCore.DIR,
+			"baseDir": AquaCore.BASE_DIR + "/" + AquaCore.DIR,
 			"script": AquaCore.SCRIPT_NAME,
 			"path": [],
 			"action": "index",

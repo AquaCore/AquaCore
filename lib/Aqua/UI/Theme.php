@@ -198,7 +198,7 @@ extends Template
 			),
 			'TIME_OFFSET' => $tz->getOffset($now),
 			'REWRITE'     => \Aqua\REWRITE,
-			'BASE_DIR'    => App::settings()->get('base_dir'),
+			'BASE_DIR'    => \Aqua\DIR,
 			'DIR'         => \Aqua\WORKING_DIR,
 			'SCRIPT_NAME' => \Aqua\SCRIPT_NAME,
 			'USER_ID'     => (App::user()->loggedIn() ? App::user()->account->id : null),
