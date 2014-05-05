@@ -61,8 +61,8 @@ foreach(array(ac_table('content_meta'),
 		foreach($delete as $data) {
 			$sth->bindValue(1, $data[0], PDO::PARAM_STR);
 			$sth->bindValue(2, $data[1], PDO::PARAM_STR);
-			$sth->bindValue(3, $data[3], PDO::PARAM_INT);
-			$sth->bindValue(4, $data[4], PDO::PARAM_STR);
+			$sth->bindValue(3, $data[2], PDO::PARAM_INT);
+			$sth->bindValue(4, $data[3], PDO::PARAM_STR);
 			$sth->execute();
 		}
 	}
