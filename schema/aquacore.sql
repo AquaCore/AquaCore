@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `#roles` (
 
 CREATE TABLE IF NOT EXISTS `#permissions` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  _permission VARCHAR(30) NOT NULL,
+  _permission VARCHAR(32) NOT NULL,
   _plugin_id INT UNSIGNED NULL,
   PRIMARY KEY ( id ),
   UNIQUE INDEX `_{$perm_tbl}__permission_UN` ( _permission )
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `#users` (
 
 CREATE TABLE IF NOT EXISTS `#user_meta` (
   _id INT UNSIGNED NOT NULL,
-  _key VARCHAR(30) NOT NULL,
+  _key VARCHAR(32) NOT NULL,
   _val TEXT,
   _type ENUM('S', 'I', 'F', 'B', 'X') NOT NULL,
   PRIMARY KEY ( _id, _key )

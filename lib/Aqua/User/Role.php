@@ -124,7 +124,7 @@ class Role
 		SET $update
 		WHERE id = ?
 		");
-		$sth->execute(array_values(array_filter($values)));
+		$sth->execute(array_values(array_filter($values, function($x) { return !is_null($x); })));
 		if(!$sth->rowCount()) {
 			return false;
 		}
@@ -493,6 +493,7 @@ class Role
 					case self::ROLE_GUEST:
 						$role = self::ROLE_GUEST;
 						break;
+					default: continue;
 				}
 				$addToRole->bindValue(':role', $role, \PDO::PARAM_INT);
 				$addToRole->bindValue(':permission', $permissionId, \PDO::PARAM_INT);
@@ -510,7 +511,7 @@ class Role
 		if(!$roleId) {
 			self::$roles = array();
 		} else if(is_array($roleId)) {
-			$roleId = array( Search::SEARCH_IN, $roleId );
+			array_unshift($roleId, Search::SEARCH_IN);
 		}
 		$select = Query::select(App::connection())
 			->columns(array(
@@ -527,11 +528,11 @@ class Role
 			    'color' => 'integer',
 			    'background' => 'integer',
 			))
-			->from(ac_table('roles'))
-			->query();
+			->from(ac_table('roles'));
 		if($roleId) {
 			$select->where(array( 'id' => $roleId ));
 		}
+		$select->query();
 		while($select->valid()) {
 			if(array_key_exists($select->get('id'), self::$roles)) {
 				$role = self::$roles[$select->get('id')];
@@ -558,11 +559,11 @@ class Role
 			))
 			->setColumnType(array( 'id' => 'interger' ))
 			->from(ac_table('role_permissions'), 'rp')
-			->rightJoin(ac_table('permissions'), 'rp._permission = p.id', 'p')
-			->query();
+			->rightJoin(ac_table('permissions'), 'rp._permission = p.id', 'p');
 		if($roleId) {
 			$select->where(array( 'rp._role_id' => $roleId ));
 		}
+		$select->query();
 		while($select->valid()) {
 			$roleId = $select->get('id');
 			if(!array_key_exists($roleId, self::$roles)) {
