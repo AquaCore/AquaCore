@@ -143,6 +143,7 @@ try {
 	}
 	unset($settings);
 } catch(Exception $exception) {
+	ac_define_constants();
 	if(!class_exists('Aqua\Log\ErrorLog', false)) {
 		include __DIR__ . '/Aqua/Log/ErrorLog.php';
 	}
@@ -153,6 +154,10 @@ try {
 		include __DIR__ . '/Aqua/UI/Exception/TemplateException.php';
 	}
 	try {
+		if(!ini_get('date.timezone') || !date_default_timezone_get()) {
+			date_default_timezone_set('UTC');
+			ini_set('date.timezone', 'UTC');
+		}
 		$error = ErrorLog::logText($exception);
 		if(\Aqua\ENVIRONMENT === 'CLI') {
 			die($exception->getMessage() . "\r\n");

@@ -7,9 +7,11 @@ use Aqua\Site\Dispatcher;
 use Aqua\UI\Form;
 use Aqua\UI\Template;
 
-if(!ini_get('date.timezone')) {
+if(!ini_get('date.timezone') || !date_default_timezone_get()) {
 	date_default_timezone_set('UTC');
+	ini_set('date.timezone', 'UTC');
 }
+
 
 define('Aqua\ROOT', str_replace('\\', '/', dirname(__DIR__)));
 define('Aqua\SCRIPT_NAME', basename(__FILE__));

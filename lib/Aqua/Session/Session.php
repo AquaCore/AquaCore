@@ -198,10 +198,11 @@ class Session
 	}
 
 	/**
+	 * @param bool $registerShutdown
 	 * @return \Aqua\Session\Session
 	 * @throws \Aqua\Session\Exception\SessionException
 	 */
-	public function open()
+	public function open($registerShutdown = true)
 	{
 		if($this->open) {
 			throw new SessionException(
@@ -257,9 +258,11 @@ class Session
 				$this->regenerateId(null, false);
 			}
 		}
-		register_shutdown_function(array( $this, 'close' ), true);
-		if(ac_probability($this->gcProbability)) {
-			register_shutdown_function(array( $this, 'gc' ));
+		if($registerShutdown) {
+			register_shutdown_function(array( $this, 'close' ), true);
+			if(ac_probability($this->gcProbability)) {
+				register_shutdown_function(array( $this, 'gc' ));
+			}
 		}
 		$this->notify('ready');
 
@@ -401,6 +404,8 @@ class Session
 		");
 		$sth->bindValue(1, hash('sha512', $this->sessionId), \PDO::PARAM_STR);
 		$sth->execute();
+		$sth->closeCursor();
+		$this->exists = false;
 		$this->notify('destroy');
 		if($reset) {
 			$this->reset();
@@ -625,7 +630,7 @@ class Session
 	public function deleteExpiredTmp()
 	{
 		foreach($this->tmp as $key => $value) {
-			if($value[1] < time()) {
+			if($value[1] <= time()) {
 				unset($this->tmp[$key]);
 			}
 		}

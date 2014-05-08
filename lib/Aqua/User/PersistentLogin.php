@@ -96,7 +96,9 @@ class PersistentLogin
 		$sth->bindValue(1, $id, \PDO::PARAM_INT);
 		$sth->bindValue(2, hash('sha512', $key), \PDO::PARAM_STR);
 		$sth->execute();
-		if(!$sth->rowCount()) {
+		$count = $sth->rowCount();
+		$sth->closeCursor();
+		if(!$count) {
 			return false;
 		}
 		$feedback = array( $id, $key );

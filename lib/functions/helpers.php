@@ -734,3 +734,39 @@ function ac_time_elapsed($timestamp)
 		return $timeElapsed;
 	}
 }
+
+function ac_define_constants()
+{
+	if(!defined('Aqua\DOMAIN')) {
+		define('Aqua\DOMAIN', getenv('HTTP_HOST'));
+	}
+	if(!defined('Aqua\HTTPS')) {
+		define('Aqua\HTTPS', ($https = getenv('HTTPS')) && ($https === 'on' || $https === '1'));
+	}
+	if(!defined('Aqua\DIR')) {
+		define('Aqua\DIR', trim(substr(\Aqua\ROOT, strlen(getenv('DOCUMENT_ROOT'))), '/\\'));
+	}
+	if(!defined('Aqua\WORKING_DIR')) {
+		define('Aqua\WORKING_DIR', trim(substr(dirname(getenv('SCRIPT_FILENAME')),
+		                                       strlen(\Aqua\ROOT)),
+		                                '/\\'));
+	}
+	if(!defined('Aqua\WORKING_URL')) {
+		if(($path = getenv('PHP_SELF')) !== false) {
+			$path = dirname($path);
+		} else {
+			$path = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
+			if(substr($path, -4) === '.php') {
+				$path = dirname($path);
+			}
+		}
+		$path = rtrim($path, '/');
+		define('Aqua\WORKING_URL', 'http' . (\Aqua\HTTPS ? 's' : '') . '://' . getenv('HTTP_HOST') . $path);
+	}
+	if(!defined('Aqua\URL')) {
+		define('Aqua\URL',
+			'http' . (\Aqua\HTTPS ? 's' : '') . '://' .
+			$_SERVER['HTTP_HOST'] .
+			rtrim(dirname(dirname(getenv('PHP_SELF'))), '/'));
+	}
+}

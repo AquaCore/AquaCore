@@ -77,7 +77,8 @@ class AquaCoreSetup
 				'gc_probability' => 0,
 			)
 		));
-		$this->defineConstants();
+		ac_define_constants();
+		App::defineConstants();
 		if(!($lang = $request->cookie(self::LANGUAGE_KEY, null)) || !isset($this->languagesAvailable[$lang])) {
 			$lang = 'en';
 		}
@@ -111,43 +112,6 @@ class AquaCoreSetup
 		$this->currentStep  = max(0, min($this->lastStep, $current_step));
 		$this->languageCode = $lang;
 		$this->language     = include \Aqua\ROOT . "/install/language/$lang/language.php";
-	}
-
-	public function defineConstants()
-	{
-		if(!defined('Aqua\DOMAIN')) {
-			define('Aqua\DOMAIN', getenv('HTTP_HOST'));
-		}
-		if(!defined('Aqua\HTTPS')) {
-			define('Aqua\HTTPS', ($https = getenv('HTTPS')) && ($https === 'on' || $https === '1'));
-		}
-		if(!defined('Aqua\DIR')) {
-			define('Aqua\DIR', trim(substr(\Aqua\ROOT, strlen(getenv('DOCUMENT_ROOT'))), '/\\'));
-		}
-		if(!defined('Aqua\WORKING_DIR')) {
-			define('Aqua\WORKING_DIR', trim(substr(dirname(getenv('SCRIPT_FILENAME')),
-			                                       strlen(\Aqua\ROOT)),
-			                                '/\\'));
-		}
-		if(!defined('Aqua\WORKING_URL')) {
-			if(($path = getenv('PHP_SELF')) !== false) {
-				$path = dirname($path);
-			} else {
-				$path = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
-				if(substr($path, -4) === '.php') {
-					$path = dirname($path);
-				}
-			}
-			$path = rtrim($path, '/');
-			define('Aqua\WORKING_URL', 'http' . (\Aqua\HTTPS ? 's' : '') . '://' . getenv('HTTP_HOST') . $path);
-		}
-		if(!defined('Aqua\URL')) {
-			define('Aqua\URL',
-				'http' . (\Aqua\HTTPS ? 's' : '') . '://' .
-				$_SERVER['HTTP_HOST'] .
-				rtrim(dirname(dirname(getenv('PHP_SELF'))), '/'));
-		}
-		App::defineConstants();
 	}
 
 	public function setLanguage($lang)
