@@ -47,6 +47,7 @@ if(ini_get('register_globals')) {
 include __DIR__ . '/functions/image_trim.php';
 include __DIR__ . '/functions/secure_random_bytes.php';
 include __DIR__ . '/functions/array_column.php';
+include __DIR__ . '/functions/boolval.php';
 include __DIR__ . '/functions/helpers.php';
 include __DIR__ . '/Aqua/Event/SubjectInterface.php';
 include __DIR__ . '/Aqua/Event/EventDispatcher.php';
