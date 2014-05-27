@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup language="en">
+        <word namespace="content" key="subscribe">Subscribe</word>
+        <word namespace="content" key="subscribe-updates">Notify on updates</word>
+        <word namespace="content" key="subscribe-comment-0">Notify on new comments</word>
+        <word namespace="content" key="subscribe-comment-1">Notify on replies to my comments</word>
+        <word namespace="content" key="subscribe-desc">Receive email notifications on updates and new comments.</word>
+        <word namespace="exception" key="file-not-writable">File file %s is not writable.</word>
+        <word namespace="ragnarok" key="expulsions">Expulsions</word>
+        <word namespace="ragnarok" key="positions">Positions</word>
+        <word namespace="ragnarok" key="position">Position</word>
+        <word namespace="ragnarok" key="guild-exp">Guild Experience</word>
+        <word namespace="ragnarok" key="skill-points">Skill Points</word>
+        <word namespace="ragnarok" key="next-exp">Next Experience</word>
+        <word namespace="ragnarok" key="online">Online</word>
+        <word namespace="ragnarok" key="skills">Skills</word>
+        <word namespace="ragnarok" key="leader">Guild Master</word>
+        <word namespace="ragnarok" key="max-members">Max Members</word>
+        <word namespace="ragnarok" key="viewing-x-guild">Viewing Guild - %s</word>
+        <word namespace="ragnarok" key="guild-storage">Guild Storage - %s</word>
+        <word namespace="ragnarok" key="guild-members">Guild Members - %s</word>
+        <word namespace="ragnarok" key="mode">Mode</word>
+        <word namespace="ragnarok" key="alliances">Alliances</word>
+        <word namespace="ragnarok" key="exp-mode">Experience Mode</word>
+        <word namespace="ragnarok-opposition" key="0">Ally</word>
+        <word namespace="ragnarok-opposition" key="1">Enemy</word>
+        <word namespace="ragnarok-position" key="1">Invite</word>
+        <word namespace="ragnarok-position" key="16">Expel</word>
+        <word namespace="ragnarok-skill-name" key="10000">Approval</word>
+        <word namespace="ragnarok-skill-name" key="10001">Kafra Contract</word>
+        <word namespace="ragnarok-skill-name" key="10002">Guardian Research</word>
+        <word namespace="ragnarok-skill-name" key="10003">Build up the Guardian</word>
+        <word namespace="ragnarok-skill-name" key="10004">Guild Extension</word>
+        <word namespace="ragnarok-skill-name" key="10005">Guild's Glory</word>
+        <word namespace="ragnarok-skill-name" key="10006">Great Leadership</word>
+        <word namespace="ragnarok-skill-name" key="10007">Wounds of Glory</word>
+        <word namespace="ragnarok-skill-name" key="10008">Soul of Cold</word>
+        <word namespace="ragnarok-skill-name" key="10009">Sharp Hawk Eyes</word>
+        <word namespace="ragnarok-skill-name" key="10010">Battle Orders</word>
+        <word namespace="ragnarok-skill-name" key="10011">Regeneration</word>
+        <word namespace="ragnarok-skill-name" key="10012">Restore</word>
+        <word namespace="ragnarok-skill-name" key="10013">Emergency Call</word>
+        <word namespace="ragnarok-skill-name" key="10014">Emsolute Develop</word>
+    </wordgroup>
+</languageimport>

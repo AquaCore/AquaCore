@@ -9,8 +9,10 @@
 
 use Aqua\Core\App;
 use Aqua\UI\Sidebar;
+use Aqua\UI\ScriptManager;
 
 $page->theme->template = 'sidebar-right';
+$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 $datetimeFormat = App::settings()->get('datetime_format');
 $sidebar = new Sidebar;
 foreach($search->content as $key => $field) {
@@ -61,8 +63,16 @@ $page->theme->set('sidebar', $sidebar);
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="5"><?php echo $paginator->render() ?></td></tr>
-	</tfoot>
+	<td colspan="5">
+		<div style="position: relative">
+			<div style="position: absolute; right: 0;">
+				<form method="GET">
+					<?php echo $search->limit()->attr('class', 'ac-search-limit')->render() ?>
+				</form>
+			</div>
+			<?php echo $paginator->render() ?>
+		</div>
+	</td>	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('application',
                                              'search-results-' . ($logCount === 1 ? 's' : 'p'),

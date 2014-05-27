@@ -55,6 +55,11 @@
     <word namespace="content" key="content">Content</word>
     <word namespace="content" key="quote-author">%s said:</word>
     <word namespace="content" key="quote-date">on %s</word>
+    <word namespace="content" key="subscribe">Subscribe</word>
+    <word namespace="content" key="subscribe-updates">Notify on updates</word>
+    <word namespace="content" key="subscribe-comment-0">Notify on new comments</word>
+    <word namespace="content" key="subscribe-comment-1">Notify on replies to my comments</word>
+    <word namespace="content" key="subscribe-desc">Receive email notifications on updates and new comments.</word>
     <word namespace="content" key="confirm-delete-s"><![CDATA[Are you sure you want to delete \"%s\"?]]></word>
     <word namespace="content" key="confirm-delete-p">Are you sure you want to delete those items?</word>
     <word namespace="content" key="content-create-success"><![CDATA[%s <b>"%s"</b> created successfuly.]]></word>

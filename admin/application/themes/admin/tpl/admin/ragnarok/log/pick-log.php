@@ -9,8 +9,10 @@
 
 use Aqua\Core\App;
 use Aqua\UI\Sidebar;
+use Aqua\UI\ScriptManager;
 
 $page->theme->template = 'sidebar-right';
+$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 $page->theme->footer->enqueueScript('cardbmp')
 	->type('text/javascript')
 	->src(ac_build_url(array(
@@ -122,7 +124,18 @@ $page->theme->set('sidebar', $sidebar);
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="13"><?php echo $paginator->render() ?></td></tr>
+	<tr>
+		<td colspan="13">
+			<div style="position: relative">
+				<div style="position: absolute; right: 0;">
+					<form method="GET">
+						<?php echo $search->limit()->attr('class', 'ac-search-limit')->render() ?>
+					</form>
+				</div>
+				<?php echo $paginator->render() ?>
+			</div>
+		</td>
+	</tr>
 	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('application',

@@ -67,6 +67,9 @@ $assetsPath: "../" !default;
 	tbody tr.ac-table-header,
 	thead tr,
 	tfoot tr {
+		.ac-button {
+			@include min-width(130px);
+		}
 		td, th {
 			position: relative;
 			height: 1em;

@@ -540,8 +540,7 @@ implements \Iterator, \Countable
 			if(!$this->parser) {
 				$result = $data;
 			} else {
-				$data = array_merge($data, $this->parserData);
-				if(!($result = call_user_func($this->parser, $data))) {
+				if(!($result = call_user_func_array($this->parser, array_merge(array( $data ), $this->parserData)))) {
 					continue;
 				}
 			}

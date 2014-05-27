@@ -73,6 +73,14 @@
     <word namespace="ragnarok" key="guild">Guild</word>
     <word namespace="ragnarok" key="guild-name">Guild Name</word>
     <word namespace="ragnarok" key="guild-ranking">Guild Ladder</word>
+    <word namespace="ragnarok" key="expulsions">Expulsions</word>
+    <word namespace="ragnarok" key="positions">Positions</word>
+    <word namespace="ragnarok" key="position">Position</word>
+    <word namespace="ragnarok" key="guild-exp">Guild Experience</word>
+    <word namespace="ragnarok" key="skill-points">Skill Points</word>
+    <word namespace="ragnarok" key="next-exp">Next Experience</word>
+    <word namespace="ragnarok" key="online">Online</word>
+    <word namespace="ragnarok" key="skills">Skills</word>
     <word namespace="ragnarok" key="guilds">Guilds</word>
     <word namespace="ragnarok" key="hidden">Hidden</word>
     <word namespace="ragnarok" key="hide-map-whos-online">Hide map from who is online</word>
@@ -98,7 +106,7 @@
     <word namespace="ragnarok" key="last-ip">Last Ip</word>
     <word namespace="ragnarok" key="last-login">Last Login</word>
     <word namespace="ragnarok" key="last-map">Last Map</word>
-    <word namespace="ragnarok" key="leader">Leader</word>
+    <word namespace="ragnarok" key="leader">Guild Master</word>
     <word namespace="ragnarok" key="level">Level</word>
     <word namespace="ragnarok" key="lockdown-desc">Lock/unlock your account temporarily</word>
     <word namespace="ragnarok" key="locked">Locked</word>
@@ -113,6 +121,7 @@
     <word namespace="ragnarok" key="max-attack">Max Attack</word>
     <word namespace="ragnarok" key="max-lvl">Max Level</word>
     <word namespace="ragnarok" key="members">Members</word>
+    <word namespace="ragnarok" key="max-members">Max Members</word>
     <word namespace="ragnarok" key="min-attack">Min Attack</word>
     <word namespace="ragnarok" key="min-lvl">Min Level</word>
     <word namespace="ragnarok" key="mob-db">Monster Database</word>
@@ -201,6 +210,9 @@
     <word namespace="ragnarok" key="viewing-mob">Viewing Monster</word>
     <word namespace="ragnarok" key="viewing-x-account">Viewing Account - %s</word>
     <word namespace="ragnarok" key="viewing-x-character">Viewing Character - %s</word>
+    <word namespace="ragnarok" key="viewing-x-guild">Viewing Guild - %s</word>
+    <word namespace="ragnarok" key="guild-storage">Guild Storage - %s</word>
+    <word namespace="ragnarok" key="guild-members">Guild Members - %s</word>
     <word namespace="ragnarok" key="vitality">Vitality</word>
     <word namespace="ragnarok" key="weapon-lvl">Weapon Level</word>
     <word namespace="ragnarok" key="weapon-type">Weapon Type</word>
@@ -279,5 +291,8 @@
     <word namespace="ragnarok" key="expire-time">Expire Time</word>
     <word namespace="ragnarok" key="bound">Bound</word>
     <word namespace="ragnarok" key="identified">Identified</word>
+    <word namespace="ragnarok" key="mode">Mode</word>
+    <word namespace="ragnarok" key="alliances">Alliances</word>
+    <word namespace="ragnarok" key="exp-mode">Experience Mode</word>
   </wordgroup>
 </languageimport>

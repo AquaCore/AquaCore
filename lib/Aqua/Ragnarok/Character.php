@@ -194,6 +194,10 @@ class Character
 	/**
 	 * @var array
 	 */
+	public $data = array();
+	/**
+	 * @var array
+	 */
 	protected $_skills;
 	/**
 	 * @var
@@ -335,24 +339,6 @@ class Character
 	public function job()
 	{
 		return __('ragnarok-jobs', $this->class);
-	}
-
-	public function homunculus()
-	{
-		if($this->homunculusId) {
-			return null;
-		} else {
-		}
-	}
-
-	public function guild()
-	{
-
-	}
-
-	public function party()
-	{
-
 	}
 
 	public function account()

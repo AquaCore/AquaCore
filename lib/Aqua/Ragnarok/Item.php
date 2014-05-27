@@ -78,9 +78,10 @@ class Item
 	 */
 	public $data       = array();
 
-	const TYPE_INVENTORY = 0;
-	const TYPE_CART      = 1;
-	const TYPE_STORAGE   = 2;
+	const TYPE_INVENTORY     = 0;
+	const TYPE_CART          = 1;
+	const TYPE_STORAGE       = 2;
+	const TYPE_GUILD_STORAGE = 3;
 
 	public function name($plain = true)
 	{

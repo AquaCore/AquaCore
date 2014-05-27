@@ -350,7 +350,7 @@ extends Page
 			$frm->field('content')->append($content->content);
 		}
 		if($this->contentType->hasFilter('RelationshipFilter')) {
-			$tree = $content->contentType->relationshipTree(array( 'title' ));
+			$tree = $this->contentType->relationshipTree(array( 'title' ));
 			if(empty($tree)) {
 				return null;
 			}

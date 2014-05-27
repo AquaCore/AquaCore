@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-opposition" key="0">Ally</word>
+    <word namespace="ragnarok-opposition" key="1">Enemy</word>
+  </wordgroup>
+</languageimport>

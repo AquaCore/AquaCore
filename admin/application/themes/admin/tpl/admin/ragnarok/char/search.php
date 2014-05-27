@@ -8,7 +8,9 @@
  */
 
 use Aqua\UI\Sidebar;
+use Aqua\UI\ScriptManager;
 
+$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 $page->theme->template = 'sidebar-right';
 $sidebar = new Sidebar;
 foreach($search->content as $key => $field) {
@@ -90,7 +92,18 @@ $page->theme->set('sidebar', $sidebar);
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="11"><?php echo $paginator->render() ?></td></tr>
+		<tr>
+			<td colspan="11">
+				<div style="position: relative">
+					<div style="position: absolute; right: 0;">
+						<form method="GET">
+						<?php echo $search->limit()->attr('class', 'ac-search-limit')->render() ?>
+						</form>
+					</div>
+					<?php echo $paginator->render() ?>
+				</div>
+			</td>
+		</tr>
 	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('application',

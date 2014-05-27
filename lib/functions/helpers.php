@@ -85,6 +85,7 @@ function ac_form_path($url = null, $action = null, $arg = null, $force = false)
 	}
 }
 
+function ac_skill_icon($skill_id) { return Aqua\URL . "/assets/images/skills/{$skill_id}.gif"; }
 function ac_item_icon($item_id) { return Aqua\URL . "/assets/images/item/icon/{$item_id}.png"; }
 function ac_item_collection($item_id) { return Aqua\URL . "/assets/images/item/collection/{$item_id}.png"; }
 function ac_item_cardbmp($item_id) { return Aqua\URL . "/assets/images/item/cardbmp/{$item_id}.bmp"; }

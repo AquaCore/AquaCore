@@ -7,7 +7,6 @@ use Aqua\Core\Settings;
 use Aqua\Log\ErrorLog;
 use Aqua\Ragnarok\ItemData;
 use Aqua\Ragnarok\Server\Logs\ChatLog;
-use Aqua\Ragnarok\Server\Logs\PickLog;
 use Aqua\Ragnarok\Server\Logs\ZenyLog;
 use Aqua\Site\Page;
 use Aqua\SQL\Search;
@@ -29,12 +28,6 @@ extends Page
 	 * @var \Aqua\Ragnarok\Server\CharMap
 	 */
 	public $charmap;
-
-	public static $categoriesPerPage = 20;
-	public static $itemsPerPage = 20;
-	public static $charactersPerPage = 15;
-	public static $guildsPerPage = 20;
-	public static $logsPerPage = 20;
 
 	public function run()
 	{
@@ -1473,7 +1466,7 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'characters');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$frm = new \Aqua\UI\Search(App::request());
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id'    => 'id',
 				    'name'  => 'name',
@@ -1484,7 +1477,10 @@ extends Page
 				    'zeny'  => 'zeny',
 				    'map'   => 'last_map'
 				))
-				->defaultOrder('id');
+				->limit(0, 7, 15, 5)
+				->defaultOrder('id')
+				->defaultLimit(15)
+				->persist('admin.charsearch');
 			$frm->input('id')
 			    ->setColumn('id')
 			    ->searchType(Input::SEARCH_EXACT)
@@ -1511,9 +1507,7 @@ extends Page
 				->setLabel(__('ragnarok', 'job-level'))
 			    ->type('number')
 			    ->attr('min', 1);
-			$search = $this->charmap->charSearch()
-				->calcRows(true)
-				->limit(($currentPage - 1) * self::$charactersPerPage, self::$charactersPerPage);
+			$search = $this->charmap->charSearch()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
 			if($search->count()) {
@@ -1522,7 +1516,7 @@ extends Page
 				$this->server->login->search()->where(array( 'id' => $accounts ))->query();
 			}
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$tpl = new Template;
 			$tpl->set('characters', $search->results)
@@ -1666,32 +1660,62 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'guilds');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$where = array();
-			if($x = $this->request->uri->getString('n')) {
-				$where['name'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%');
-			}
-			if($x = $this->request->uri->getString('m')) {
-				$where['master'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%');
-			}
-			$search = $this->charmap->guildSearch()
-				->calcRows(true)
-				->where($where)
-				->limit(($currentPage - 1) * self::$guildsPerPage, self::$guildsPerPage)
-				->query();
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'id'         => 'id',
+					'name'       => 'name',
+					'master'     => 'master',
+					'avg'        => 'average_level',
+					'lvl'        => 'level',
+					'exp'        => 'experience',
+					'members'    => 'member_count',
+					'maxmembers' => 'max_members',
+	            ))
+			    ->limit(0, 6, 20, 5)
+			    ->defaultOrder('id')
+			    ->defaultLimit(20)
+			    ->persist('admin.guild');
+			$frm->input('id')
+				->setColumn('id')
+				->searchType(Input::SEARCH_EXACT)
+				->setLabel(__('ragnarok', 'id'))
+				->attr('min', '0');
+			$frm->input('name')
+				->setColumn('name')
+				->setLabel(__('ragnarok', 'name'));
+			$frm->input('master')
+				->setColumn('master')
+				->setLabel(__('ragnarok', 'leader'));
+			$frm->range('lvl')
+				->setColumn('level')
+				->setLabel(__('ragnarok', 'level'))
+				->attr('min', '0');
+			$frm->range('members')
+			    ->setColumn('members')
+			    ->setLabel(__('ragnarok', 'members'))
+			    ->attr('min', '0');
+			$frm->range('avg')
+			    ->setColumn('average_level')
+			    ->setLabel(__('ragnarok', 'avg-level'))
+			    ->attr('min', '0');
+			$search = $this->charmap->guildSearch()->calcRows(true);
+			$frm->apply($search);
+			$search->query();
 			if($search->rowsFound) {
 				$characters = $search->getColumn('master_id');
 				array_unshift($characters, Search::SEARCH_IN);
 				$this->charmap->charSearch()->where(array( 'id' => $characters ))->query();
 			}
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$guildsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$tpl = new Template;
 			$tpl->set('guilds', $search->results)
-			    ->set('guild_count', $search->rowsFound)
-				->set('pagination', $pgn)
+			    ->set('guildCount', $search->rowsFound)
+				->set('paginator', $pgn)
+				->set('search', $frm)
 				->set('page', $this);
-			echo $tpl->render('admin/ragnarok/guild/main');
+			echo $tpl->render('admin/ragnarok/guild/search');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
@@ -1705,9 +1729,12 @@ extends Page
 				$this->error(404);
 				return;
 			}
+			$this->title = $this->theme->head->section = __('ragnarok', 'viewing-x-guild', htmlspecialchars($guild->name));
 			$this->theme->set('return', $this->charmap->url(array( 'action' => 'guild' )));
 			$tpl = new Template;
 			$tpl->set('guild', $guild)
+				->set('skills', $guild->skills())
+				->set('alliances', $guild->alliances())
 				->set('page', $this);
 			echo $tpl->render('admin/ragnarok/guild/view');
 		} catch(\Exception $exception) {
@@ -1718,7 +1745,86 @@ extends Page
 
 	public function gstorage_action($id = null)
 	{
+		try {
+			if(!$id || !($guild = $this->charmap->guild($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$this->title = $this->theme->head->section = __('ragnarok', 'guild-storage', htmlspecialchars($guild->name));
+			$this->theme->set('return', $this->charmap->url(array( 'action'    => 'viewguild',
+			                                                       'arguments' => array( $guild->id ) )));
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+				            'id' => 'id',
+				            'name' => 'name'
+			            ))
+			    ->limit(0, 6, 20, 5)
+			    ->defaultOrder('id')
+			    ->defaultLimit(20)
+			    ->persist('admin.intentory');
+			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
+			                                           array( 0 ),
+			                                           range(2, 8),
+			                                           range(10, 12));
+			asort($itemTypes, SORT_STRING);
+			$itemTypes = array( '' => __('application', 'any') ) + $itemTypes;
+			$frm->input('name')
+			    ->setColumn('name')
+			    ->setLabel(__('ragnarok', 'name'));
+			$frm->select('type')
+			    ->setColumn('type')
+			    ->setLabel(__('ragnarok', 'type'))
+			    ->value($itemTypes);
+			$search = $this->charmap->guildStorageSearch()->where(array( 'guild_id' => $id ));
+			$frm->apply($search);
+			$search->calcRows(true)->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($currentPage / $frm->getLimit()),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('items', $search->results)
+			    ->set('itemCount', $search->rowsFound)
+			    ->set('paginator', $pgn)
+			    ->set('search', $frm)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/inventory');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
 
+	public function gmembers_action($id = null)
+	{
+		try {
+			if(!$id || !($guild = $this->charmap->guild($id, 'id'))) {
+				$this->error(404);
+				return;
+			}
+			$this->title = $this->theme->head->section = __('ragnarok', 'guild-members', htmlspecialchars($guild->name));
+			$this->theme->set('return', $this->charmap->url(array( 'action'    => 'viewguild',
+			                                                       'arguments' => array( $guild->id ) )));
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
+			$search = $guild->memberSearch()
+				->calcRows(true)
+				->limit(($currentPage - 1) * 10, 10)
+				->order(array( 'name' => 'ASC' ))
+				->query();
+			$pgn = new Pagination(App::request()->uri,
+			                      ceil($currentPage / 20),
+			                      $currentPage);
+			$tpl = new Template;
+			$tpl->set('members', $search->results)
+			    ->set('memberCount', $search->rowsFound)
+			    ->set('positions', $guild->positions())
+			    ->set('paginator', $pgn)
+			    ->set('page', $this);
+			echo $tpl->render('admin/ragnarok/guild/members');
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
 	}
 
 	public function zenylog_action()
@@ -1726,7 +1832,7 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'zeny-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$frm = new \Aqua\UI\Search(App::request());
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id'   => 'id',
 			        'date' => 'date',
@@ -1736,7 +1842,10 @@ extends Page
 			        'src'  => 'src_id',
 			        'zeny' => 'amount'
 				))
-				->defaultOrder('id');
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20)
+				->persist('admin.zenylog');
 			$frm->input('char')
 				->searchType(Input::SEARCH_EXACT)
 				->setLabel(__('ragnarok', 'character-id'))
@@ -1761,9 +1870,7 @@ extends Page
 			    ->setLabel(__('ragnarok', 'type'))
 			    ->multiple()
 			    ->value($types);
-			$search = $this->charmap->log->searchZenyLog()
-				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$search = $this->charmap->log->searchZenyLog()->calcRows(true);
 			$frm->apply($search);
 			if(!$frm->field('char')->getWarning() && ($where = $frm->field('char')->parse($frm))) {
 				$search->where(array(
@@ -1775,7 +1882,7 @@ extends Page
 			}
 			$search->query();
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			if($search->count()) {
 				$characters = array();
@@ -1843,7 +1950,7 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'shop-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$frm = new \Aqua\UI\Search(App::request());
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id'     => 'id',
 			        'date'   => 'date',
@@ -1851,7 +1958,10 @@ extends Page
 			        'amount' => 'amount',
 			        'total'  => 'total'
 				))
-				->defaultOrder('id');
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20)
+				->persist('admin.shoplog');
 			$frm->input('id')
 				->setColumn('id')
 				->searchType(Input::SEARCH_EXACT)
@@ -1874,9 +1984,7 @@ extends Page
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
 				->attr('placeholder', 'YYY-MM-DD HH:II:SS');
-			$search = $this->charmap->log->searchCashShopLog()
-				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$search = $this->charmap->log->searchCashShopLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
 			if($search->count()) {
@@ -1890,7 +1998,7 @@ extends Page
 				$this->charmap->server->login->search()->where(array( 'id' => $accounts ))->query();
 			}
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
@@ -1929,7 +2037,7 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'atcommand-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$frm = new \Aqua\UI\Search(App::request());
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id'   => 'id',
 				    'date' => 'date',
@@ -1939,7 +2047,10 @@ extends Page
 				    'name' => 'char_name',
 				    'cmd'  => 'command',
 				))
-				->defaultOrder('id');
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20)
+				->persist('admin.atcmdlog');
 			$frm->input('id')
 				->setColumn('id')
 				->searchType(Input::SEARCH_EXACT)
@@ -1964,13 +2075,11 @@ extends Page
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
 				->attr('placeholder', 'YYY-MM-DD HH:II:SS');
-			$search = $this->charmap->log->searchAtcommandLog()
-				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$search = $this->charmap->log->searchAtcommandLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			if($search->count()) {
 				$accounts = $search->getColumn('account_id');
@@ -2000,7 +2109,7 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'pick-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$frm = new \Aqua\UI\Search(App::request());
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id'    => 'id',
 			        'date'   => 'date',
@@ -2011,7 +2120,10 @@ extends Page
 			        'amount' => 'amount',
 			        'uniqid' => 'unique_id'
 				))
-				->defaultOrder('id');
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20)
+				->persist('admin.picklog');
 			$frm->input('id')
 				->setColumn('id')
 				->searchType(Input::SEARCH_EXACT)
@@ -2064,9 +2176,7 @@ extends Page
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
 				->attr('placeholder', 'YYYY-MM-DD HH:II:SS');
-			$search = $this->charmap->log->searchPickLog()
-				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$search = $this->charmap->log->searchPickLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
 			if($search->count()) {
@@ -2107,7 +2217,7 @@ extends Page
 				}
 			}
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
@@ -2127,7 +2237,7 @@ extends Page
 		try {
 			$this->title = $this->theme->head->section = __('ragnarok-charmap', 'chat-log');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$frm = new \Aqua\UI\Search(App::request());
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
 					'id'   => 'id',
 			        'date' => 'date',
@@ -2138,7 +2248,10 @@ extends Page
 			        'char' => 'src_char_id',
 			        'dst'  => 'dst_char_name',
 				))
-				->defaultOrder('id');
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20)
+				->persist('admin.chatlog');
 			$frm->input('id')
 				->setColumn('id')
 				->searchType(Input::SEARCH_EXACT)
@@ -2179,9 +2292,7 @@ extends Page
 					ChatLog::TYPE_GUILD   => __('ragnarok-chat-log-type', ChatLog::TYPE_GUILD),
 					ChatLog::TYPE_MAIN    => __('ragnarok-chat-log-type', ChatLog::TYPE_MAIN),
 				));
-			$search = $this->charmap->log->searchChatLog()
-				->calcRows(true)
-				->limit(($currentPage - 1) * self::$logsPerPage, self::$logsPerPage);
+			$search = $this->charmap->log->searchChatLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
 			if($search->count()) {
@@ -2203,7 +2314,7 @@ extends Page
 				$this->charmap->server->login->search()->where(array( 'id' => $accounts ))->query();
 			}
 			$pgn = new Pagination(App::request()->uri,
-			                      ceil($search->rowsFound / self::$logsPerPage),
+			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)

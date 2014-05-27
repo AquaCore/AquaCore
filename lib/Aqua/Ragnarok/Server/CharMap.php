@@ -628,6 +628,17 @@ class CharMap
 	/**
 	 * @return \Aqua\SQL\Search
 	 */
+	public function guildStorageSearch()
+	{
+		return $this->_inventorySearch()
+			->columns(array( 'guild_id' => 'x.guild_id', 'storage_type' => Item::TYPE_STORAGE ))
+			->whereOptions(array( 'guild_id' => 'x.guild_id' ))
+			->from($this->table('guild_storage'), 'x');
+	}
+
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
 	public function cartSearch()
 	{
 		return $this->_inventorySearch()
@@ -1039,10 +1050,10 @@ class CharMap
 			->parser(array( $this, 'parseGuildSql' ));
 		switch($type) {
 			case 'id':
-				$select->where(array( 'id' => $id ));
+				$select->where(array( 'g.guild_id' => $id ));
 				break;
 			case 'name':
-				$select->where(array( 'name' => $id ));
+				$select->where(array( 'g.`name`' => $id ));
 				break;
 			default:
 				return null;
@@ -1970,10 +1981,11 @@ class CharMap
 	 * Parse character data from sql
 	 *
 	 * @param array $data
+	 * @param array $extraKeys
 	 * @access protected
 	 * @return \Aqua\Ragnarok\Character
 	 */
-	public function parseCharSql($data)
+	public function parseCharSql($data, array $extraKeys = array())
 	{
 		if(isset($this->characters[$data['id']])) {
 			$char = $this->characters[$data['id']];
@@ -2027,6 +2039,9 @@ class CharMap
 		$char->statusPoints = (int)$data['status_point'];
 		$char->skillPoints  = (int)$data['skill_point'];
 		$char->deleteDate   = (int)$data['delete_date'];
+		foreach($extraKeys as $key) {
+			$char->data[$key] = $data[$key];
+		}
 
 		return $char;
 	}

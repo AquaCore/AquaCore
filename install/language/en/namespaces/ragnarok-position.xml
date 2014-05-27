@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-position" key="1">Invite</word>
+    <word namespace="ragnarok-position" key="16">Expel</word>
+  </wordgroup>
+</languageimport>

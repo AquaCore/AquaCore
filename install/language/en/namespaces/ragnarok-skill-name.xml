@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup language="en">
+    <word namespace="ragnarok-skill-name" key="10000">Approval</word>
+    <word namespace="ragnarok-skill-name" key="10001">Kafra Contract</word>
+    <word namespace="ragnarok-skill-name" key="10002">Guardian Research</word>
+    <word namespace="ragnarok-skill-name" key="10003">Build up the Guardian</word>
+    <word namespace="ragnarok-skill-name" key="10004">Guild Extension</word>
+    <word namespace="ragnarok-skill-name" key="10005">Guild's Glory</word>
+    <word namespace="ragnarok-skill-name" key="10006">Great Leadership</word>
+    <word namespace="ragnarok-skill-name" key="10007">Wounds of Glory</word>
+    <word namespace="ragnarok-skill-name" key="10008">Soul of Cold</word>
+    <word namespace="ragnarok-skill-name" key="10009">Sharp Hawk Eyes</word>
+    <word namespace="ragnarok-skill-name" key="10010">Battle Orders</word>
+    <word namespace="ragnarok-skill-name" key="10011">Regeneration</word>
+    <word namespace="ragnarok-skill-name" key="10012">Restore</word>
+    <word namespace="ragnarok-skill-name" key="10013">Emergency Call</word>
+    <word namespace="ragnarok-skill-name" key="10014">Emsolute Develop</word>
+  </wordgroup>
+</languageimport>
