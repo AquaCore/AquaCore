@@ -367,7 +367,7 @@ class Login
 		$len = strlen($pincode);
 		$min = App::settings()->get('ragnarok')->get('pincode_min_len', 4);
 		$max = App::settings()->get('ragnarok')->get('pincode_max_len', 4);
-		if(!ctype_digit($pincode)) {
+		if(!ctype_digit((string)$pincode)) {
 			$message = __('ragnarok', 'pincode-digit');
 
 			return self::FIELD_INVALID_CHARACTERS;
@@ -478,8 +478,8 @@ class Login
 				'id'           => $account->id,
 				'username'     => $account->username,
 				'owner'        => $account->owner,
-				'role_id'      => $account->user()->roleId,
-				'display_name' => $account->user()->displayName
+				'role_id'      => $account->owner ? $account->user()->roleId : null,
+				'display_name' => $account->owner ? $account->user()->displayName : null
 			));
 			if(count($this->cache['last_registered']) > self::CACHE_RECENT_ACCOUNTS) {
 				$this->cache['last_registered'] = array_slice(

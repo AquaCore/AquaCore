@@ -81,7 +81,7 @@ extends AbstractFilter
 		INSERT INTO `%s` (_user_id, _content_id, _weight)
 		VALUES (?, ?, ?)
 		ON DUPLICATE KEY UPDATE _weight = VALUES(_weight)
-		'), ac_table('content_ratings'));
+		', ac_table('content_ratings')));
 		$sth->bindValue(1, $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(2, $content->uid, \PDO::PARAM_INT);
 		$sth->bindValue(3, $weight, \PDO::PARAM_INT);

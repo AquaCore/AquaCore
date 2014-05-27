@@ -75,8 +75,7 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 			</td>
 		</tr>
 		<tr class="ac-form-warning">
-			<td colspan="2"><?php echo $form->field('password')->getWarning() ?></td>
-			<td colspan="2"><?php echo $form->field('repeat_password')->getWarning() ?></td>
+			<td colspan="4"><?php echo $form->field('password')->getWarning() ?: $form->field('repeat_password')->getWarning() ?></td>
 		</tr>
 		<tr>
 			<td style="width: 15%"><b><?php echo $form->field('password')->getLabel() ?></b></td>

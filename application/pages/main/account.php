@@ -190,7 +190,7 @@ extends Page
 					$frm->field('current_password')->setWarning(__('profile', 'password-incorrect'));
 
 					return false;
-				} else if(!empty($password) || !empty($password_r) && $password !== $password_r) {
+				} else if((!empty($password) || !empty($password_r)) && $password !== $password_r) {
 					$frm->field('repeat_password')->setWarning(__('profile', 'password-mismatch'));
 
 					return false;

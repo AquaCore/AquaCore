@@ -241,6 +241,7 @@ extends Page
 				->attr('maxlen', $pincodeLen)
 				->attr('size', $pincodeLen)
 		        ->setLabel(__('ragnarok', 'pincode'));
+			$frm->token('linkaccount' . md5($this->server->key));
 			$frm->submit();
 			$self = $this;
 			$account = null;
@@ -249,7 +250,7 @@ extends Page
 					$password = $frm->request->getString('password');
 					$pincode  = $frm->request->getString('pincode');
 					if(!$self->server->login->checkCredentials($username, $password, $pincode)) {
-						$message = __('ragnarok-account', 'invalid-credentials');
+						$message = __('login', 'invalid-credentials');
 						return false;
 					}
 					$account = $self->server->login->get($username, 'username');
@@ -261,7 +262,7 @@ extends Page
 						$message = __('ragnarok', 'already-linked');
 						return false;
 					} else if($account->owner) {
-						$message = __('ragnarok', 'invalid-credentials');
+						$message = __('login', 'invalid-credentials');
 						return false;
 					}
 					return true;

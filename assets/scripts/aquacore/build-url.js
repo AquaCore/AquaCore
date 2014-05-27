@@ -23,7 +23,7 @@ var AquaCore = AquaCore || {};
 		return url;
 	};
 	AquaCore.buildPath = function(options) {
-		var path = "/";
+		var path = "/", trailingSlash = false;
 		options = $.extend({
 			"urlRewrite": AquaCore.REWRITE,
 			"baseDir": AquaCore.BASE_DIR + "/" + AquaCore.DIR,
@@ -34,19 +34,29 @@ var AquaCore = AquaCore || {};
 			"query": {},
 			"hash": null
 		}, options);
-		if(options.baseDir) {
-			path+= options.baseDir.replace(/(\/+)$/g, "").replace(/^(\/+)/g, "") + "/"
+		if(options.baseDir && options.baseDir !== "/") {
+			path+= options.baseDir.replace(/(\/+)$/g, "").replace(/^(\/+)/g, "") + "/";
+			trailingSlash = true;
 		}
 		if(options.script && options.script !== "index.php") {
-			path+= options.script.replace(/(\/+)$/g, "").replace(/^(\/+)/g, "") + "/";
+			path+= options.script.replace(/(\/+)$/g, "").replace(/^(\/+)/g, "");
+			trailingSlash = false;
 		}
 		if(options.urlRewrite) {
 			options.path.map(encodeURIComponent);
 			options.arguments.map(encodeURIComponent);
 			if(options.path.length) {
+				if(!trailingSlash) {
+					trailingSlash = true;
+					path+= "/";
+				}
 				path+= options.path.join("/") + "/";
 			}
 			if((options.action && options.action !== "index") || options.arguments.length) {
+				if(!trailingSlash) {
+					trailingSlash = true;
+					path+= "/";
+				}
 				path+= "action/" + encodeURIComponent(options.action || "index") + "/";
 				if(options.arguments.length) {
 					path+= options.arguments.join("/") + "/";
@@ -59,7 +69,6 @@ var AquaCore = AquaCore || {};
 			if(options.arguments.length) pathQuery.arg = options.arguments.join(".");
 			options.query = $.extend(pathQuery, options.query);
 		}
-		path = path.replace(/\/+$/g, "");
 		path+= this.buildQuery(options.query).replace(/&+$/g, "");
 		if(options.hash) {
 			path+= "#" + options.hash;
@@ -83,7 +92,7 @@ var AquaCore = AquaCore || {};
 			query+= "&";
 		}
 		if(query) {
-			return "/?" + query;
+			return "?" + query;
 		} else {
 			return "";
 		}

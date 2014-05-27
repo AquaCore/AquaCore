@@ -68,7 +68,7 @@ extends Page
 
 	public function index_action()
 	{
-		$this->title = __('ragnarok-account', 'view-account-name', htmlspecialchars($this->account->username));
+		$this->title = __('ragnarok', 'viewing-x-account', htmlspecialchars($this->account->username));
 		$this->theme->set('return', ac_build_url(array( 'path' => array( 'account' ) )));
 		$this->theme->head->section = __('ragnarok-account', 'view-account');
 		$tpl = new Template;
@@ -94,7 +94,7 @@ extends Page
 				->setLabel(__('ragnarok', 'password'));
 			$frm->input('password_r')
 				->type('password')
-				->setLabel(__('ragnarok', 'repeat-password'));
+				->setLabel(__('profile', 'repeat-password'));
 			if($this->server->login->getOption('use-pincode')) {
 				$pincode_len = (int)App::settings()->get('ragnarok')->get('pincode_max_len', 4);
 				$frm->input('confirm_pincode')
@@ -155,6 +155,7 @@ extends Page
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = __('ragnarok', 'edit-account', htmlspecialchars($this->account->username));
 				$this->theme->head->section = __('ragnarok', 'preferences');
+				$this->theme->set('return', $this->account->url());
 				$tpl = new Template;
 				$tpl->set('account', $this->account)
 					->set('form', $frm)
@@ -207,6 +208,7 @@ extends Page
 				return;
 			}
 			$this->title = __('ragnarok', 'x-storage', htmlspecialchars($this->account->username));
+			$this->theme->set('return', $this->account->url());
 			$this->theme->head->section = __('ragnarok', 'storage');
 			$current_page = $this->request->uri->getInt('page', 1, 1);
 			$search = $charMap->storageSearch()
@@ -287,6 +289,7 @@ extends Page
 				return;
 			}
 			$this->theme->head->section = $this->title = __('ragnarok', 'x-characters', $this->account->username);
+			$this->theme->set('return', $this->account->url());
 			$characters = $charMap->charSearch()
 				->where(array( 'account_id' => $this->account->id ))
 				->order(array( 'slot' => 'ASC' ))
@@ -337,6 +340,7 @@ extends Page
 			});
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = __('ragnarok', 'recover-x-password', htmlspecialchars($this->account->username));
+				$this->theme->set('return', $this->account->url());
 				$this->theme->head->section = __('ragnarok', 'ro-password-recovery');
 				$tpl = new Template;
 				$tpl->set('form', $frm)
@@ -440,6 +444,7 @@ extends Page
 			});
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->theme->head->section = $this->title = __('ragnarok', 'reset-x-password', htmlspecialchars($this->account->username));
+				$this->theme->set('return', $this->account->url());
 				$tpl = new Template;
 				$tpl->set('form', $frm)
 				    ->set('page', $this);

@@ -65,6 +65,7 @@ extends Page
 	{
 		try {
 			$this->title = __('ragnarok', 'viewing-x-character', htmlspecialchars($this->char->name));
+			$this->theme->set('return', $this->char->account()->url());
 			$this->theme->head->section = __('ragnarok', 'character');
 			$tpl = new Template;
 			$tpl->set('char', $this->char)
@@ -80,6 +81,7 @@ extends Page
 	{
 		try {
 			$this->title = __('ragnarok', 'x-inventory', htmlspecialchars($this->char->name));
+			$this->theme->set('return', $this->char->url());
 			$this->theme->head->section = __('ragnarok', 'inventory');
 			$current_page = $this->request->uri->getInt('page', 1, 1);
 			$search = $this->charmap->inventorySearch()
@@ -133,6 +135,7 @@ extends Page
 			return;
 		}
 		$this->title = __('ragnarok', 'x-cart', htmlspecialchars($this->char->name));
+		$this->theme->set('return', $this->char->url());
 		$this->theme->head->section = __('ragnarok', 'cart');
 		try {
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
@@ -211,6 +214,7 @@ extends Page
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = __('ragnarok', 'edit-char', htmlspecialchars($this->char->name));
+				$this->theme->set('return', $this->char->url());
 				$this->theme->head->section = __('ragnarok', 'char-preferences');
 				$tpl = new Template;
 				$tpl->set('form', $frm)
