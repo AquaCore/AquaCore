@@ -136,9 +136,8 @@ class TransferLog
 		$sth->execute();
 		$transfer->id = (int)App::connection()->lastInsertId();
 		self::$cache !== null or self::fetchCache(null, true);
-		if(!empty(self::$cache)) {
-			array_unshift(
-				self::$cache['last_transfer'], array(
+		if(!empty(self::$cache) && array_key_exists('last_transfer', self::$cache)) {
+			array_unshift(self::$cache['last_transfer'], array(
 					'id'                    => $transfer->id,
 					'sender'                => $transfer->senderId,
 					'receiver'              => $transfer->receiverId,

@@ -98,7 +98,7 @@ class AbstractForm
 	public function prepend($key, $content = null)
 	{
 		if($content === null) {
-			array_unshift($this->content, $content);
+			array_unshift($this->content, $key);
 		} else {
 			$this->content = array( $key => $content ) + $this->content;
 		}

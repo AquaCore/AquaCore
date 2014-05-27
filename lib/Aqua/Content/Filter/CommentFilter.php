@@ -93,6 +93,7 @@ extends AbstractFilter
 		$tbl  = ac_table('comments');
 		$sth  = App::connection()->prepare("
 		INSERT INTO `$tbl` (
+		_content_type,
 		_content_id,
 		_parent_id,
 		_root_id,
@@ -106,6 +107,7 @@ extends AbstractFilter
 		_publish_date,
 		_options
 		) VALUES (
+		:ctype,
 		:id,
 		:parent,
 		:root,
@@ -120,6 +122,7 @@ extends AbstractFilter
 		:opt
 		)
 		");
+		$sth->bindValue(':ctype', $content->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(':id', $content->uid, \PDO::PARAM_INT);
 		$sth->bindValue(':author', $author->id, \PDO::PARAM_INT);
 		$sth->bindValue(':status', $status, \PDO::PARAM_INT);

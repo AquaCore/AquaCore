@@ -103,7 +103,7 @@ extends Page
 						if($credits > $account->credits) {
 							App::user()->addFlash('warning', null, __('donation', 'transfer-not-enough-credits'));
 						} else if($account->transferCredits($target, $credits)) {
-							App::user()->addFlash('success', null, __('donation', 'credits-transferred'), __('donation', 'credit-points', number_format($credits), $target->display()));
+							App::user()->addFlash('success', null, __('donation', 'credits-transferred', __('donation', 'credit-points', number_format($credits)), $target->display()));
 						} else {
 							App::user()->addFlash('warning', null, __('donation', 'credits-not-transferred'), __('donation', 'credit-points', number_format($credits), $target->display()));
 						}

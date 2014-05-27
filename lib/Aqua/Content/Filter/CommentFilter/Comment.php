@@ -194,7 +194,7 @@ class Comment
 
 	public function timeElapsedPublishDate()
 	{
-		return __('time-elapsed', 'ago', ac_time_elapsed($this->editDate));
+		return __('time-elapsed', 'ago', ac_time_elapsed($this->publishDate));
 	}
 
 	/**
