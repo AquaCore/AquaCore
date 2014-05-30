@@ -39,14 +39,14 @@ CREATE PROCEDURE disablePlugin (IN pluginId INT)
         SELECT id
         FROM `#comments`
         WHERE _content_id IN ( SELECT * FROM __content );
-    DELETE FROM `#comment_meta` WHERE _comment_id IN ( SELECT * FROM __comments );
+    DELETE FROM `#comment_meta` WHERE _id IN ( SELECT * FROM __comments );
     DELETE FROM `#comments` WHERE id IN ( SELECT * FROM __comments );
-    DELETE FROM `#content_meta` WHERE _content_id IN ( SELECT * FROM __content );
+    DELETE FROM `#content_meta` WHERE _id IN ( SELECT * FROM __content );
     DELETE FROM `#tags` WHERE _content_id IN ( SELECT * FROM __content );
     DELETE FROM `#content_relationship` WHERE _content_id IN ( SELECT * FROM __content );
     DELETE FROM `#content_categories` WHERE _content_id IN ( SELECT * FROM __content );
     DELETE FROM `#content` WHERE _uid IN ( SELECT * FROM __content );
-    DELETE FROM `#category_meta` WHERE _category_id IN ( SELECT * FROM __categories );
+    DELETE FROM `#category_meta` WHERE _id IN ( SELECT * FROM __categories );
     DELETE FROM `#categories` WHERE _type IN ( SELECT * FROM __contentTypes );
     DELETE FROM `#content_type_filters` WHERE _type IN ( SELECT * FROM __contentTypes );
     DELETE FROM `#content_type_fields` WHERE _type IN ( SELECT * FROM __contentTypes );

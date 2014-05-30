@@ -1,14 +1,17 @@
 <?php
-use Aqua\Core\App;
-
 /**
  * @var \Aqua\Log\ErrorLog[] $errors
- * @var int                 $error_count
+ * @var int                 $errorCount
  * @var \Page\Admin\Log     $page
+ * @var \Aqua\UI\Search     $search
  * @var \Aqua\UI\Pagination $paginator
  */
 
-$date_format = App::settings()->get('datetime_format', '');
+use Aqua\Core\App;
+use Aqua\UI\ScriptManager;
+
+$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
+$datetimeFormat = App::settings()->get('datetime_format', '');
 ?>
 <table class="ac-table ac-table-fixed">
 	<colgroup>
@@ -21,12 +24,14 @@ $date_format = App::settings()->get('datetime_format', '');
 	</colgroup>
 	<thead>
 		<tr class="alt">
-			<td><?php echo __('error', 'id')?></td>
-			<td><?php echo __('error', 'class')?></td>
-			<td><?php echo __('error', 'code')?></td>
-			<td><?php echo __('error', 'ip-address')?></td>
-			<td><?php echo __('error', 'url')?></td>
-			<td><?php echo __('error', 'date')?></td>
+			<?php echo $search->renderHeader(array(
+				'id'    => __('error', 'id'),
+				'class' => __('error', 'class'),
+				'code'  => __('error', 'code'),
+				'ip'    => __('error', 'ip-address'),
+				'url'   => __('error', 'url'),
+				'date'  => __('error', 'date'),
+			)) ?>
 		</tr>
 	</thead>
 	<tbody>
@@ -43,16 +48,21 @@ $date_format = App::settings()->get('datetime_format', '');
 			<td><?php echo htmlspecialchars($error->code) ?></td>
 			<td><?php echo htmlspecialchars($error->ipAddress) ?></td>
 			<td><a href="<?php echo $error->url ?>" target="_blank"><?php echo htmlspecialchars($error->url) ?></a></td>
-			<td><?php echo $error->date($date_format)?></td>
+			<td><?php echo $error->date($datetimeFormat)?></td>
 		</tr>
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr>
-			<td colspan="6" style="text-align: center">
-				<?php echo $paginator->render()?>
-			</td>
-		</tr>
+	<tr>
+		<td colspan="6">
+			<div style="position: relative">
+				<div style="position: absolute; right: 0;">
+					<?php echo $search->limit()->attr('class', 'ac-search-limit')->render() ?>
+				</div>
+				<?php echo $paginator->render() ?>
+			</div>
+		</td>
+	</tr>
 	</tfoot>
 </table>
-<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($error_count === 1 ? 's' : 'p'), number_format($error_count)) ?></span>
+<span class="ac-search-result"><?php echo __('application', 'search-results-' . ($errorCount === 1 ? 's' : 'p'), number_format($errorCount)) ?></span>

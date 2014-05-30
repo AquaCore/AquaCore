@@ -45,6 +45,9 @@ class TaskManager
 		return $task;
 	}
 
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
 	public static function search()
 	{
 		return Query::search(App::connection())
@@ -235,6 +238,7 @@ class TaskManager
 		if(!$tasks->count()) {
 			return;
 		}
+		ignore_user_abort(true);
 		set_time_limit(0);
 		foreach($tasks as $taskData) {
 			if(!$taskData->isEnabled ||

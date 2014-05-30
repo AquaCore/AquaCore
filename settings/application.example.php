@@ -163,9 +163,11 @@ return array(
 		),
 	),
 	'email'              => array(
-		'from_address' => isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : 'example@example.com',
-		'from_name'    => 'AquaCore',
-		'use_smtp'     => false,
+		'from_address'       => isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : 'example@example.com',
+		'from_name'          => 'AquaCore',
+		'cc_limit'           => 50,
+		'max_emails_per_run' => 20,
+		'use_smtp'           => false,
 	),
 	'db'                 => array(),
 );

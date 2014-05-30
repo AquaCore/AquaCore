@@ -154,6 +154,33 @@ extends AbstractFilter
 		}
 		Event::fire('comment.create', $feedback);
 		$this->contentData_commentSpamFilter($content, $comment);
+		self::$cache !== null or self::fetchCache(null, true);
+		if(!empty(self::$cache)) {
+			array_unshift(self::$cache['last_comments'], array(
+				'id'           => $comment->id,
+				'content_id'   => $comment->contentId,
+				'status'       => $comment->status,
+				'anonymous'    => $comment->anonymous,
+				'content'      => $comment->html,
+				'publish_date' => $comment->publishDate,
+				'user_id'      => $comment->authorId,
+				'display_name' => $author->displayName,
+				'avatar'       => $author->avatar(),
+				'role_id'      => $author->roleId,
+				'title'        => $content->title,
+				'slug'         => $content->slug,
+				'content_type' => $content->contentType->id
+			));
+			if(count(self::$cache['last_comments']) > self::CACHE_RECENT_COMMENTS) {
+				self::$cache['last_comments'] = array_slice(
+					self::$cache['last_comments'],
+					0,
+					self::CACHE_RECENT_COMMENTS,
+					false
+				);
+			}
+			App::cache()->store(self::CACHE_KEY, self::$cache, self::CACHE_TTL);
+		}
 		return $comment;
 	}
 
@@ -468,6 +495,27 @@ extends AbstractFilter
 			->current();
 		$feedback = array( $report, $comment, $user );
 		Event::fire('comment.report', $feedback);
+		self::$cache !== null or self::fetchCache(null, true);
+		if(!empty(self::$cache)) {
+			array_unshift(self::$cache['last_reports'], array(
+				'id'           => $report->id,
+				'comment_id'   => $report->commentId,
+				'date'         => $report->date,
+				'content'      => $report->report,
+				'user_id'      => $report->userId,
+				'display_name' => $user->displayName,
+				'role_id'      => $user->roleId,
+			));
+			if(count(self::$cache['last_reports']) > self::CACHE_RECENT_REPORTS) {
+				self::$cache['last_reports'] = array_slice(
+					self::$cache['last_reports'],
+					0,
+					self::CACHE_RECENT_REPORTS,
+					false
+				);
+			}
+			App::cache()->store(self::CACHE_KEY, self::$cache, self::CACHE_TTL);
+		}
 		return $report;
 	}
 
@@ -671,7 +719,7 @@ extends AbstractFilter
 				    'status'       => 'c._status',
 				    'anonymous'    => 'c._anonymous',
 				    'content'      => 'c._html_content',
-				    'publish_date' => 'c._publish_date',
+				    'publish_date' => 'UNIX_TIMESTAMP(c._publish_date)',
 				    'user_id'      => 'c._author_id',
 				    'display_name' => 'u._display_name',
 				    'avatar'       => 'u._avatar',

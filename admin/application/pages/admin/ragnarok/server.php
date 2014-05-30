@@ -1860,7 +1860,7 @@ extends Page
 				->setColumn('date')
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
-				->attr('placeholder', 'YYYY-MM-DD HH:II:SS');
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
 			$types = array();
 			foreach(range(1, 8) as $id) {
 				$types[$id] = __('ragnarok-zeny-log-type', $id);
@@ -1983,7 +1983,7 @@ extends Page
 				->setColumn('date')
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
-				->attr('placeholder', 'YYY-MM-DD HH:II:SS');
+				->attr('placeholder', 'YYY-MM-DD HH:MM:SS');
 			$search = $this->charmap->log->searchCashShopLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
@@ -2074,7 +2074,7 @@ extends Page
 				->setColumn('date')
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
-				->attr('placeholder', 'YYY-MM-DD HH:II:SS');
+				->attr('placeholder', 'YYY-MM-DD HH:MM:SS');
 			$search = $this->charmap->log->searchAtcommandLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
@@ -2175,7 +2175,7 @@ extends Page
 				->setColumn('date')
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
-				->attr('placeholder', 'YYYY-MM-DD HH:II:SS');
+				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
 			$search = $this->charmap->log->searchPickLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
@@ -2280,7 +2280,7 @@ extends Page
 			    ->setColumn('date')
 			    ->setLabel(__('ragnarok', 'date'))
 			    ->type('datetime')
-			    ->attr('placeholder', 'YYYY-MM-DD HH:II:SS');
+			    ->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
 			$frm->select('type')
 				->setColumn('type')
 				->setLabel(__('ragnarok', 'type'))

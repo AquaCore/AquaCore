@@ -273,6 +273,7 @@ function ac_mailer($throw = true)
 		$phpmailer->Password    = $settings->get('smtp_password', '');
 	}
 	$phpmailer->Hostname    = $settings->get('hostname', '');
+	$phpmailer->CharSet     = $settings->get('charset', 'UTF-8');
 	$phpmailer->SetFrom($settings->get('from_address', ''), $settings->get('from_name', ''));
 	return $phpmailer;
 }
@@ -699,7 +700,7 @@ function ac_time_elapsed($timestamp)
 				$count = floor($diff / $intervals[$key]);
 				if($count && $count < ($intervals[$key + 1] / $intervals[$key])) {
 					$timeElapsed[] = __('time-elapsed',
-					                    $intervalNames[$key] . ($count === 1 ? '' : 's'),
+					                    $intervalNames[$key] . (intval($count) === 1 ? '' : 's'),
 					                    $count);
 					$diff -= $count * $intervals[$key];
 					++$match;
@@ -716,12 +717,12 @@ function ac_time_elapsed($timestamp)
 			$diff = $now->diff($then);
 			if($diff->y) {
 				$timeElapsed[] = __('time-elapsed',
-				                    'year' . ($diff->y === 1 ? '' : 's'),
+				                    'year' . (intval($diff->y) === 1 ? '' : 's'),
 				                    $diff->y);
 			}
 			if($diff->m) {
 				$timeElapsed[] = __('time-elapsed',
-				                    'month' . ($diff->m === 1 ? '' : 's'),
+				                    'month' . (intval($diff->m) === 1 ? '' : 's'),
 				                    $diff->m);
 			}
 		}

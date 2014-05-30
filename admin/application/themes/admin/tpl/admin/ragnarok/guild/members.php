@@ -9,7 +9,7 @@
 ?>
 <table class="ac-table">
 	<thead>
-		<tr class="alt"><td colspan="7"><?php echo __('ragnarok', 'position') ?></td></tr>
+		<tr class="alt"><td colspan="7"><?php echo __('ragnarok', 'positions') ?></td></tr>
 		<tr>
 			<td><?php echo __('ragnarok', 'position') ?></td>
 			<td colspan="2"><?php echo __('ragnarok', 'name') ?></td>
@@ -17,7 +17,7 @@
 			<td colspan="2"><?php echo __('ragnarok', 'exp-mode') ?></td>
 		</tr>
 	</thead>
-	<?php if(empty($members)) : ?>
+	<?php if(empty($positions)) : ?>
 		<tr><td colspan="7" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($positions as $pos => $posData) : ?>
 		<tr>

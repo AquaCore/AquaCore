@@ -11,14 +11,13 @@ extends TaskData
 	{
 		$this->isRunning = true;
 		$this->lastRun = microtime(true);
-		$tbl = ac_table('tasks');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
-		SET _running = 'y',
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _running = \'y\',
 			_last_run = ?
 		WHERE id = ?
 		LIMIT 1
-		");
+		', ac_table('tasks')));
 		$sth->bindValue(1, date('Y-m-d H:i:s', $this->lastRun), \PDO::PARAM_INT);
 		$sth->bindValue(2, $this->id, \PDO::PARAM_INT);
 		$sth->execute();
@@ -35,19 +34,18 @@ extends TaskData
 
 	public final function abort()
 	{
-		$tbl = ac_table('tasks');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
-		SET _running = 'n',
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _running = \'n\',
 			_next_run = ?
 		WHERE id = ?
 		LIMIT 1
-		");
+		', ac_table('tasks')));
 		$this->isRunning = false;
 		$this->nextRun   = $this->cron()
-			->getNextRunDate('now')
+			->getNextRunDate()
 			->getTimestamp();
-		$sth->bindValue(1, date('Y-m-d', $this->nextRun), \PDO::PARAM_INT);
+		$sth->bindValue(1, date('Y-m-d H:i:s', $this->nextRun), \PDO::PARAM_INT);
 		$sth->bindValue(2, $this->id, \PDO::PARAM_INT);
 		$sth->execute();
 	}

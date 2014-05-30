@@ -420,7 +420,7 @@ class PHPMailer
 	 * @type SMTP
 	 * @access protected
 	 */
-	protected $smtp = null;
+	public $smtp = null;
 
 	/**
 	 * The array of 'to' addresses.

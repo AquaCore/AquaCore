@@ -104,3 +104,7 @@ INSERT IGNORE INTO `#content` VALUES
 INSERT IGNORE INTO `#content_meta` VALUES
  (1, 'rating-disabled', 'b:1;')
 ;
+
+INSERT IGNORE INTO `#tasks` VALUES
+ (1, 'BulkMailTask', 'Bulk mail', 'Send queued bulk emails.', '*/3 * * * *', NULL, DATE_ADD(NOW(), INTERVAL 5 MINUTE), 'n', 'y', '', NULL);
+;

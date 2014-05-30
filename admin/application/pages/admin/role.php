@@ -219,7 +219,6 @@ extends Page
 				if(!empty($update) && $role->update($update)) {
 					++$updated;
 				}
-				file_put_contents(\Aqua\ROOT . '/test.txt', print_r($update, true));
 				if(!$frm->field('permission')->getWarning()) {
 					$newPermissions    = $this->request->getArray('permission');
 					$oldPermissions    = $role->getPermissions();
@@ -233,7 +232,7 @@ extends Page
 					}
 				}
 				if($updated) {
-					$message = __('role', 'role-updated');
+					$message = __('role', 'role-updated', htmlspecialchars($role->name));
 				}
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);

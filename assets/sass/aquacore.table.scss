@@ -112,10 +112,11 @@ $assetsPath: "../" !default;
 			border-right: 1px solid $lightBlue-3;
 			&.ac-table-order {
 				.ac-table-bullet {
+					position: absolute;
 					width: 10px;
-					height: 6px;
-					margin-top: 4px;
-					float: right;
+					height: 100%;
+					top: 0;
+					right: 3px;
 					background-position: center center;
 					background-repeat: no-repeat;
 					background-color: transparent;
@@ -133,6 +134,9 @@ $assetsPath: "../" !default;
 					));
 				}
 				a {
+					display: block;
+					position: relative;
+					padding-right: 15px !important;
 					color: $lightGray-2;
 					@include text-shadow(-1px -1px 0 $midBlue-2);
 				}

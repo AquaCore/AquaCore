@@ -2,6 +2,7 @@
 namespace Page\Admin;
 
 use Aqua\Core\App;
+use Aqua\Core\L10n;
 use Aqua\Log\ErrorLog;
 use Aqua\Log\PayPalLog;
 use Aqua\Log\ProfileUpdateLog;
@@ -28,52 +29,59 @@ extends Page
 		$this->theme->head->section = $this->title = __('account', 'users');
 		try {
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			if($x = $this->request->uri->getInt('id', false, 1)) {
-				if($users = Account::get($x)) {
-					$users = array( $users );
-					$rows  = 1;
-				} else {
-					$users = array();
-					$rows  = 0;
-				}
-			} else {
-				$where = array();
-				// u : Username
-				if($x = $this->request->uri->getString('u', false)) {
-					$where['username'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' );
-				}
-				// d : Display Name
-				if($x = $this->request->uri->getString('d', false)) {
-					$where['display_name'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' );
-				}
-				// e : Email
-				if($x = $this->request->uri->getString('e', false)) {
-					$where['email'] = array( Search::SEARCH_LIKE, '%' . addcslashes($x, '%_\\') . '%' );
-				}
-				// r : Role
-				if($x = $this->request->uri->getArray('r', false)) {
-					array_unshift($x, Search::SEARCH_IN);
-					$where['role_id'] = $x;
-				}
-				// s : Status
-				if($x = $this->request->uri->getArray('s', false)) {
-					array_unshift($x, Search::SEARCH_IN);
-					$where['status'] = $x;
-				}
-				$search = Account::search()
-					->where($where)
-					->order(array( 'id' => 'ASC' ))
-					->limit(($currentPage - 1) * self::$usersPerPage, self::$usersPerPage)
-					->calcRows(true)
-					->query();
-				$rows   = $search->rowsFound;
-				$users  = $search->results;
+			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
+			$frm->order(array(
+					'id' => 'id',
+				    'uname' => 'username',
+				    'display' => 'display_name',
+				    'email' => 'email',
+				    'role' => 'role_id',
+				    'status' => 'status',
+				    'regdate' => 'registration_date'
+				))
+				->limit(0, 6, 20, 5)
+				->defaultOrder('id')
+				->defaultLimit(20)
+				->persist('admin.users');
+			$frm->input('uname')
+				->setColumn('username')
+				->setLabel(__('profile', 'username'));
+			$frm->input('display')
+				->setColumn('display_name')
+				->setLabel(__('profile', 'display-name'));
+			$frm->input('email')
+				->setColumn('email')
+				->setLabel(__('profile', 'email'));
+			$frm->range('reg')
+				->setColumn('registration_date')
+				->setLabel(__('profile', 'registration-date'))
+				->type('datetime')
+				->attr('placeholder', 'YYY-MM-DD HH:MM:SS');
+			$roles = array();
+			foreach(Role::$roles as $role) {
+				$roles[$role->id] = htmlspecialchars($role->name);
 			}
-			$pgn = new Pagination(App::user()->request->uri, ceil($rows / self::$usersPerPage), $currentPage);
+			$frm->select('role')
+				->setColumn('role_id')
+				->multiple()
+				->setLabel(__('profile', 'role'))
+				->value($roles);
+			$frm->select('status')
+				->setColumn('status')
+				->multiple()
+				->setLabel(__('profile', 'status'))
+				->value(L10n::getDefault()->rangeList('account-state', range( 0, 3 )));
+			$search = Account::search()->calcRows(true);
+			$frm->apply($search);
+			$search->query();
+			$pgn = new Pagination(App::user()->request->uri,
+			                      ceil($search->rowsFound / $frm->getLimit()),
+			                      $currentPage);
 			$tpl = new Template;
-			$tpl->set('users', $users)
-				->set('userCount', $rows)
+			$tpl->set('users', $search->results)
+				->set('userCount', $search->rowsFound)
 				->set('paginator', $pgn)
+				->set('search', $frm)
 				->set('page', $this);
 			echo $tpl->render('admin/user/search');
 		} catch(\Exception $exception) {

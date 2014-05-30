@@ -21,10 +21,6 @@ class App
 	 */
 	public static $uid = 1;
 	/**
-	 * @var int
-	 */
-	public static $uidSeed = 0;
-	/**
 	 * @var \Aqua\Storage\StorageInterface
 	 */
 	public static $cache;
@@ -92,11 +88,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.1.7';
+	const VERSION = '0.1.8';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 107;
+	const VERSION_LONG = 108;
 
 	private function __construct() { }
 
@@ -450,18 +446,9 @@ class App
 		return \Aqua\URL . '/assets/images/logo.png';
 	}
 
-	/**
-	 * @param int $seed
-	 * @return int
-	 */
-	public static function uid($seed = 0)
+	public static function uid()
 	{
-		$id = self::$uid;
-		self::$uidSeed += $seed;
-		if(self::$uidSeed === 0) ++self::$uid;
-		else --self::$uidSeed;
-
-		return $id;
+		return ++self::$uid;
 	}
 
 	public static function upgrade()

@@ -138,7 +138,7 @@ class Guild
 			->from($this->charmap->table('guild_member'), 'gm')
 			->innerJoin($this->charmap->table('char'), 'c.char_id = gm.char_id', 'c')
 			->groupBy('gm.char_id')
-			->where(array( 'gm.guild_id' => $this->id ))
+			->where(array( 'guild_id' => $this->id ))
 			->parser(array( $this->charmap, 'parseCharSql' ), array(array( 'guild_exp', 'guild_exp_payper', 'guild_position' )));
 	}
 
