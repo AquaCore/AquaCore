@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-mob-mode" key="16384">Target Weak</word>
     <word namespace="ragnarok-mob-mode" key="12288">Change Target</word>
     <word namespace="ragnarok-mob-mode" key="8192">Change Target (Chase)</word>

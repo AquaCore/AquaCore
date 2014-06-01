@@ -4,10 +4,8 @@ namespace Page\Main\Ragnarok\Server;
 use Aqua\Core\App;
 use Aqua\Core\L10n;
 use Aqua\Log\ErrorLog;
-use Aqua\Ragnarok\Cart;
 use Aqua\Ragnarok\Ragnarok;
 use Aqua\Ragnarok\Server\CharMap;
-use Aqua\Ragnarok\Server\Login;
 use Aqua\Site\Page;
 use Aqua\SQL\Query;
 use Aqua\SQL\Search;
@@ -17,7 +15,6 @@ use Aqua\UI\Pagination;
 use Aqua\UI\Search\Input;
 use Aqua\UI\Search\Select;
 use Aqua\UI\Template;
-use PHPMailer\POP3;
 
 class Item
 extends Page
@@ -53,7 +50,6 @@ extends Page
 	}
 
 	public function validateItemTypeSearch(Select $select, \Aqua\UI\Search $frm, $value, $type) {
-		var_dump($frm->getInt('t'), $type);
 		if($frm->getInt('t') === $type) {
 			return $select->_parse($value);
 		} else {
@@ -78,13 +74,12 @@ extends Page
 				->limit(0, 4, 10, 5)
 				->defaultOrder('id')
 				->defaultLimit(10)
-				->persist("itemDB");
-			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
-			                                           array( 0 ),
-			                                           range(2, 8),
-			                                           range(10, 12));
-			$equipLocations = L10n::getDefault()
-				->rangeList('ragnarok-equip-location',array(
+				->persist('itemDB');
+			$itemTypes = L10n::rangeList('ragnarok-item-type',
+			                             array( 0 ),
+			                             range(2, 8),
+			                             range(10, 12));
+			$equipLocations = L10n::rangeList('ragnarok-equip-location', array(
 					0x0001, 0x0002, 0x0004, 0x0008,
 					0x0010, 0x0020, 0x0040, 0x0080,
 					0x0100, 0x0200, 0x0400, 0x0800,
@@ -92,9 +87,9 @@ extends Page
 					0x0101, 0x0201, 0x0300, 0x0301,
 				    0x1400, 0x0C00, 0x1800, 0x1C00
 				));
-			$weaponTypes = L10n::getDefault()->rangeList('ragnarok-weapon-type', range(0, 8), range(10, 22));
-			$ammoTypes = L10n::getDefault()->rangeList('ragnarok-ammo-type', range(0, 7));
-			$jobs = L10n::getDefault()->rangeList('ragnarok-equip-job', array(
+			$weaponTypes = L10n::rangeList('ragnarok-weapon-type', range(0, 8), range(10, 22));
+			$ammoTypes = L10n::rangeList('ragnarok-ammo-type', range(0, 7));
+			$jobs = L10n::rangeList('ragnarok-equip-job', array(
 				0x0000001, 0x0000002, 0x0000004, 0x0000008,
 				0x0000010, 0x0000020, 0x0000040, 0x0000080,
 				0x0000100, 0x0000200, 0x0000400, 0x0000800,
@@ -103,7 +98,7 @@ extends Page
 				           0x0200000, 0x0400000, 0x0800000,
 				0x1000000, 0x2000000
 			));
-			$upper = L10n::getDefault()->rangeList('ragnarok-equip-upper', array( 0x01, 0x02, 0x04, 0x08 ));
+			$upper = L10n::rangeList('ragnarok-equip-upper', array( 0x01, 0x02, 0x04, 0x08 ));
 			asort($itemTypes, SORT_STRING);
 			asort($equipLocations, SORT_STRING);
 			asort($weaponTypes, SORT_STRING);

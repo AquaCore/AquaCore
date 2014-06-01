@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="content" key="author">Author</word>
     <word namespace="content" key="editor">Last Editor</word>
     <word namespace="content" key="categories">Categories</word>

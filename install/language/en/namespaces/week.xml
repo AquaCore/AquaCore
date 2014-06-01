@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="week" key="0">Sunday</word>
     <word namespace="week" key="1">Monday</word>
     <word namespace="week" key="2">Tuesday</word>

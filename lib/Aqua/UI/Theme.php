@@ -133,7 +133,7 @@ extends Template
 				$this->jsLang[$namespace][$keys] = __($namespace, $keys);
 			}
 		} else {
-			$this->jsLang += array( $namespace => L10n::getDefault()->getNamespace($namespace) );
+			$this->jsLang += array( $namespace => L10n::getNamespace($namespace) );
 		}
 
 		return $this;
@@ -187,14 +187,13 @@ extends Template
 		$content = $this->renderTemplate($title, $content);
 		$tz      = new \DateTimeZone(date_default_timezone_get());
 		$now     = new \DateTime("now", $tz);
-		$lang    = L10n::getDefault();
 		$json    = array(
 			'URL'         => \Aqua\URL,
 			'URI'         => array(
-				'path' => App::request()->uri->path,
-				'action' => App::request()->uri->action,
+				'path'      => App::request()->uri->path,
+				'action'    => App::request()->uri->action,
 				'arguments' => App::request()->uri->arguments,
-				'query' => App::request()->uri->parameters,
+				'query'     => App::request()->uri->parameters,
 			),
 			'TIME_OFFSET' => $tz->getOffset($now),
 			'REWRITE'     => \Aqua\REWRITE,
@@ -204,14 +203,12 @@ extends Template
 			'USER_ID'     => (App::user()->loggedIn() ? App::user()->account->id : null),
 			'settings'    => $this->jsSettings
 		);
-		if($lang) {
-			$json['language'] = array(
-				'words'     => $this->jsLang,
-				'direction' => $lang->direction,
-				'code'      => $lang->code,
-				'name'      => $lang->name
-			);
-		}
+		$json['language'] = array(
+			'words'     => $this->jsLang,
+			'direction' => L10n::$direction,
+			'code'      => L10n::$code,
+			'name'      => L10n::$name
+		);
 		$json = json_encode($json);
 		$this->script->content = array("
 var AquaCore = AquaCore || {};

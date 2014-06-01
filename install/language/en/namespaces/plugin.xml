@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="plugin" key="plugins">Plugins</word>
     <word namespace="plugin" key="plugin-settings">Plugin Settings</word>
     <word namespace="plugin" key="x-plugin-settings">Plugin Settings - %s</word>

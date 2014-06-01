@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="time-elapsed" key="minute">%d minute</word>
     <word namespace="time-elapsed" key="minutes">%d minutes</word>
     <word namespace="time-elapsed" key="second">%d second</word>

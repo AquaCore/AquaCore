@@ -148,7 +148,7 @@ class Mob
 	public function mode()
 	{
 		$data = $this->mode;
-		$db = L10n::getDefault()->getNamespace('ragnarok-mob-mode');
+		$db = L10n::getNamespace('ragnarok-mob-mode');
 		$matches = array();
 		do {
 			$key = key($db);

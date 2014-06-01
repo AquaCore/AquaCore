@@ -208,7 +208,7 @@ class Rss
 		$rss->appendChild($channel);
 		$channel->appendChild($dom->createElement('title', str_replace(array('&', '<'), array('&#x26;', '&#x3C;'), $this->title)));
 		$channel->appendChild($dom->createElement('link', $this->link ?: \Aqua\URL));
-		$channel->appendChild($dom->createElement('language', L10n::getDefault()->code));
+		$channel->appendChild($dom->createElement('language', L10n::$code));
 		$channel->appendChild($dom->createElement('lastBuildDate', date(DATE_RSS, $this->lastBuildDate)));
 		if($this->description !== htmlspecialchars(strip_tags($this->description))) {
 			$description = $dom->createElement('description');

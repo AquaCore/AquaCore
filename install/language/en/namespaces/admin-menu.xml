@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="admin-menu" key="dashboard">Dashboard</word>
     <word namespace="admin-menu" key="pages">Pages</word>
     <word namespace="admin-menu" key="new-page">New Page</word>
@@ -21,5 +21,6 @@
     <word namespace="admin-menu" key="credit-log">Credit Transfer Log</word>
     <word namespace="admin-menu" key="ban-log">Ban Log</word>
     <word namespace="admin-menu" key="settings">Settings</word>
+    <word namespace="admin-menu" key="smileys">Smileys</word>
   </wordgroup>
 </languageimport>

@@ -3,7 +3,6 @@ namespace Page\Main;
 
 use Aqua\Content\ContentType;
 use Aqua\Core\App;
-use Aqua\Core\L10n;
 use Aqua\Log\BanLog;
 use Aqua\Log\ErrorLog;
 use Aqua\Log\LoginLog;
@@ -14,6 +13,7 @@ use Aqua\UI\Menu;
 use Aqua\UI\Template;
 use Aqua\User\Account as UserAccount;
 use Aqua\User\PersistentLogin;
+use Aqua\Util\Email;
 use Aqua\Util\ImageUploader;
 use PHPMailer\PHPMailerException;
 
@@ -778,33 +778,31 @@ extends Page
 			}
 			$key = bin2hex(secure_random_bytes(64));
 			App::user()->session->tmp('password_reset', array( $account->id, $key ), 3600 * 2);
-			L10n::getDefault()->email('reset-pw', array(
-				'site-title'   => htmlspecialchars(App::settings()->get('title')),
-				'site-url'     => \Aqua\URL,
-				'username'     => htmlspecialchars($account->username),
-				'display-name' => htmlspecialchars($account->displayName),
-				'email'        => htmlspecialchars($account->email),
-				'time-now'     => strftime(App::settings()->get('date_format', '')),
-				'time-left'    => 2,
-				'key'          => $key,
-				'url'          => ac_build_url(array(
-					                               'path'      => array( 'account' ),
-					                               'action'    => 'resetpw',
-					                               'arguments' => array( $key )
-				                               ))
-			), $title, $body);
-			$mailer = ac_mailer(true);
-			$mailer->AddAddress($account->email, $account->displayName);
-			$mailer->Body    = $body;
-			$mailer->Subject = $title;
-			$mailer->isHTML(true);
-			if(!$mailer->Send()) {
-				throw new PHPMailerException($mailer->ErrorInfo);
+			$email = Email::fromTemplate('reset-pw')
+				->isHtml(true)
+				->replace(array(
+					'site-title'   => htmlspecialchars(App::settings()->get('title')),
+					'site-url'     => \Aqua\URL,
+					'username'     => htmlspecialchars($account->username),
+					'display-name' => htmlspecialchars($account->displayName),
+					'email'        => htmlspecialchars($account->email),
+					'time-now'     => strftime(App::settings()->get('date_format', '')),
+					'time-left'    => 2,
+					'key'          => $key,
+					'url'          => ac_build_url(array(
+						'path'      => array( 'account' ),
+						'action'    => 'resetpw',
+						'arguments' => array( $key )
+					))
+				))
+				->addAddress($account);
+			if(!$email->send()) {
+				throw new PHPMailerException(Email::phpMailer()->ErrorInfo);
 			}
-			$host = strrchr($account->email, '@');
-			$name = substr($account->email, 0, -strlen($host));
+			$host  = strrchr($account->email, '@');
+			$name  = substr($account->email, 0, -strlen($host));
 			$count = (strlen($name) / 100) * 25;
-			$name = substr($name, 0, $count) . str_repeat('*', min(0, strlen($name) - $count));
+			$name  = substr($name, 0, $count) . str_repeat('*', min(0, strlen($name) - $count));
 			App::user()->addFlash('success', null, __('reset-pw', 'email-sent', "$name$host"));
 			$this->response->redirect(\Aqua\URL);
 		} catch(\Exception $exception) {
@@ -937,18 +935,18 @@ extends Page
 		}
 		$this->response->status(302)->redirect(App::request()->uri->url());
 		try {
-			$username          = trim($this->request->getString('username'));
-			$password          = trim($this->request->getString('password'));
-			$ip_attempts       = LoginLog::attempts(App::request()->ipString, self::$ipLoginInterval, 'ip_address');
-			$username_attempts = LoginLog::attempts($username, self::$usernameLoginInterval, 'username');
-			if($ip_attempts >= self::$ipLoginAttemptsLockout) {
+			$username         = trim($this->request->getString('username'));
+			$password         = trim($this->request->getString('password'));
+			$ipAttempts       = LoginLog::attempts(App::request()->ipString, self::$ipLoginInterval, 'ip_address');
+			$usernameAttempts = LoginLog::attempts($username, self::$usernameLoginInterval, 'username');
+			if($ipAttempts >= self::$ipLoginAttemptsLockout) {
 				App::user()->session
 					->delete('ac_login_captcha')
 					->flash('ac_login_warning', __('login', 'attempt-wait'));
 
 				return;
-			} else if($ip_attempts >= self::$ipLoginAttemptsCaptcha ||
-			          $username_attempts >= self::$usernameLoginAttemptsCaptcha) {
+			} else if($ipAttempts >= self::$ipLoginAttemptsCaptcha ||
+			          $usernameAttempts >= self::$usernameLoginAttemptsCaptcha) {
 				if(!App::user()->session->get('ac_login_captcha')) {
 					App::user()->session
 						->set('ac_login_captcha', true)
@@ -1030,6 +1028,7 @@ extends Page
 					} else {
 						$this->response->redirect(\Aqua\URL);
 					}
+					App::user()->session->flash('403-redirect', true);
 					App::user()->session->delete('ac_login_captcha');
 					break;
 			}
@@ -1047,32 +1046,30 @@ extends Page
 		$this->response->status(302)->redirect(\Aqua\URL);
 	}
 
-	public function sendValidationEmail(UserAccount $acc, $key)
+	public function sendValidationEmail(UserAccount $account, $key)
 	{
-		$time_left = floor((time() / 3600) - ($acc->registrationDate / 3600));
-		$time_left = App::settings()->get('account')->get('registration')->get('validation_time', 48) - $time_left;
-		L10n::getDefault()->email('registration', array(
-			'site-title'   => App::settings()->get('title'),
-			'site-url'     => \Aqua\URL,
-			'username'     => htmlspecialchars($acc->username),
-			'display-name' => htmlspecialchars($acc->displayName),
-			'email'        => htmlspecialchars($acc->email),
-			'time-now'     => strftime(App::settings()->get('date_format', '')),
-			'hours-left'   => $time_left,
-			'key'          => $key,
-			'url'          => ac_build_url(array(
+		$timeLeft = floor((time() / 3600) - ($account->registrationDate / 3600));
+		$timeLeft = App::settings()->get('account')->get('registration')->get('validation_time', 48) - $timeLeft;
+		$email = Email::fromTemplate('registration')
+			->isHtml(true)
+			->replace(array(
+				'site-title'   => App::settings()->get('title'),
+				'site-url'     => \Aqua\URL,
+				'username'     => htmlspecialchars($account->username),
+				'display-name' => htmlspecialchars($account->displayName),
+				'email'        => htmlspecialchars($account->email),
+				'time-now'     => strftime(App::settings()->get('date_format', '')),
+				'time-left'    => $timeLeft,
+				'key'          => $key,
+				'url'          => ac_build_url(array(
 					'path'      => array( 'account' ),
 					'action'    => 'activate',
-					'arguments' => array( $acc->username, $key )
+					'arguments' => array( $account->username, $key )
 				))
-		), $title, $body);
-		$mailer = ac_mailer(true);
-		$mailer->AddAddress($acc->email, $acc->displayName);
-		$mailer->Body    = $body;
-		$mailer->Subject = $title;
-		$mailer->isHTML(true);
-		if(!$mailer->Send()) {
-			throw new PHPMailerException($mailer->ErrorInfo);
+			))
+			->addAddress($account);
+		if(!$email->send()) {
+			throw new PHPMailerException(Email::phpMailer()->ErrorInfo);
 		}
 	}
 }

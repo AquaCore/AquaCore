@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-item-sc" key="1">Very Strong</word>
     <word namespace="ragnarok-item-sc" key="2">Very Very Strong</word>
     <word namespace="ragnarok-item-sc" key="3">Very Very Very Strong</word>

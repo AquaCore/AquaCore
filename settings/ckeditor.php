@@ -1,5 +1,6 @@
 <?php
-$smileys = include __DIR__ . '/smiley.php';
+use Aqua\BBCode\Smiley;
+
 return array(
 	'font_sizes'            => 'Georgia/Georgia, serif;' .
 	                           'Palatino/"Palatino Linotype", "Book Antiqua", Palatino, serif;' .
@@ -25,8 +26,8 @@ return array(
 		\Aqua\URL . '/assets/styles/bbcode.css'
 	),
 	'smiley_path'           => \Aqua\URL . '/uploads/smiley/',
-	'smiley_descriptions'   => array_keys($smileys),
-	'smiley_images'         => array_values($smileys),
+	'smiley_descriptions'   => array_column(Smiley::smileys(), 'text'),
+	'smiley_images'         => array_column(Smiley::smileys(), 'file'),
 	'removePlugins'         => 'autogrow,pagination',
 	'extraPlugins'          => 'bbcode,spoiler',
 	'bbCodeTags'            => 'b,s,u,i,' .

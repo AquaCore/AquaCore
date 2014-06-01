@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="profile-history" key="profile-history">Profile Edit History</word>
     <word namespace="profile-history" key="x-profile-history">%s's Profile Edit History</word>
     <word namespace="profile-history" key="id">ID</word>

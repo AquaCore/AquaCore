@@ -2,12 +2,10 @@
 namespace Page\Main\Ragnarok;
 
 use Aqua\Core\App;
-use Aqua\Core\L10n;
 use Aqua\Site\Page;
 use Aqua\Ragnarok\Server;
 use Aqua\Ragnarok\Server\Login;
 use Aqua\Ragnarok\Account as RagnarokAccount;
-use Aqua\SQL\Query;
 use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
@@ -15,6 +13,7 @@ use Aqua\UI\Pagination;
 use Aqua\UI\Template;
 use Aqua\User\Account as UserAccount;
 use Aqua\Log\ErrorLog;
+use Aqua\Util\Email;
 use PHPMailer\PHPMailerException;
 
 class Account
@@ -264,7 +263,6 @@ extends Page
 				foreach($this->request->getArray('slots') as $id) {
 					$order[intval($id)] = ++$i;
 				}
-				var_dump($order);
 				if($this->account->setOrder($charMap, $order)) {
 					App::user()->addFlash('success', null, __('ragnarok', 'slot-saved'));
 				}
@@ -355,25 +353,24 @@ extends Page
 		}
 		try {
 			$key = bin2hex(secure_random_bytes(32));
-			L10n::getDefault()->email('ragnarok-reset-pw', array(
-				'site-title'   => App::settings()->get('title'),
-				'site-url'     => \Aqua\URL,
-				'ro-username'  => htmlspecialchars($this->account->username),
-				'username'     => htmlspecialchars($user->account->username),
-				'display-name' => htmlspecialchars($user->account->displayName),
-				'email'        => htmlspecialchars($user->account->email),
-				'time-now'     => strftime(App::settings()->get('date_format'), ''),
-				'key'          => $key,
-				'url'          => $this->account->url(array( 'action' => 'resetpw', 'arguments' => array( $key ) ))
-			), $title, $content);
+			$email = Email::fromTemplate('ragnarok-reset-pw')
+				->isHtml(true)
+				->replace(array(
+					'site-title'   => App::settings()->get('title'),
+					'site-url'     => \Aqua\URL,
+					'ro-username'  => htmlspecialchars($this->account->username),
+					'username'     => htmlspecialchars($user->account->username),
+					'display-name' => htmlspecialchars($user->account->displayName),
+					'email'        => htmlspecialchars($user->account->email),
+					'time-now'     => strftime(App::settings()->get('date_format'), ''),
+					'time-left'    => 2,
+					'key'          => $key,
+					'url'          => $this->account->url(array( 'action' => 'resetpw', 'arguments' => array( $key ) ))
+				))
+				->addAddress($user->account);
 			App::user()->session->tmp('ragnarok-pw-reset::' . $this->account->id, $key, 3600 * 2);
-			$mailer = ac_mailer(true);
-			$mailer->AddAddress($user->account->email, $user->account->displayName);
-			$mailer->Body    = $content;
-			$mailer->Subject = $title;
-			$mailer->isHTML(true);
-			if(!$mailer->Send()) {
-				throw new PHPMailerException($mailer->ErrorInfo);
+			if(!$email->send()) {
+				throw new PHPMailerException(Email::phpMailer()->ErrorInfo);
 			}
 			$user->addFlash('success', null, __('ragnarok', 'password-email-sent'));
 			$user->session->tmp('ragnarok_pass_reset::' . $this->account->id, $key, 3600);

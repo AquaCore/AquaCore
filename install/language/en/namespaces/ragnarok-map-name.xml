@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-map-name" key="06guild_01">Guild War Arena</word>
     <word namespace="ragnarok-map-name" key="06guild_02">Guild War Arena</word>
     <word namespace="ragnarok-map-name" key="06guild_03">Guild War Arena</word>

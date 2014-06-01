@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="login" key="login">Login</word>
     <word namespace="login" key="logout">Logout</word>
     <word namespace="login" key="account-suspended">This account is suspended indefinitely.</word>

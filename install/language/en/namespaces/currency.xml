@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="currency" key="AUD">Australian Dollar</word>
     <word namespace="currency" key="BRL">Brazilian Real</word>
     <word namespace="currency" key="CAD">Canadian Dollar</word>

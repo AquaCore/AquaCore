@@ -1,60 +1,50 @@
 <?php
 namespace Aqua\Core;
 
+use Aqua\SQL\Query;
+use Aqua\SQL\Search;
+use Aqua\User\Role;
+
 class L10n
 {
 	/**
-	 * @var int
+	 * @var string
 	 */
-	public $id;
+	public static $code;
 	/**
 	 * @var string
 	 */
-	public $code;
+	public static $name;
 	/**
 	 * @var string
 	 */
-	public $name;
-	/**
-	 * @var string
-	 */
-	public $direction;
+	public static $direction;
 	/**
 	 * @var array
 	 */
-	public $locales = array();
+	public static $locales = array();
 	/**
 	 * @var array
 	 */
-	public $dictionary = array();
-	/**
-	 * @var \Aqua\Core\L10n[]
-	 */
-	public static $languages = array();
+	public static $phrases = array();
 	/**
 	 * @var string
 	 */
 	protected static $_defaultLanguage = 'en';
 
 	const CACHE_DIR = '/tmp/lang';
-	const LANG_DIR  = '/language';
 
 	protected function __construct() { }
-
-	public function __sleep()
-	{
-		return array( 'id', 'code', 'name', 'direction', 'locales' );
-	}
 
 	/**
 	 * @param string $namespace
 	 * @return array
 	 */
-	public function getNamespace($namespace)
+	public static function getNamespace($namespace)
 	{
-		isset($this->dictionary[$namespace]) or $this->_namespaceLoad($namespace);
+		isset(self::$phrases[$namespace]) or self::_namespaceLoad($namespace);
 
-		return $this->dictionary[$namespace];
+		return self::$phrases[$namespace];
 	}
 
 	/**
@@ -62,11 +52,11 @@ class L10n
 	 * @param string $key
 	 * @return string
 	 */
-	public function dictionary($namespace, $key)
+	public static function dictionary($namespace, $key)
 	{
-		isset($this->dictionary[$namespace]) or $this->_namespaceLoad($namespace);
+		isset(self::$phrases[$namespace]) or self::_namespaceLoad($namespace);
 
-		return isset($this->dictionary[$namespace][$key]) ? $this->dictionary[$namespace][$key] : $key;
+		return (isset(self::$phrases[$namespace][$key]) ? self::$phrases[$namespace][$key] : $key);
 	}
 
 	/**
@@ -74,10 +64,10 @@ class L10n
 	 * @param string $key
 	 * @return bool
 	 */
-	public function exists($namespace, $key = null)
+	public static function exists($namespace, $key = null)
 	{
-		isset($this->dictionary[$namespace]) or $this->_namespaceLoad($namespace);
-		if(empty($this->dictionary[$namespace]) || ($key && empty($this->dictionary[$namespace][$key]))) {
+		isset(self::$phrases[$namespace]) or self::_namespaceLoad($namespace);
+		if(empty(self::$phrases[$namespace]) || ($key && empty(self::$phrases[$namespace][$key]))) {
 			return false;
 		} else {
 			return true;
@@ -85,98 +75,16 @@ class L10n
 	}
 
 	/**
-	 * @param string $key
-	 * @param array  $replacements
-	 * @param        $title
-	 * @param        $content
-	 * @return bool
-	 */
-	public function email($key, array $replacements, &$title, &$content)
-	{
-		$tbl = ac_table('email_translations');
-		$sth = App::connection()->prepare("
-		SELECT _title, _body
-		FROM `$tbl`
-		WHERE _language_id = ? AND _email_name = ?
-		LIMIT 1
-		");
-		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
-		$sth->bindValue(2, $key, \PDO::PARAM_STR);
-		$sth->execute();
-		if(!($data = $sth->fetch(\PDO::FETCH_NUM))) {
-			return false;
-		}
-		list($title, $content) = $data;
-		$search  = array();
-		$replace = array();
-		foreach($replacements as $key => $word) {
-			$search[]  = ":$key";
-			$replace[] = $word;
-		}
-		unset($replacements);
-		$title   = str_replace($search, $replace, $title);
-		$content = str_replace($search, $replace, $content);
-
-		return true;
-	}
-
-	/**
+	 * @param string $namespace
 	 * @return array
 	 */
-	public function emails()
-	{
-		$tbl = ac_table('emails');
-		$sth = App::connection()->prepare("SELECT _name, _placeholders FROM `$tbl`");
-		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
-		$sth->execute();
-		$emails = array();
-		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$emails[$data[0]] = unserialize($data[1]);
-		}
-
-		return $emails;
-	}
-
-	/**
-	 * @param string $key
-	 * @param string $title
-	 * @param string $body
-	 * @return bool
-	 */
-	public function updateEmail($key, $title, $body)
-	{
-		$etbl = ac_table('emails');
-		$ttbl = ac_table('email_translations');
-		$sth  = App::connection()->prepare("
-		SELECT COUNT(1) FROM `$etbl`
-		WHERE _name = ?
-		");
-		$sth->bindValue(1, $key, \PDO::PARAM_STR);
-		$sth->execute();
-		if(!$sth->fetchColumn(0)) {
-			return false;
-		}
-		$sth = App::connection()->prepare("
-		INSERT INTO `$ttbl` (_language_id, _email_name, _title, _body)
-		VALUES (:language, :key, :title, :body)
-		ON DUPLICATE KEY UPDATE _title = VALUES(_title), _body = VALUES(_body)
-		");
-		$sth->bindValue(':key', $key, \PDO::PARAM_STR);
-		$sth->bindValue(':language', $this->id, \PDO::PARAM_INT);
-		$sth->bindValue(':title', $title, \PDO::PARAM_STR);
-		$sth->bindValue(':body', $body, \PDO::PARAM_STR);
-		$sth->execute();
-
-		return (bool)$sth->rowCount();
-	}
-
-	public function rangeList($namespace)
+	public static function rangeList($namespace)
 	{
 		$list = array();
 		$count = func_num_args();
 		for($i = 1; $i < $count; ++$i) {
 			foreach(func_get_arg($i) as $name) {
-				$list[$name] = $this->dictionary($namespace, $name) ?: $name;
+				$list[$name] = self::dictionary($namespace, $name) ?: $name;
 			}
 		}
 		return $list;
@@ -186,46 +94,41 @@ class L10n
 	 * @param string $namespace
 	 * @access protected
 	 */
-	protected function _namespaceLoad($namespace)
+	protected static function _namespaceLoad($namespace)
 	{
-		$file = \Aqua\ROOT . self::CACHE_DIR . "/$this->id/$namespace.cache";
+		$file = \Aqua\ROOT . self::CACHE_DIR . "/$namespace";
 		if(file_exists($file)) {
-			$this->dictionary[$namespace] = unserialize(file_get_contents($file));
+			self::$phrases[$namespace] = unserialize(file_get_contents($file));
 		} else {
-			$this->dictionary[$namespace] = array();
+			self::$phrases[$namespace] = array();
 		}
 	}
 
-	/**
-	 * @param string $default_language
-	 */
-	public static function init($default_language)
+	public static function init()
 	{
-		$file = \Aqua\ROOT . self::CACHE_DIR . '/lang.cache';
-		if(!file_exists($file)) {
-			self::rebuildCache();
-		} else {
-			self::$languages = unserialize(file_get_contents($file));
+		$settings = App::settings()->get('language');
+		self::$code      = $settings->get('code', 'en');
+		self::$name      = $settings->get('name', 'English');
+		self::$direction = $settings->get('direction', 'LTR');
+		self::$locales   = $settings->get('locales')->toArray();
+		$locales = self::$locales;
+		if(empty(self::$locales)) {
+			return;
 		}
-		self::setDefault($default_language);
+		array_unshift($locales, LC_ALL);
+		call_user_func_array('setlocale', $locales);
 	}
 
 	/**
 	 * @param string $namespace
 	 * @param mixed  $str
 	 * @param array  $sprintf
-	 * @param string $locale
 	 * @return string
 	 * @static
 	 */
-	public static function translate($namespace, $str, array $sprintf = array(), $locale = null)
+	public static function replace($namespace, $str, array $sprintf = array())
 	{
-		if(!$locale) {
-			$locale = self::$_defaultLanguage;
-		}
-		if($locale = self::get($locale)) {
-			$str = $locale->dictionary($namespace, $str);
-		}
+		$str = self::dictionary($namespace, $str);
 		if(empty($sprintf)) {
 			return $str;
 		} else {
@@ -235,113 +138,59 @@ class L10n
 		}
 	}
 
-	/**
-	 * Set the application's language
-	 *
-	 * @param int $id
-	 */
-	public static function setDefault($id)
+	public static function setLanguage(\SimpleXMLElement $xml)
 	{
-		if(!isset(self::$languages[$id])) {
-			self::$_defaultLanguage = key(self::$languages);
-		} else {
-			self::$_defaultLanguage = $id;
+		if(!$xml->language) {
+			return false;
 		}
-		if(!($lang = self::getDefault())) {
-			return;
+		$settings = new Settings(array());
+		$settings->set('name', (string)$xml->language->name);
+		$settings->set('code', (string)$xml->language->code);
+		switch(strtoupper((string)$xml->language->direction)) {
+			case 'LTR':
+			case '1':
+				$settings->set('direction', 'LRT');
+				break;
+			case 'RTL':
+			case '2':
+				$settings->set('direction', 'RTL');
+				break;
 		}
-		$locales = $lang->locales;
-		if(empty($locales)) return;
-		array_unshift($locales, LC_ALL);
-		call_user_func_array('setlocale', $locales);
-	}
-
-	/**
-	 * @return \Aqua\Core\L10n
-	 */
-	public static function getDefault()
-	{
-		return self::get(self::$_defaultLanguage);
-	}
-
-	/**
-	 * @param string $code
-	 * @return \Aqua\Core\L10n|null
-	 */
-	public static function get($code)
-	{
-		if(!isset(self::$languages[$code])) return null;
-
-		return self::$languages[$code];
+		$locales = array();
+		foreach($xml->language->locale as $lc) {
+			$locales[] = (string)$lc;
+		}
+		$settings->set('locales', $locales);
+		App::settings()->set('language', $settings)->export(\Aqua\ROOT . '/settings/application.php');
+		self::$code = $settings->get('code', '');
+		self::$name = $settings->get('name', '');
+		self::import($xml, null, true);
+		return true;
 	}
 
 	/**
 	 * @param \SimpleXMLElement $xml
-	 * @param int|null          $plugin_id
+	 * @param int|null          $pluginId
+	 * @param bool              $rebuildCache
 	 */
-	public static function import(\SimpleXMLElement $xml, $plugin_id = null)
+	public static function import(\SimpleXMLElement $xml, $pluginId = null, $rebuildCache = true)
 	{
-		if($plugin_id === null) {
-			$tbl      = ac_table('languages');
-			$lang_sth = App::connection()->prepare("
-			INSERT IGNORE INTO `$tbl` (_code, _name, _direction)
-			VALUES (:code, :name, :direction)
-			");
-			$tbl        = ac_table('language_locales');
-			$locale_sth = App::connection()->prepare("
-			REPLACE INTO `$tbl` (_language_id, _locale)
-			VALUES (:language, :locale)
-			");
-			foreach($xml->language as $language) {
-				if(!($code = (string)$language->code) ||
-				   !($name = (string)$language->name) ||
-				   self::get($code)) {
-					continue;
-				}
-				switch(strtoupper((string)$language->direction)) {
-					default:
-					case 'LTR':
-					case '1':
-						$dir = 'LTR';
-						break;
-					case 'RTL':
-					case '2':
-						$dir = 'RTL';
-						break;
-				}
-				$lang_sth->bindValue(':code', $code, \PDO::PARAM_STR);
-				$lang_sth->bindValue(':name', $name, \PDO::PARAM_STR);
-				$lang_sth->bindValue(':direction', $dir, \PDO::PARAM_STR);
-				$lang_sth->execute();
-				$id = App::connection()->lastInsertId();
-				$lang_sth->closeCursor();
-				if(!$id) {
-					continue;
-				}
-				$lang                   = new self;
-				$lang->id               = (int)$id;
-				$lang->code             = $code;
-				$lang->name             = $name;
-				$lang->direction        = $dir;
-				self::$languages[$code] = $lang;
-				foreach($language->locale as $locale) {
-					$locale_sth->bindValue(':language', $lang->id, \PDO::PARAM_INT);
-					$locale_sth->bindValue(':locale', (string)$locale, \PDO::PARAM_STR);
-					$locale_sth->execute();
-					$locale_sth->closeCursor();
-					$lang->locales[] = (string)$locale;
-				}
-			}
-			unset($lang_sth, $locale_sth);
-		}
-		$tbl = ac_table('language_words');
-		$sth = App::connection()->prepare("
-		INSERT IGNORE INTO `$tbl` (_language_id, _namespace, _key, _word, _plugin_id)
-		VALUES (:language, :namespace, :key, :word, :plugin)
-		");
+		self::importWordGroup($xml, $pluginId, $rebuildCache);
+		self::importEmailGroup($xml, $pluginId);
+		self::importTaskGroup($xml);
+		self::importPermissionGroup($xml, $rebuildCache);
+	}
+
+	public static function importWordGroup(\SimpleXMLElement $xml, $pluginId = null, $rebuildCache = true)
+	{
+		$sth = App::connection()->prepare(sprintf('
+		REPLACE INTO `%s` (_namespace, _key, _phrase, _plugin_id)
+		VALUES (:namespace, :key, :word, :plugin)
+		', ac_table('phrases')));
+		$namespaces = array();
 		foreach($xml->wordgroup as $wordgroup) {
 			$lang = (string)$wordgroup->attributes()->language;
-			if($lang === '' || !($lang = self::get($lang))) {
+			if($lang && strcasecmp($lang, self::$code) !== 0) {
 				continue;
 			}
 			foreach($wordgroup->word as $word) {
@@ -350,115 +199,154 @@ class L10n
 				if($namespace === '' || $key === '') {
 					continue;
 				}
-				$sth->bindValue(':language', $lang->id, \PDO::PARAM_INT);
+				$namespaces[] = $namespace;
 				$sth->bindValue(':namespace', $namespace, \PDO::PARAM_STR);
 				$sth->bindValue(':key', $key, \PDO::PARAM_STR);
 				$sth->bindValue(':word', (string)$word, \PDO::PARAM_STR);
-				if($plugin_id) $sth->bindValue(':plugin', $plugin_id, \PDO::PARAM_INT);
+				if($pluginId) $sth->bindValue(':plugin', $pluginId, \PDO::PARAM_INT);
 				else $sth->bindValue(':plugin', null, \PDO::PARAM_NULL);
 				$sth->execute();
-				$sth->closeCursor();
 			}
 		}
-		$tbl       = ac_table('emails');
-		$email_sth = App::connection()->prepare("
-		INSERT IGNORE INTO `$tbl` (_name, _plugin_id, _placeholders)
-		VALUES (:name, :plugin, :placeholders)
-		");
-		$tbl             = ac_table('email_translations');
-		$translation_sth = App::connection()->prepare("
-		REPLACE INTO `$tbl` (_email_name, _language_id, _title, _body)
-		VALUES (:name, :language, :title, :body)
-		");
+		if($rebuildCache) {
+			self::rebuildCache($namespaces);
+		}
+	}
+
+	public static function importEmailGroup(\SimpleXMLElement $xml, $pluginId = null)
+	{
+		$sth = App::connection()->prepare(sprintf('
+		REPLACE INTO `%s` (_key, _name, _default_subject, _default_body, _plugin_id)
+		VALUES (:key, :name, :subject, :body, :plugin)
+		', ac_table('email_templates')));
+
 		foreach($xml->emailgroup as $emailgroup) {
 			$lang = (string)$emailgroup->attributes()->language;
-			if($lang === '' || !($lang = self::get($lang))) {
+			if($lang && strcasecmp($lang, self::$code) !== 0) {
 				continue;
 			}
 			foreach($emailgroup->email as $email) {
 				$key = (string)$email->attributes()->key;
-				if($key === '') continue;
-				$x = (array)$email;
-				if(isset($x['placeholder'])) {
-					$placeholders = array_values($x['placeholders']);
-				} else {
-					$placeholders = array();
+				if($key === '') {
+					continue;
 				}
-				$email_sth->bindValue(':name', $key, \PDO::PARAM_STR);
-				$email_sth->bindValue(':placeholders', serialize($placeholders), \PDO::PARAM_STR);
-				if($plugin_id === null) $email_sth->bindValue(':plugin', null, \PDO::PARAM_NULL);
-				else $email_sth->bindValue(':plugin', $plugin_id, \PDO::PARAM_INT);
-				$email_sth->execute();
-				$email_sth->closeCursor();
-				$title = (string)$email->title;
-				$body  = (string)$email->body;
-				$translation_sth->bindValue(':name', $key, \PDO::PARAM_STR);
-				$translation_sth->bindValue(':language', $lang->id, \PDO::PARAM_INT);
-				$translation_sth->bindValue(':title', $title, \PDO::PARAM_STR);
-				$translation_sth->bindValue(':body', $body, \PDO::PARAM_STR);
-				$translation_sth->execute();
-				$translation_sth->closeCursor();
+				$sth->bindValue(':key', $key, \PDO::PARAM_STR);
+				$sth->bindValue(':name', (string)$email->name, \PDO::PARAM_STR);
+				$sth->bindValue(':subject', (string)$email->subject, \PDO::PARAM_STR);
+				$sth->bindValue(':body', (string)$email->body, \PDO::PARAM_STR);
+				if($pluginId === null) $sth->bindValue(':plugin', null, \PDO::PARAM_NULL);
+				else $sth->bindValue(':plugin', $pluginId, \PDO::PARAM_INT);
+				$sth->execute();
+				if($email->placeholder) {
+					self::_importEmailPlaceholders($email, $key);
+				}
 			}
 		}
-		self::rebuildCache();
 	}
 
-	public static function rebuildCache()
+	protected static function _importEmailPlaceholders(\SimpleXMLElement $xml, $emailKey)
 	{
-		ac_delete_dir(\Aqua\ROOT . self::CACHE_DIR, false);
-		self::$languages = array();
-		$tbl = ac_table('languages');
-		$sth = App::connection()->query("
-		SELECT id,
-		       _code,
-		       _name,
-		       _direction
-		FROM `$tbl`
-		");
-		$languages = array();
-		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$lang                         = new self;
-			$lang->id                     = (int)$data[0];
-			$lang->code                   = $data[1];
-			$lang->name                   = $data[2];
-			$lang->direction              = $data[3];
-			$languages[$lang->id]         = $lang;
-			self::$languages[$lang->code] = $lang;
+		$sth = App::connection()->prepare(sprintf('
+		REPLACE INTO `%s` (_email, _key, _description)
+		VALUES (:email, :key, :description)
+		', ac_table('email_placeholders')));
+		foreach($xml->placeholder as $placeholder) {
+			$key = (string)$placeholder->attributes()->key;
+			if($key === '') {
+				continue;
+			}
+			$sth->bindValue(':email', $emailKey, \PDO::PARAM_STR);
+			$sth->bindValue(':key', $key, \PDO::PARAM_STR);
+			$sth->bindValue(':description', (string)$placeholder, \PDO::PARAM_STR);
+			$sth->execute();
 		}
-		$tbl = ac_table('language_locales');
-		$sth = App::connection()->query("
-		SELECT _locale, _language_id
-		FROM  `$tbl`
-		");
-		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			if(!isset($languages[$data[1]])) continue;
-			$languages[$data[1]]->locales[] = $data[0];
-		}
-		$tbl = ac_table('language_words');
-		$sth = App::connection()->query("
-		SELECT _language_id,
-		       _namespace,
-		       _key,
-		       _word
-		FROM `$tbl`
-		ORDER BY _language_id, _namespace, _key
-		");
-		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			if(!isset($languages[$data[0]])) continue;
-			$languages[$data[0]]->dictionary[$data[1]][$data[2]] = $data[3];
-		}
-		$old = umask(0);
-		foreach($languages as $lang) {
-			$dir = \Aqua\ROOT . self::CACHE_DIR . "/{$lang->id}";
-			mkdir($dir, \Aqua\PRIVATE_DIRECTORY_PERMISSION);
-			foreach($lang->dictionary as $namespace => $words) {
-				krsort($words, SORT_NUMERIC);
-				file_put_contents("$dir/{$namespace}.cache", serialize($words));
-				chmod("$dir/{$namespace}.cache", \Aqua\PRIVATE_FILE_PERMISSION);
+	}
+
+	public static function importTaskGroup(\SimpleXMLElement $xml)
+	{
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _title = :title,
+			_description = :desc
+		WHERE _name = :name
+		LIMIT 1
+		', ac_table('tasks')));
+		foreach($xml->taskgroup as $taskgroup) {
+			$lang = (string)$taskgroup->attributes()->language;
+			if($lang && strcasecmp($lang, self::$code) !== 0) {
+				continue;
+			}
+			foreach($taskgroup->task as $task) {
+				$sth->bindValue(':name', (string)$task->attributes()->name, \PDO::PARAM_STR);
+				$sth->bindValue(':title', (string)$task->title, \PDO::PARAM_STR);
+				if($task->description) $sth->bindValue(':desc', (string)$task->description, \PDO::PARAM_STR);
+				else $sth->bindValue(':desc', null, \PDO::PARAM_NULL);
+				$sth->execute();
+				$sth->closeCursor();
 			}
 		}
-		file_put_contents(\Aqua\ROOT . self::CACHE_DIR . '/lang.cache', serialize(self::$languages));
-		chmod(\Aqua\ROOT . self::CACHE_DIR . '/lang.cache', \Aqua\PRIVATE_FILE_PERMISSION);
+	}
+
+	public static function importPermissionGroup(\SimpleXMLElement $xml, $rebuildCache = true)
+	{
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _name = :name,
+			_description = :desc
+		WHERE _permission = :key
+		LIMIT 1
+		', ac_table('permissions')));
+		foreach($xml->permissiongroup as $permissiongroup) {
+			$lang = (string)$permissiongroup->attributes()->language;
+			if($lang && strcasecmp($lang, self::$code) !== 0) {
+				continue;
+			}
+			foreach($permissiongroup->permission as $permission) {
+				$sth->bindValue(':key', (string)$permission->attributes()->key, \PDO::PARAM_STR);
+				$sth->bindValue(':name', (string)$permission->name, \PDO::PARAM_STR);
+				if($permission->description) $sth->bindValue(':desc', (string)$permission->description, \PDO::PARAM_STR);
+				else $sth->bindValue(':desc', null, \PDO::PARAM_NULL);
+				$sth->execute();
+				$sth->closeCursor();
+			}
+		}
+		if($rebuildCache) {
+			Role::rebuildPermissionCache();
+		}
+	}
+
+	public static function rebuildCache(array $namespaces = null)
+	{
+		if(empty($namespaces)) {
+			ac_delete_dir(\Aqua\ROOT . self::CACHE_DIR, false);
+		}
+		$select = Query::select(App::connection())
+			->columns(array(
+				'namespace' => '_namespace',
+			    'key'       => '_key',
+			    'phrase'    => '_phrase'
+			))
+			->from(ac_table('phrases'))
+			->order(array( '_namespace', '_key' ));
+		if(!empty($namespaces)) {
+			array_unshift($namespaces, Search::SEARCH_IN);
+			$select->where(array( '_namespace' => $namespaces ));
+		}
+		$select->query();
+		if(!$select->count()) {
+			return;
+		}
+		$phrases = array();
+		foreach($select as $data) {
+			$phrases[$data['namespace']][$data['key']] = $data['phrase'];
+		}
+		$old = umask(0);
+		foreach($phrases as $namespace => $keys) {
+			ksort($keys, SORT_NUMERIC);
+			$file = \Aqua\ROOT . self::CACHE_DIR . "/$namespace";
+			file_put_contents($file, serialize($keys));
+			chmod($file, \Aqua\PRIVATE_FILE_PERMISSION);
+		}
 		umask($old);
 	}
 }

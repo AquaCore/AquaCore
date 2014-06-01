@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-state" key="0">Normal</word>
     <word namespace="ragnarok-state" key="1">Unregistered ID</word>
     <word namespace="ragnarok-state" key="2">Incorrect user ID</word>

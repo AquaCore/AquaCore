@@ -33,24 +33,24 @@ extends Page
 		}
 		if($action === 'import') {
 			$this->response->status(302)->redirect(App::request()->uri->url(array( 'query' => array() )));
-			if(ac_file_uploaded('plugin-import', false, $error, $error_str)) {
-				switch(strtolower($_FILES['plugin-import']['type'])) {
+			if(ac_file_uploaded('plugin', false, $error, $error_str)) {
+				switch(strtolower($_FILES['plugin']['type'])) {
 					case 'application/zip':
-						if(!preg_match('/\.zipx?$/i', $_FILES['plugin-import']['name'])) {
+						if(!preg_match('/\.zipx?$/i', $_FILES['plugin']['name'])) {
 							App::user()->addFlash('error', null, __('upload', 'ext-mime-mismatch'));
 
 							return;
 						}
 						break;
 					case 'application/x-tar':
-						if(!preg_match('/\.tar$/i', $_FILES['plugin-import']['name'])) {
+						if(!preg_match('/\.tar$/i', $_FILES['plugin']['name'])) {
 							App::user()->addFlash('error', null, __('upload', 'ext-mime-mismatch'));
 
 							return;
 						}
 						break;
 					case 'application/x-gtar':
-						if(!preg_match('/\.t(ar\.)?(gz|bz2)$/i', $_FILES['plugin-import']['name'])) {
+						if(!preg_match('/\.t(ar\.)?(gz|bz2)$/i', $_FILES['plugin']['name'])) {
 							App::user()->addFlash('error', null, __('upload', 'ext-mime-mismatch'));
 
 							return;
@@ -67,15 +67,18 @@ extends Page
 				return;
 			}
 			try {
-				$dir = "phar://{$_FILES['plugin-import']['tmp_name']}";
-				if(!is_dir($dir)) {
+				preg_match('/\.(zipx?|tar|t(?:ar\.)?(?:gz|bz2))$/i', $_FILES['plugin']['name'], $match);
+				$tmp = \Aqua\ROOT . '/tmp/' . uniqid() . $match[0];
+				if(!move_uploaded_file($_FILES['plugin']['tmp_name'], $tmp)) {
+					App::user()->addFlash('error', null, __('plugin', 'failed-to-import', __('upload', 'failed-to-move')));
 					return;
 				}
-				$plugin = P::import($dir);
+				$plugin = P::import("phar://$tmp");
+				@unlink($tmp);
 				App::user()->addFlash('success', null, __('plugin', 'plugin-imported', $plugin->name));
 			} catch(PluginManagerException $exception) {
 				ErrorLog::logSql($exception);
-				App::user()->addFlash('error', __('plugin', 'failed-to-import'), $exception->getMessage());
+				App::user()->addFlash('error', null, __('plugin', 'failed-to-import', $exception->getMessage()));
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));

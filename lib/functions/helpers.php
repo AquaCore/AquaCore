@@ -1,7 +1,6 @@
 <?php
 use Aqua\Core\L10n;
 use Aqua\Core\App;
-use PHPMailer\PHPMailer;
 use Aqua\Ragnarok\Character;
 use Aqua\Http\Uri;
 
@@ -13,11 +12,10 @@ use Aqua\Http\Uri;
 function __($namespace, $key)
 {
 	$arguments = func_get_args();
-	return L10n::translate(
+	return L10n::replace(
 		array_shift($arguments), // namespace
 		array_shift($arguments), // string
-		$arguments,              // sprintf arguments
-		null                     // locale
+		$arguments               // sprintf arguments
 	);
 }
 
@@ -253,29 +251,6 @@ function ac_probability($probability)
 		return true;
 	}
 	return false;
-}
-
-function ac_mailer($throw = true)
-{
-	$settings = App::settings()->get('email');
-	$phpmailer = new PHPMailer($throw);
-	if($settings->get('use_smtp', false)) {
-		$phpmailer->IsSMTP();
-		$phpmailer->SMTPSecure  = $settings->get('smtp_encryption', '');
-		$phpmailer->SMTPAuth    = (bool)$settings->get('smtp_authentication', false);
-		$phpmailer->Port        = (int)$settings->get('smtp_port', 25);
-		$phpmailer->Helo        = $settings->get('smtp_helo', '');
-		$phpmailer->Realm       = $settings->get('smtp_realm', '');
-		$phpmailer->Workstation = $settings->get('smtp_workstation', '');
-		$phpmailer->Timeout     = $settings->get('smtp_timeout', 10);
-		$phpmailer->Host        = $settings->get('smtp_host', '');
-		$phpmailer->Username    = $settings->get('smtp_username', '');
-		$phpmailer->Password    = $settings->get('smtp_password', '');
-	}
-	$phpmailer->Hostname    = $settings->get('hostname', '');
-	$phpmailer->CharSet     = $settings->get('charset', 'UTF-8');
-	$phpmailer->SetFrom($settings->get('from_address', ''), $settings->get('from_name', ''));
-	return $phpmailer;
 }
 
 /**

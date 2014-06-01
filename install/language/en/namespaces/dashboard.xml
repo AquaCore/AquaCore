@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="dashboard" key="dashboard">Dashboard</word>
     <word namespace="dashboard" key="this-week">This week</word>
     <word namespace="dashboard" key="weeks-ago-s">Last week</word>

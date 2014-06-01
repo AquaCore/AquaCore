@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="account-state" key="0">Normal</word>
     <word namespace="account-state" key="1">Awaiting validation</word>
     <word namespace="account-state" key="2">Suspended</word>

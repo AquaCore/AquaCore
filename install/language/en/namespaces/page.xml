@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="page" key="pages">Pages</word>
     <word namespace="page" key="new-page">New Page</word>
     <word namespace="page" key="edit-page">Edit Page</word>

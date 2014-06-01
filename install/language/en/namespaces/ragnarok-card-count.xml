@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-card-count" key="0"></word>
     <word namespace="ragnarok-card-count" key="1">Double</word>
     <word namespace="ragnarok-card-count" key="2">Triple</word>

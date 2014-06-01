@@ -164,11 +164,11 @@ class Role
 		if(!is_array($permissions)) {
 			$permissions = array( $permissions );
 		}
-		$protected   = ($protected ? 'y' : 'n');
-		$xprotected  = ($protected ? 2 : 1 );
-		$added       = array();
-		$permissionList = array_flip(self::permissions());
-		$permissions = array_unique($permissions);
+		$protected      = ($protected ? 'y' : 'n');
+		$xprotected     = ($protected ? 2 : 1 );
+		$added          = array();
+		$permissionList = array_column(self::permissions(), 'id', 'key');
+		$permissions    = array_unique($permissions);
 		$sth = App::connection()->prepare(sprintf('
 		REPLACE INTO `%s` (_role_id, _permission, _protected)
 		VALUES (:role, :permission, :protected)
@@ -205,9 +205,9 @@ class Role
 		if(!is_array($permissions)) {
 			$permissions = array( $permissions );
 		}
-		$deleted = array();
-		$permissionList = array_flip(self::permissions());
-		$permissions = array_unique($permissions);
+		$deleted        = array();
+		$permissionList = array_column(self::permissions(), 'id', 'key');
+		$permissions    = array_unique($permissions);
 		$sth = App::connection()->prepare(sprintf('
 		DELETE FROM `%s`
 		WHERE _role_id = :role
@@ -359,7 +359,7 @@ class Role
 		INSERT INTO `%s` (_role_id, _permission, _protected)
 		VALUES (:role , :permission, :protected)
 		', ac_table('role_permissions')));
-		$existingPermissions = self::permissions();
+		$existingPermissions = array_column(self::permissions(), 'key', 'id');
 		foreach($permissions as $permission) {
 			if(is_array($permission)) {
 				$protected  = ($permission[1] ? 'y' : 'n');
@@ -449,8 +449,8 @@ class Role
 	public static function importPermissions(\SimpleXMLElement $xml, $pluginId = null)
 	{
 		$insertPermission = App::connection()->prepare(sprintf('
-		INSERT IGNORE INTO `%s` (_permission, _plugin_id)
-		VALUES (:name, :plugin)
+		INSERT IGNORE INTO `%s` (_permission, _name, _description, _plugin_id)
+		VALUES (:key, :name, :desc, :plugin)
 		', ac_table('permissions')));
 		$getPermissionId = App::connection()->prepare(sprintf('
 		SELECT id FROM `%s`
@@ -464,7 +464,13 @@ class Role
 			if(!($key = (string)$permission->attributes()->key)) {
 				continue;
 			}
-			$insertPermission->bindValue(':name', $key, \PDO::PARAM_STR);
+			$insertPermission->bindValue(':key', $key, \PDO::PARAM_STR);
+			$insertPermission->bindValue(':name', (string)$permission->name, \PDO::PARAM_STR);
+			if($desc = (string)$permission->description) {
+				$insertPermission->bindValue(':desc', $desc, \PDO::PARAM_STR);
+			} else {
+				$insertPermission->bindValue(':desc', null, \PDO::PARAM_NULL);
+			}
 			if($pluginId) {
 				$insertPermission->bindValue(':plugin', $pluginId, \PDO::PARAM_INT);
 			} else {
@@ -582,19 +588,19 @@ class Role
 
 	public static function rebuildPermissionCache()
 	{
-		self::$permissions = array();
-		$select = Query::select(App::connection())
+		self::$permissions = Query::select(App::connection())
 			->columns(array(
-				'id'   => 'id',
-				'name' => '_permission'
+				'id'          => 'id',
+				'key'         => '_permission',
+			    'name'        => '_name',
+			    'description' => '_description',
 			))
 			->setColumnType(array( 'id' => 'interger' ))
 			->from(ac_table('permissions'))
-			->query();
-		while($select->valid()) {
-			self::$permissions[$select->get('id')] = $select->get('name');
-			$select->next();
-		}
+			->setKey('id')
+			->order(array( 'id' => 'ASC' ))
+			->query()
+			->results;
 		App::cache()->store(self::PERMISSION_CACHE_KEY, self::$permissions, self::CACHE_TTL);
 	}
 }

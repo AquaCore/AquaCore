@@ -69,7 +69,7 @@ extends Page
 				->setColumn('status')
 				->setLabel(__('content', 'status'))
 				->multiple()
-				->value(L10n::getDefault()->rangeList('comment-status', range(0, 2)));
+				->value(L10n::rangeList('comment-status', range(0, 2)));
 			if(!$this->contentType) {
 				$search = CommentFilter::commentSearch();
 			} else if(!$id) {

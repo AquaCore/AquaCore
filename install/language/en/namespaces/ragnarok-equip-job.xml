@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-equip-job" key="268435455">All jobs</word>
     <word namespace="ragnarok-equip-job" key="268435454">Every job except novice</word>
     <word namespace="ragnarok-equip-job" key="33554432">Ninja</word>

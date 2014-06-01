@@ -9,7 +9,6 @@ use Aqua\Log\ProfileUpdateLog;
 use Aqua\Ragnarok\Server;
 use Aqua\Ragnarok\Account as RoAccount;
 use Aqua\Site\Page;
-use Aqua\SQL\Search;
 use Aqua\UI\Form;
 use Aqua\UI\Pagination;
 use Aqua\UI\Template;
@@ -70,7 +69,7 @@ extends Page
 				->setColumn('status')
 				->multiple()
 				->setLabel(__('profile', 'status'))
-				->value(L10n::getDefault()->rangeList('account-state', range( 0, 3 )));
+				->value(L10n::rangeList('account-state', range( 0, 3 )));
 			$search = Account::search()->calcRows(true);
 			$frm->apply($search);
 			$search->query();

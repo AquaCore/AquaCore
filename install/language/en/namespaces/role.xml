@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="role" key="id">ID</word>
     <word namespace="role" key="name">Name</word>
     <word namespace="role" key="description">Description</word>
@@ -19,5 +19,6 @@
     <word namespace="role" key="edit">Edit</word>
     <word namespace="role" key="delete">Delete</word>
     <word namespace="role" key="roles">Roles</word>
+    <word namespace="role" key="role-updated"><![CDATA[The role <b>%s</b> had been upated.]]></word>
   </wordgroup>
 </languageimport>

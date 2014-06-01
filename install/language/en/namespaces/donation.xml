@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="donation" key="transfer">Transfer Credits</word>
     <word namespace="donation" key="transfer-history">Transfer History</word>
     <word namespace="donation" key="history">Donation History</word>

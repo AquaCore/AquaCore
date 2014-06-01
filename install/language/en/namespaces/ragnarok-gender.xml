@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-gender" key="1">Male</word>
     <word namespace="ragnarok-gender" key="2">Female</word>
     <word namespace="ragnarok-gender" key="3">Server</word>

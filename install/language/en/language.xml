@@ -8,4 +8,65 @@
     <locale>en_US.UTF-8</locale>
     <locale>English</locale>
   </language>
+  <permissiongroup>
+    <permission key="register-account">
+      <name>Register ragnarök accounts</name>
+    </permission>
+    <permission key="comment">
+      <name>Comment</name>
+    </permission>
+    <permission key="rate">
+      <name>Rate content</name>
+    </permission>
+    <permission key="view-admin-cp">
+      <name>View admin CP</name>
+    </permission>
+    <permission key="edit-cp-user">
+      <name>Edit site users</name>
+      <description>Edit users' account data (username, password, display name, etc).</description>
+    </permission>
+    <permission key="edit-server-user">
+      <name>Edit ragnarök users</name>
+    </permission>
+    <permission key="edit-cp-settings">
+      <name>Edit site settings</name>
+    </permission>
+    <permission key="edit-server-settings">
+      <name>Edit server settings</name>
+    </permission>
+    <permission key="view-cp-logs">
+      <name>View dite logs</name>
+    </permission>
+    <permission key="view-server-logs">
+      <name>View server logs</name>
+    </permission>
+    <permission key="manage-roles">
+      <name>Manage roles</name>
+    </permission>
+    <permission key="manage-plugins">
+      <name>Manage plugins</name>
+    </permission>
+    <permission key="create-pages">
+      <name>Create pages</name>
+    </permission>
+    <permission key="publish-posts">
+      <name>Publish posts</name>
+    </permission>
+    <permission key="view-user-items">
+      <name>View storage</name>
+      <description>View inventories, carts, storages and guild storages.</description>
+    </permission>
+    <permission key="ban-cp-user">
+      <name>Ban site users</name>
+    </permission>
+    <permission key="ban-server-user">
+      <name>Ban ragnarök accounts</name>
+    </permission>
+  </permissiongroup>
+  <taskgroup>
+    <task key="BulkMailTask">
+      <name>Bulk Mail</name>
+      <description>Send queued bulk emails.</description>
+    </task>
+  </taskgroup>
 </languageimport>

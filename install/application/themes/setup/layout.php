@@ -2,7 +2,6 @@
 <?php
 use Aqua\Core\App;
 use Aqua\UI\ScriptManager;
-use Aqua\Core\L10n;
 /**
  * @var $body_class string
  * @var $head       \Aqua\UI\Theme\Head

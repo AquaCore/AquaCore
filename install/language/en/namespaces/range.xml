@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="range" key="between">Between</word>
     <word namespace="range" key="exactly">Exactly</word>
     <word namespace="range" key="higher">Higher than</word>

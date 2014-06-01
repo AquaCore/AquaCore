@@ -16,7 +16,7 @@ extends AbstractRule
 
 	public function __construct(array $settings = array())
 	{
-		$this->settings['direction'] = strtolower(L10n::getDefault()->direction);
+		$this->settings['direction'] = strtolower(L10n::$direction);
 		parent::__construct($settings);
 		$self = $this;
 		$this->addTag('indent', array(

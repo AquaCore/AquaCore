@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-skill-name" key="10000">Approval</word>
     <word namespace="ragnarok-skill-name" key="10001">Kafra Contract</word>
     <word namespace="ragnarok-skill-name" key="10002">Guardian Research</word>

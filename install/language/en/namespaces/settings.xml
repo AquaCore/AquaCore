@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="settings" key="settings">Settings</word>
     <word namespace="settings" key="settings-categories">Settings Categories</word>
     <word namespace="settings" key="application">Application Settings</word>

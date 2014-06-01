@@ -1572,7 +1572,7 @@ extends Page
 				->defaultOrder('id')
 				->defaultLimit(20)
 				->persist('admin.intentory');
-			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
+			$itemTypes = L10n::rangeList('ragnarok-item-type',
 			                                           array( 0 ),
 			                                           range(2, 8),
 			                                           range(10, 12));
@@ -1623,7 +1623,7 @@ extends Page
 			    ->defaultOrder('id')
 			    ->defaultLimit(20)
 			    ->persist('admin.intentory');
-			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
+			$itemTypes = L10n::rangeList('ragnarok-item-type',
 			                                           array( 0 ),
 			                                           range(2, 8),
 			                                           range(10, 12));
@@ -1763,7 +1763,7 @@ extends Page
 			    ->defaultOrder('id')
 			    ->defaultLimit(20)
 			    ->persist('admin.intentory');
-			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
+			$itemTypes = L10n::rangeList('ragnarok-item-type',
 			                                           array( 0 ),
 			                                           range(2, 8),
 			                                           range(10, 12));

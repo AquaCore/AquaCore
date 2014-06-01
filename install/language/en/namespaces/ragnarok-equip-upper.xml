@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-equip-upper" key="15">All</word>
     <word namespace="ragnarok-equip-upper" key="8">3rd Classes</word>
     <word namespace="ragnarok-equip-upper" key="4">Baby</word>

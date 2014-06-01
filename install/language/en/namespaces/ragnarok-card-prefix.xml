@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-card-prefix" key="4001">Lucky</word>
     <word namespace="ragnarok-card-prefix" key="4002">Vital</word>
     <word namespace="ragnarok-card-prefix" key="4003">Hard</word>

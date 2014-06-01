@@ -5,6 +5,9 @@ use Aqua\UI\Theme;
 /**
  * @var $this \Aqua\UI\Theme
  */
+
+use Aqua\BBCode\Smiley;
+
 $this->footer->enqueueScript(ScriptManager::script('aquacore.flash'), false);
 $json = json_encode(App::user()->getFlash());
 $this->footer->enqueueScript('theme.flash')
@@ -15,12 +18,11 @@ AquaCore._flash.enqueue($json);
 ");
 
 function registerCKEditorSettings(Theme $theme) {
-	$smileys = include \Aqua\ROOT . '/settings/smiley.php';
 	$lang = \Aqua\Core\L10n::getDefault();
 	$theme->addSettings('CKEditorOptions', array(
 		'smiley_path' => \Aqua\URL . '/uploads/smiley/',
-		'smiley_descriptions' => array_keys($smileys),
-		'smiley_images' => array_values($smileys),
+		'smiley_descriptions' => array_column(Smiley::smileys(), 'text'),
+		'smiley_images' => array_column(Smiley::smileys(), 'file'),
 		'removePlugins' => 'autogrow,bbcode,spoiler',
 		'height' => 450,
 		'contentsLangDirection' => strtolower($lang->direction),

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-weapon-type" key="0">Bare Fist</word>
     <word namespace="ragnarok-weapon-type" key="1">Dagger</word>
     <word namespace="ragnarok-weapon-type" key="2">One-Handed Sword</word>

@@ -154,7 +154,7 @@ extends Page
 				->setColumn('type')
 				->setLabel(__('profile', 'ban-type'))
 				->multiple()
-				->value(L10n::getDefault()->rangeList('ban-type', range(1, 3)));
+				->value(L10n::rangeList('ban-type', range(1, 3)));
 			$frm->apply($search);
 			$search->query();
 			$users = new DataPreload('Aqua\\User\\Account::search', Account::$users);

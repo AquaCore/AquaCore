@@ -54,6 +54,7 @@ include __DIR__ . '/Aqua/Event/EventDispatcher.php';
 include __DIR__ . '/Aqua/Autoloader/ClassMap.php';
 include __DIR__ . '/Aqua/Autoloader/Autoloader.php';
 include __DIR__ . '/Aqua/Core/App.php';
+include __DIR__ . '/Aqua/Core/L10n.php';
 include __DIR__ . '/Aqua/Core/Settings.php';
 include __DIR__ . '/Aqua/Core/Exception/PHP.php';
 include __DIR__ . '/Aqua/Core/Exception/Assertion.php';
@@ -106,10 +107,8 @@ try {
 	} else {
 		die("AquaCore is not installed.\r\n");
 	}
-	include __DIR__ . '/Aqua/Core/L10n.php';
 	App::defineConstants();
 	App::registrySet('ac_time', $time);
-	L10n::init(App::settings()->get('language', 'en'));
 	if(\Aqua\ENVIRONMENT === 'CLI' || php_sapi_name() === 'cli') {
 		$args = array();
 		for($i = 1; $i < $argc; ++$i) {
@@ -143,6 +142,7 @@ try {
 			include __DIR__ . '/tags.php';
 	}
 	unset($settings);
+	L10n::init();
 } catch(Exception $exception) {
 	ac_define_constants();
 	if(!class_exists('Aqua\Log\ErrorLog', false)) {

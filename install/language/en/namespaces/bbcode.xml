@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup>
+    <word namespace="bbcode" key="smileys">Smileys</word>
+    <word namespace="bbcode" key="smiley-upload">Upload smileys (GIF, JPEG, JPG, PNG, ZIP, TAR, TAR.GZ, TAR.BZ2)</word>
+    <word namespace="bbcode" key="smiley-order-saved">Smiley order saved.</word>
+    <word namespace="bbcode" key="smiley-deleted-s">%s smiley deleted.</word>
+    <word namespace="bbcode" key="smiley-deleted-p">%s smileys deleted.</word>
+    <word namespace="bbcode" key="smiley-updated-s">%s smiley updated.</word>
+    <word namespace="bbcode" key="smiley-updated-p">%s smileys updated.</word>
+    <word namespace="bbcode" key="smiley-uploaded-s">%s smiley uploaded.</word>
+    <word namespace="bbcode" key="smiley-uploaded-p">%s smileys uploaded.</word>
+  </wordgroup>
+</languageimport>

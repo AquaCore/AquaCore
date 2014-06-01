@@ -60,37 +60,40 @@ implements SubjectInterface
 			$settings->toArray()
 		);
 		$this->session->open();
-		$login_settings = App::settings()->get('account')->get('persistent_login');
+		$loginSettings = App::settings()->get('account')->get('persistent_login');
 		if($this->session->userId !== null) {
 			$this->account = Account::get($this->session->userId);
-		} else if($login_settings->get('enable', false) &&
-		          ($key = $this->request->cookie($login_settings->get('name', 'ac_persistent_login'), null))) {
+			if($this->session->get('403-redirect')) {
+				App::dispatcher()->attach('render-end', array( $this, '_403Callback' ));
+			}
+		} else if($loginSettings->get('enable', false) &&
+		          ($key = $this->request->cookie($loginSettings->get('name', 'ac_persistent_login'), null))) {
 			$response = App::response();
 			try {
-				$old_key = $user_id = null;
-				if(PersistentLogin::getKey($key, $user_id, $old_key) &&
+				$oldKey = $userId = null;
+				if(PersistentLogin::getKey($key, $userId, $oldKey) &&
 				   ($user = PersistentLogin::authenticate($key))) {
 					if($user->status === Account::STATUS_BANNED || $user->status === Account::STATUS_SUSPENDED) {
-						LoginLog::logSql($old_key,
+						LoginLog::logSql($oldKey,
 						                 $user->id,
 						                 LoginLog::TYPE_PERSISTENT,
 						                 LoginLog::STATUS_ACCESS_DENIED);
-						$response->setCookie($login_settings->get('name'), array(
+						$response->setCookie($loginSettings->get('name'), array(
 							'value' => '',
 							'ttl'   => -3600
 						));
 					} else {
-						LoginLog::logSql($old_key,
+						LoginLog::logSql($oldKey,
 						                 $user->id,
 						                 LoginLog::TYPE_PERSISTENT,
 						                 LoginLog::STATUS_OK);
 						$response->status(302)->redirect($this->request->uri->url());
 						$this->login($user);
-						$response->setCookie($login_settings->get('name'), array(
+						$response->setCookie($loginSettings->get('name'), array(
 							'value'     => $key,
 							'ttl'       => 315360000,
-							'http_only' => (bool)$login_settings->get('http_only', true),
-							'secure'    => (bool)$login_settings->get('secure', false)
+							'http_only' => (bool)$loginSettings->get('http_only', true),
+							'secure'    => (bool)$loginSettings->get('secure', false)
 						));
 						if($this->request->method === 'GET') {
 							$response->send();
@@ -98,18 +101,18 @@ implements SubjectInterface
 						}
 					}
 				} else {
-					LoginLog::logSql($old_key,
-					                 $user_id,
+					LoginLog::logSql($oldKey,
+					                 $userId,
 					                 LoginLog::TYPE_PERSISTENT,
 					                 LoginLog::STATUS_INVALID_CREDENTIALS);
-					$response->setCookie($login_settings->get('name'), array(
+					$response->setCookie($loginSettings->get('name'), array(
 						'value' => '',
 						'ttl'   => -3600
 					));
 				}
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
-				$response->setCookie($login_settings->get('name'), array(
+				$response->setCookie($loginSettings->get('name'), array(
 					'value' => '',
 					'ttl'   => -3600
 				));
@@ -238,6 +241,15 @@ implements SubjectInterface
 		$this->notify('logout', $feedback);
 
 		return $this;
+	}
+
+	public function _403Callback()
+	{
+		if(App::response()->status === 403) {
+			App::response()->status(302)->redirect(\Aqua\WORKING_URL);
+		}
+		$this->session->delete('403-redirect');
+		$this->session->keep(self::FLASH_MESSAGE_KEY, 1);
 	}
 
 	public function attach($event, $listener)

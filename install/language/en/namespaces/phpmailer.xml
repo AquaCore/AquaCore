@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup>
+    <word namespace="phpmailer" key="authenticate">SMTP Error: Could not authenticate.</word>
+    <word namespace="phpmailer" key="connect_host">SMTP Error: Could not connect to SMTP host.</word>
+    <word namespace="phpmailer" key="data_not_accepted">SMTP Error: data not accepted.</word>
+    <word namespace="phpmailer" key="empty_message">Message body empty.</word>
+    <word namespace="phpmailer" key="encoding">Unknown encoding: </word>
+    <word namespace="phpmailer" key="execute">Could not execute: </word>
+    <word namespace="phpmailer" key="file_access">Could not access file: </word>
+    <word namespace="phpmailer" key="file_open">File Error: Could not open file: </word>
+    <word namespace="phpmailer" key="from_failed">The following From address failed: </word>
+    <word namespace="phpmailer" key="instantiate">Could not instantiate mail function.</word>
+    <word namespace="phpmailer" key="invalid_address">Invalid address.</word>
+    <word namespace="phpmailer" key="mailer_not_supported"> mailer is not supported.</word>
+    <word namespace="phpmailer" key="provide_address">You must provide at least one recipient email address.</word>
+    <word namespace="phpmailer" key="recipients_failed">SMTP Error: The following recipients failed: </word>
+    <word namespace="phpmailer" key="signing">Signing Error: </word>
+    <word namespace="phpmailer" key="smtp_connect_failed">SMTP connect() failed.</word>
+    <word namespace="phpmailer" key="smtp_error">SMTP server error: </word>
+    <word namespace="phpmailer" key="variable_set">Cannot set or reset variable: </word>
+  </wordgroup>
+</languageimport>

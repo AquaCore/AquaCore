@@ -255,4 +255,16 @@ implements FieldInterface
 	{
 
 	}
+
+	public function render()
+	{
+		if($this->getBool('multiple') && ($name = $this->getAttr('name'))) {
+			$this->attr('name', "{$name}[]");
+			$html = parent::render();
+			$this->attr('name', $name);
+			return $html;
+		} else {
+			return parent::render();
+		}
+	}
 }

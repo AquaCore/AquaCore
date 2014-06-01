@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="menu" key="home">Home</word>
     <word namespace="menu" key="register">Register</word>
     <word namespace="menu" key="news">News</word>

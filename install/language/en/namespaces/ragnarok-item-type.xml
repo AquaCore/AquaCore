@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-item-type" key="0">Healing</word>
     <word namespace="ragnarok-item-type" key="1">Unknown</word>
     <word namespace="ragnarok-item-type" key="2">Usable</word>

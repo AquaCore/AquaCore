@@ -3,7 +3,6 @@ namespace Page\Admin;
 
 use Aqua\Content\ContentType;
 use Aqua\Core\App;
-use Aqua\Core\L10n;
 use Aqua\Log\ErrorLog;
 use Aqua\Captcha\ReCaptcha;
 use Aqua\Site\Page;
@@ -56,14 +55,6 @@ extends Page
 				->checked(($settings->get('output_compression', false) ? '1' : null))
 			    ->setLabel(__('settings', 'app-ob-label'))
 			    ->setDescription(__('settings', 'app-ob-desc'));
-			$languages = array();
-			foreach(L10n::$languages as $lang) {
-				$languages[$lang->code] = $lang->name;
-			}
-			$frm->select('language')
-				->value($languages)
-				->selected($settings->get('language', null))
-				->setLabel(__('settings', 'app-language-label'));
 			$frm->select('ssl')
 		        ->value(array(
 						'0' => __('settings', 'app-ssl-0'),

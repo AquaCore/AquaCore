@@ -2,17 +2,21 @@
 namespace Aqua\Util;
 
 use Aqua\Core\App;
-use Aqua\Core\L10n;
+use Aqua\Core\Exception\InvalidArgumentException;
+use Aqua\Ragnarok\Account as RagnarokAccount;
+use Aqua\Ragnarok\Character;
+use Aqua\SQL\Query;
+use Aqua\User\Account as UserAccount;
 use PHPMailer\PHPMailer;
 
 class Email
 {
 	public $fromAddress;
 	public $fromName;
-	public $toAddress;
+	public $to = array();
 	public $subject;
 	public $body;
-	public $toName;
+	public $altBody;
 	public $tidy = true;
 	public $tidyConfig = array(
 		'indent'       => true,
@@ -27,17 +31,31 @@ class Email
 	protected static $_fromAddress;
 	protected static $_fromName;
 
-	public function __construct($subject, $body, $address, $name = null)
+	public function __construct($subject, $body, $altBody = null)
 	{
-		$this->toAddress = $address;
-		$this->toName    = $name;
-		if(is_array($body)) {
-			L10n::getDefault()->email($subject, $body, $this->subject, $this->body);
-		} else {
-			$this->subject = $subject;
-			$this->body    = $body;
-		}
+		$this->subject = $subject;
+		$this->body    = $body;
+		$this->altBody = $altBody;
 	}
+
+	public function replace(array $replacements)
+	{
+		$search  = array();
+		$replace = array();
+		foreach($replacements as $key => $word) {
+			$search[]  = ":$key";
+			$replace[] = $word;
+		}
+		unset($replacements);
+		$this->subject = str_replace($search, $replace, $this->subject);
+		$this->body    = str_replace($search, $replace, $this->body);
+		if(!empty($this->altBody)) {
+			$this->altBody = str_replace($search, $replace, $this->altBody);
+		}
+
+		return $this;
+	}
+
 
 	public function setFrom($address, $name = null)
 	{
@@ -46,25 +64,23 @@ class Email
 
 		return $this;
 	}
+	public function addAddress($address, $name = null)
+	{
+		$this->_address($this->to, $address, $name);
+
+		return $this;
+	}
 
 	public function addCC($address, $name = null)
 	{
-		if(!is_array($address)) {
-			$this->cc[$address] = $name;
-		} else {
-			$this->cc = array_merge($this->cc, $address);
-		}
+		$this->_address($this->cc, $address, $name);
 
 		return $this;
 	}
 
 	public function addBCC($address, $name = null)
 	{
-		if(!is_array($address)) {
-			$this->bcc[$address] = $name;
-		} else {
-			$this->bcc = array_merge($this->bcc, $address);
-		}
+		$this->_address($this->bcc, $address, $name);
 
 		return $this;
 	}
@@ -98,7 +114,7 @@ class Email
 		return $this;
 	}
 
-	public function html($useHtml = true)
+	public function isHtml($useHtml = true)
 	{
 		$this->html = $useHtml;
 
@@ -124,9 +140,9 @@ class Email
 		if($this->fromName) {
 			$phpMailer->FromName = $this->fromName;
 		}
-		$phpMailer->addAddress($this->toAddress, $this->toName);
-		$phpMailer->Subject = $this->subject;
+		$phpMailer->Subject  = $this->subject;
 		$phpMailer->Priority = $this->priority;
+		$phpMailer->AltBody  = $this->altBody;
 		if($this->html) {
 			$body = $this->body;
 			if($this->tidy && class_exists('tidy')) {
@@ -141,8 +157,10 @@ class Email
 			$phpMailer->isHTML(true);
 		} else {
 			$phpMailer->Body = $this->body;
-			$phpMailer->AltBody = $this->body;
 			$phpMailer->isHTML(false);
+		}
+		foreach($this->to as $to) {
+			$phpMailer->addAddress($to[1], $to[0]);
 		}
 		foreach($this->cc as $address => $name) {
 			$phpMailer->addCC($address, $name);
@@ -158,11 +176,9 @@ class Email
 	public function queue()
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_date, _to_address, _to_name, _from_address, _from_name, _subject, _body, _status)
-		VALUES (NOW(), :toaddr, :toname, :fromaddr, :fromname, :subject, :body, \'pending\')
+		INSERT INTO `%s` (_date, _from_address, _from_name, _subject, _body, _status)
+		VALUES (NOW(), :fromaddr, :fromname, :subject, :body, \'pending\')
 		', ac_table('mail_queue')));
-		$sth->bindValue(':toaddr', $this->toAddress, \PDO::PARAM_STR);
-		$sth->bindValue(':toname', $this->toName, \PDO::PARAM_STR);
 		$sth->bindValue(':subject', $this->subject, \PDO::PARAM_STR);
 		$sth->bindValue(':subject', $this->body, \PDO::PARAM_STR);
 		if($this->fromAddress) $sth->bindValue(':fromaddr', $this->fromAddress, \PDO::PARAM_STR);
@@ -173,13 +189,22 @@ class Email
 		$id = App::connection()->lastInsertId();
 		$sth->closeCursor();
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_mail_id, _address, _name, _bcc)
-		VALUES (:id, :addr, :name, :bcc)
+		INSERT INTO `%s` (_mail_id, _address, _name, _type)
+		VALUES (:id, :addr, :name, :type)
 		', ac_table('mail_cc')));
+		foreach($this->to as $address => $name) {
+			$sth->bindValue(':id', $id, \PDO::PARAM_INT);
+			$sth->bindValue(':addr', $address, \PDO::PARAM_STR);
+			$sth->bindValue(':type', 'to', \PDO::PARAM_STR);
+			if($name) $sth->bindValue(':name', $name, \PDO::PARAM_STR);
+			else $sth->bindValue(':name', null, \PDO::PARAM_NULL);
+			$sth->execute();
+			$sth->closeCursor();
+		}
 		foreach($this->cc as $address => $name) {
 			$sth->bindValue(':id', $id, \PDO::PARAM_INT);
 			$sth->bindValue(':addr', $address, \PDO::PARAM_STR);
-			$sth->bindValue(':bcc', 'n', \PDO::PARAM_STR);
+			$sth->bindValue(':type', 'cc', \PDO::PARAM_STR);
 			if($name) $sth->bindValue(':name', $name, \PDO::PARAM_STR);
 			else $sth->bindValue(':name', null, \PDO::PARAM_NULL);
 			$sth->execute();
@@ -188,13 +213,45 @@ class Email
 		foreach($this->bcc as $address => $name) {
 			$sth->bindValue(':id', $id, \PDO::PARAM_INT);
 			$sth->bindValue(':addr', $address, \PDO::PARAM_STR);
-			$sth->bindValue(':bcc', 'y', \PDO::PARAM_STR);
+			$sth->bindValue(':type', 'bcc', \PDO::PARAM_STR);
 			if($name) $sth->bindValue(':name', $name, \PDO::PARAM_STR);
 			else $sth->bindValue(':name', null, \PDO::PARAM_NULL);
 			$sth->execute();
 			$sth->closeCursor();
 		}
 		return $this;
+	}
+
+	protected function _address(&$addrList, $address, $name)
+	{
+		if(is_array($address)) {
+			foreach($address as $addr => $name) {
+				if(is_int($addr)) {
+					$this->_address($addrList, $name, null);
+				} else {
+					$this->_address($addrList, $addr, $name);
+				}
+			}
+		} else {
+			if($address instanceof Character) {
+				$name    = $address->name;
+				$address = $address->account()->email;
+			} else if($address instanceof RagnarokAccount) {
+				$name    = $address->username;
+				$address = $address->email;
+			} else if($address instanceof UserAccount) {
+				$name    = $address->displayName;
+				$address = $address->email;
+			} else if(!is_string($address)) {
+				throw new InvalidArgumentException(1, array(
+					'Aqua\\Ragnarok\\Character',
+					'Aqua\\Ragnarok\\Account',
+					'Aqua\\User\\Account',
+				    'string'
+				), $address);
+			}
+			$addrList[$address] = $name;
+		}
 	}
 
 	protected static function _reset()
@@ -235,5 +292,76 @@ class Email
 			self::$_phpMailer->SetFrom(self::$_fromAddress, self::$_fromName);
 		}
 		return self::$_phpMailer;
+	}
+
+	public static function fromTemplate($template)
+	{
+		if(!$template = self::getTemplate($template, false)) {
+			return false;
+		}
+		return new static($template['subject'], $template['body'], $template['alt_body']);
+	}
+
+	public static function getTemplate($key, $placeholders = false)
+	{
+		$select = Query::select(App::connection())
+			->columns(array(
+				'key' => '_key',
+			    'name' => '_name',
+			    'default_subject' => '_default_subject',
+			    'default_body' => '_default_body',
+			    'subject' => '_subject',
+			    'body' => '_body',
+			    'alt_body' => '_alt_body',
+			    'plugin_id' => '_plugin_id',
+			))
+			->setColumnType(array( 'plugin_id' => 'integer' ))
+			->from(ac_table('email_templates'))
+			->where(array( '_key' => $key ))
+			->limit(1)
+			->query();
+		if(!$select->valid()) {
+			return null;
+		}
+		$template = array(
+			'key'       => $select->get('key'),
+			'name'      => $select->get('name'),
+			'plugin_id' => $select->get('plugin_id'),
+			'subject'   => $select->get('subject') ?: $select->get('default_subject'),
+			'body'      => $select->get('body') ?: $select->get('default_body'),
+			'alt_body'  => $select->get('alt_body') ?: '',
+		);
+		if($placeholders) {
+			$placeholders = Query::select(App::connection())
+				->columns(array(
+					'key' => 'key',
+				    'description' => 'description'
+				))
+				->from(ac_table('email_placeholders'))
+				->where(array( '_email' => $select->get('key') ))
+				->query();
+			$template['placeholders'] = $placeholders->getColumn('description', 'key');
+		}
+		return $template;
+	}
+
+	public static function editTemplate($template, $subject, $body, $altBody)
+	{
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _subject = :subject,
+			_body = :body,
+			_alt_body = :alt
+		WHERE _key = :key
+		', ac_table('email_templates')));
+		$sth->bindValue(':key', $template, \PDO::PARAM_STR);
+		if($subject !== null) $sth->bindValue(':subject', $subject, \PDO::PARAM_STR);
+		else $sth->bindValue(':subject', null, \PDO::PARAM_NULL);
+		if($body !== null) $sth->bindValue(':body', $body, \PDO::PARAM_STR);
+		else $sth->bindValue(':body', null, \PDO::PARAM_NULL);
+		if($altBody !== null) $sth->bindValue(':alt', $altBody, \PDO::PARAM_STR);
+		else $sth->bindValue(':alt', null, \PDO::PARAM_NULL);
+		$sth->execute();
+		return (bool)$sth->rowCount();
 	}
 }

@@ -5,6 +5,7 @@ use Aqua\Core\App;
 use Aqua\Core\L10n;
 use Aqua\Event\Event;
 use Aqua\Plugin\Exception\PluginManagerException;
+use Aqua\Schedule\TaskManager;
 use Aqua\SQL\Query;
 use Aqua\UI\Form;
 use Aqua\UI\Tag;
@@ -110,6 +111,9 @@ class Plugin
 		}
 		if($xml = $this->xml('permission')) {
 			Role::importPermissions($xml, $this->id);
+		}
+		if($xml = $this->xml('task')) {
+			TaskManager::import($xml, $this->id);
 		}
 		self::rebuildCache(true);
 		Event::fire('plugin.enable', $feedback);

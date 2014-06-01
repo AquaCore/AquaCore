@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-login-response" key="-3">IP banned</word>
     <word namespace="ragnarok-login-response" key="0">Unregistered ID</word>
     <word namespace="ragnarok-login-response" key="1">Incorrect password</word>

@@ -69,10 +69,10 @@ extends Page
 			$permission = $frm->checkbox('permission')
 				->multiple(true)
 				->setLabel(__('role', 'permissions'));
-			foreach(R::permissions() as $name) {
-				$permission->value(array( $name => htmlspecialchars(__('permission-name', $name)) ));
-				$desc = htmlspecialchars(__('permission-desc', $name));
-				$permission->label($name)
+			foreach(R::permissions() as $data) {
+				$permission->value(array( $data['key'] => htmlspecialchars($data['name']) ));
+				$desc = htmlspecialchars($data['description']);
+				$permission->label($data['key'])
 					->attr('class', 'ac-tooltip')
 					->attr('title', $desc)
 					->attr('alt', $desc);

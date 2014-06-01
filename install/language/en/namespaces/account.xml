@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="account" key="account-not-found">There are no accounts registered under this email or username.</word>
     <word namespace="account" key="my-account">My Account</word>
     <word namespace="account" key="welcome">Welcome, %s</word>

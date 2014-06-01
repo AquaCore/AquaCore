@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-card-suffix" key="4530">of Merchant</word>
     <word namespace="ragnarok-card-suffix" key="4516">of Stone wall</word>
     <word namespace="ragnarok-card-suffix" key="4517">of Magician</word>

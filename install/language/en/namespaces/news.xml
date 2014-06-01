@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="news" key="edit-post">Edit Post</word>
     <word namespace="news" key="more-posts">More</word>
     <word namespace="news" key="new-post">New Post</word>

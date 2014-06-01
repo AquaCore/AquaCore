@@ -5,12 +5,13 @@ CREATE TABLE IF NOT EXISTS `#tasks` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _name VARCHAR(255) NOT NULL,
   _title VARCHAR(255) NOT NULL,
-  _description VARCHAR(255) NOT NULL,
+  _description TEXT DEFAULT NULL,
   _expression MEDIUMTEXT NOT NULL,
   _last_run DATETIME DEFAULT NULL,
   _next_run DATETIME NOT NULL,
   _running ENUM('y', 'n') NOT NULL DEFAULT 'n',
   _enabled ENUM('y','n') NOT NULL DEFAULT 'y',
+  _protected ENUM('y', 'n') NOT NULL DEFAULT 'n',
   _error_message VARCHAR(255) NOT NULL DEFAULT '',
   _plugin_id INT UNSIGNED NULL,
   PRIMARY KEY ( id ),
@@ -36,6 +37,8 @@ CREATE TABLE IF NOT EXISTS `#roles` (
 CREATE TABLE IF NOT EXISTS `#permissions` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _permission VARCHAR(32) NOT NULL,
+  _name VARCHAR(255) NOT NULL,
+  _description TEXT DEFAULT NULL,
   _plugin_id INT UNSIGNED NULL,
   PRIMARY KEY ( id ),
   UNIQUE INDEX `_{$perm_tbl}__permission_UN` ( _permission )
@@ -60,63 +63,36 @@ CREATE TABLE IF NOT EXISTS `#role_permissions` (
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `#languages` (
-  id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  _code CHAR(5) NOT NULL,
-  _name VARCHAR(255) NOT NULL,
-  _direction ENUM('LTR', 'RTL') NOT NULL DEFAULT 'LTR',
-  PRIMARY KEY ( id ),
-  UNIQUE `_#languages__code_UN` ( _code )
-) ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8
-  COLLATE = utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `#language_locales` (
-  _language_id SMALLINT UNSIGNED NOT NULL,
-  _locale VARCHAR(255) NOT NULL,
-  PRIMARY KEY ( _language_id, _locale ),
-  CONSTRAINT `_#language_locales__language_id_FK` FOREIGN KEY ( _language_id ) REFERENCES `#languages` ( id )
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8
-  COLLATE = utf8_bin;
-
-CREATE TABLE IF NOT EXISTS `#language_words` (
-  _language_id SMALLINT UNSIGNED NOT NULL,
+CREATE TABLE IF NOT EXISTS `#phrases` (
   _namespace VARCHAR(32) NOT NULL,
   _key VARCHAR(32) NOT NULL,
-  _word TEXT,
+  _phrase TEXT,
   _plugin_id INT UNSIGNED,
-  PRIMARY KEY ( _language_id, _namespace, _key ),
-  INDEX `_#language_words__plugin_id_IN` ( _plugin_id ),
-  CONSTRAINT `_#language_words__language_id_FK` FOREIGN KEY ( _language_id ) REFERENCES `#languages` ( id )
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
+  PRIMARY KEY ( _namespace, _key )
 ) ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_bin;
 
-CREATE TABLE IF NOT EXISTS `#emails` (
-  _name VARCHAR(32) NOT NULL,
+CREATE TABLE IF NOT EXISTS `#email_templates` (
+  _key VARCHAR(32) NOT NULL,
+  _name VARCHAR(255) NOT NULL,
+  _default_subject TEXT NOT NULL,
+  _default_body TEXT NOT NULL,
+  _subject TEXT DEFAULT NULL,
+  _body TEXT DEFAULT NULL,
+  _alt_body TEXT DEFAULT NULL,
   _plugin_id INT UNSIGNED NULL,
-  _placeholders TEXT,
-  PRIMARY KEY ( _name )
+  PRIMARY KEY ( _key )
 ) ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_bin;
 
-CREATE TABLE IF NOT EXISTS `#email_translations` (
-  _email_name VARCHAR(32) NOT NULL,
-  _language_id SMALLINT UNSIGNED NOT NULL,
-  _title VARCHAR(255) NOT NULL,
-  _body TEXT,
-  PRIMARY KEY ( _language_id, _email_name ),
-  INDEX `_#email_translations__email_id_IN` ( _email_name ),
-  CONSTRAINT `_#email_translations__language_id_FK` FOREIGN KEY ( _language_id ) REFERENCES `#languages` ( id )
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-  CONSTRAINT `_#email_translations__email_name_FK` FOREIGN KEY ( _email_name ) REFERENCES `#emails` ( _name )
+CREATE TABLE IF NOT EXISTS `#email_placeholders` (
+  _email VARCHAR(32) NOT NULL,
+  _key VARCHAR(32) NOT NULL,
+  _description TEXT NOT NULL,
+  PRIMARY KEY ( _email, _key ),
+  CONSTRAINT `_#email_placeholders__email_FK` FOREIGN KEY ( _email ) REFERENCES `#email_templates` ( _key )
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB
@@ -344,8 +320,6 @@ CREATE TABLE IF NOT EXISTS `#mail_queue` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _from_name VARCHAR(255) DEFAULT NULL,
   _from_address VARCHAR(255) DEFAULT NULL,
-  _to_name VARCHAR(255) DEFAULT NOT NULL,
-  _to_address VARCHAR(255) DEFAULT NOT NULL,
   _priority ENUM('high', 'normal', 'low') NOT NULL DEFAULT 'normal',
   _subject TEXT,
   _content TEXT,
@@ -356,16 +330,26 @@ CREATE TABLE IF NOT EXISTS `#mail_queue` (
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `#mail_cc` (
+CREATE TABLE IF NOT EXISTS `#mail_recipient` (
   _mail_id INT UNSIGNED NOT NULL,
   _name VARCHAR(255),
   _address VARCHAR(255) NOT NULL,
-  _bcc ENUM('y', 'n') NOT NULL DEFAULT 'y',
+  _type ENUM('to', 'cc', 'bcc') NOT NULL DEFAULT 'bcc',
   PRIMARY KEY ( _mail_id, _address ),
-  CONSTRAINT `_#mail_cc__mail_id_FK` FOREIGN KEY ( _mail_id ) REFERENCES `#mail_queue` ( id )
+  CONSTRAINT `_#mail_recipi ent__mail_id_FK` FOREIGN KEY ( _mail_id ) REFERENCES `#mail_queue` ( id )
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `#smileys` (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  _file VARCHAR(32) NOT NULL,
+  _text VARCHAR(255) NOT NULL,
+  _order INT UNSIGNED NOT NULL,
+  PRIMARY KEY ( _id )
+) ENGINE = MyIsam
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_unicode_ci;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-element" key="0">Neutral</word>
     <word namespace="ragnarok-element" key="1">Water</word>
     <word namespace="ragnarok-element" key="2">Earth</word>

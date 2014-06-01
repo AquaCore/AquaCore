@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="login-log" key="id">ID</word>
     <word namespace="login-log" key="date">Date</word>
     <word namespace="login-log" key="username">Username/Key</word>

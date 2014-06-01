@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
+    <word namespace="upload" key="upload">Upload</word>
     <word namespace="upload" key="invalid-mime-type">The uploaded file's type is invalid.</word>
     <word namespace="upload" key="file-too-large">The file uploaded is too large.</word>
     <word namespace="upload" key="too-many-files">Too many files uploaded.</word>

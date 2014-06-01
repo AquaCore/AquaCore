@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup>
+    <word namespace="task-error" key="1">The plugin associated with this task is disabled or is not installed.</word>
+    <word namespace="task-error" key="2"><![CDATA[The task class "%s" does not exist.]]></word>
+    <word namespace="task-error" key="3"><![CDATA[The task class "%s" is not an instance of \Aqua\Schedule\AbstractTask.]]></word>
+    <word namespace="task-error" key="4"><![CDATA[The cron expression "%s" is not valid.]]></word>
+  </wordgroup>
+</languageimport>

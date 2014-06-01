@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="comment" key="comment">Comment</word>
     <word namespace="comment" key="id">Comment ID</word>
     <word namespace="comment" key="date">Date</word>

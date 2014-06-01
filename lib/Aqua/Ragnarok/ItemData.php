@@ -175,16 +175,16 @@ class ItemData
 	{
 		switch($type) {
 			case self::ITEM_LOCATION:
-				$db = L10n::getDefault()->getNamespace('ragnarok-equip-location');
+				$db = L10n::getNamespace('ragnarok-equip-location');
 				break;
 			case self::ITEM_GENDER:
-				$db = L10n::getDefault()->getNamespace('ragnarok-equip-gender');
+				$db = L10n::getNamespace('ragnarok-equip-gender');
 				break;
 			case self::ITEM_UPPER:
-				$db = L10n::getDefault()->getNamespace('ragnarok-equip-upper');
+				$db = L10n::getNamespace('ragnarok-equip-upper');
 				break;
 			case self::ITEM_JOB:
-				$db = L10n::getDefault()->getNamespace('ragnarok-equip-job');
+				$db = L10n::getNamespace('ragnarok-equip-job');
 				break;
 			default: return array();
 		}
@@ -206,7 +206,9 @@ class ItemData
 		$sth = $this->charmap->connection()->prepare("
 		INSERT INTO $tbl (item_id, category_id, `order`, price)
 		VALUES (:id, :category, :order, :price)
-		ON DUPLICATE KEY UPDATE category_id = VALUES(category_id), price = VALUES(price)
+		ON DUPLICATE KEY UPDATE
+		category_id = VALUES(category_id),
+		price = VALUES(price)
 		");
 		$sth->bindValue(':id', $this->id, \PDO::PARAM_INT);
 		$sth->bindValue(':order', $order + 1, \PDO::PARAM_INT);

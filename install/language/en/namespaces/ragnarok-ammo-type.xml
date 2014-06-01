@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-ammo-type" key="0">Unknown</word>
     <word namespace="ragnarok-ammo-type" key="1">Arrow</word>
     <word namespace="ragnarok-ammo-type" key="2">Throwing Dagger</word>

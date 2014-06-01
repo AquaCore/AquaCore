@@ -61,8 +61,8 @@ CREATE PROCEDURE disablePlugin (IN pluginId INT)
       WHERE _plugin_id = pluginId
     );
     DELETE FROM `#permissions` WHERE _plugin_id = pluginId;
-    DELETE FROM `#language_words` WHERE _plugin_id = pluginId;
-    DELETE FROM `#emails` WHERE _plugin_id = pluginId;
+    DELETE FROM `#phrases` WHERE _plugin_id = pluginId;
+    DELETE FROM `#email_templates` WHERE _plugin_id = pluginId;
     DELETE FROM `#plugin_settings` WHERE _plugin_id = pluginId;
     DELETE FROM `#tasks` WHERE _plugin_id = pluginId;
     UPDATE `#plugins` SET _enabled = 'n' WHERE id = pluginId;

@@ -103,9 +103,9 @@ extends Script
 	public function render()
 	{
 		$script = parent::render();
-		if($this->language && $this->defaultLanguage !== L10n::getDefault()->code) {
+		if($this->language && $this->defaultLanguage !== L10n::$code) {
 			$script.= "\r\n<script type=\"text/javascript\" src=\"" .
-			          sprintf($this->language, (strtolower(L10n::getDefault()->code))) .
+			          sprintf($this->language, (strtolower(L10n::$code))) .
 		              "\"></script>";
 		}
 		return $script;

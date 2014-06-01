@@ -56,8 +56,8 @@ extends Page
 				->defaultOrder('id')
 				->defaultLimit(10)
 				->persist('mobDB');
-			$races = L10n::getDefault()->rangeList('ragnarok-race', range(0, 9));
-			$elements = L10n::getDefault()->rangeList('ragnarok-element', range(0, 9));
+			$races = L10n::rangeList('ragnarok-race', range(0, 9));
+			$elements = L10n::rangeList('ragnarok-element', range(0, 9));
 			asort($races);
 			asort($elements);
 			$elements = array( '' => __('application', 'any') ) + $elements;

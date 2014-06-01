@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-charmap" key="new-server">Add Char/Map Server</word>
     <word namespace="ragnarok-charmap" key="new-server-name">Add Char/Map Server - %s</word>
     <word namespace="ragnarok-charmap" key="edit-server">Edit Char/Map Server</word>

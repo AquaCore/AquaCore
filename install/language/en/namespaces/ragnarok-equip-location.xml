@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-equip-location" key="8192">Ammunition</word>
     <word namespace="ragnarok-equip-location" key="7168">Upper/Mid/Lower costume</word>
     <word namespace="ragnarok-equip-location" key="6144">Mid/Lower costume</word>

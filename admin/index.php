@@ -169,7 +169,17 @@ try {
 			$menu->append('settings', array(
 					'class' => array( 'option-settings' ),
 					'title' => __('admin-menu', 'settings'),
-					'url'   => ac_build_url(array( 'path' => array( 'settings' ) ))
+					'url'   => ac_build_url(array( 'path' => array( 'settings' ) )),
+			        'submenu' => array(
+				        array(
+					        'title' => __('admin-menu', 'settings'),
+				            'url' => ac_build_query(array( 'path' => array( 'settings' ) )),
+				        ),
+			            array(
+				            'title' => __('admin-menu', 'smileys'),
+				            'url' => ac_build_query(array( 'path' => array( 'bbcode' ), 'action' => 'smiley' )),
+			            )
+			        )
 				));
 		}
 		App::registrySet('adminMenu', $menu);

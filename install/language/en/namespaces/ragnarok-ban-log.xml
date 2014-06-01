@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-ban-log" key="id">ID</word>
     <word namespace="ragnarok-ban-log" key="account">Banned Account</word>
     <word namespace="ragnarok-ban-log" key="banned-by">Banned By</word>

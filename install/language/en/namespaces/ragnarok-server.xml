@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-server" key="new-server">Add Server</word>
     <word namespace="ragnarok-server" key="new-server-settings">Add Server - Settings</word>
     <word namespace="ragnarok-server" key="new-server-groups">Add Server - Groups</word>

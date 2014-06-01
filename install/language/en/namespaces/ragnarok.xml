@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok" key="account">Account</word>
     <word namespace="ragnarok" key="account-info">%s's Information</word>
     <word namespace="ragnarok" key="stats-info">%s's Stats</word>

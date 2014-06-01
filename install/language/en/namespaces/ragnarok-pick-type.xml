@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-pick-type" key="T">Trade</word>
     <word namespace="ragnarok-pick-type" key="V">Vending</word>
     <word namespace="ragnarok-pick-type" key="M">Monster</word>

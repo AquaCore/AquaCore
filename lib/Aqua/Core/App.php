@@ -88,11 +88,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.1.8';
+	const VERSION = '0.2.0';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 108;
+	const VERSION_LONG = 200;
 
 	private function __construct() { }
 
@@ -491,10 +491,7 @@ class App
 				   !version_compare($version, $oldVersion, '>')) { continue; }
 				include $file;
 			}
-			$old = umask(0);
 			file_put_contents(\Aqua\ROOT . '/upgrade/version', self::VERSION);
-			chmod(\Aqua\ROOT . '/upgrade/version', \Aqua\PRIVATE_FILE_PERMISSION);
-			umask($old);
 		}
 	}
 }

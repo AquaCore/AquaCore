@@ -1045,7 +1045,7 @@ extends Page
 				->setColumn('type')
 				->setLabel(__('ragnarok-ban-log', 'type'))
 				->multiple()
-				->value(L10n::getDefault()->rangeList('ragnarok-ban-type', range(1, 3)));
+				->value(L10n::rangeList('ragnarok-ban-type', range(1, 3)));
 			$search = $this->server->login->log->searchBan();
 			$frm->apply($search);
 			$search->calcRows(true)->query();
@@ -1195,10 +1195,10 @@ extends Page
 			    ->defaultOrder('id')
 			    ->defaultLimit(20)
 			    ->persist('admin.intentory');
-			$itemTypes = L10n::getDefault()->rangeList('ragnarok-item-type',
-			                                           array( 0 ),
-			                                           range(2, 8),
-			                                           range(10, 12));
+			$itemTypes = L10n::rangeList('ragnarok-item-type',
+			                             array( 0 ),
+			                             range(2, 8),
+			                             range(10, 12));
 			asort($itemTypes, SORT_STRING);
 			$itemTypes = array( '' => __('application', 'any') ) + $itemTypes;
 			$frm->input('name')

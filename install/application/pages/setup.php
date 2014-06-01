@@ -702,6 +702,19 @@ extends Page
 							         ->set('adapter', 'md5');
 							break;
 					}
+					$file = \Aqua\ROOT . '/install/language/' . $config->get('application')->get('language', 'en') . '/language.xml';
+					$xml  = new \SimpleXMLElement(file_get_contents($file));
+					$settings->set('language', array(
+						'name'      => (string)$xml->language->name,
+						'code'      => (string)$xml->language->code,
+						'direction' => strtoupper((string)$xml->language->direction ?: 'LTR')
+					));
+					$locales = array();
+					foreach($xml->language->locale as $lc) {
+						$locales[] = (string)$lc;
+					}
+					$settings->get('language')->set('locales', $locales);
+					$settings->set('cron_key', bin2hex(secure_random_bytes(32)));
 					App::cache()->store('setup_settings_full', $settings->toArray());
 					$response = array( 'progress' => array( 1, 1 ) );
 					break;
@@ -730,7 +743,7 @@ extends Page
 							}
 						}
 					}
-					foreach(array( 'ragnarok.php', 'smiley.php' ) as $name) {
+					foreach(array( 'ragnarok.php', 'ckeditor.php' ) as $name) {
 						$file = \Aqua\ROOT . "/settings/$name";
 						if(!file_exists($file)) {
 							file_put_contents($file, "<?php\r\nreturn array();");
@@ -757,7 +770,7 @@ extends Page
 					$response = array( 'progress' => array( $progress, 2 ) );
 					break;
 				case 'populate-tables':
-					$progress = min(3, max(1, $progress));
+					$progress = min(2, max(1, $progress));
 					switch($progress) {
 						case 1:
 							$query = file_get_contents(\Aqua\ROOT . '/schema/inserts.sql');
@@ -766,7 +779,7 @@ extends Page
 							break;
 						case 2:
 							$settings = $this->setup->config->get('account');
-							if($settings->exists('account_id')) {
+							if($settings->get('skip', false) || $settings->exists('account_id')) {
 								break;
 							}
 							$account = Account::register(
@@ -781,18 +794,15 @@ extends Page
 							);
 							$settings->set('account_id', $account->id);
 							break;
-						case 3:
-							$file = \Aqua\ROOT . '/install/language/' . App::settings()->get('language', 'en') . '/language.xml';
-							L10n::import(new \SimpleXMLElement(file_get_contents($file)), null);
-							break;
 					}
-					$response = array( 'progress' => array( $progress, 3 ) );
+					$response = array( 'progress' => array( $progress, 2 ) );
 					break;
 				case 'insert-namespaces':
 					set_time_limit(120);
-					L10n::init(App::settings()->get('language', 'en'));
-					$dir = \Aqua\ROOT . '/install/language/' . App::settings()->get('language', 'en');
+					L10n::init();
+					$dir = \Aqua\ROOT . '/install/language/' . L10n::$code;
 					$namespaces = glob("$dir/namespaces/*.xml");
+					array_unshift($namespaces, $dir . '/language.xml');
 					$count = 2;
 					$max = ceil(count($namespaces) / $count);
 					$progress = min($max, max(0, $progress));
@@ -805,8 +815,8 @@ extends Page
 					$response = array( 'progress' => array( $progress, $max ) );
 					break;
 				case 'insert-emails':
-					L10n::init(App::settings()->get('language', 'en'));
-					$dir = \Aqua\ROOT . '/install/language/' . App::settings()->get('language', 'en');
+					L10n::init();
+					$dir = \Aqua\ROOT . '/install/language/' . L10n::$code;
 					$emails = glob("$dir/emails/*.xml");
 					foreach($emails as $path) {
 						L10n::import(new \SimpleXMLElement(file_get_contents($path)));
@@ -817,7 +827,6 @@ extends Page
 					if(!file_exists(\Aqua\ROOT . '/upgrade/version')) {
 						file_put_contents(\Aqua\ROOT . '/upgrade/version', App::VERSION);
 					}
-					App::settings()->set('cron_key', bin2hex(secure_random_bytes(32)));
 					App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 					App::cache()->delete('setup_settings_full');
 					$this->setup->clear();

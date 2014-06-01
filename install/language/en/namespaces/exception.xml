@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="exception" key="assertion">Assertion failed: %1$s. %2$s</word>
     <word namespace="exception" key="critical-error">Critical Error</word>
     <word namespace="exception" key="headers-sent">Headers have already been sent.</word>

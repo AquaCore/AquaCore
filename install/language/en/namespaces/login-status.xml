@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="login-status" key="0">Successful</word>
     <word namespace="login-status" key="1">Invalid Credentials</word>
     <word namespace="login-status" key="2">Access Denied</word>

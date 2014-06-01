@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="form" key="validation-fail">Please verify that all the information provided is correct.</word>
     <word namespace="form" key="field-required">This field is required.</word>
     <word namespace="form" key="invalid-pattern">The value you have entered does not match the pattern.</word>

@@ -14,8 +14,6 @@ class TaskManager
 	 */
 	public static $tasks = array();
 
-	const DIRECTORY = '/tasks';
-
 	/**
 	 * @param int $id
 	 * @return null|\Aqua\Schedule\AbstractTask
@@ -31,11 +29,11 @@ class TaskManager
 		}
 		$className = "Aqua\\Schedule\\Task\\$taskData->name";
 		if(!class_exists($className)) {
-			$taskData->setError(__('task-error', TaskData::ERR_CLASS_NOT_FOUND));
+			$taskData->setError(__('task-error', TaskData::ERR_CLASS_NOT_FOUND, htmlspecialchars($className)));
 			return null;
 		}
 		if(!is_subclass_of($className, "Aqua\\Schedule\\AbstractTask")) {
-			$taskData->setError(__('task-error', TaskData::ERR_INVALID_CLASS));
+			$taskData->setError(__('task-error', TaskData::ERR_INVALID_CLASS, htmlspecialchars($className)));
 			return null;
 		}
 		$task = new $className;
@@ -122,11 +120,15 @@ class TaskManager
 		return ($select->valid() ? $select->current() : null);
 	}
 
+	/**
+	 * @param \SimpleXMLElement $xml
+	 * @param int|null          $pluginId
+	 * @param bool              $override
+	 */
 	public static function import(\SimpleXMLElement $xml, $pluginId = null, $override = false)
 	{
-		$tbl = ac_table('tasks');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_title, _description, _expression, _enabled, _next_run, _error_message, _plugin_id)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO `%s` (_title, _description, _expression, _enabled, _next_run, _error_message, _plugin_id)
 		VALUES (:title, :desc, :expr, :enabled, :nextrun, :error, :pluginid)
 		ON DUPLICATE KEY UPDATE
 		_title = VALUES(_title),
@@ -134,7 +136,7 @@ class TaskManager
 		_expression = VALUES(_expression),
 		_error = VALUES(_error),
 		_plugin_id = VALUES(_plugin_id)
-		");
+		', ac_table('tasks')));
 		foreach($xml->task as $task) {
 			$name        = (string)$task->name;
 			$title       = (string)$task->title;
@@ -146,20 +148,13 @@ class TaskManager
 				continue;
 			}
 			$taskData = new TaskData;
-			$taskData->isEnabled   = filter_var((string)$task->enabled ?: 'yes', FILTER_VALIDATE_BOOLEAN);;
+			$taskData->isEnabled   = filter_var((string)$task->enabled ?: 'yes', FILTER_VALIDATE_BOOLEAN);
 			$taskData->isRunning   = false;
 			$taskData->name        = $name;
 			$taskData->title       = $title;
 			$taskData->description = (string)$task->description;
 			$taskData->expression  = $expression;
 			$taskData->pluginId    = $pluginId;
-			if(!class_exists("Aqua\\Schedule\\Task\\{$name}")) {
-				$taskData->isEnabled = false;
-				$taskData->errorMessage = __('task-error', TaskData::ERR_CLASS_NOT_FOUND);
-			} else if(!is_subclass_of("Aqua\\Schedule\\Task\\{$name}", "Aqua\\Schedule\\AbstractTask")) {
-				$taskData->isEnabled = false;
-				$taskData->errorMessage = __('task-error', TaskData::ERR_INVALID_CLASS);
-			}
 			try {
 				$taskData->nextRun = $taskData->cron()->getNextRunDate()->getTimestamp();
 			} catch(\Exception $exception) {
@@ -178,8 +173,12 @@ class TaskManager
 			} else {
 				$sth->bindValue(':pluginid', null, \PDO::PARAM_NULL);
 			}
+			if($taskData->description) {
+				$sth->bindValue(':desc', $taskData->description, \PDO::PARAM_INT);
+			} else {
+				$sth->bindValue(':desc', null, \PDO::PARAM_NULL);
+			}
 			$sth->bindValue(':title', $taskData->title, \PDO::PARAM_STR);
-			$sth->bindValue(':desc', $taskData->description, \PDO::PARAM_STR);
 			$sth->bindValue(':name', $taskData->name, \PDO::PARAM_STR);
 			$sth->bindValue(':expr', $taskData->expression, \PDO::PARAM_STR);
 			$sth->bindValue(':enabled', $taskData->isEnabled ? 'y' : 'n', \PDO::PARAM_STR);

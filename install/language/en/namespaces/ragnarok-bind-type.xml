@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-bind-type" key="1">Account</word>
     <word namespace="ragnarok-bind-type" key="2">Guild</word>
     <word namespace="ragnarok-bind-type" key="3">Party</word>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-homunculus" key="6001">Lif</word>
     <word namespace="ragnarok-homunculus" key="6009">Lif</word>
     <word namespace="ragnarok-homunculus" key="6005">Lif</word>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="content-status" key="0">Published</word>
     <word namespace="content-status" key="1">Draft</word>
     <word namespace="content-status" key="2">Scheduled</word>

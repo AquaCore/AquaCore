@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-attribute" key="0"></word>
     <word namespace="ragnarok-attribute" key="1">Ice</word>
     <word namespace="ragnarok-attribute" key="2">Earth</word>

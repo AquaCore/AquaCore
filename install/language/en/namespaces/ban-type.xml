@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ban-type" key="1">Temporary</word>
     <word namespace="ban-type" key="2">Permanent</word>
     <word namespace="ban-type" key="3">Unban</word>

@@ -9,7 +9,7 @@ $assetsPath: "../../../../../assets/";
 @import "aquacore.dashboard";
 @import "aquacore.cards";
 
-$backgroundColor: #f4f6f9;
+$backgroundColor: #eff3f8;
 $menuColor: #4e7bbc;
 
 ::-moz-selection { background: $lightBlue-1; color: $backgroundColor }
@@ -88,15 +88,8 @@ textarea:focus {
 input.ac-delete-button,
 button.ac-delete-button {
 	display: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	-webkit-border-radius: 5px;
-	-khtml-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-ms-border-radius: 5px;
-	-o-border-radius: 5px;
-	border-radius: 5px;
+	@include box-shadow(none);
+	@include border-radius(5px);
 	border: 1px solid $midRed-2;
 	width: 10px;
 	height: 10px;
@@ -397,7 +390,7 @@ button.ac-delete-button {
 		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 		font-weight: bold;
 		border: 1px solid $midBlue-2;
-		@include text-shadow(-1 -1 0 $darkBlue-1);
+		@include text-shadow(-1px -1px 0 $midBlue-2);
 		@include box-shadow($lightBlue-2 1px 2px 0 0 inset, $lightBlue-2 0 0 4px 0 inset);
 		@include background(linear-gradient($lightBlue-3, $midBlue-3));
 	}
@@ -462,14 +455,12 @@ button.ac-delete-button {
 			padding: 0;
 			list-style: none;
 			li {
-				font-size: 15px;
-				font-weight: bold;
 				color: $bluishGray-5;
 				background: $lightGray-2;
 				border-top: 1px solid white;
 				border-bottom: 1px solid $bluishGray-5;
 				@include text-shadow(1px -1px 0 white);
-				@include box-shadow($bluishGray-1 0 0 5px 0 inset);
+				@include box-shadow(#d4d9e5 0 0 5px 0 inset);
 				a {
 					display: block;
 					width: 220;
@@ -479,9 +470,10 @@ button.ac-delete-button {
 				&:hover, &.active {
 					color: #e5ebf6;
 					border-bottom: 1px solid $midBlue-2;
+					border-top: 1px solid scale_lightness($midBlue-3, 30);
 					@include text-shadow(-1px -1px 0 $midBlue-2);
 					@include background(linear-gradient(
-							scale_lightness($lightBlue-3, 30),
+							scale_lightness($midBlue-4, 30),
 							scale_saturation($midBlue-3, 30)
 					));
 					@include box-shadow(none);
@@ -1522,5 +1514,112 @@ button.ac-delete-button {
 	}
 	.wrapper, .ac-add-castle {
 		width: 390px;
+	}
+}
+.smiley-form {
+	padding: 5px 20px 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid $midBlue-1;
+	.upload {
+		float: left;
+	}
+	.upload-message {
+		font-size: .85em;
+	}
+	.actions {
+		float: right;
+	}
+}
+.smiley-list {
+	clear: both;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	li {
+		float: left;
+		text-align: center;
+		height: 135px;
+		width: 12.5%;
+		padding: 0;
+		margin: 5px 0;
+		.wrapper {
+			position: relative;
+			height: 100%;
+			width: 93%;
+			margin: 0;
+			padding: 0;
+			border: 1px solid $bluishGray-5;
+			@include border-radius(6px);
+			.smiley-checkbox {
+				position: absolute;
+				top: 3px;
+				right: 5px;
+				z-index: 5;
+			}
+			.image-wrapper {
+				background: $backgroundColor;
+				position: absolute;
+				top: 0;
+				height: 82px;
+				display: table;
+				width: 100%;
+				padding-top: 25px;
+				@include border-radius(6px 6px 0 0);
+				@include box-shadow(inset 0 0 20px 2px $bluishGray-4);
+				.image-align {
+					display: table-cell;
+					text-align: center;
+					vertical-align: middle;
+				}
+				img {
+					clear: both;
+					height: 100%;
+					max-height: 75px;
+				}
+			}
+			.input-wrapper {
+				background: $backgroundColor;
+				z-index: 1;
+				position: absolute;
+				padding: 0;
+				bottom: 0;
+				width: 100%;
+				height: 27px;
+				border-top: 1px solid $bluishGray-5;
+				@include border-radius(0 0 6px 6px);
+				@include box-shadow(0px 0px 15px 0px $bluishGray-4 inset,
+									0px -3px 0px 0px $bluishGray-4 inset);
+				input {
+					background: none;
+					border: none;
+					outline: none;
+					padding: 0;
+					width: 80%;
+					height: 25px;
+					line-height: 25px;
+					margin: 2px 5px;
+					@include border-radius(0 0 6px 6px);
+					&:focus {
+						color: $darkBlue-2 !important;
+					}
+				}
+			}
+			&:hover {
+				background: $backgroundColor;
+				border-color: $darkBlue-2;
+				.image-wrapper {
+					@include box-shadow(inset 0 0 20px 2px #98cbe7);
+				}
+				.input-wrapper {
+					border-color: $darkBlue-2;
+					@include box-shadow(0px 0px 15px 0px #98cbe7 inset,
+						0px -3px 0px 0px #98cbe7 inset);
+				}
+				.ac-delete-button {
+					display: block;
+				}
+			}
+		}
 	}
 }

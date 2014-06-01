@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="ragnarok-chat-log-type" key="1">Global</word>
     <word namespace="ragnarok-chat-log-type" key="2">Whisper</word>
     <word namespace="ragnarok-chat-log-type" key="3">Party</word>

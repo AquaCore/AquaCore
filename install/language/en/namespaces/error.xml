@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
-  <wordgroup language="en">
+  <wordgroup>
     <word namespace="error" key="view-error">View Error</word>
     <word namespace="error" key="error-not-found">Error not found.</word>
     <word namespace="error" key="error-info">Error Info</word>

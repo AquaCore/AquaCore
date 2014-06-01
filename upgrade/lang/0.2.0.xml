@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="admin-menu" key="smileys">Smileys</word>
+        <word namespace="bbcode" key="smileys">Smileys</word>
+        <word namespace="bbcode" key="smiley-upload">Upload smileys (GIF, JPEG, JPG, PNG, ZIP, TAR, TAR.GZ, TAR.BZ2)</word>
+        <word namespace="bbcode" key="smiley-order-saved">Smiley order saved.</word>
+        <word namespace="bbcode" key="smiley-deleted-s">%s smiley deleted.</word>
+        <word namespace="bbcode" key="smiley-deleted-p">%s smileys deleted.</word>
+        <word namespace="bbcode" key="smiley-updated-s">%s smiley updated.</word>
+        <word namespace="bbcode" key="smiley-updated-p">%s smileys updated.</word>
+        <word namespace="bbcode" key="smiley-uploaded-s">%s smiley uploaded.</word>
+        <word namespace="bbcode" key="smiley-uploaded-p">%s smileys uploaded.</word>
+        <word namespace="role" key="role-updated"><![CDATA[The role <b>%s</b> had been upated.]]></word>
+        <word namespace="registration" key="registered">You account has been created and is ready to use! You have been automatically logged in.</word>
+        <word namespace="phpmailer" key="authenticate">SMTP Error: Could not authenticate.</word>
+        <word namespace="phpmailer" key="connect_host">SMTP Error: Could not connect to SMTP host.</word>
+        <word namespace="phpmailer" key="data_not_accepted">SMTP Error: data not accepted.</word>
+        <word namespace="phpmailer" key="empty_message">Message body empty.</word>
+        <word namespace="phpmailer" key="encoding">Unknown encoding: </word>
+        <word namespace="phpmailer" key="execute">Could not execute: </word>
+        <word namespace="phpmailer" key="file_access">Could not access file: </word>
+        <word namespace="phpmailer" key="file_open">File Error: Could not open file: </word>
+        <word namespace="phpmailer" key="from_failed">The following From address failed: </word>
+        <word namespace="phpmailer" key="instantiate">Could not instantiate mail function.</word>
+        <word namespace="phpmailer" key="invalid_address">Invalid address.</word>
+        <word namespace="phpmailer" key="mailer_not_supported"> mailer is not supported.</word>
+        <word namespace="phpmailer" key="provide_address">You must provide at least one recipient email address.</word>
+        <word namespace="phpmailer" key="recipients_failed">SMTP Error: The following recipients failed: </word>
+        <word namespace="phpmailer" key="signing">Signing Error: </word>
+        <word namespace="phpmailer" key="smtp_connect_failed">SMTP connect() failed.</word>
+        <word namespace="phpmailer" key="smtp_error">SMTP server error: </word>
+        <word namespace="phpmailer" key="variable_set">Cannot set or reset variable: </word>
+        <word namespace="task-error" key="1">The plugin associated with this task is disabled or is not installed.</word>
+        <word namespace="task-error" key="2"><![CDATA[The task class "%s" does not exist.]]></word>
+        <word namespace="task-error" key="3"><![CDATA[The task class "%s" is not an instance of \Aqua\Schedule\AbstractTask.]]></word>
+        <word namespace="task-error" key="4"><![CDATA[The cron expression "%s" is not valid.]]></word>
+        <word namespace="upload" key="upload">Upload</word>
+    </wordgroup>
+    <permissiongroup>
+        <permission key="register-account">
+            <name>Register ragnarök accounts</name>
+        </permission>
+        <permission key="comment">
+            <name>Comment</name>
+        </permission>
+        <permission key="rate">
+            <name>Rate content</name>
+        </permission>
+        <permission key="view-admin-cp">
+            <name>View admin CP</name>
+        </permission>
+        <permission key="edit-cp-user">
+            <name>Edit site users</name>
+            <description>Edit users' account data (username, password, display name, etc).</description>
+        </permission>
+        <permission key="edit-server-user">
+            <name>Edit ragnarök users</name>
+        </permission>
+        <permission key="edit-cp-settings">
+            <name>Edit site settings</name>
+        </permission>
+        <permission key="edit-server-settings">
+            <name>Edit server settings</name>
+        </permission>
+        <permission key="view-cp-logs">
+            <name>View dite logs</name>
+        </permission>
+        <permission key="view-server-logs">
+            <name>View server logs</name>
+        </permission>
+        <permission key="manage-roles">
+            <name>Manage roles</name>
+        </permission>
+        <permission key="manage-plugins">
+            <name>Manage plugins</name>
+        </permission>
+        <permission key="create-pages">
+            <name>Create pages</name>
+        </permission>
+        <permission key="publish-posts">
+            <name>Publish posts</name>
+        </permission>
+        <permission key="view-user-items">
+            <name>View storage</name>
+            <description>View inventories, carts, storages and guild storages.</description>
+        </permission>
+        <permission key="ban-cp-user">
+            <name>Ban site users</name>
+        </permission>
+        <permission key="ban-server-user">
+            <name>Ban ragnarök accounts</name>
+        </permission>
+        <permission key="view-server-acc">
+            <name>View ragnarök accounts</name>
+            <description>View server's accounts and characters.</description>
+        </permission>
+    </permissiongroup>
+    <taskgroup>
+        <task name="BulkMailTask">
+            <title>Bulk Mail</title>
+            <description>Send queued bulk emails.</description>
+        </task>
+    </taskgroup>
+    <emailgroup>
+        <email key="ragnarok-reset-pw">
+            <name>Ragnarök Password Recovery</name>
+            <subject>:site-title Password Recovery</subject>
+            <body><![CDATA[<html>
+	<body>
+		Hello, :display-name,<br>
+		You have received this e-mail because you have requested
+		a new password for your Ragnarok account <b>:ro-username</b><br>
+		Please use the link below to reset your password:<br>
+		<a href=":url">Reset Password</a>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="ro-username">Recipient's ragnarök username</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+        <email key="registration">
+            <name>Registration</name>
+            <subject>:site-title Registration</subject>
+            <body><![CDATA[<html>
+	<body>
+	Welcome, :display-name.<br>
+	You have created an account on <a href=":site-url">:site-title</a>,<br>
+	in order to proceed with your registration please use the link below:<br>
+	<a href=":url">Confirm Registration</a><br>
+	You may log in to your account using your username <b><i>(:username)</i></b> and your password.<br>
+	This link will expire in <b>:time-left</b> hours.
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="time-left">Hours left until the confirmation url expires</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+        <email key="reset-pw">
+            <name>Site Password Recovery</name>
+            <subject>:site-title Password Recovery</subject>
+            <body><![CDATA[<html>
+	<body>
+		Hello, :display-name.<br>
+		You have received this email because you or someone else have requested a new password for your account at <a href=":site-url">:site-title</a>,<br>
+		Please click the link below to proceed:<br>
+		<a href=":url">Reset Password</a><br>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="time-left">Hours left until the password recovery key expires</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+    </emailgroup>
+</languageimport>

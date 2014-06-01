@@ -94,7 +94,7 @@ implements SubjectInterface
 		$action = $request->uri->action;
 		$arguments = $request->uri->arguments;
 		$feedback = array( &$_page, &$action, &$arguments );
-		if($this->notify('render-start', $feedback) !== true) {
+		if($this->notify('render-start', $feedback) !== false) {
 			$path = implode('/', $request->uri->path);
 			if(isset($this->extend[$path])) {
 				$this->extend[$path]->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
