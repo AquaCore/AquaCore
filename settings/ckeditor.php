@@ -1,4 +1,5 @@
 <?php
+use Aqua\Core\L10n;
 use Aqua\BBCode\Smiley;
 
 return array(
@@ -25,6 +26,8 @@ return array(
 		\Aqua\URL . '/assets/scripts/ckeditor/contents.css',
 		\Aqua\URL . '/assets/styles/bbcode.css'
 	),
+	'contentsLangDirection' => strtolower(L10n::$direction),
+	'defaultLanguage'       => L10n::$code,
 	'smiley_path'           => \Aqua\URL . '/uploads/smiley/',
 	'smiley_descriptions'   => array_column(Smiley::smileys(), 'text'),
 	'smiley_images'         => array_column(Smiley::smileys(), 'file'),
