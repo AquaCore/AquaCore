@@ -36,24 +36,24 @@ INSERT IGNORE INTO `#roles` VALUES
 ;
 
 REPLACE INTO `#permissions` VALUES
- (@PERMISSION_REGISTER, 'register-account', NULL)
-,(@PERMISSION_COMMENT, 'comment', NULL)
-,(@PERMISSION_RATE, 'rate', NULL)
-,(@PERMISSION_VIEW_ADMIN_CP, 'view-admin-cp', NULL)
-,(@PERMISSION_VIEW_SERVER_ACC, 'view-server-acc', NULL)
-,(@PERMISSION_EDIT_CP_USER, 'edit-cp-user', NULL)
-,(@PERMISSION_EDIT_RO_USER, 'edit-server-user', NULL)
-,(@PERMISSION_VIEW_ITEMS, 'view-user-items', NULL)
-,(@PERMISSION_BAN_CP_USER, 'ban-cp-user', NULL)
-,(@PERMISSION_BAN_RO_USER, 'ban-server-user', NULL)
-,(@PERMISSION_VIEW_CP_LOGS, 'view-cp-logs', NULL)
-,(@PERMISSION_VIEW_RO_LOGS, 'view-server-logs', NULL)
-,(@PERMISSION_EDIT_CP_CONF, 'edit-cp-settings', NULL)
-,(@PERMISSION_EDIT_RO_CONF, 'edit-server-settings', NULL)
-,(@PERMISSION_CREATE_PAGES, 'create-pages', NULL)
-,(@PERMISSION_CREATE_POSTS, 'publish-posts', NULL)
-,(@PERMISSION_MANAGE_ROLES, 'manage-roles', NULL)
-,(@PERMISSION_MANAGE_PLUGINS, 'manage-plugins', NULL)
+ (@PERMISSION_REGISTER, 'register-account', '', NULL, NULL)
+,(@PERMISSION_COMMENT, 'comment', '', NULL, NULL)
+,(@PERMISSION_RATE, 'rate', '', NULL, NULL)
+,(@PERMISSION_VIEW_ADMIN_CP, 'view-admin-cp', '', NULL, NULL)
+,(@PERMISSION_VIEW_SERVER_ACC, 'view-server-acc', '', NULL, NULL)
+,(@PERMISSION_EDIT_CP_USER, 'edit-cp-user', '', NULL, NULL)
+,(@PERMISSION_EDIT_RO_USER, 'edit-server-user', '', NULL, NULL)
+,(@PERMISSION_VIEW_ITEMS, 'view-user-items', '', NULL, NULL)
+,(@PERMISSION_BAN_CP_USER, 'ban-cp-user', '', NULL, NULL)
+,(@PERMISSION_BAN_RO_USER, 'ban-server-user', '', NULL, NULL)
+,(@PERMISSION_VIEW_CP_LOGS, 'view-cp-logs', '', NULL, NULL)
+,(@PERMISSION_VIEW_RO_LOGS, 'view-server-logs', '', NULL, NULL)
+,(@PERMISSION_EDIT_CP_CONF, 'edit-cp-settings', '', NULL, NULL)
+,(@PERMISSION_EDIT_RO_CONF, 'edit-server-settings', '', NULL, NULL)
+,(@PERMISSION_CREATE_PAGES, 'create-pages', '', NULL, NULL)
+,(@PERMISSION_CREATE_POSTS, 'publish-posts', '', NULL, NULL)
+,(@PERMISSION_MANAGE_ROLES, 'manage-roles', '', NULL, NULL)
+,(@PERMISSION_MANAGE_PLUGINS, 'manage-plugins', '', NULL, NULL)
 ;
 
 REPLACE INTO `#role_permissions` VALUES
@@ -102,9 +102,9 @@ INSERT IGNORE INTO `#content` VALUES
  (1, @CTYPE_PAGE, 1 , NULL, NOW(), NULL, 0, 'tos', 'Terms of Service', '', '', 'y', 0)
 ;
 INSERT IGNORE INTO `#content_meta` VALUES
- (1, 'rating-disabled', 'b:1;')
+ (1, 'rating-disabled', '1', 'B')
 ;
 
 INSERT IGNORE INTO `#tasks` VALUES
- (1, 'BulkMailTask', 'Bulk mail', 'Send queued bulk emails.', '*/3 * * * *', NULL, DATE_ADD(NOW(), INTERVAL 5 MINUTE), 'n', 'y', '', NULL);
+ (1, 'BulkMailTask', 'Bulk mail', 'Send queued bulk emails.', '*/3 * * * *', NULL, DATE_ADD(NOW(), INTERVAL 5 MINUTE), 'n', 'y', 'n', '', NULL);
 ;

@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `#permissions` (
   _description TEXT DEFAULT NULL,
   _plugin_id INT UNSIGNED NULL,
   PRIMARY KEY ( id ),
-  UNIQUE INDEX `_{$perm_tbl}__permission_UN` ( _permission )
+  UNIQUE INDEX `_#permissions__permission_UN` ( _permission )
 ) ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_bin;
@@ -348,7 +348,7 @@ CREATE TABLE IF NOT EXISTS `#smileys` (
   _file VARCHAR(32) NOT NULL,
   _text VARCHAR(255) NOT NULL,
   _order INT UNSIGNED NOT NULL,
-  PRIMARY KEY ( _id )
+  PRIMARY KEY ( id )
 ) ENGINE = MyIsam
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_unicode_ci;
