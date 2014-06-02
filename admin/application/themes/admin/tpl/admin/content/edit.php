@@ -123,7 +123,8 @@ $sidebar->append('publish', array(
 </div>
 <input class=\"ac-sidebar-submit ac-post-submit\"
        type=\"submit\"
-       value=\"$submit\">
+       value=\"$submit\"
+       ac-default-submit=\"1\">
 "
     )));
 $page->theme->set('sidebar', $sidebar);

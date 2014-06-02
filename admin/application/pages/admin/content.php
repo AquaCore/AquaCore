@@ -47,19 +47,25 @@ extends Page
 			if($this->call('bulkAction', array( $action, $ids ), true) !== false && $action === 'delete') {
 				$this->response->status(302)->redirect(App::request()->uri->url());
 				try {
-					$updated = 0;
+					$deleted = 0;
 					foreach($ids as $id) {
 						if(!($content = $this->contentType->get($id))) {
 							continue;
 						}
+						if($content->protected) {
+							App::user()->addFlash('warning', null, __('content', 'cannot-delete', htmlspecialchars($content->title)));
+							continue;
+						}
 						if($content->delete()) {
-							++$updated;
+							++$deleted;
+						} else {
+							App::user()->addFlash('warning', null, __('content', 'content-not-deleted', htmlspecialchars($content->title)));
 						}
 					}
-					if($updated) {
+					if($deleted) {
 						App::user()->addFlash('success', null, __('content',
-						                                          "action-delete-" . ($updated === 1 ? 's' : 'p'),
-						                                          number_format($updated)));
+						                                          'content-deleted-' . ($deleted === 1 ? 's' : 'p'),
+						                                          number_format($deleted)));
 					}
 				} catch(\Exception $exception) {
 					ErrorLog::logSql($exception);
@@ -262,6 +268,17 @@ extends Page
 		}
 		$this->response->status(302)->redirect(App::request()->uri->url());
 		try {
+			if(isset($this->request->data['x-delete'])) {
+				if($content->protected) {
+					App::user()->addFlash('warning', null, __('content', 'cannot-delete', htmlspecialchars($content->title)));
+				} else if($content->delete()) {
+					App::user()->addFlash('success', null, __('content', 'content-deleted', htmlspecialchars($content->title)));
+					$this->response->redirect($this->contentType->url());
+				} else {
+					App::user()->addFlash('warning', null, __('content', 'content-not-deleted', htmlspecialchars($content->title)));
+				}
+				return;
+			}
 			if(($publishDate = trim($frm->request->getString('publish_date'))) &&
 			   ($publishDate = \DateTime::CreateFromFormat('Y-m-d H:i:s', $publishDate))) {
 				$publishDate = $publishDate->getTimestamp();

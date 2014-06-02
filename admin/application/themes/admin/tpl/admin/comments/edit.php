@@ -52,7 +52,11 @@ $sidebar->append('status', array(array(
 	)));
 ob_clean();
 ?>
-<input class="ac-sidebar-submit" type="submit" name="submit" value="<?php echo __('application', 'submit') ?>">
+<input class="ac-sidebar-submit"
+       type="submit"
+       name="submit"
+       value="<?php echo __('application', 'submit') ?>"
+       ac-default-submit="1">
 <?php
 $sidebar->append('submit', array( 'class' => 'ac-sidebar-action', array(
 	'content' => ob_get_contents()
