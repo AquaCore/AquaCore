@@ -8,6 +8,7 @@ use Aqua\Log\LoginLog;
 use Aqua\Log\PayPalLog;
 use Aqua\Log\TransferLog;
 use Aqua\Site\Page;
+use Aqua\SQL\Query;
 use Aqua\UI\Menu;
 use Aqua\UI\Pagination;
 use Aqua\UI\Search;
@@ -123,22 +124,31 @@ extends Page
 		$this->theme->head->section = $this->title = __('admin-log', 'ban-log');
 		try {
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
-			$search = BanLog::search()->calcRows(true);
 			$frm = new Search(App::request(), $currentPage);
 			$frm->order(array(
-					'id'    => 'id',
-			        'type'  => 'type',
-			        'ban'   => 'ban_date',
-			        'unban' => 'unban_date'
+					'id'      => 'id',
+			        'adminid' => 'user_id',
+			        'userid'  => 'banned_user_id',
+			        'admin'   => 'display_name',
+			        'user'    => 'banned_display_name',
+			        'type'    => 'type',
+			        'ban'     => 'ban_date',
+			        'unban'   => 'unban_date'
 				))
 			    ->limit(0, 7, 15, 5)
 			    ->defaultOrder('id', Search::SORT_DESC)
 			    ->defaultLimit(15)
 			    ->persist('admin.banlog');
+			$frm->join('display_name', 'ua._display_name')
+				->type('INNER')
+				->tables(array( 'ua' => ac_table('users') ))
+				->on('ua.id = b._user_id');
+			$frm->join('banned_display_name', 'ub._display_name')
+				->type('INNER')
+				->tables(array( 'ub' => ac_table('users') ))
+				->on('ub.id = b._banned_id');
 			$frm->input('user')
-				->setColumn('display_name')
-				->setParser(array( $this, 'parseDisplayNameSearch' ),
-				            array( array( 'display_name' => 'b._banned_id' ), $search ))
+				->setColumn('banned_display_name')
 				->setLabel(__('profile', 'user'));
 			$frm->range('ban')
 				->setColumn('ban_date')
@@ -155,6 +165,7 @@ extends Page
 				->setLabel(__('profile', 'ban-type'))
 				->multiple()
 				->value(L10n::rangeList('ban-type', range(1, 3)));
+			$search = BanLog::search()->calcRows(true);
 			$frm->apply($search);
 			$search->query();
 			$users = new DataPreload('Aqua\\User\\Account::search', Account::$users);
@@ -190,16 +201,19 @@ extends Page
 			        'type'        => 'txn_type',
 			        'email'       => 'payer_email',
 			        'processdate' => 'process_date',
-			        'paydate'     => 'payment_date'
+			        'paydate'     => 'payment_date',
+			        'user'        => 'display_name'
 				))
 			    ->limit(0, 6, 20, 5)
 			    ->defaultOrder('id', Search::SORT_DESC)
 			    ->defaultLimit(20)
 			    ->persist('admin.pplog');
+			$frm->join('display_name', 'u._display_name')
+				->type('INNER')
+				->tables(array( 'u' => ac_table('users') ))
+				->on('u.id = pp._user_id');
 			$frm->input('user')
 				->setColumn('display_name')
-				->setParser(array( $this, 'parseDisplayNameSearch' ),
-				            array( array( 'display_name' => 'pp._user_id' ), $search ))
 				->setLabel(__('donation', 'user'));
 			$frm->input('email')
 				->setColumn('email')
@@ -268,20 +282,26 @@ extends Page
 			$search = TransferLog::search()->calcRows(true);
 			$frm = new Search(App::request(), $currentPage);
 			$frm->order(array(
-		            'id'     => 'id',
-		            'amount' => 'amount',
-		            'date'   => 'date',
+		            'id'       => 'id',
+		            'amount'   => 'amount',
+		            'date'     => 'date',
+			        'sender'   => 'sender_display_name',
+			        'receiver' => 'receiver_display_name'
 	            ))
 			    ->limit(0, 7, 20, 5)
 			    ->defaultOrder('id', Search::SORT_DESC)
 			    ->defaultLimit(20)
-			    ->persist('admin.xferlog');
+			    ->persist('admin.xferLog');
+			$frm->join('sender_display_name', 'us._display_name')
+				->type('INNER')
+				->tables(array( 'us' => ac_table('users') ))
+				->on('us.id = tl._sender_id');
+			$frm->join('receiver_display_name', 'ur._display_name')
+				->type('INNER')
+				->tables(array( 'ur' => ac_table('users') ))
+				->on('ur.id = tl._receiver_id');
 			$frm->input('user')
 			    ->setColumn(array( 'sender_display_name', 'receiver_display_name' ))
-			    ->setParser(array( $this, 'parseDisplayNameSearch' ), array( array(
-					'sender_display_name'   => 'tl._sender_id',
-					'receiver_display_name' => 'tl._receiver_id'
-				), $search ))
 			    ->setLabel(__('profile', 'user'));
 			$frm->range('amount')
 				->setColumn('amount')
@@ -321,19 +341,19 @@ extends Page
 			$search = LoginLog::search()->calcRows(true);
 			$frm = new Search(App::request(), $currentPage);
 			$frm->order(array(
-		            'date'   => 'date',
-					'ip'     => 'ip',
-					'type'   => 'type',
-					'status' => 'status',
-					'uname' => 'username',
+		            'date'    => 'date',
+					'ip'      => 'ip',
+					'type'    => 'type',
+					'status'  => 'status',
+					'name'    => 'username',
+			        'user'    => 'display_name'
 				))
 			    ->limit(0, 7, 20, 5)
 			    ->defaultOrder('date', Search::SORT_DESC)
 			    ->defaultLimit(20)
-			    ->persist('admin.loginlog');
+			    ->persist('admin.loginLog');
 			$frm->input('user')
 			    ->setColumn('display_name')
-			    ->setParser(array( $this, 'parseDisplayNameSearch' ), array( array( 'display_name' => 'll._user_id' ), $search ))
 			    ->setLabel(__('profile', 'display-name'));
 			$frm->input('uname')
 			    ->setColumn('username')
@@ -381,16 +401,5 @@ extends Page
 			ErrorLog::logSql($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
-	}
-
-	public function parseDisplayNameSearch($input, $frm, $username, array $joins, \Aqua\SQL\Search $search) {
-		$username = addcslashes($username, '%_\\');
-		$username = "%$username%";
-		foreach($joins as $alias => $column) {
-			$i = App::uid();
-			$search->innerJoin(ac_table('users'), "u$i.id = $column", "u$i")
-			       ->whereOptions(array( $alias => "u$i._display_name" ));
-		}
-		return array( \Aqua\SQL\Search::SEARCH_LIKE, $username );
 	}
 }

@@ -35,4 +35,13 @@ class Query
 	public static function search(\PDO $dbh) {
 		return new Search($dbh);
 	}
+
+	/**
+	 * @return \Aqua\SQL\Join
+	 */
+	public static function join() {
+		return new Join;
+	}
+
+
 }

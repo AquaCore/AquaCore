@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\UI;
 
+use Aqua\Core\L10n;
 use Aqua\Core\Settings;
 use Aqua\Http\Request;
 
@@ -26,13 +27,27 @@ extends Form
 		foreach($xml->settings as $settings) {
 			$key         = (string)$settings->key;
 			$type        = strtolower((string)$settings->type);
-			$label       = (string)$settings->label;
-			$description = (string)$settings->description;
 			if($key === '' || $type === '') {
 				continue;
 			}
-			$_settings = (array)$settings;
-			$value     = $defaults->get($key, '');
+			$label       = '';
+			$description = '';
+			foreach(array( array( $settings->label, &$label ),
+			               array( $settings->description, &$description ) ) as $x) {
+				$nodes = $x[0];
+				$var   = &$x[1];
+				foreach($nodes[0] as $str) {
+					$language = (string)$str->attributes()->language;
+					if($language === '') {
+						$var = (string)$str;
+					} else if(strcasecmp($language, L10n::$code) === 0) {
+						$var = (string)$str;
+						break;
+					}
+				}
+			}
+			$settingsArray = (array)$settings;
+			$value         = $defaults->get($key, '');
 			if($value instanceof Settings) {
 				$value = $value->toArray();
 			}
@@ -54,7 +69,7 @@ extends Form
 				case 'checkbox':
 				case 'radio':
 					$options = array();
-					if(isset($_settings['option'])) {
+					if(isset($settingsArray['option'])) {
 						foreach($settings->option as $opt) {
 							$options[(string)$opt->attributes()->key] = (string)$opt;
 						}
@@ -70,8 +85,8 @@ extends Form
 					$input->checked($value);
 					break;
 				case 'select':
-					if(isset($_settings['option'])) {
-						$options = $_settings['option'];
+					if(isset($settingsArray['option'])) {
+						$options = $settingsArray['option'];
 					} else {
 						continue;
 					}

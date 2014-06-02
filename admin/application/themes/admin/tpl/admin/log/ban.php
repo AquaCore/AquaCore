@@ -39,8 +39,8 @@ $page->theme->set('sidebar', $sidebar);
 	<tr class="alt">
 		<?php echo $search->renderHeader(array(
 			'id'    => __('profile', 'id'),
-		    'usr'   => __('profile', 'user'),
-		    'admin' => __('profile', 'banned-by'),
+		    'admin' => __('profile', 'user'),
+		    'user'  => __('profile', 'banned-by'),
 		    'type'  => __('profile', 'ban-type'),
 		    'ban'   => __('profile', 'ban-date'),
 		    'unban' => __('profile', 'unban-date'),

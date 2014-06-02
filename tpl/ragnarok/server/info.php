@@ -12,7 +12,7 @@ use Aqua\UI\ScriptManager;
  * @var $page               \Page\Main\Ragnarok\Server
  */
 
-$class_population = array_replace(array_fill_keys(array_keys(\Aqua\Core\L10n::getDefault()->getNamespace('ragnarok-jobs')), 0), $class_population);
+$class_population = array_replace(array_fill_keys(array_keys(\Aqua\Core\L10n::getNamespace('ragnarok-jobs')), 0), $class_population);
 $mkJobList = function($jobs) use ($class_population) {
 	$html = '<ul class="ac-job-population">';
 	foreach($jobs as $name => $job) {

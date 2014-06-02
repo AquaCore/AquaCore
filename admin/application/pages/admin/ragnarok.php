@@ -816,8 +816,7 @@ extends Page
 					$names = $frm->request->getArray('group-name', false);
 					$tbl   = $this->server->login->table('ac_groups');
 					$this->server->login->connection()->exec("TRUNCATE TABLE $tbl");
-					$sth   =
-						$this->server->login->connection()->prepare("REPLACE INTO $tbl (id, `name`) VALUES (?, ?)");
+					$sth   = $this->server->login->connection()->prepare("REPLACE INTO $tbl (id, `name`) VALUES (?, ?)");
 					$count = count($ids);
 					for($i = 0; $i < $count; ++$i) {
 						if($ids[$i] === '' || $names[$i] === '') continue;
@@ -864,23 +863,23 @@ extends Page
 
 	public function account_action()
 	{
+		$this->title = $this->theme->head->section = __('ragnarok-server', 'accounts');
 		try {
-			$this->title = $this->theme->head->section = __('ragnarok-server', 'accounts');
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
-					'id'    => 'id',
-			        'name'  => 'username',
-			        'email' => 'email',
-			        'user'  => 'user_id',
-			        'group' => 'group_id',
-			        'state' => 'state',
-			        'ip'    => 'last_ip_address',
-			        'login' => 'last_login'
+					'id'     => 'id',
+			        'name'   => 'username',
+			        'email'  => 'email',
+			        'group'  => 'group_id',
+			        'state'  => 'state',
+			        'ip'     => 'last_ip_address',
+			        'login'  => 'last_login'
 				))
 				->limit(0, 6, 20, 5)
 				->defaultOrder('id')
-				->defaultLimit(20);
+				->defaultLimit(20)
+				->persist('admin.roAccounts');
 			$frm->input('id')
 				->setColumn('id')
 				->searchType(Input::SEARCH_EXACT)
@@ -910,15 +909,11 @@ extends Page
 				->setLabel(__('ragnarok', 'last-login'))
 				->type('datetime')
 				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
-			$states = array();
-			foreach(array( 0, 3, 5, 7, 10, 11, 13, 14 ) as $id) {
-				$states[$id] = __('ragnarok-state', $id);
-			}
 			$frm->select('state')
 				->setColumn('state')
 				->setLabel(__('ragnarok', 'state'))
 				->multiple()
-				->value($states);
+				->value(L10n::rangeList('ragnarok-state', array( 0, 3, 5, 7, 10, 11, 13, 14 )));
 			$search = $this->server->login->search();
 			$frm->apply($search);
 			if(!isset($search->where['id'])) {
@@ -947,6 +942,7 @@ extends Page
 
 	public function loginlog_action()
 	{
+		$this->title  = $this->theme->head->section = __('ragnarok-server', 'login-log');
 		try {
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
@@ -989,7 +985,6 @@ extends Page
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
-			$this->title  = $this->theme->head->section = __('ragnarok-server', 'login-log');
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
 			    ->set('logCount', $search->rowsFound)
@@ -1005,6 +1000,7 @@ extends Page
 
 	public function banlog_action()
 	{
+		$this->title = $this->theme->head->section = __('ragnarok-server', 'ban-log');
 		try {
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
@@ -1060,7 +1056,6 @@ extends Page
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / $frm->getLimit()),
 			                      $currentPage);
-			$this->title = $this->theme->head->section = __('ragnarok-server', 'ban-log');
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
 			    ->set('logCount', $search->rowsFound)
@@ -1076,6 +1071,7 @@ extends Page
 
 	public function pwlog_action()
 	{
+		$this->title = $this->theme->head->section = __('ragnarok-server', 'password-reset-log');
 		try {
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
@@ -1125,7 +1121,6 @@ extends Page
 			$pgn = new Pagination(App::request()->uri,
 			                      ceil($search->rowsFound / self::$logsPerPage),
 			                      $currentPage);
-			$this->title = $this->theme->head->section = __('ragnarok-server', 'ban-log');
 			$tpl = new Template;
 			$tpl->set('logs', $search->results)
 			    ->set('logCount', $search->rowsFound)

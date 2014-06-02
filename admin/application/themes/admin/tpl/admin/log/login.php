@@ -39,7 +39,7 @@ $datetimeFormat = App::settings()->get('datetime_format', '');
 	<thead>
 	<tr class="alt">
 		<?php echo $search->renderHeader(array(
-			'uname'  => __('login-log', 'username'),
+			'name'   => __('login-log', 'username'),
 		    'user'   => __('login-log', 'logged-as'),
 		    'ip'     => __('login-log', 'ip-address'),
 		    'type'   => __('login-log', 'type'),

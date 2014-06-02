@@ -316,15 +316,19 @@ implements \Iterator, \Countable
 	 * @param string|null  $alias
 	 * @return static
 	 */
-	public function join($type, $tables, $on, $alias = null)
+	public function join($type, $tables = '', $on = '', $alias = null)
 	{
-		$join = new Join;
-		if(!is_array($tables)) {
-			if($alias) $tables = array( $alias => $tables );
-			else $tables = array( $tables );
+		if($type instanceof Join) {
+			$this->joins[] = $type;
+		} else {
+			$join = new Join;
+			if(!is_array($tables)) {
+				if($alias) $tables = array( $alias => $tables );
+				else $tables = array( $tables );
+			}
+			$join->tables($tables)->on($on)->type($type);
+			$this->joins[] = $join;
 		}
-		$join->tables($tables)->on($on)->type($type);
-		$this->joins[] = $join;
 
 		return $this;
 	}

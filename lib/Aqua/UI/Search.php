@@ -16,6 +16,7 @@ extends AbstractForm
 	public $clause = array();
 	public $order = array();
 	public $limit = array();
+	public $joins = array();
 	public $currentPage = null;
 	public $defaultOrder = null;
 	public $defaultSorting = self::SORT_ASC;
@@ -37,9 +38,9 @@ extends AbstractForm
 
 	public function __construct(Request $request,
 	                            $currentPage = null,
-	                            $orderKey = 'order',
-	                            $sortingKey = 'sort',
-	                            $limitKey = 'limit')
+	                            $orderKey    = 'order',
+	                            $sortingKey  = 'sort',
+	                            $limitKey    = 'limit')
 	{
 		$this->currentPage = $currentPage;
 		$this->orderKey = $orderKey;
@@ -48,6 +49,12 @@ extends AbstractForm
 		parent::__construct($request);
 	}
 
+	/**
+	 * @param string $name
+	 * @param int    $clause
+	 * @param bool   $autofill
+	 * @return \Aqua\UI\Search\Input
+	 */
 	public function input($name, $clause = self::CLAUSE_WHERE, $autofill = true)
 	{
 		if(isset($this->content[$name]) && $this->content[$name] instanceof Input) {
@@ -62,6 +69,12 @@ extends AbstractForm
 		return $input;
 	}
 
+	/**
+	 * @param string $name
+	 * @param int    $clause
+	 * @param bool   $autofill
+	 * @return \Aqua\UI\Search\Select
+	 */
 	public function select($name, $clause = self::CLAUSE_WHERE, $autofill = true)
 	{
 		if(isset($this->content[$name]) && $this->content[$name] instanceof Select) {
@@ -78,6 +91,12 @@ extends AbstractForm
 		return $select;
 	}
 
+	/**
+	 * @param string $name
+	 * @param int    $clause
+	 * @param bool   $autofill
+	 * @return \Aqua\UI\Search\Range
+	 */
 	public function range($name, $clause = self::CLAUSE_WHERE, $autofill = true)
 	{
 		if(isset($this->content[$name]) && $this->content[$name] instanceof Range) {
@@ -94,12 +113,23 @@ extends AbstractForm
 		return $range;
 	}
 
+	/**
+	 * @param array $orders
+	 * @return \Aqua\UI\Search
+	 */
 	public function order(array $orders)
 	{
 		$this->order = $orders;
 		return $this;
 	}
 
+	/**
+	 * @param string $order
+	 * @param int    $sorting
+	 * @return \Aqua\UI\Search
+	 * @see \Aqua\UI\Search\Search::SORT_ASC
+	 * @see \Aqua\UI\Search\Search::SORT_DESC
+	 */
 	public function defaultOrder($order, $sorting = null)
 	{
 		$this->defaultOrder = $order;
@@ -134,6 +164,10 @@ extends AbstractForm
 		return $this;
 	}
 
+	/**
+	 * @param int $limit
+	 * @return \Aqua\UI\Search
+	 */
 	public function defaultLimit($limit)
 	{
 		$this->defaulLimit = (int)$limit;
@@ -141,6 +175,10 @@ extends AbstractForm
 		return $this;
 	}
 
+	/**
+	 * @param string $key
+	 * @return \Aqua\UI\Search
+	 */
 	public function persist($key)
 	{
 		$this->persistKey = $key;
@@ -177,11 +215,44 @@ extends AbstractForm
 		return $this;
 	}
 
+	/**
+	 * @param string         $alias
+	 * @param string         $column
+	 * @return \Aqua\SQL\Join
+	 */
+	public function join($alias, $column = null)
+	{
+		if(isset($this->joins[$alias])) {
+			$join = $this->joins[$alias];
+		} else {
+			$join = new SQL\Join();
+		}
+		$this->joins[$alias] = array( $join, $column );
+
+		return $join;
+	}
+
+	/**
+	 * @param \Aqua\SQL\Search $search
+	 * @param callable        $validator
+	 * @return \Aqua\UI\Search
+	 */
 	public function apply(SQL\Search $search, $validator = null)
 	{
 		$this->validate($validator, false);
+		$joins = $this->joins;
 		if($order = $this->getOrder()) {
-			$search->order(array( $this->order[$order] => $this->getSorting() ? 'DESC' : 'ASC' ));
+			$column = $this->order[$order];
+			if(isset($joins[$column])) {
+				$key = $column;
+				if($joins[$key][1]) {
+					$search->whereOptions(array( $column => $joins[$key][1] ));
+					$column = $joins[$key][1];
+				}
+				$search->join($joins[$key][0]);
+				unset($joins[$key], $key);
+			}
+			$search->order(array( $column => $this->getSorting() ? 'DESC' : 'ASC' ));
 		}
 		if($limit = $this->getLimit()) {
 			$search->limit(($this->currentPage - 1) * $limit, $limit);
@@ -192,11 +263,25 @@ extends AbstractForm
 				if(is_array($column)) {
 					$x = array();
 					foreach($column as $col) {
+						if(isset($joins[$col])) {
+							if($joins[$col][1]) {
+								$search->whereOptions(array( $col => $joins[$col][1] ));
+							}
+							$search->join($joins[$col][0]);
+							unset($joins[$col]);
+						}
 						$x[] = array( $col => $where );
 						$x[] = 'OR';
 					}
 					array_pop($x);
 				} else {
+					if(isset($joins[$column])) {
+						if($joins[$column][1]) {
+							$search->whereOptions(array( $column => $joins[$column][1] ));
+						}
+						$search->join($joins[$column][0]);
+						unset($joins[$column]);
+					}
 					$x = array( $column => $where );
 				}
 				if($this->clause[$key] === self::CLAUSE_WHERE) {
@@ -209,6 +294,9 @@ extends AbstractForm
 		return $this;
 	}
 
+	/**
+	 * @return int|null
+	 */
 	public function getLimit()
 	{
 		if($this->persistKey && App::user()->loggedIn() &&
@@ -222,6 +310,9 @@ extends AbstractForm
 		}
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function getOrder()
 	{
 		if($this->persistKey && App::user()->loggedIn() &&
@@ -235,6 +326,9 @@ extends AbstractForm
 		}
 	}
 
+	/**
+	 * @return int|null
+	 */
 	public function getSorting()
 	{
 		if($this->persistKey && App::user()->loggedIn() &&
@@ -248,6 +342,11 @@ extends AbstractForm
 		}
 	}
 
+	/**
+	 * @param string $order
+	 * @param int    $sorting
+	 * @return string
+	 */
 	public function buildUrl($order, $sorting)
 	{
 		$query = $this->request->uri->parameters;
@@ -268,6 +367,11 @@ extends AbstractForm
 		return $this->request->uri->url(array( 'query' => $query ));
 	}
 
+	/**
+	 * @param array    $columns
+	 * @param callable $renderColumn
+	 * @return string
+	 */
 	public function renderHeader(array $columns, $renderColumn = null)
 	{
 		$currentOrder   = $this->getOrder();
@@ -296,6 +400,14 @@ extends AbstractForm
 		return $html;
 	}
 
+	/**
+	 * @param string $key
+	 * @param string $name
+	 * @param string $url
+	 * @param string $class
+	 * @param string $colspan
+	 * @return string
+	 */
 	public function renderHeaderColumn($key, $name, $url, $class, $colspan)
 	{
 		$html = '<td';

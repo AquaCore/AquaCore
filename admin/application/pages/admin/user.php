@@ -546,7 +546,7 @@ extends Page
 			}
 			$this->theme->head->section = $this->title = __('profile-history', 'x-profile-history', htmlspecialchars($account->displayName));
 			$this->theme->set('return', ac_build_url(array(
-					'path' => array( 'role' ),
+					'path' => array( 'user' ),
 					'action' => 'view',
 					'arguments' => array( $account->id )
 				)));

@@ -71,6 +71,9 @@ try {
 				$img  = imagecreatefrombmpstring($data);
 				if($cache_ttl > -1) {
 					$old = umask(0);
+					if(file_exists($file)) {
+						@unlink($file);
+					}
 					imagepng($img, $file, $settings->get('compression', 0));
 					chmod($file, \Aqua\PUBLIC_FILE_PERMISSION);
 					umask($old);
@@ -80,6 +83,9 @@ try {
 			} else {
 				if(file_exists($missing_emblem_file) && $cache_ttl > -1) {
 					$old = umask(0);
+					if(file_exists($file)) {
+						@unlink($file);
+					}
 					copy($missing_emblem_file, $file);
 					chmod($file, \Aqua\PUBLIC_FILE_PERMISSION);
 					umask($old);
@@ -162,6 +168,9 @@ try {
 			image_trim($img, imagecolorallocatealpha($img, 255, 255, 255, 127));
 			if($cache_ttl > -1) {
 				$old = umask(0);
+				if(file_exists($file)) {
+					@unlink($file);
+				}
 				imagepng($img, $file, $settings->get('compression', 0));
 				chmod($file, \Aqua\PUBLIC_FILE_PERMISSION);
 				umask($old);
@@ -182,6 +191,9 @@ try {
 			image_trim($img, imagecolorallocatealpha($img, 255, 255, 255, 127));
 			if($cache_ttl > -1) {
 				$old = umask(0);
+				if(file_exists($file)) {
+					@unlink($file);
+				}
 				imagepng($img, $file, $settings->get('compression', 0));
 				chmod($file, \Aqua\PUBLIC_FILE_PERMISSION);
 				umask($old);
