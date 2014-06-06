@@ -4,6 +4,7 @@ namespace Aqua\BBCode\Filter;
 use Aqua\BBCode\AbstractFilter;
 use Aqua\BBCode\BBCode;
 use Aqua\BBCode\Node;
+use Aqua\BBCode\Smiley;
 
 /**
  * BBCode filter that replaces smileys with their respective images
@@ -32,7 +33,7 @@ extends AbstractFilter
 	{
 		$this->settings['base_url'] = \Aqua\URL . '/uploads/smiley/';
 		if(empty($settings['smileys'])) {
-			$this->settings['smileys'] = include \Aqua\ROOT . '/settings/smiley.php';
+			$this->settings['smileys'] = array_column(Smiley::smileys(), 'file', 'text');
 		}
 		parent::__construct($settings);
 		$this->rebuildPattern();
