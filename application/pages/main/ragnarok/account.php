@@ -67,9 +67,8 @@ extends Page
 
 	public function index_action()
 	{
-		$this->title = __('ragnarok', 'viewing-x-account', htmlspecialchars($this->account->username));
+		$this->title = $this->theme->head->section = __('ragnarok', 'viewing-x-account', htmlspecialchars($this->account->username));
 		$this->theme->set('return', ac_build_url(array( 'path' => array( 'account' ) )));
-		$this->theme->head->section = __('ragnarok-account', 'view-account');
 		$tpl = new Template;
 		$tpl->set('account', $this->account);
 		$tpl->set('page', $this);
@@ -317,8 +316,7 @@ extends Page
 			$frm = new Form($this->request);
 			$frm->input('password', false)
 				->type('password')
-				->setLabel(__('ragnarok', 'site-password'))
-				->setDescription('Your site account\'s password.');
+				->setLabel(__('ragnarok', 'site-password'));
 			$frm->token('ragnarok_reset_pass');
 			if(App::settings()->get('captcha')->get('use_recaptcha', false)) {
 				$frm->reCaptcha();
@@ -356,19 +354,20 @@ extends Page
 			$email = Email::fromTemplate('ragnarok-reset-pw')
 				->isHtml(true)
 				->replace(array(
-					'site-title'   => App::settings()->get('title'),
+					'site-title'   => htmlspecialchars(App::settings()->get('title', '')),
 					'site-url'     => \Aqua\URL,
 					'ro-username'  => htmlspecialchars($this->account->username),
 					'username'     => htmlspecialchars($user->account->username),
 					'display-name' => htmlspecialchars($user->account->displayName),
 					'email'        => htmlspecialchars($user->account->email),
-					'time-now'     => strftime(App::settings()->get('date_format'), ''),
+					'time-now'     => strftime(App::settings()->get('date_format', ''), time()),
 					'time-left'    => 2,
 					'key'          => $key,
 					'url'          => $this->account->url(array( 'action' => 'resetpw', 'arguments' => array( $key ) ))
 				))
 				->addAddress($user->account);
 			App::user()->session->tmp('ragnarok-pw-reset::' . $this->account->id, $key, 3600 * 2);
+			$this->server->login->log->logPasswordResetRequest($this->account, $key);
 			if(!$email->send()) {
 				throw new PHPMailerException(Email::phpMailer()->ErrorInfo);
 			}
@@ -462,6 +461,7 @@ extends Page
 			if($this->account->update($update)) {
 				$user->addFlash('success', null, __('ragnarok', 'password-reset-success'));
 				$user->session->delete('ragnarok_pass_reset::' . $this->account->id);
+				$this->server->login->log->logPasswordReset($this->account, $code);
 			}
 			$this->response->redirect($this->account->url());
 		} catch(\Exception $exception) {

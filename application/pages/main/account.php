@@ -786,7 +786,7 @@ extends Page
 					'username'     => htmlspecialchars($account->username),
 					'display-name' => htmlspecialchars($account->displayName),
 					'email'        => htmlspecialchars($account->email),
-					'time-now'     => strftime(App::settings()->get('date_format', '')),
+					'time-now'     => strftime(App::settings()->get('date_format', ''), time()),
 					'time-left'    => 2,
 					'key'          => $key,
 					'url'          => ac_build_url(array(
@@ -819,30 +819,30 @@ extends Page
 			return;
 		}
 		try {
+			if(empty($key) || !ctype_xdigit($key)) {
+				$this->error(404);
+
+				return;
+			}
+			list($accountId, $resetKey) = App::user()->session->get('password_reset', array( null, null ));
+			if(!$accountId || !$resetKey || $key !== $resetKey || !($account = UserAccount::get($accountId))) {
+				$this->error(404);
+
+				return;
+			}
 			$settings = App::settings()->get('account')->get('registration');
-			if(empty($key) || ctype_xdigit($key) || strlen($key) !== 127) {
-				$this->error(404);
-
-				return;
-			}
-			list($account_id, $reset_key) = App::user()->session->get('password_reset', array( null, null ));
-			if(!$account_id || !$reset_key || $key !== $reset_key || !($account = UserAccount::get($account_id))) {
-				$this->error(404);
-
-				return;
-			}
 			$frm               = new Form($this->request);
 			$frm->autocomplete = false;
 			$frm->input('password')
 			    ->required()
 			    ->type('password')
 			    ->attr('autocomplete', 'off')
-			    ->setLabel(__('account', 'password'));
+			    ->setLabel(__('profile', 'password'));
 			$frm->input('repeat_password')
 			    ->required()
 			    ->type('password')
 			    ->attr('autocomplete', 'off')
-			    ->setLabel(__('account', 'password-repeat'));
+			    ->setLabel(__('profile', 'repeat-password'));
 			$frm->token('account_password_reset');
 			$frm->submit();
 			$frm->validate(function (Form $frm) use ($settings) {
@@ -879,9 +879,7 @@ extends Page
 		$this->response->status(302);
 		try {
 			$account->updatePassword(trim($this->request->getString('password')), true);
-			App::user()
-			   ->addFlash('success', null, __('reset-pw', 'success'))
-				->session->delete('password_reset');
+			App::user()->addFlash('success', null, __('reset-pw', 'success'))->session->delete('password_reset');
 			$this->response->redirect(\Aqua\URL);
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);

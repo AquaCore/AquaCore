@@ -210,7 +210,7 @@ class LoginLog
 			))
 			->from($this->table('ac_password_reset_log'), 'pw')
 			->groupBy('pw.id')
-			->parser(array( __CLASS__, 'parsePasswordResetLogSql' ));
+			->parser(array( $this, 'parsePasswordResetLogSql' ));
 	}
 
 	public function fetchCache($name = null, $rebuild = false, $internal = false)
@@ -340,6 +340,7 @@ class LoginLog
 	{
 		$log              = new Logs\PasswordResetLog();
 		$log->login       = & $this->login;
+		$log->id          = (int)$data['id'];
 		$log->accountId   = (int)$data['account_id'];
 		$log->requestDate = (int)$data['request_date'];
 		$log->ipAddress   = $data['ip_address'];

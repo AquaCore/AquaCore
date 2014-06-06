@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `ac_ban_log` (
-  id BIGINT UNSIGNED NOT NULL,
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   user_id BIGINT UNSIGNED NOT NULL,
   banned_account INT UNSIGNED NOT NULL,
   type ENUM('permanent', 'temporary', 'unban') NOT NULL,
