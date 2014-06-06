@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="ragnarok" key="unban-time-desc">Leave this field blank to ban this account permanently.</word>
+        <word namespace="ragnarok" key="ban-account">Ban %s</word>
+        <word namespace="ragnarok" key="unban-account">Unban %s</word>
+        <word namespace="ragnarok" key="ban-reason">Ban reason</word>
+        <word namespace="ragnarok" key="unban-reason">Unban reason</word>
+        <word namespace="ragnarok" key="ban">Ban Account</word>
+        <word namespace="ragnarok" key="account-unbaned">%s has been unbaned.</word>
+        <word namespace="ragnarok" key="account-banned-temporarily">%s is banned until %s.</word>
+        <word namespace="ragnarok" key="account-banned-permanently">%s has been banned permanently.</word>
+    </wordgroup>
+</languageimport>

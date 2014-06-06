@@ -83,8 +83,8 @@ class LoginLog
 	public function logUnban(RagnarokAccount $acc, UserAccount $user, $reason)
 	{
 		$sth = $this->connection()->prepare("
-		INSERT INTO {$this->table('ac_ban_log')} (user_id, banned_account, type, ban_time, `date`, reason)
-		VALUES (:user, :acc, :type, 0, NOW(), :reason)
+		INSERT INTO {$this->table('ac_ban_log')} (user_id, banned_account, type, unban_time, `date`, reason)
+		VALUES (:user, :acc, :type, NULL, NOW(), :reason)
 		");
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(':acc', $acc->id, \PDO::PARAM_INT);
@@ -169,9 +169,10 @@ class LoginLog
 				'id'         => 'bl.`id`',
 				'account_id' => 'bl.`user_id`',
 				'banned_id'  => 'bl.`banned_account`',
-				'type'       => 'bl.`type`',
+				'type'       => '(bl.`type` + 0)',
 				'ban_date'   => 'UNIX_TIMESTAMP(bl.`date`)',
 				'unban_date' => 'UNIX_TIMESTAMP(bl.`unban_date`)',
+			    'reason'     => 'bl.reason'
 			))
 			->whereOptions(array(
 				'id'         => 'bl.`id`',
@@ -322,13 +323,14 @@ class LoginLog
 	{
 		$log            = new Logs\BanLog();
 		$log->login     = & $this->login;
+		$log->id        = (int)$data['id'];
 		$log->accountId = (int)$data['account_id'];
 		$log->bannedId  = (int)$data['banned_id'];
 		$log->date      = (int)$data['ban_date'];
 		$log->type      = (int)$data['type'];
 		$log->reason    = $data['reason'];
 		if(!$data['unban_date']) {
-			$log->date = null;
+			$log->unbanDate = null;
 		} else {
 			$log->unbanDate = (int)$data['unban_date'];
 		}

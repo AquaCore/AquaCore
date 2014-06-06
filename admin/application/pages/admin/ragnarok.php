@@ -1007,16 +1007,16 @@ extends Page
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
-					'id'   => 'id',
-					'acc'  => 'banned_id',
-					'ban'  => 'account_id',
-					'type' => 'type',
-					'date' => 'ban_date',
-					'uban' => 'unban_date'
+					'id'    => 'id',
+					'accid' => 'banned_id',
+					'banid' => 'account_id',
+					'type'  => 'type',
+					'date'  => 'ban_date',
+					'unban' => 'unban_date'
 				))
-			    ->limit(0, 6, 20, 5)
-			    ->defaultOrder('id')
-			    ->defaultLimit(20);
+			    ->limit(0, 7, 15, 5)
+			    ->defaultOrder('id', \Aqua\UI\Search::SORT_DESC)
+			    ->defaultLimit(15);
 			$frm->input('id')
 				->setColumn('id')
 				->searchType(Input::SEARCH_EXACT)
@@ -1086,7 +1086,7 @@ extends Page
 			        'res'   => 'reset_date'
 				))
 				->limit(0, 6, 20, 5)
-				->defaultOrder('id')
+				->defaultOrder('id', \Aqua\UI\Search::SORT_DESC)
 				->defaultLimit(20);
 			$frm->input('id')
 				->setColumn('id')
@@ -1464,29 +1464,28 @@ extends Page
 			$frm = new Form($this->request);
 			if($account->isBanned()) {
 				$frm->textarea('reason')
-					->setLabel(__('ragnarok-account', 'unban-reason'));
+					->setLabel(__('ragnarok', 'unban-reason'));
 				$frm->submit();
 			} else {
 				$frm->input('unban')
-				    ->type('text')
-				    ->setLabel(__('ragnarok-account', 'unban-date'));
+				    ->type('datetime')
+					->placeholder('YYYY-MM-DD HH:MM:SS')
+					->attr('min', date('Y-m-d'))
+				    ->setLabel(__('ragnarok', 'unban-time'))
+					->setDescription(__('ragnarok', 'unban-time-desc'));
 				$frm->textarea('reason')
-					->setLabel(__('ragnarok-account', 'ban-reason'));
+					->setLabel(__('ragnarok', 'ban-reason'));
 				$frm->submit();
 			}
-			$frm->validate(function (Form $frm) use ($account) {
-				if($account->isBanned() &&
-				   ($unban = $frm->request->getString('unban')) &&
-				   (!($d = \DateTime::createFromFormat('Y-m-d H:i:s', $unban)) || $d->getTimestamp() < time())) {
-					$frm->field('unban')->setWarning(__('form', 'invalid-date'));
-				}
-
-				return true;
-			}, !$this->request->ajax);
+			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				if($account->isBanned()) {
-					$this->title = __('ragnarok-account', 'unban-account', htmlspecialchars($account->username));
+					$this->title = __('ragnarok', 'unban-account', htmlspecialchars($account->username));
+				} else {
+					$this->title = __('ragnarok', 'ban-account', htmlspecialchars($account->username));
 				}
+				$this->theme->set('return', $this->server->url(array( 'action' => 'viewaccount',
+				                                                      'arguments' => array( $account->id ) )));
 				$tpl = new Template;
 				$tpl->set('account', $account)
 					->set('form', $frm)
@@ -1496,9 +1495,11 @@ extends Page
 				return;
 			}
 			try {
+				$this->response->status(302)->redirect(App::request()->uri->url());
 				if($account->isBanned()) {
 					if($account->unban(App::user()->account, $this->request->getString('reason'))) {
-						App::user()->addFlash('success', null, __('ragnarok-account', 'ubanned'));
+						App::user()->addFlash('success', null, __('ragnarok', 'account-ubanned',
+						                                          htmlspecialchars($account->username)));
 					}
 				} else {
 					if(($unban = $this->request->getString('unban')) &&
@@ -1510,10 +1511,13 @@ extends Page
 					if($account->ban(App::user()->account, $unban, $this->request->getString('reason'))) {
 						if($unban) {
 							App::user()
-							   ->addFlash('success', null, __('ragnarok-account', 'banned-temporarily',
-							              strftime(App::settings()->get('datetime_format', $unban))));
+							   ->addFlash('success', null, __('ragnarok', 'account-banned-temporarily',
+							                                  htmlspecialchars($account->username),
+							                                  strftime(App::settings()->get('datetime_format', ''), $unban)));
+						} else {
+							App::user()->addFlash('success', null, __('ragnarok', 'account-banned-permanently',
+							                                          htmlspecialchars($account->username)));
 						}
-						else App::user()->addFlash('success', null, __('ragnarok-account', 'banned-permanently'));
 					}
 				}
 			} catch(\Exception $exception) {

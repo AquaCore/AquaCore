@@ -1,9 +1,9 @@
-ALTER TABLE `ac_ban_log`
+ALTER TABLE #db#`ac_ban_log`
   CHANGE COLUMN `id` `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT;
 
-DROP TABLE IF EXISTS `ac_password_reset_log`;
+DROP TABLE IF EXISTS #db#`ac_password_reset_log`;
 
-CREATE TABLE IF NOT EXISTS `ac_password_reset_log` (
+CREATE TABLE IF NOT EXISTS #db#`ac_password_reset_log` (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   account_id INT UNSIGNED NOT NULL,
   ip_address VARCHAR(46) NOT NULL,

@@ -285,7 +285,7 @@ class Account
 		Event::fire('ragnarok.ban', $feedback);
 		$this->state     = ($time ? self::STATE_NORMAL : self::STATE_BANNED_TEMPORARILY);
 		$this->unbanTime = $time;
-		return false;
+		return true;
 	}
 
 	/**

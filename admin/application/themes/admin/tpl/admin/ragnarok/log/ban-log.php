@@ -48,15 +48,20 @@ $page->theme->set('sidebar', $sidebar);
 	<?php if(empty($logs)) : ?>
 		<tr><td colspan="6" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($logs as $log) : ?>
-	<tr>
-		<td><?php echo $log->id ?></td>
-		<td><?php echo htmlspecialchars($log->banned()->username) ?></td>
-		<td><?php echo $log->account()->display() ?></td>
-		<td class="ac-ban-type <?php if($log->type === BanLog::TYPE_UNBAN) echo 'ac-unban' ?>"><?php echo $log->type() ?></td>
-		<td><?php echo $log->banDate($datetimeFormat) ?></td>
-		<td><?php echo $log->unbanDate($datetimeFormat) ?></td>
-	</tr>
-	<?php endforeach; endif; ?>
+		<tr>
+			<td><?php echo $log->id ?></td>
+			<td><?php echo htmlspecialchars($log->banned()->username) ?></td>
+			<td><?php echo $log->account()->display() ?></td>
+			<td class="ac-ban-type <?php if($log->type === BanLog::TYPE_UNBAN) echo 'ac-unban' ?>"><?php echo $log->type() ?></td>
+			<td><?php echo $log->banDate($datetimeFormat) ?></td>
+			<td><?php echo $log->unbanDate ? $log->unbanDate($datetimeFormat) : '--' ?></td>
+		</tr>
+	<?php if($log->reason) : ?>
+		<tr>
+			<td colspan="2"><b><?php echo __('ragnarok', ($log->type === BanLog::TYPE_UNBAN ? 'unban-reason' : 'ban-reason')) ?></b></td>
+			<td colspan="4" style="text-align: justify"><?php echo $log->reason ?></td>
+		</tr>
+	<?php endif; endforeach; endif; ?>
 	</tbody>
 	<tfoot>
 		<tr>

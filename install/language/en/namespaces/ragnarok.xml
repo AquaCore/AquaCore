@@ -235,6 +235,7 @@
     <word namespace="ragnarok" key="zeny-ranking">Zeny Ladder</word>
     <word namespace="ragnarok" key="account-id">Account ID</word>
     <word namespace="ragnarok" key="unban-time">Unban Time</word>
+    <word namespace="ragnarok" key="unban-time-desc">Leave this field blank to ban this account permanently.</word>
     <word namespace="ragnarok" key="birthday">Birthday</word>
     <word namespace="ragnarok" key="email">Email</word>
     <word namespace="ragnarok" key="parties">Parties</word>
@@ -294,5 +295,13 @@
     <word namespace="ragnarok" key="mode">Mode</word>
     <word namespace="ragnarok" key="alliances">Alliances</word>
     <word namespace="ragnarok" key="exp-mode">Experience Mode</word>
+    <word namespace="ragnarok" key="ban-account">Ban %s</word>
+    <word namespace="ragnarok" key="unban-account">Unban %s</word>
+    <word namespace="ragnarok" key="ban-reason">Ban reason</word>
+    <word namespace="ragnarok" key="unban-reason">Unban reason</word>
+    <word namespace="ragnarok" key="ban">Ban Account</word>
+    <word namespace="ragnarok" key="account-unbaned">%s has been unbaned.</word>
+    <word namespace="ragnarok" key="account-banned-temporarily">%s is banned until %s.</word>
+    <word namespace="ragnarok" key="account-banned-permanently">%s has been banned permanently.</word>
   </wordgroup>
 </languageimport>

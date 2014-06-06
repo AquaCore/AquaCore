@@ -24,26 +24,30 @@ AddType image/x-icon .ico
   RewriteRule ^(.*)(?!/action/?)$ index.php?path=$1 [L,QSA]
 </IfModule>
 <FilesMatch "\.(shtml?|xml|php([3-5s]|tml)?|in[ic]|conf(ig)?|neon|cache|log|sql)$">
-  Order Deny,Allow
+  Order deny,allow
   Deny from all
 </FilesMatch>
 <Files ~ "^index\..*$">
-  Order Allow,Deny
+  Order allow,deny
   Allow from all
 </Files>
 <Files "img.php">
-  Order Allow,Deny
+  Order allow,deny
   Allow from all
 </Files>
 <Files "captcha.php">
-  Order Allow,Deny
+  Order allow,deny
   Allow from all
 </Files>
 <Files "rate.php">
-  Order Allow,Deny
+  Order allow,deny
   Allow from all
 </Files>
 <Files "ratecomment.php">
-  Order Allow,Deny
+  Order allow,deny
   Allow from all
+</Files>
+<Files "cron.php">
+  Order deny,allow
+  Deny from all
 </Files>

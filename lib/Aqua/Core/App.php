@@ -88,11 +88,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.2.1';
+	const VERSION = '0.2.2';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 201;
+	const VERSION_LONG = 202;
 
 	private function __construct() { }
 
@@ -458,20 +458,25 @@ class App
 			foreach(glob(\Aqua\ROOT . '/upgrade/sql/*.sql') as $file) {
 				if(!ac_parse_upgrade_file_name($file, $version, $num, $type) ||
 				   !$type || !version_compare($version, $oldVersion, '>')) { continue; }
-				$query = str_replace('#', \Aqua\TABLE_PREFIX, file_get_contents($file));
+				$query = file_get_contents($file);
 				if($type === 'aquacore') {
+					$query = str_pad('#', \Aqua\TABLE_PREFIX, $query);
 					try { App::connection()->exec($query); } catch(\Exception $e) { }
 				} else {
 					foreach(Server::$servers as $server) {
 						if($type === 'login') {
+							$query = str_replace('#db#', ($server->login->db ? "`{$server->login->db}`." : ''), $query);
 							try { $server->login->connection()->exec($query); } catch(\Exception $e) { }
 						} else if($type === 'loginlog') {
+							$query = str_replace('#db#', ($server->login->log->db ? "`{$server->login->log->db}`." : ''), $query);
 							try { $server->login->log->connection()->exec($query); } catch(\Exception $e) { }
 						} else {
 							foreach($server->charmap as $charmap) {
 								if($type === 'charmap') {
+									$query = str_replace('#db#', ($charmap->db ? "`{$charmap->db}`." : ''), $query);
 									try { $charmap->connection()->exec($query); } catch(\Exception $e) { }
 								} else if($type === 'charmaplog') {
+									$query = str_replace('#db#', ($charmap->log->db ? "`{$charmap->log->db}`." : ''), $query);
 									try { $charmap->log->connection()->exec($query); } catch(\Exception $e) { }
 								}
 							}
