@@ -47,7 +47,9 @@ extends Page
 					'url'   => $baseUrl . 'settings'
 				));
 			}
-			if(App::user()->role()->hasPermission('view-server-acc')) {
+			if(App::user()->role()->hasPermission('view-server-acc') ||
+			   App::user()->role()->hasPermission('edit-server-user') ||
+			   App::user()->role()->hasPermission('ban-server-user')) {
 				$nav->append('accounts', array(
 					'title' => __('ragnarok-server', 'accounts'),
 					'url'   => $baseUrl . 'account'
@@ -1076,12 +1078,12 @@ extends Page
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
 			$frm->order(array(
-					'id' => 'id',
-			        'acc' => 'account_id',
-			        'ip' => 'ip_address',
-			        'key' => 'key',
-			        'req' => 'request_date',
-			        'res' => 'reset_date'
+					'id'    => 'id',
+			        'accid' => 'account_id',
+			        'ip'    => 'ip_address',
+			        'key'   => 'key',
+			        'req'   => 'request_date',
+			        'res'   => 'reset_date'
 				))
 				->limit(0, 6, 20, 5)
 				->defaultOrder('id')
@@ -1114,6 +1116,8 @@ extends Page
 				->type('datetime')
 				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
 			$search = $this->server->login->log->searchPasswordReset();
+			$frm->apply($search);
+			$search->query();
 			$load = new DataPreload(array( $this->server->login, 'search' ),
 			                        $this->server->login->accounts);
 			$load->add($search, array( 'account_id' ));

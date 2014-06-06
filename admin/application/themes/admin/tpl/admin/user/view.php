@@ -8,6 +8,7 @@
  */
 
 use Aqua\Core\App;
+use Aqua\Log\ProfileUpdateLog;
 use Aqua\User\Role;
 use Aqua\User\Account;
 use Aqua\UI\ScriptManager;
@@ -60,7 +61,7 @@ $ban_user_url = ac_build_url(array(
 <table class="ac-table ac-account-info-table">
 	<thead>
 		<tr>
-			<td colspan="6" style="text-align: left">
+			<td colspan="6">
 				<?php echo __('profile', 'account-info', htmlspecialchars($account->username)) ?>
 			</td>
 		</tr>
@@ -120,15 +121,15 @@ $ban_user_url = ac_build_url(array(
 			</td>
 		</tr>
 		<tr class="ac-table-header">
-			<td colspan="6" style="text-align: left"><?php echo __('profile', 'ragnarok-accounts') ?></td>
+			<td colspan="6"><?php echo __('profile', 'ragnarok-accounts') ?></td>
 		</tr>
 		<tr class="ac-table-header alt">
-			<td><?php echo __('ragnarok-account', 'username') ?></td>
-			<td><?php echo __('ragnarok-account', 'sex') ?></td>
-			<td><?php echo __('ragnarok-account', 'group') ?></td>
-			<td><?php echo __('ragnarok-account', 'state') ?></td>
-			<td><?php echo __('ragnarok-account', 'last-login') ?></td>
-			<td><?php echo __('ragnarok-account', 'server') ?></td>
+			<td><?php echo __('ragnarok', 'username') ?></td>
+			<td><?php echo __('ragnarok', 'sex') ?></td>
+			<td><?php echo __('ragnarok', 'group') ?></td>
+			<td><?php echo __('ragnarok', 'state') ?></td>
+			<td><?php echo __('ragnarok', 'last-login') ?></td>
+			<td><?php echo __('ragnarok', 'server') ?></td>
 		</tr>
 	<?php if(empty($ragnarokAccounts)) : ?>
 		<tr>
@@ -138,25 +139,22 @@ $ban_user_url = ac_build_url(array(
 		</tr>
 	<?php else : foreach($ragnarokAccounts as $acc) : ?>
 		<tr>
-			<td><a href="<?php echo ac_build_url(array(
-				                                     'path'      => array( 'r', $acc->server->key ),
-				                                     'action'    => 'viewaccount',
-				                                     'arguments' => array( $acc->id )
-			                                     )) ?>"><?php echo htmlspecialchars($acc->username) ?></a></td>
+			<td><a href="<?php echo $acc->server->url(array(
+						'action' => 'viewaccount',
+						'arguments' => array( $acc->id )
+					)) ?>"><?php echo htmlspecialchars($acc->username) ?></a></td>
 			<td><?php echo $acc->gender() ?></td>
 			<td><?php echo $acc->groupName() ?>
 				<small>(<?php echo $acc->groupId ?>)</small>
 			</td>
 			<td><?php echo $acc->state() ?></td>
 			<td><?php echo $acc->lastLogin($datetime_format) ?></td>
-			<td><a href="<?php echo ac_build_url(array(
-				                                     'path' => array( 'ro', $acc->server->key )
-			                                     )) ?>"><?php echo htmlspecialchars($acc->server->name) ?></a></td>
+			<td><a href="<?php echo $acc->server->url() ?>"><?php echo htmlspecialchars($acc->server->name) ?></a></td>
 		</tr>
 <?php endforeach; endif; ?>
 <?php if(App::user()->role()->hasPermission('view-cp-logs')) : ?>
 	<tr class="ac-table-header">
-		<td colspan="6" style="text-align: left">
+		<td colspan="6">
 			<?php echo __('profile-history', 'profile-history') ?>
 			<a style="float: right"
 			   href="<?php echo ac_build_url(array(
@@ -182,16 +180,16 @@ $ban_user_url = ac_build_url(array(
 		</tr>
 	<?php else : foreach($profileHistory as $log) : ?>
 		<tr>
-			<td>#<?php echo $log->id ?></td>
+			<td><?php echo $log->id ?></td>
 			<td><?php echo $log->ipAddress ?></td>
 			<td><?php echo $log->field() ?></td>
-			<td><?php echo htmlspecialchars($log->oldValue) ?></td>
-			<td><?php echo htmlspecialchars($log->newValue) ?></td>
+			<td><?php echo ($log->field === ProfileUpdateLog::FIELD_PASSWORD ? '--' : htmlspecialchars($log->oldValue)) ?></td>
+			<td><?php echo ($log->field === ProfileUpdateLog::FIELD_PASSWORD ? '--' : htmlspecialchars($log->newValue)) ?></td>
 			<td><?php echo $log->date($datetime_format) ?></td>
 		</tr>
 	<?php endforeach; endif; ?>
 	<tr class="ac-table-header">
-		<td colspan="6" style="text-align: left">
+		<td colspan="6">
 			<?php echo __('donation', 'donation-history') ?>
 		</td>
 	</tr>

@@ -1,6 +1,7 @@
 <?php
 namespace Aqua\Core;
 
+use Aqua\Content\ContentType;
 use Aqua\SQL\Query;
 use Aqua\SQL\Search;
 use Aqua\User\Role;
@@ -179,6 +180,7 @@ class L10n
 		self::importEmailGroup($xml, $pluginId);
 		self::importTaskGroup($xml);
 		self::importPermissionGroup($xml, $rebuildCache);
+		self::importContentTypeGroup($xml, $rebuildCache);
 	}
 
 	public static function importWordGroup(\SimpleXMLElement $xml, $pluginId = null, $rebuildCache = true)
@@ -312,6 +314,37 @@ class L10n
 		}
 		if($rebuildCache) {
 			Role::rebuildPermissionCache();
+		}
+	}
+
+	public static function importContentTypeGroup(\SimpleXMLElement $xml, $rebuildCache = true)
+	{
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _name = :name,
+			_item_name = :item
+		WHERE _key = :key
+		LIMIT 1
+		', ac_table('content_type')));
+		foreach($xml->contenttypegroup as $ctypegroup) {
+			$lang = (string)$ctypegroup->attributes()->language;
+			if($lang && strcasecmp($lang, self::$code) !== 0) {
+				continue;
+			}
+			foreach($ctypegroup->contenttype as $ctype) {
+				$sth->bindValue(':key', (string)$ctype->attributes()->key, \PDO::PARAM_STR);
+				$sth->bindValue(':name', (string)$ctype->name, \PDO::PARAM_STR);
+				if($ctype->itemname) {
+					$sth->bindValue(':item', (string)$ctype->itemname, \PDO::PARAM_STR);
+				} else {
+					$sth->bindValue(':name', (string)$ctype->name, \PDO::PARAM_STR);
+				}
+				$sth->execute();
+				$sth->closeCursor();
+			}
+		}
+		if($rebuildCache) {
+			ContentType::rebuildCache();
 		}
 	}
 

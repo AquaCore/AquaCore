@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup>
+    <word namespace="task" key="task">Task</word>
+    <word namespace="task" key="tasks">Tasks</word>
+    <word namespace="task" key="next-run">Next run</word>
+    <word namespace="task" key="last-run">Last run</word>
+    <word namespace="task" key="title">Title</word>
+    <word namespace="task" key="description">Description</word>
+    <word namespace="task" key="ip-address">IP address</word>
+    <word namespace="task" key="start-time">Start time</word>
+    <word namespace="task" key="end-time">End time</word>
+    <word namespace="task" key="duration">Duration</word>
+    <word namespace="task" key="output">Output</word>
+    <word namespace="task" key="id">ID</word>
+    <word namespace="task" key="edit-task">Edit Task - %s</word>
+    <word namespace="task" key="task-log">Task Log</word>
+    <word namespace="task" key="view-task-log">View Task Log</word>
+    <word namespace="task" key="disable">Disable</word>
+    <word namespace="task" key="enable">Enable</word>
+    <word namespace="task" key="run">Run</word>
+    <word namespace="task" key="logging">Logging</word>
+    <word namespace="task" key="expression">Cron expression</word>
+    <word namespace="task" key="cannot-edit">This task cannot be edited.</word>
+    <word namespace="task" key="task-run"><![CDATA[Finished running <b>%s</b> task.]]></word>
+    <word namespace="task" key="cron">Cron</word>
+    <word namespace="task" key="cron-key">Cron key</word>
+    <word namespace="task" key="cron-help"><![CDATA[<h3>Specific Task</h3>
+To run a specific tasks set your cron to run <b>%1$s/cron.php</b><br/>
+passing the task class name or a list of classes separated by comma in the first argument<br/>
+and the cron key in the second one.<br/>
+Example:<p/>
+<input type="text" style="width: 90%%" value="php %1$s/cron.php BulkMailTask %3$s"><p/>
+"BulkMailTask" should be replaced with the tasks's class name.<br/>
+Tasks that have individual cron jobs should be disabled.<p/>
+<h3>All Tasks</h3>
+To run all pending tasks set cron to run the following command every minute:<p/>
+<input type="text" style="width: 90%%" value="php %1$s/cron.php all %3$s"><p/>
+You can disable tasks altogether in the <a href="%2$s">settings page</a>.]]></word>
+  </wordgroup>
+</languageimport>

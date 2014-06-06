@@ -29,7 +29,7 @@ class TaskLog
 
 	public function task()
 	{
-		return TaskManager::get($this->id);
+		return TaskManager::get($this->taskId);
 	}
 
 	public static function logSql(TaskData $task, $startTime, $endTime, $outputShort, $outputFull)
@@ -70,35 +70,38 @@ class TaskLog
 		return $log;
 	}
 
-	public function search()
+	/**
+	 * @return \Aqua\SQL\Search
+	 */
+	public static function search()
 	{
 		return Query::search(App::connection())
 			->columns(array(
-				'id'           => 'id',
-			    'task_id'      => 'task_id',
-			    'start_time'   => 'UNIX_TIMESTAMP(_start)',
-			    'end_time'     => 'UNIX_TIMESTAMP(_end)',
-			    'run_time'     => '(TIME_TO_SEC(_run_time) * 1000000 + MICROSECOND(_run_time)) / 1000000.0',
-			    'ip_address'   => '_ip_address',
-			    'output_short' => '_output_short',
-			    'output_full'  => '_output_full',
+				'id'           => 'tl.id',
+			    'task_id'      => 'tl._task_id',
+			    'start_time'   => 'UNIX_TIMESTAMP(tl._start)',
+			    'end_time'     => 'UNIX_TIMESTAMP(tl._end)',
+			    'run_time'     => '(TIME_TO_SEC(tl._run_time) * 1000000 + MICROSECOND(tl._run_time)) / 1000000.0',
+			    'ip_address'   => 'tl._ip_address',
+			    'output_short' => 'tl._output_short',
+			    'output_full'  => 'tl._output_full',
 			))
 			->whereOptions(array(
-				'id'           => 'id',
-				'task_id'      => 'task_id',
-				'start_time'   => '_start',
-				'end_time'     => '_end',
-				'run_time'     => '_run_time',
-				'ip_address'   => '_ip_address',
-				'output_short' => '_output_short',
-				'output_full'  => '_output_full',
+				'id'           => 'tl.id',
+				'task_id'      => 'tl._task_id',
+				'start_time'   => 'tl._start',
+				'end_time'     => 'tl._end',
+				'run_time'     => 'tl._run_time',
+				'ip_address'   => 'tl._ip_address',
+				'output_short' => 'tl._output_short',
+				'output_full'  => 'tl._output_full',
 			))
-			->from(ac_table('task_log'))
+			->from(ac_table('task_log'), 'tl')
 			->groupBy('id')
 			->parser(array( __CLASS__, 'parseTaskLogSql' ));
 	}
 
-	public function get($id)
+	public static function get($id)
 	{
 		$search = self::search()->where(array( 'id' => $id ))->query();
 		return ($search->valid() ? $search->current() : null);

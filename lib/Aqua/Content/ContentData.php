@@ -148,59 +148,7 @@ implements \Serializable
 	 */
 	public function truncate($max, $append = '')
 	{
-		$content = '';
-		$printed = 0;
-		$pattern = '%</?([a-z]+)[^>]*/?>|&#?[a-zA-Z0-9]+;|[\x80-\xFF][\x80-\xBF]*%miS';
-		$offset = 0;
-		$tags = array();
-		while($printed < $max && preg_match($pattern, $this->content, $match, PREG_OFFSET_CAPTURE, $offset)) {
-			$tagLength = strlen($match[0][0]);
-			$tagOffset = $match[0][1];
-			$str = substr($this->content, $offset, $tagOffset - $offset);
-			if(($printed + strlen($str)) > $max) {
-				$str = substr($str, 0, $max - $printed);
-			}
-			$printed += strlen($str);
-			if(substr($match[0][0], 0, 2) === '</') {
-				$name = strtolower($match[1][0]);
-				for($i = count($tags) - 1; $i >= 0; --$i) {
-					if($name === $tags[$i]) {
-						break;
-					}
-					$printed.= "</{$tags[$i]}>";
-					array_pop($tags);
-				}
-			} else if($match[0][0][0] === '<' && isset($match[1]) &&
-			          substr($match[0][0], -2) !== '/>') {
-				$tags[] = strtolower($match[1][0]);
-			}
-			$content.= $str . $match[0][0];
-			$offset = $tagOffset + $tagLength;
-		}
-		if($printed < $max) {
-			$content.= substr($this->content, $offset, $max - $printed);
-		}
-		$content = substr($content, 0, strrpos($content, ' '));
-		$inline = array(
-			'b', 'big', 'i', 'small', 'tt', 'label',
-			'abbr', 'acronym', 'cite', 'code', 'input',
-			'dfn', 'em', 'kdb', 'strong', 'samp', 'select',
-			'var', 'a', 'bdo', 'br', 'img', 'map', 'textarea',
-			'object', 'span', 'sub', 'sup', 'button'
-		);
-		for($i = count($tags) - 1; $i >= 0; --$i) {
-			$name = $tags[$i];
-			if($append && !in_array($name, $inline, true)) {
-				$content.= $append;
-				$append = null;
-			}
-			$content.= "</$name>";
-		}
-		if($append) {
-			$content.= $append;
-		}
-
-		return $content;
+		return ac_truncate_string($this->content, $max, $append);
 	}
 
 	/**

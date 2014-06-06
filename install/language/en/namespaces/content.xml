@@ -56,14 +56,21 @@
     <word namespace="content" key="quote-author">%s said:</word>
     <word namespace="content" key="quote-date">on %s</word>
     <word namespace="content" key="subscribe">Subscribe</word>
-    <word namespace="content" key="subscribe-updates">Notify on updates</word>
-    <word namespace="content" key="subscribe-comment-0">Notify on new comments</word>
-    <word namespace="content" key="subscribe-comment-1">Notify on replies to my comments</word>
-    <word namespace="content" key="subscribe-desc">Receive email notifications on updates and new comments.</word>
-    <word namespace="content" key="confirm-delete-s"><![CDATA[Are you sure you want to delete \"%s\"?]]></word>
+    <word namespace="content" key="unsubscribe">Unsubscribe</word>
+    <word namespace="content" key="replies">Replies</word>
+    <word namespace="content" key="sub-reply">Recieve notifications on replies to your comments.</word>
+    <word namespace="content" key="sub-comment">Recieve notifications on new comments.</word>
+    <word namespace="content" key="sub-desc">Recieve notifications on new posts.</word>
+    <word namespace="content" key="confirm-delete-s"><![CDATA[Are you sure you want to delete "%s"?]]></word>
     <word namespace="content" key="confirm-delete-p">Are you sure you want to delete those items?</word>
+    <word namespace="content" key="content-deleted-s">%s entry deleted.</word>
+    <word namespace="content" key="content-deleted-p">%s entries deleted.</word>
+    <word namespace="content" key="content-deleted"><![CDATA["%s" has been deleted.]]></word>
+    <word namespace="content" key="content-not-deleted"><![CDATA[Failed to delete "%s".]]></word>
+    <word namespace="content" key="cannot-delete"><![CDATA["%s" cannot be deleted.]]></word>
     <word namespace="content" key="content-create-success"><![CDATA[%s <b>"%s"</b> created successfuly.]]></word>
     <word namespace="content" key="content-create-fail"><![CDATA[Failed to create %s <b>"%s"</b>.]]></word>
     <word namespace="content" key="content-updated"><![CDATA[<b>"%2$s"</b> has been updated.]]></word>
+    <word namespace="content" key="edit-comment">Edit Comment</word>
   </wordgroup>
 </languageimport>

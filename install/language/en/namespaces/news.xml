@@ -6,12 +6,6 @@
     <word namespace="news" key="new-post">New Post</word>
     <word namespace="news" key="news">News</word>
     <word namespace="news" key="news-category">News Category</word>
-    <word namespace="news" key="post-create-fail">Failed to create post.</word>
-    <word namespace="news" key="post-created">Post created successfully.</word>
-    <word namespace="news" key="posts-deleted-s">%s post deleted.</word>
-    <word namespace="news" key="posts-deleted-p">%s posts deleted.</word>
-    <word namespace="news" key="post-deleted"><![CDATA[The post <b%s</b> has been deleted.]]></word>
-    <word namespace="news" key="failed-to-delete"><![CDATA[Failed to delete <b%s</b>.]]></word>
     <word namespace="news" key="cannot-delete"><![CDATA[The post <b%s</b> cannot be deleted.]]></word>
     <word namespace="news" key="post-updated">Post updated.</word>
     <word namespace="news" key="posted-by">Posted by %s</word>

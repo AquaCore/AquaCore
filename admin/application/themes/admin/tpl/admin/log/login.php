@@ -84,6 +84,7 @@ $datetimeFormat = App::settings()->get('datetime_format', '');
 				<?php echo $paginator->render() ?>
 			</div>
 		</td>
-	</tr>	</tfoot>
+	</tr>
+	</tfoot>
 </table>
 <span class="ac-search-result"><?php echo __('application', 'search-results-' . ($loginCount === 1 ? 's' : 'p'), number_format($loginCount)) ?></span>

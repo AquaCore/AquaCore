@@ -26,7 +26,15 @@ implements \Serializable, SubjectInterface
 	/**
 	 * @var string
 	 */
+	public $itemName;
+	/**
+	 * @var string
+	 */
 	public $adapter;
+	/**
+	 * @var string
+	 */
+	public $permission;
 	/**
 	 * @var string
 	 */
@@ -90,6 +98,7 @@ implements \Serializable, SubjectInterface
 				$this->key,
 				$this->name,
 				$this->adapter,
+				$this->permission,
 				$this->fields,
 				$this->listing,
 				$this->feed,
@@ -106,6 +115,7 @@ implements \Serializable, SubjectInterface
 			$this->key,
 			$this->name,
 			$this->adapter,
+			$this->permission,
 			$this->fields,
 			$this->listing,
 			$this->feed,
@@ -574,13 +584,19 @@ implements \Serializable, SubjectInterface
 			if(!strlen($key) || strlen($name) || self::getContentType($key, 'key')) {
 				continue;
 			}
-			$adapter = (string)$ctype->adapter;
+			$adapter    = (string)$ctype->adapter;
+			$permission = (string)$ctype->permission;
 			$sth = App::connection()->prepare(sprintf('
-			INSERT INTO `%s` (_key, _name, _listing, _feed, _adapter, _table, _plugin_id)
-			VALUES (:key, :name, :listing, :feed, :adapter, NULL, :plugin)
+			INSERT INTO `%s` (_key, _name, _item_name, _listing, _feed, _adapter, _permission, _table, _plugin_id)
+			VALUES (:key, :name, :item, :listing, :feed, :adapter, :permission, NULL, :plugin)
 			', ac_table('content_type')));
 			$sth->bindValue(':key', $key, \PDO::PARAM_STR);
 			$sth->bindValue(':name', $name, \PDO::PARAM_STR);
+			if($ctype->itemname) {
+				$sth->bindValue(':item', (string)$ctype->itemname, \PDO::PARAM_STR);
+			} else {
+				$sth->bindValue(':item', $name, \PDO::PARAM_STR);
+			}
 			if(!$ctype->listing || filter_var((string)$ctype->listing, FILTER_VALIDATE_BOOLEAN)) {
 				$sth->bindValue(':list', 'y', \PDO::PARAM_STR);
 			} else {
@@ -595,6 +611,11 @@ implements \Serializable, SubjectInterface
 				$sth->bindValue(':adapter', $adapter, \PDO::PARAM_STR);
 			} else {
 				$sth->bindValue(':adapter', null, \PDO::PARAM_NULL);
+			}
+			if($permission) {
+				$sth->bindValue(':permission', $permission, \PDO::PARAM_STR);
+			} else {
+				$sth->bindValue(':permission', null, \PDO::PARAM_NULL);
 			}
 			if($pluginId) {
 				$sth->bindValue(':plugin', $pluginId, \PDO::PARAM_INT);
@@ -711,18 +732,22 @@ implements \Serializable, SubjectInterface
 		       _table,
 		       _listing,
 		       _feed,
-		       _plugin_id
+		       _plugin_id,
+		       _permission,
+		       _item_name
 		FROM `$tbl`
 		");
 		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
-			$type           = new self;
-			$type->id       = (int)$data[0];
-			$type->key      = $data[1];
-			$type->name     = $data[2];
-			$type->table    = $data[4];
-			$type->listing  = ($data[5] === 'y');
-			$type->feed     = ($data[6] === 'y');
-			$type->pluginId = (int)$data[7];
+			$type             = new self;
+			$type->id         = (int)$data[0];
+			$type->key        = $data[1];
+			$type->name       = $data[2];
+			$type->itemName   = $data[9];
+			$type->table      = $data[4];
+			$type->permission = $data[8];
+			$type->listing    = ($data[5] === 'y');
+			$type->feed       = ($data[6] === 'y');
+			$type->pluginId   = (int)$data[7];
 			if($data[3]) {
 				$adapter = "Aqua\\Content\\Adapter\\{$data[3]}";
 				if(class_exists($adapter) && is_subclass_of($adapter, 'Aqua\\Content\\ContentData')) {

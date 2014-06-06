@@ -45,11 +45,13 @@ CREATE PROCEDURE disablePlugin (IN pluginId INT)
     DELETE FROM `#tags` WHERE _content_id IN ( SELECT * FROM __content );
     DELETE FROM `#content_relationship` WHERE _content_id IN ( SELECT * FROM __content );
     DELETE FROM `#content_categories` WHERE _content_id IN ( SELECT * FROM __content );
+    DELETE FROM `#content_subscriptions` WHERE _content_id IN ( SELECT * FROM __content );
     DELETE FROM `#content` WHERE _uid IN ( SELECT * FROM __content );
     DELETE FROM `#category_meta` WHERE _id IN ( SELECT * FROM __categories );
     DELETE FROM `#categories` WHERE _type IN ( SELECT * FROM __contentTypes );
     DELETE FROM `#content_type_filters` WHERE _type IN ( SELECT * FROM __contentTypes );
     DELETE FROM `#content_type_fields` WHERE _type IN ( SELECT * FROM __contentTypes );
+    DELETE FROM `#content_type_subscriptions` WHERE _type IN ( SELECT * FROM __contentTypes );
     DELETE FROM `#content_type` WHERE id IN ( SELECT * FROM __contentTypes );
     DROP TEMPORARY TABLE __contentTypes;
     DROP TEMPORARY TABLE __categories;

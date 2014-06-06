@@ -190,12 +190,12 @@ implements SubjectInterface
 	}
 
 	/**
-	 * @param string $permission
+	 * @param array|string $permission
 	 * @return \Aqua\Permission\Permission
 	 */
 	public function allowPermission($permission)
 	{
-		$this->permissions['allow'][] = $permission;
+		$this->permissions['allow'][] = (is_array($permission) ? $permission : func_get_args());
 
 		return $this;
 	}
@@ -206,7 +206,7 @@ implements SubjectInterface
 	 */
 	public function denyPermission($permission)
 	{
-		$this->permissions['deny'][] = $permission;
+		$this->permissions['deny'][] = (is_array($permission) ? $permission : func_get_args());
 
 		return $this;
 	}
@@ -220,7 +220,7 @@ implements SubjectInterface
 	 */
 	public function addFilter($name, $function)
 	{
-		if(!is_callable($function)) {
+		if(!is_callable($function, true)) {
 			throw new InvalidArgumentException(2, 'callable', $function);
 		}
 		$this->filter[$name] = $function;
@@ -264,8 +264,7 @@ implements SubjectInterface
 			do {
 				list($username, $password) = current($this->credentials);
 				if($user->request->authUsername === $username &&
-				   (!$password || $user->request->authPassword === $password)
-				) {
+				   (!$password || $user->request->authPassword === $password)) {
 					$authorized = true;
 					break;
 				}
@@ -326,21 +325,29 @@ implements SubjectInterface
 	public function checkPermissions(Role $role)
 	{
 		$permissions = $role->getPermissions();
+		$result      = true;
 		if($this->options & self::ORDER_DENY_ALLOW) {
-			return (!empty($this->permissions['deny']) &&
-			        count(array_intersect($this->permissions['deny'], $permissions)) ===
-			        count($this->permissions['deny']) ? false :
-				(!empty($this->permissions['allow']) &&
-				 count(array_intersect($this->permissions['allow'], $permissions)) !==
-				 count($this->permissions['allow']) ? false : true));
+			$order = array( 'deny', 'allow' );
 		} else {
-			return (!empty($this->permissions['allow']) &&
-			        count(array_intersect($this->permissions['allow'], $permissions)) !==
-			        count($this->permissions['allow']) ? false :
-				(!empty($this->permissions['deny']) &&
-				 count(array_intersect($this->permissions['deny'], $permissions)) ===
-				 count($this->permissions['deny']) ? false : true));
+			$order = array( 'allow', 'deny' );
 		}
+		foreach($order as $ord) {
+			if(empty($this->permissions[$ord])) {
+				continue;
+			}
+			do {
+				foreach($this->permissions[$ord] as $permissionSet) {
+					if(count(array_intersect($permissionSet, $permissions)) === count($permissionSet)) {
+						$result = ($ord === 'allow');
+						break 2;
+					}
+				}
+				if($ord === 'allow') {
+					$result = false;
+				}
+			} while(0);
+		}
+		return $result;
 	}
 
 	public function attach($event, $listener)

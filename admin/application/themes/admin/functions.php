@@ -18,12 +18,18 @@ AquaCore._flash = new AquaCore.Flash();
 AquaCore._flash.enqueue($json);
 ");
 
+function registerCKEditorEmailSettings(Theme $theme) {
+	registerCKEditorSettings($theme);
+	$theme->jsSettings['CKEditorOptions']['fullPage'] = true;
+	unset($theme->jsSettings['CKEditorOptions']['extraPlugins']);
+}
 function registerCKEditorSettings(Theme $theme) {
 	$theme->addSettings('CKEditorOptions', array(
 		'smiley_path' => \Aqua\URL . '/uploads/smiley/',
 		'smiley_descriptions' => array_column(Smiley::smileys(), 'text'),
 		'smiley_images' => array_column(Smiley::smileys(), 'file'),
-		'removePlugins' => 'autogrow,bbcode,spoiler',
+		'removePlugins' => 'autogrow,bbcode,spoiler,pagebreak',
+		'extraPlugins' => 'pagination',
 		'height' => 450,
 		'contentsLangDirection' => strtolower(L10n::$direction),
 		'defaultLanguage' => L10n::$code,

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup language="en">
+        <word namespace="admin-menu" key="task-log">Task Log</word>
+        <word namespace="admin-menu" key="emails">Email Templates</word>
+        <word namespace="admin-menu" key="tasks">Tasks</word>
+        <word namespace="content" key="unsubscribe">Unsubscribe</word>
+        <word namespace="content" key="replies">Replies</word>
+        <word namespace="content" key="sub-reply">Recieve notifications on replies to your comments.</word>
+        <word namespace="content" key="sub-comment">Recieve notifications on new comments.</word>
+        <word namespace="content" key="sub-desc">Recieve notifications on new posts.</word>
+        <word namespace="content" key="confirm-delete-s"><![CDATA[Are you sure you want to delete "%s"?]]></word>
+        <word namespace="content" key="content-deleted-s">%s entry deleted.</word>
+        <word namespace="content" key="content-deleted-p">%s entries deleted.</word>
+        <word namespace="content" key="content-deleted"><![CDATA["%s" has been deleted.]]></word>
+        <word namespace="content" key="content-not-deleted"><![CDATA[Failed to delete "%s".]]></word>
+        <word namespace="content" key="cannot-delete"><![CDATA["%s" cannot be deleted.]]></word>
+        <word namespace="content" key="edit-comment">Edit Comment</word>
+        <word namespace="profile" key="admin-account-updated">%s's account has been updated.</word>
+        <word namespace="registration" key="reset-code">Resend validation code</word>
+        <word namespace="registration" key="failed-to-register">Registration failed</word>
+        <word namespace="registration" key="agree-tos">I agree</word>
+        <word namespace="registration" key="disagree-tos">I disagree</word>
+        <word namespace="reset-pw" key="email-sent">An email has been sent to %s with information on how to recover your password.</word>
+        <word namespace="role" key="role-updated"><![CDATA[The role <b>%s</b> has been upated.]]></word>
+        <word namespace="settings" key="app-task-label">Enable Tasks</word>
+        <word namespace="settings" key="app-task-desc">Run pending tasks at the end of each request.</word>
+        <word namespace="task" key="task-log">Task Log</word>
+        <word namespace="task" key="view-task-log">View Task Log</word>
+        <word namespace="task" key="task">Task</word>
+        <word namespace="task" key="tasks">Tasks</word>
+        <word namespace="task" key="next-run">Next run</word>
+        <word namespace="task" key="last-run">Last run</word>
+        <word namespace="task" key="title">Title</word>
+        <word namespace="task" key="description">Description</word>
+        <word namespace="task" key="ip-address">IP address</word>
+        <word namespace="task" key="start-time">Start time</word>
+        <word namespace="task" key="end-time">End time</word>
+        <word namespace="task" key="duration">Duration</word>
+        <word namespace="task" key="output">Output</word>
+        <word namespace="task" key="id">ID</word>
+        <word namespace="task" key="edit-task">Edit Task - %s</word>
+        <word namespace="task" key="disable">Disable</word>
+        <word namespace="task" key="enable">Enable</word>
+        <word namespace="task" key="run">Run</word>
+        <word namespace="task" key="logging">Logging</word>
+        <word namespace="task" key="expression">Cron expression</word>
+        <word namespace="task" key="cannot-edit">This task cannot be edited.</word>
+        <word namespace="task" key="task-run"><![CDATA[Finished running <b>%s</b> task.]]></word>
+        <word namespace="task" key="cron">Cron</word>
+        <word namespace="task" key="cron-key">Cron key</word>
+        <word namespace="task" key="cron-help"><![CDATA[<h3>Specific Task</h3>
+To run a specific tasks set your cron to run <b>%1$s/cron.php</b><br/>
+passing the task class name or a list of classes separated by comma in the first argument<br/>
+and the cron key in the second one.<br/>
+Example:<p/>
+<input type="text" style="width: 90%%" value="php %1$s/cron.php BulkMailTask %3$s"><p/>
+"BulkMailTask" should be replaced with the tasks's class name.<br/>
+Tasks that have individual cron jobs should be disabled.<p/>
+<h3>All Tasks</h3>
+To run all pending tasks set cron to run the following command every minute:<p/>
+<input type="text" style="width: 90%%" value="php %1$s/cron.php all %3$s"><p/>
+You can disable tasks altogether in the <a href="%2$s">settings page</a>.]]></word>
+        <word namespace="email" key="templates">Email Templates</word>
+        <word namespace="email" key="edit-x-template">Edit Template - %s</word>
+        <word namespace="email" key="name">Name</word>
+        <word namespace="email" key="key">Key</word>
+        <word namespace="email" key="plugin">Plugin</word>
+        <word namespace="email" key="placeholders">Placeholders</word>
+        <word namespace="email" key="body">Body</word>
+        <word namespace="email" key="subject">Subject</word>
+        <word namespace="email" key="alt-body">Alternative Body</word>
+        <word namespace="email" key="body-desc">HTML Body</word>
+        <word namespace="email" key="alt-body-desc">Plain text Body (optional)</word>
+    </wordgroup>
+    <permissiongroup>
+        <permission key="register-account">
+            <name>Register RO accounts</name>
+        </permission>
+        <permission key="manage-tasks">
+            <name>Manage tasks</name>
+        </permission>
+        <permission key="view-guilds">
+            <name>View guilds</name>
+        </permission>
+        <permission key="edit-comments">
+            <name>Edit Comments</name>
+        </permission>
+    </permissiongroup>
+    <contenttypegroup>
+        <contenttype key="news">
+            <name>News</name>
+            <itemname>Post</itemname>
+        </contenttype>
+        <contenttype key="page">
+            <name>Pages</name>
+            <itemname>Page</itemname>
+        </contenttype>
+    </contenttypegroup>
+    <emailgroup>
+        <email key="sub-content">
+            <name>Content Subscription</name>
+            <subject>New #content-type-name#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		Hello, #user-display-name#,<br/>
+		<p>#author-display-name-full# has just posted a new #content-type-name#</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		<div style="font-size: 18px; color: #4586d0; border-bottom: 1px solid;">#content-title#</div>
+		#short-content#
+		</div>
+		<p><a href="#content-url#">Click here to read more.</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-type-name">Content type name (post, page, ...)</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="short-content">Post's short content</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-display-name-full">Recipient's display name with their role's style applied</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="author-display-name">Author's plain display name</placeholder>
+            <placeholder key="author-display-name-full">Author's display name with their role's style applied</placeholder>
+            <placeholder key="author-avatar">Author's avatar url</placeholder>
+        </email>
+        <email key="sub-comment">
+            <name>Comment Subscription</name>
+            <subject>New reply to #content-title#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		Hello, #user-display-name#,<br>
+		<p>#comment-display-name-full# has posted a new comment to <a href="#content-url#"></a><b>#content-title#</b></a>:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment.</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-display-name-full">Recipient's display name with their role's style applied</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+            <placeholder key="comment-display-name-full">Replier's display name with their role's style applied, or "anonymous" if it's an anonymous comment</placeholder>
+            <placeholder key="comment-avatar">Replier's avatar url</placeholder>
+        </email>
+        <email key="sub-comment-reply">
+            <name>Comment Reply Subscription</name>
+            <subject>New reply to #content-title#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		Hello, #user-display-name#,<br>
+		<p>#comment-display-name-full# has posted a new reply to <a href="#user-comment-url#">your comment</a> on <a href="#content-url#"></a><b>#content-title#</b></a>:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment.</a></p>
+		</div>
+		</body>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-display-name-full">Recipient's display name with their role's style applied</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="user-comment-url">Parent comment's url</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+            <placeholder key="comment-display-name-full">Replier's display name with their role's style applied, or "anonymous" if it's an anonymous comment</placeholder>
+            <placeholder key="comment-avatar">Replier's avatar url</placeholder>
+        </email>
+        <email key="reset-pw">
+            <name>Site Password Recovery</name>
+            <subject>Password Recovery</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		Hello, #display-name#.<br>
+		You have received this email because you or someone else have requested a new password for your account at <a href="#site-url#">#site-title#</a>,<br>
+		Please click the link below to proceed:<br>
+		<a href="#url#">Reset Password</a><br>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="time-left">Hours left until the password recovery key expires</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+        <email key="registration">
+            <name>Registration</name>
+            <subject>Registration</subject>
+            <body><![CDATA[<html>
+	<body>
+	<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+	Welcome, #display-name#.<br>
+	You have created an account on <a href="#site-url#">#site-title#</a>,<br>
+	in order to proceed with your registration please use the link below:<br>
+	<a href="#url#">Confirm Registration</a><br>
+	You may log in to your account using your username <b><i>(#username#)</i></b> and your password.<br>
+	This link will expire in <b>#time-left#</b> hours.
+	</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="time-left">Hours left until the confirmation url expires</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+        <email key="ragnarok-reset-pw">
+            <name>Ragnarök Password Recovery</name>
+            <subject>Password Recovery</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		Hello, #display-name#,<br>
+		You have received this e-mail because you have requested
+		a new password for your Ragnarok account <b>#ro-username#</b><br>
+		Please use the link below to reset your password:<br>
+		<a href="#url#">Reset Password</a>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="ro-username">Recipient's ragnarök username</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+    </emailgroup>
+</languageimport>

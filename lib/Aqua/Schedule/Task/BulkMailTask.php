@@ -19,8 +19,6 @@ extends AbstractTask
 				'priority' => '_priority',
 			    'fromName' => '_from_name',
 			    'fromAddr' => '_from_address',
-			    'toName'   => '_to_name',
-			    'toAddr'   => '_to_address',
 			    'subject'  => '_subject',
 			    'content'  => '_content'
 			))
@@ -49,36 +47,34 @@ extends AbstractTask
 				'id'      => '_mail_id',
 			    'name'    => '_name',
 			    'address' => '_address',
-			    'bcc'     => '_bcc'
+			    'type'    => '_type'
 			))
 			->where(array( '_mail_id' => $emailIds ))
 			->setColumnType(array( 'id' => 'integer' ))
-			->from(ac_table('mail_cc'))
+			->from(ac_table('mail_recipient'))
 			->query();
 		array_shift($emailIds);
-		$cc = $bcc = array_fill_keys($emailIds, array());
+		$cc = $bcc = $to = array_fill_keys($emailIds, array());
 		$success = $failure = 0;
 		foreach($ccSearch as $data) {
-			if($data['bcc'] === 'y') {
-				$array = &$bcc;
-			} else {
-				$array = &$cc;
+			switch($data['type']) {
+				case 'bcc': $array = &$bcc; break;
+				case 'cc': $array = &$cc; break;
+				case 'to': $array = &$to; break;
 			}
 			$array[$data['id']][$data['address']] = $data['name'];
 		}
 		unset($ccSearch, $data, $array);
 		Email::phpMailer()->SMTPKeepAlive = true;
-		Email::phpMailer()->SMTPDebug     = 1;
 		ob_start();
 		foreach($emails as $id => $data) {
-			$email = new Email($data['subject'],
-			                   $data['content'],
-			                   $data['toAddr'],
-			                   $data['toName']);
+			$email = new Email($data['subject'], $data['content']);
 			$email->setFrom($data['fromAddr'], $data['fromName'])
+				->addAddress($to[$id])
 				->addCC($cc[$id])
 				->addBCC($bcc[$id])
-				->setPriority($data['priority']);
+				->setPriority($data['priority'])
+				->isHtml(true);
 			try {
 				if($email->send()) {
 					++$success;
@@ -95,7 +91,6 @@ extends AbstractTask
 		ob_end_clean();
 		Email::phpMailer()->smtpClose();
 		Email::phpMailer()->SMTPKeepAlive = false;
-		Email::phpMailer()->SMTPDebug     = 0;
 		$sth = App::connection()->prepare(sprintf('
 		DELETE FROM `%s`
 		WHERE id IN (' . str_repeat('?,', count($emailIds) - 1) . '?)

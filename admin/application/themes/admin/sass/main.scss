@@ -236,6 +236,7 @@ button.ac-delete-button {
 	.option-posts .menu-option-icon,
 	.option-users .menu-option-icon,
 	.option-plugins .menu-option-icon,
+	.option-tasks .menu-option-icon,
 	.option-logs .menu-option-icon,
 	.option-settings .menu-option-icon,
 	.option-ragnarok .menu-option-icon {
@@ -264,6 +265,10 @@ button.ac-delete-button {
 	.option-plugins {
 		.menu-option-icon { background-position: -150px 0; }
 		&:hover .menu-option-icon { background-position: -150px -30px; }
+	}
+	.option-tasks {
+		.menu-option-icon { background-position: -240px 0; }
+		&:hover .menu-option-icon { background-position: -240px -30px; }
 	}
 	.option-logs {
 		.menu-option-icon { background-position: -210px 0; }
@@ -685,6 +690,9 @@ button.ac-delete-button {
 		}
 		&.ac-action-delete {
 			background: transparent url("../images/icons/delete.png") center left no-repeat !important;
+		}
+		&.ac-action-refresh {
+			background: transparent url("../images/icons/refresh.png") center left no-repeat !important;
 		}
 	}
 }
@@ -1621,5 +1629,89 @@ button.ac-delete-button {
 				}
 			}
 		}
+	}
+}
+
+.cron-key {
+	background: #e6e8ec;
+	position: relative;
+	border: 1px solid $midBlue-2;
+	@include border-radius(5px);
+	@include box-shadow($bluishGray-1 0 1px 3px 0);
+	.title {
+		color: $midBlue-2;
+		border-right: 1px solid $midBlue-2;
+		font-weight: bold;
+		float: left;
+		width: 10%;
+		padding: 5px 15px;
+	}
+	.key {
+		width: 80%;
+		float: left;
+		text-align: center;
+		padding: 5px 15px;
+	}
+	.help {
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		height: 16px;
+		width: 16px;
+		background: transparent url(#{$assetsPath}images/icons/f_help.png) center center no-repeat;
+	}
+}
+.email-placeholders {
+	.ac-sidebar-content {
+		margin: 6px !important;
+	}
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+		font-size: .95em;
+		li {
+			padding: 3px 0;
+			border-bottom: 1px solid $bluishGray-4;
+			&:last-child {
+				border-bottom: none;
+			}
+			.description {
+				padding: 4px 8px 0;
+				font-size: .9em;
+				font-style: italic;
+			}
+		}
+	}
+}
+button.tab {
+	margin: 0;
+	padding: 3px 5px;
+	font-size: .85em;
+	@include border-radius(10px 10px 0 0);
+	width: 250px;
+	&.gray {
+		color: $bluishGray-5;
+	}
+	&:disabled {
+		color: $bluishGray-4;
+	}
+}
+#email-alt-body, #ckeditor {
+	display: block;
+	margin: 0;
+	width: 99%;
+	@include min-height(450px);
+}
+.task-output {
+	width: 100%;
+	overflow-x: auto;
+	font-size: 1.2em;
+	text-align: justify;
+	pre {
+		white-space: -moz-pre-wrap;
+		white-space: -o-pre-wrap;
+		white-space: pre-wrap;
+		word-wrap: break-word;
 	}
 }

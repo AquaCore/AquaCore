@@ -86,9 +86,23 @@ extends AbstractFilter
 		$status = Comment::STATUS_PUBLISHED,
 		Comment $parent = null
 	) {
-		if($content->forged) return null;
-		if($content->meta->get('comments-disabled', false)) return null;
-		if(!$content->meta->get('comment-anonymously', false)) $anon = false;
+		$feedback = array(
+			$content,
+		    $author,
+		    &$bbcode,
+		    &$anon,
+		    &$options,
+		    &$status,
+		    $parent
+		);
+		if($content->forged ||
+		   $content->meta->get('comments-disabled', false) ||
+		   $this->notify('before-create', $feedback) === false) {
+			return null;
+		}
+		if(!$content->meta->get('comment-anonymously', false)) {
+			$anon = false;
+		}
 		$html = $this->parseCommentContent($bbcode);
 		$tbl  = ac_table('comments');
 		$sth  = App::connection()->prepare("
@@ -152,7 +166,7 @@ extends AbstractFilter
 			$sth->bindValue(1, $parent->id, \PDO::PARAM_INT);
 			$sth->execute();
 		}
-		Event::fire('comment.create', $feedback);
+		$this->notify('after-create', $feedback);
 		$this->contentData_commentSpamFilter($content, $comment);
 		self::$cache !== null or self::fetchCache(null, true);
 		if(!empty(self::$cache)) {
@@ -200,7 +214,8 @@ extends AbstractFilter
 				'anonymous', 'publish_date',
 				'bbcode_content', 'html_content', 'options'
 			)));
-		if(empty($edit)) {
+		$feedback = array( $comment, &$edit );
+		if(empty($edit) || $this->notify('before-edit', $feedback) === false) {
 			return false;
 		}
 		$edit = array_map(function ($val) { return (is_string($val) ? trim($val) : $val); }, $edit);
@@ -269,7 +284,7 @@ extends AbstractFilter
 		if(isset($values['anonymous'])) $values['anonymous'] = ($values['anonymous'] === 'y');
 		$comment->editDate = time();
 		$feedback = array( $comment, $values );
-		Event::fire('comment.update', $feedback);
+		$this->notify('after-edit', $feedback);
 		foreach($data as $key => $val) {
 			$comment->$key = $val;
 		}
@@ -414,7 +429,8 @@ extends AbstractFilter
 	public function contentType_rateComment(Comment $comment, Account $user, $weight)
 	{
 		if(!$this->getOption('rating', false) ||
-		   ($comment->authorId === $user->id && !$this->getOption('rateself', false))) {
+		   ($comment->authorId === $user->id &&
+		    !$this->getOption('rateself', false))) {
 			return false;
 		}
 		$weight = max(-1, min(1, $weight));
@@ -460,6 +476,8 @@ extends AbstractFilter
 		$sth->bindValue(':comment', $comment->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$comment->rating += $weight_total;
+		$feedback = array( $comment, $user, &$weight );
+		$this->notify('rate', $feedback);
 
 		return $weight;
 	}
@@ -522,7 +540,7 @@ extends AbstractFilter
 	public function contentData_commentSpamFilter(ContentData $content, Comment $comment)
 	{
 		$isSpam = false;
-		$feedback = array( $content, $comment, $isSpam );
+		$feedback = array( $content, $comment, &$isSpam );
 		if(Event::fire('content.filter-spam', $feedback) === false || $isSpam) {
 			$comment->update(array( 'status' => Comment::STATUS_FLAGGED ));
 			return true;

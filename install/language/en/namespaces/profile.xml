@@ -66,5 +66,6 @@
     <word namespace="profile" key="unban-accounts">Unban RO accounts</word>
     <word namespace="profile" key="view-account">Viewing %s's Account</word>
     <word namespace="profile" key="account-updated">Your account has been updated.</word>
+    <word namespace="profile" key="admin-account-updated">%s's account has been updated.</word>
   </wordgroup>
 </languageimport>

@@ -9,17 +9,20 @@ SET @PERMISSION_VIEW_ADMIN_CP   = 4;
 SET @PERMISSION_EDIT_CP_USER    = 5;
 SET @PERMISSION_EDIT_RO_USER    = 6;
 SET @PERMISSION_VIEW_SERVER_ACC = 7;
-SET @PERMISSION_VIEW_ITEMS      = 8;
-SET @PERMISSION_BAN_CP_USER     = 9;
-SET @PERMISSION_BAN_RO_USER     = 10;
-SET @PERMISSION_VIEW_CP_LOGS    = 11;
-SET @PERMISSION_VIEW_RO_LOGS    = 12;
-SET @PERMISSION_EDIT_CP_CONF    = 13;
-SET @PERMISSION_EDIT_RO_CONF    = 14;
-SET @PERMISSION_CREATE_PAGES    = 15;
-SET @PERMISSION_CREATE_POSTS    = 16;
-SET @PERMISSION_MANAGE_ROLES    = 17;
-SET @PERMISSION_MANAGE_PLUGINS  = 18;
+SET @PERMISSION_VIEW_GUILDS     = 8;
+SET @PERMISSION_VIEW_ITEMS      = 9;
+SET @PERMISSION_BAN_CP_USER     = 10;
+SET @PERMISSION_BAN_RO_USER     = 11;
+SET @PERMISSION_VIEW_CP_LOGS    = 12;
+SET @PERMISSION_VIEW_RO_LOGS    = 13;
+SET @PERMISSION_EDIT_CP_CONF    = 14;
+SET @PERMISSION_EDIT_RO_CONF    = 15;
+SET @PERMISSION_EDIT_COMMENTS   = 16;
+SET @PERMISSION_CREATE_PAGES    = 17;
+SET @PERMISSION_CREATE_POSTS    = 18;
+SET @PERMISSION_MANAGE_ROLES    = 19;
+SET @PERMISSION_MANAGE_PLUGINS  = 20;
+SET @PERMISSION_MANAGE_TASKS    = 21;
 
 SET @CTYPE_POST = 1;
 SET @CTYPE_PAGE = 2;
@@ -44,6 +47,7 @@ REPLACE INTO `#permissions` VALUES
 ,(@PERMISSION_EDIT_CP_USER, 'edit-cp-user', '', NULL, NULL)
 ,(@PERMISSION_EDIT_RO_USER, 'edit-server-user', '', NULL, NULL)
 ,(@PERMISSION_VIEW_ITEMS, 'view-user-items', '', NULL, NULL)
+,(@PERMISSION_VIEW_GUILDS, 'view-guilds', '', NULL, NULL)
 ,(@PERMISSION_BAN_CP_USER, 'ban-cp-user', '', NULL, NULL)
 ,(@PERMISSION_BAN_RO_USER, 'ban-server-user', '', NULL, NULL)
 ,(@PERMISSION_VIEW_CP_LOGS, 'view-cp-logs', '', NULL, NULL)
@@ -52,8 +56,10 @@ REPLACE INTO `#permissions` VALUES
 ,(@PERMISSION_EDIT_RO_CONF, 'edit-server-settings', '', NULL, NULL)
 ,(@PERMISSION_CREATE_PAGES, 'create-pages', '', NULL, NULL)
 ,(@PERMISSION_CREATE_POSTS, 'publish-posts', '', NULL, NULL)
+,(@PERMISSION_EDIT_COMMENTS, 'edit-comments', '', NULL, NULL)
 ,(@PERMISSION_MANAGE_ROLES, 'manage-roles', '', NULL, NULL)
 ,(@PERMISSION_MANAGE_PLUGINS, 'manage-plugins', '', NULL, NULL)
+,(@PERMISSION_MANAGE_TASKS, 'manage-tasks', '', NULL, NULL)
 ;
 
 REPLACE INTO `#role_permissions` VALUES
@@ -78,11 +84,14 @@ REPLACE INTO `#role_permissions` VALUES
 ,(@ROLE_ADMIN, @PERMISSION_CREATE_POSTS, 'y')
 ,(@ROLE_ADMIN, @PERMISSION_MANAGE_ROLES, 'y')
 ,(@ROLE_ADMIN, @PERMISSION_MANAGE_PLUGINS, 'y')
+,(@ROLE_ADMIN, @PERMISSION_MANAGE_TASKS, 'y')
+,(@ROLE_ADMIN, @PERMISSION_VIEW_GUILDS, 'y')
+,(@ROLE_ADMIN, @PERMISSION_EDIT_COMMENTS, 'y')
 ;
 
 INSERT IGNORE INTO `#content_type` VALUES
- (@CTYPE_POST, 'news', 'Post', NULL, NULL, 'y', 'y', NULL)
-,(@CTYPE_PAGE, 'page', 'Page', NULL, NULL, 'n', 'n', NULL)
+ (@CTYPE_POST, 'news', 'News', 'Post', NULL, NULL, 'create-pages', 'y', 'y', NULL)
+,(@CTYPE_PAGE, 'page', 'Pages', 'Page', NULL, NULL, 'publish-posts', 'n', 'n', NULL)
 ;
 
 TRUNCATE `#content_type_filters`;
@@ -94,6 +103,7 @@ INSERT INTO `#content_type_filters` VALUES
 ,(@CTYPE_POST, 'ScheduleFilter', 'a:0:{}')
 ,(@CTYPE_POST, 'TagFilter', 'a:0:{}')
 ,(@CTYPE_POST, 'ArchiveFilter', 'a:0:{}')
+,(@CTYPE_POST, 'SubscriptionFilter', 'a:0:{}')
 ,(@CTYPE_PAGE, 'RatingFilter', 'a:0:{}')
 ,(@CTYPE_PAGE, 'RelationshipFilter', 'a:0:{}')
 ;
@@ -106,5 +116,5 @@ INSERT IGNORE INTO `#content_meta` VALUES
 ;
 
 INSERT IGNORE INTO `#tasks` VALUES
- (1, 'BulkMailTask', 'Bulk mail', 'Send queued bulk emails.', '*/3 * * * *', NULL, DATE_ADD(NOW(), INTERVAL 5 MINUTE), 'n', 'y', 'n', '', NULL);
+ (1, 'BulkMailTask', 'Bulk mail', 'Send queued bulk emails.', '*/3 * * * *', NULL, DATE_ADD(NOW(), INTERVAL 5 MINUTE), 'n', 'y', 'y', 'n', '', NULL);
 ;

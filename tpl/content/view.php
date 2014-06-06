@@ -8,6 +8,7 @@
  */
 
 use Aqua\Core\App;
+use Aqua\Content\Filter\SubscriptionFilter;
 
 $query = array();
 if($paginator->currentPage !== 1) {
@@ -20,6 +21,59 @@ $tags = $content->tags();
 $page->theme->head->enqueueMeta('description')
 	->name('description')
 	->content($content->shortContent ? $content->shortContent : html_entity_decode(strip_tags(substr($content->plainText, 0, 150)), ENT_QUOTES, 'UTF-8'));
+if($content->contentType->hasFilter('SubscriptionFilter') &&
+   $content->contentType->hasFilter('CommentFilter') &&
+   $content->contentType->filter('SubscriptionFilter')->getOption('comments', true) &&
+   App::user()->loggedIn()) {
+	$subType = $content->isSubscribed(App::user()->account);
+	ob_start();
+	$formAction = $content->contentType->url(array(
+		'action' => 'subscribe',
+		'arguments' => array( $content->slug, SubscriptionFilter::COMMENT_SUBSCRIPTION )
+	));
+?>
+<div class="ac-content-subscription has-options <?php switch($subType) {
+	case SubscriptionFilter::COMMENT_SUBSCRIPTION:
+		echo 'subscribed-comment'; break;
+	case SubscriptionFilter::REPLY_SUBSCRIPTION:
+		echo 'subscribed-reply'; break;
+} ?>">
+	<div class="icon"></div>
+	<?php echo __('content', 'subscribe') ?>
+	<ul class="ac-content-sub-types">
+		<?php if($subType === SubscriptionFilter::COMMENT_SUBSCRIPTION) : ?>
+			<li class="active" title="<?php echo __('content', 'sub-comment') ?>"><?php echo __('content', 'comments') ?></li>
+		<?php else : ?>
+			<li title="<?php echo __('content', 'sub-comment') ?>">
+				<form method="POST" action="<?php echo $formAction ?>">
+					<input type="hidden" name="type" value="<?php echo SubscriptionFilter::COMMENT_SUBSCRIPTION ?>">
+					<button type="submit"><?php echo __('content', 'comments') ?></button>
+				</form>
+			</li>
+		<?php endif; ?>
+		<?php if($subType === SubscriptionFilter::REPLY_SUBSCRIPTION) : ?>
+			<li class="active" title="<?php echo __('content', 'sub-reply') ?>"><?php echo __('content', 'replies') ?></li>
+		<?php else : ?>
+			<li title="<?php echo __('content', 'sub-reply') ?>">
+				<form method="POST" action="<?php echo $formAction ?>">
+					<input type="hidden" name="type" value="<?php echo SubscriptionFilter::REPLY_SUBSCRIPTION ?>">
+					<button type="submit"><?php echo __('content', 'replies') ?></button>
+				</form>
+			</li>
+		<?php endif; ?>
+		<?php if($subType) : ?>
+			<li class="unsubscribe">
+				<form method="POST" action="<?php echo $formAction ?>">
+					<button type="submit"><?php echo __('content', 'unsubscribe') ?></button>
+				</form>
+			</li>
+		<?php endif; ?>
+	</ul>
+</div>
+<?php
+	$page->title.= ob_get_contents();
+	ob_end_clean();
+}
 ?>
 <div class="ac-post-header">
 	<div class="ac-post-info">

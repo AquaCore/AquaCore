@@ -157,15 +157,15 @@ extends Page
 			$permission = $frm->checkbox('permission')
 				->multiple(true)
 				->setLabel(__('role', 'permissions'));
-			foreach(R::permissions() as $name) {
-				$permission->value(array( $name => htmlspecialchars(__('permission-name', $name)) ));
-				$desc = htmlspecialchars(__('permission-desc', $name));
-				$permission->label($name)
-					->attr('class', 'ac-tooltip')
-					->attr('title', $desc)
-					->attr('alt', $desc);
-				if($role->hasPermission($name) && $role->permission[$name] === 2) {
-					$permission->option($name)->bool('disabled', true);
+			foreach(R::permissions() as $data) {
+				$permission->value(array( $data['key'] => htmlspecialchars($data['name']) ));
+				$desc = htmlspecialchars($data['description']);
+				$permission->label($data['key'])
+				           ->attr('class', 'ac-tooltip')
+				           ->attr('title', $desc)
+				           ->attr('alt', $desc);
+				if($role->hasPermission($data['key']) && $role->permission[$data['key']] === 2) {
+					$permission->option($data['key'])->bool('disabled', true);
 				}
 			}
 			$permission->checked($role->getPermissions());

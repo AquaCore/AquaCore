@@ -43,7 +43,7 @@ class Email
 		$search  = array();
 		$replace = array();
 		foreach($replacements as $key => $word) {
-			$search[]  = ":$key";
+			$search[]  = "#$key#";
 			$replace[] = $word;
 		}
 		unset($replacements);
@@ -159,8 +159,8 @@ class Email
 			$phpMailer->Body = $this->body;
 			$phpMailer->isHTML(false);
 		}
-		foreach($this->to as $to) {
-			$phpMailer->addAddress($to[1], $to[0]);
+		foreach($this->to as $address => $name) {
+			$phpMailer->addAddress($address, $name);
 		}
 		foreach($this->cc as $address => $name) {
 			$phpMailer->addCC($address, $name);
@@ -176,11 +176,11 @@ class Email
 	public function queue()
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_date, _from_address, _from_name, _subject, _body, _status)
+		INSERT INTO `%s` (_date, _from_address, _from_name, _subject, _content, _status)
 		VALUES (NOW(), :fromaddr, :fromname, :subject, :body, \'pending\')
 		', ac_table('mail_queue')));
 		$sth->bindValue(':subject', $this->subject, \PDO::PARAM_STR);
-		$sth->bindValue(':subject', $this->body, \PDO::PARAM_STR);
+		$sth->bindValue(':body', $this->body, \PDO::PARAM_STR);
 		if($this->fromAddress) $sth->bindValue(':fromaddr', $this->fromAddress, \PDO::PARAM_STR);
 		else $sth->bindValue(':fromaddr', null, \PDO::PARAM_NULL);
 		if($this->fromAddress) $sth->bindValue(':fromname', $this->fromName, \PDO::PARAM_STR);
@@ -191,7 +191,7 @@ class Email
 		$sth = App::connection()->prepare(sprintf('
 		INSERT INTO `%s` (_mail_id, _address, _name, _type)
 		VALUES (:id, :addr, :name, :type)
-		', ac_table('mail_cc')));
+		', ac_table('mail_recipient')));
 		foreach($this->to as $address => $name) {
 			$sth->bindValue(':id', $id, \PDO::PARAM_INT);
 			$sth->bindValue(':addr', $address, \PDO::PARAM_STR);
@@ -294,6 +294,10 @@ class Email
 		return self::$_phpMailer;
 	}
 
+	/**
+	 * @param string $template
+	 * @return \Aqua\Util\Email|bool
+	 */
 	public static function fromTemplate($template)
 	{
 		if(!$template = self::getTemplate($template, false)) {
@@ -306,14 +310,14 @@ class Email
 	{
 		$select = Query::select(App::connection())
 			->columns(array(
-				'key' => '_key',
-			    'name' => '_name',
+				'key'             => '_key',
+			    'name'            => '_name',
 			    'default_subject' => '_default_subject',
-			    'default_body' => '_default_body',
-			    'subject' => '_subject',
-			    'body' => '_body',
-			    'alt_body' => '_alt_body',
-			    'plugin_id' => '_plugin_id',
+			    'default_body'    => '_default_body',
+			    'subject'         => '_subject',
+			    'body'            => '_body',
+			    'alt_body'        => '_alt_body',
+			    'plugin_id'       => '_plugin_id',
 			))
 			->setColumnType(array( 'plugin_id' => 'integer' ))
 			->from(ac_table('email_templates'))
@@ -334,8 +338,8 @@ class Email
 		if($placeholders) {
 			$placeholders = Query::select(App::connection())
 				->columns(array(
-					'key' => 'key',
-				    'description' => 'description'
+					'key'         => '_key',
+				    'description' => '_description'
 				))
 				->from(ac_table('email_placeholders'))
 				->where(array( '_email' => $select->get('key') ))

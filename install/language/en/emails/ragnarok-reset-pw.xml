@@ -3,14 +3,16 @@
   <emailgroup>
     <email key="ragnarok-reset-pw">
       <name>Ragnarök Password Recovery</name>
-      <subject>:site-title Password Recovery</subject>
+      <subject>Password Recovery</subject>
       <body><![CDATA[<html>
 	<body>
-		Hello, :display-name,<br>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		Hello, #display-name#,<br>
 		You have received this e-mail because you have requested
-		a new password for your Ragnarok account <b>:ro-username</b><br>
+		a new password for your Ragnarok account <b>#ro-username#</b><br>
 		Please use the link below to reset your password:<br>
-		<a href=":url">Reset Password</a>
+		<a href="#url#">Reset Password</a>
+		</div>
 	</body>
 </html>]]></body>
       <placeholder key="site-title">Site title</placeholder>

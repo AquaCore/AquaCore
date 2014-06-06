@@ -59,6 +59,8 @@ class TaskManager
 			    'next_run'      => 'UNIX_TIMESTAMP(_next_run)',
 			    'running'       => '_running',
 			    'enabled'       => '_enabled',
+			    'protected'     => '_protected',
+			    'logging'       => '_logging',
 			    'error_message' => '_error_message',
 			    'plugin_id'     => '_plugin_id',
 			))
@@ -72,6 +74,8 @@ class TaskManager
 				'next_run'      => '_next_run',
 				'running'       => '_running',
 				'enabled'       => '_enabled',
+				'protected'     => '_protected',
+				'logging'       => '_logging',
 				'error_message' => '_error_message',
 				'plugin_id'     => '_plugin_id',
 			))
@@ -80,6 +84,11 @@ class TaskManager
 			->parser(array( __CLASS__, 'parseTaskSql' ));
 	}
 
+	/**
+	 * @param string|int $id
+	 * @param string     $type
+	 * @return \Aqua\Schedule\TaskData|null
+	 */
 	public static function get($id, $type = 'id')
 	{
 		if(!$id) {
@@ -105,6 +114,8 @@ class TaskManager
 				'next_run'      => 'UNIX_TIMESTAMP(_next_run)',
 				'running'       => '_running',
 				'enabled'       => '_enabled',
+				'protected'     => '_protected',
+				'logging'       => '_logging',
 				'error_message' => '_error_message',
 				'plugin_id'     => '_plugin_id',
 			))
@@ -128,8 +139,8 @@ class TaskManager
 	public static function import(\SimpleXMLElement $xml, $pluginId = null, $override = false)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_title, _description, _expression, _enabled, _next_run, _error_message, _plugin_id)
-		VALUES (:title, :desc, :expr, :enabled, :nextrun, :error, :pluginid)
+		INSERT INTO `%s` (_title, _description, _expression, _enabled, _protected, _logging, _next_run, _error_message, _plugin_id)
+		VALUES (:title, :desc, :expr, :enabled, :protected, :logging, :nextrun, :error, :pluginid)
 		ON DUPLICATE KEY UPDATE
 		_title = VALUES(_title),
 		_description = VALUES(_description),
@@ -150,6 +161,8 @@ class TaskManager
 			$taskData = new TaskData;
 			$taskData->isEnabled   = filter_var((string)$task->enabled ?: 'yes', FILTER_VALIDATE_BOOLEAN);
 			$taskData->isRunning   = false;
+			$taskData->isProtected = false;
+			$taskData->logging     = true;
 			$taskData->name        = $name;
 			$taskData->title       = $title;
 			$taskData->description = (string)$task->description;
@@ -163,10 +176,12 @@ class TaskManager
 				$taskData->errorMessage = __('task-error', TaskData::ERR_INVALID_EXPRESSION);
 			}
 			if($existingTask) {
-				$taskData->id        = $existingTask->id;
-				$taskData->isEnabled = $existingTask->isEnabled;
-				$taskData->nextRun   = $existingTask->nextRun;
-				$taskData->isRunning = $existingTask->isRunning;
+				$taskData->id          = $existingTask->id;
+				$taskData->isRunning   = $existingTask->isRunning;
+				$taskData->isEnabled   = $existingTask->isEnabled;
+				$taskData->isProtected = $existingTask->isProtected;
+				$taskData->logging     = $existingTask->logging;
+				$taskData->nextRun     = $existingTask->nextRun;
 			}
 			if($taskData->pluginId) {
 				$sth->bindValue(':pluginid', $taskData->pluginId, \PDO::PARAM_INT);
@@ -182,6 +197,8 @@ class TaskManager
 			$sth->bindValue(':name', $taskData->name, \PDO::PARAM_STR);
 			$sth->bindValue(':expr', $taskData->expression, \PDO::PARAM_STR);
 			$sth->bindValue(':enabled', $taskData->isEnabled ? 'y' : 'n', \PDO::PARAM_STR);
+			$sth->bindValue(':protected', $taskData->isProtected ? 'y' : 'n', \PDO::PARAM_STR);
+			$sth->bindValue(':logging', $taskData->logging ? 'y' : 'n', \PDO::PARAM_STR);
 			$sth->bindValue(':nextrun', date('Y-m-d H:i:s', $taskData->nextRun), \PDO::PARAM_STR);
 			$sth->bindValue(':error', $taskData->errorMessage, \PDO::PARAM_STR);
 			$sth->execute();
@@ -209,6 +226,8 @@ class TaskManager
 		$task->pluginId     = $data['plugin_id'];
 		$task->isEnabled    = ($data['enabled'] === 'y');
 		$task->isRunning    = ($data['running'] === 'y');
+		$task->isProtected  = ($data['protected'] === 'y');
+		$task->logging      = ($data['logging'] === 'y');
 		$task->errorMessage = (bool)$data['error_message'];
 		self::$tasks[$task->id] = $task;
 		return $task;

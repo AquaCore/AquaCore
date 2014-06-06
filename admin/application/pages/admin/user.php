@@ -25,7 +25,7 @@ extends Page
 
 	public function index_action()
 	{
-		$this->theme->head->section = $this->title = __('account', 'users');
+		$this->theme->head->section = $this->title = __('admin-menu', 'users');
 		try {
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new \Aqua\UI\Search(App::request(), $currentPage);
@@ -236,20 +236,20 @@ extends Page
 						$form->field('username')->setWarning($message);
 					} else if(Account::exists($username, null, null, $account->id)) {
 						$error = true;
-						$form->field('username')->setWarning(__('account', 'username-taken'));
+						$form->field('username')->setWarning(__('profile', 'username-taken'));
 					}
 					if(Account::checkValidDisplayName($display, $message) !== Account::FIELD_OK) {
 						$error = true;
 						$form->field('display_name')->setWarning($message);
 					} else if(Account::exists(null, $display, null, $account->id)) {
 						$error = true;
-						$form->field('display_name')->setWarning(__('account', 'display-name-taken'));
+						$form->field('display_name')->setWarning(__('profile', 'display-name-taken'));
 					}
 					if(Account::checkValidEmail($email, $message) !== Account::FIELD_OK) {
 						$form->field('email')->setWarning($message);
 					} else if(Account::exists(null, null, $email, $account->id)) {
 						$error = true;
-						$form->field('email')->setWarning(__('account', 'email-taken'));
+						$form->field('email')->setWarning(__('profile', 'email-taken'));
 					}
 					if(!empty($password) &&
 					   Account::checkValidPassword($password, $message) !== Account::FIELD_OK) {
@@ -257,7 +257,7 @@ extends Page
 						$form->field('password')->setWarning($message);
 					}
 					if(!$form->field('birthday')->getWarning() &&
-					   Account::checkValidBirthday(strtotime($birthday), $message) !== Account::FIELD_OK) {
+					   Account::checkValidBirthday(\DateTime::createFromFormat('Y-m-d', $birthday)->getTimestamp(), $message) !== Account::FIELD_OK) {
 						$error = true;
 						$form->field('birthday')->setWarning($message);
 					}
@@ -310,7 +310,7 @@ extends Page
 					}
 				}
 				if(!$frm->field('birthday')->getWarning()) {
-					$update['birthday'] = strtotime(trim($this->request->getString('birthday')));
+					$update['birthday'] = \DateTime::createFromFormat('Y-m-d', trim($this->request->getString('birthday')))->getTimestamp();
 				}
 				if(!$frm->field('credits')->getWarning()) {
 					$update['credits'] = (int)trim($this->request->getString('credits'));
@@ -339,7 +339,7 @@ extends Page
 						break;
 				}
 				if((!empty($update) && $account->update($update)) || $avatarUpdated) {
-					$message = __('account', 'admin-account-updated');
+					$message = __('profile', 'admin-account-updated', htmlspecialchars($account->displayName));
 				}
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);

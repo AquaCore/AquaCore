@@ -388,6 +388,33 @@ extends Page
 		}
 	}
 
+	public function subscribe_action($slug = null)
+	{
+		if(!$this->request->method !== 'POST') {
+			$this->error(405);
+		}
+		if($slug && !($content = $this->contentType->get($slug, 'slug'))) {
+			$this->error(404);
+			return;
+		}
+		if(isset($content)) {
+			$this->response->status(302)->redirect($this->contentType->url(array( 'path' => array( $content->slug ) )));
+			if($subType = $this->request->getInt('type')) {
+				$subType = min(2, max(1, $subType));
+				$content->addSubscription(App::user()->account, $subType);
+			} else {
+				$content->removeSubscription(App::user()->account);
+			}
+		} else {
+			$this->response->status(302)->redirect($this->contentType->url());
+			if($this->request->getInt('subscribe')) {
+				$this->contentType->addSubscription(App::user()->account);
+			} else {
+				$this->contentType->removeSubscription(App::user()->account);
+			}
+		}
+	}
+
 	protected function _keywordSearch(Select $search, &$values)
 	{
 		$where = array(array(

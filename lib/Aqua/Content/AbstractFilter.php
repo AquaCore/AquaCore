@@ -3,9 +3,16 @@ namespace Aqua\Content;
 
 use Aqua\Content\Feed\RssItem;
 use Aqua\Core\App;
+use Aqua\Event\EventDispatcher;
+use Aqua\Event\SubjectInterface;
 
 abstract class AbstractFilter
+implements SubjectInterface
 {
+	/**
+	 * @var string
+	 */
+	public $name;
 	/**
 	 * @var \Aqua\Content\ContentType
 	 */
@@ -13,7 +20,11 @@ abstract class AbstractFilter
 	/**
 	 * @var array
 	 */
-	public $options;
+	public $options = array();
+	/**
+	 * @var \Aqua\Event\EventDispatcher
+	 */
+	protected $_dispatcher;
 
 	/**
 	 * @param \Aqua\Content\ContentType $content
@@ -23,7 +34,15 @@ abstract class AbstractFilter
 	{
 		$this->contentType = $content;
 		$this->options     = $options;
+		$this->_dispatcher = new EventDispatcher;
+		$this->name        = get_class($this);
+		if($name = strstr($this->name, '/')) {
+			$this->name = substr($name, 1);
+		}
+		$this->init();
 	}
+
+	public function init() { }
 
 	/**
 	 * @param \Aqua\Content\ContentData $content
@@ -132,5 +151,25 @@ abstract class AbstractFilter
 		} else {
 			return false;
 		}
+	}
+
+	public function attach($event, $listener)
+	{
+		$this->_dispatcher->attach("{$this->name}.$event", $listener);
+		return $this;
+	}
+
+	public function detach($event, $listener)
+	{
+		$this->_dispatcher->detach("{$this->name}.$event", $listener);
+		return $this;
+	}
+
+	public function notify($event, &$feedback = array())
+	{
+		array_unshift($feedback, $this->contentType);
+		$result =  $this->_dispatcher->notify("{$this->name}.$event", $feedback);
+		array_shift($feedback);
+		return $result;
 	}
 }

@@ -29,7 +29,9 @@ extends TaskData
 		$this->isRunning = false;
 		$endTime = microtime(true);
 		$this->abort();
-		TaskLog::logSql($this, $this->lastRun, $endTime, $outputShort, $outputFull);
+		if($this->logging) {
+			TaskLog::logSql($this, $this->lastRun, $endTime, $outputShort, $outputFull);
+		}
 	}
 
 	public final function abort()

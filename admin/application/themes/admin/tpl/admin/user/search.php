@@ -9,7 +9,7 @@ use Aqua\User\Role;
  * @var $userCount int
  * @var $paginator \Aqua\UI\Pagination
  * @var $search    \Aqua\UI\Search
- * @var $page      \Page\Main\Ragnarok\Server\Item
+ * @var $page      \Page\Admin\User
  */
 
 use Aqua\UI\ScriptManager;

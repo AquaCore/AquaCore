@@ -55,6 +55,11 @@ extends Page
 				->checked(($settings->get('output_compression', false) ? '1' : null))
 			    ->setLabel(__('settings', 'app-ob-label'))
 			    ->setDescription(__('settings', 'app-ob-desc'));
+			$frm->checkbox('tasks')
+				->value(array( '1' => '' ))
+				->checked(($settings->get('tasks', false) ? '1' : null))
+			    ->setLabel(__('settings', 'app-task-label'))
+			    ->setDescription(__('settings', 'app-task-desc'));
 			$frm->select('ssl')
 		        ->value(array(
 						'0' => __('settings', 'app-ssl-0'),
@@ -159,6 +164,7 @@ extends Page
 			$settings->set('time_format', trim($this->request->getString('time_format')));
 			$settings->set('datetime_format', trim($this->request->getString('datetime_format')));
 			$settings->set('output_compression', (bool)$this->request->getInt('ob'));
+			$settings->set('tasks', (bool)$this->request->getInt('tasks'));
 			if($settings->get('ssl', 0) >= 2) {
 				$settings->get('session')->set('secure', true);
 				$settings->get('account')->get('persistent_login')->set('secure', true);

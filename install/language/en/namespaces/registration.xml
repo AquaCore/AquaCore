@@ -2,11 +2,10 @@
 <languageimport>
   <wordgroup>
     <word namespace="registration" key="register">Register</word>
-    <word namespace="registration" key="reset-code">Resend Validation Code</word>
-    <word namespace="registration" key="failed-to-register">Failed to register</word>
-    <word namespace="registration" key="registration">Failed to Send Email</word>
-    <word namespace="registration" key="agree-tos">I Agree</word>
-    <word namespace="registration" key="disagree-tos">I Disagree</word>
+    <word namespace="registration" key="reset-code">Resend validation code</word>
+    <word namespace="registration" key="failed-to-register">Registration failed</word>
+    <word namespace="registration" key="agree-tos">I agree</word>
+    <word namespace="registration" key="disagree-tos">I disagree</word>
     <word namespace="registration" key="agree-tos-desc"><![CDATA[I have read and agree with the <a href="%s">Terms of Service</a>]]></word>
     <word namespace="registration" key="tos-required">You must agree with the Terms of Service to register an account.</word>
     <word namespace="registration" key="completed">Registration completed</word>

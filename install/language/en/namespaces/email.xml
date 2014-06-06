@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+  <wordgroup>
+    <word namespace="email" key="templates">Email Templates</word>
+    <word namespace="email" key="edit-x-template">Edit Template - %s</word>
+    <word namespace="email" key="name">Name</word>
+    <word namespace="email" key="key">Key</word>
+    <word namespace="email" key="plugin">Plugin</word>
+    <word namespace="email" key="placeholders">Placeholders</word>
+    <word namespace="email" key="body">Body</word>
+    <word namespace="email" key="subject">Subject</word>
+    <word namespace="email" key="alt-body">Alternative Body</word>
+    <word namespace="email" key="body-desc">HTML Body</word>
+    <word namespace="email" key="alt-body-desc">Plain text Body (optional)</word>
+  </wordgroup>
+</languageimport>

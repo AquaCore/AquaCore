@@ -8,7 +8,7 @@ $option = &$menu->get('application');
 $option['class'] = 'active';
 ?>
 <table class="ac-settings-form">
-	<?php echo $form->render(null, false, array( 'title', 'domain', 'base_dir', 'rewrite_url', 'ob', 'language', 'ssl' )) ?>
+	<?php echo $form->render(null, false, array( 'title', 'domain', 'base_dir', 'rewrite_url', 'ob', 'tasks', 'ssl' )) ?>
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">

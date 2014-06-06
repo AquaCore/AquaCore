@@ -522,7 +522,7 @@ implements \Iterator, \Countable
 			throw $exception;
 		}
 		$results = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		$this->results = array();
+		$this->results = $this->resultsData = array();
 		if($this->calcRows) {
 			$this->rowsFound = (int)$this->dbh->query('SELECT FOUND_ROWS()')->fetch(\PDO::FETCH_COLUMN, 0);
 		}

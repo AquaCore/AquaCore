@@ -7,6 +7,30 @@
  * @var $page         \Aqua\Site\Page
  */
 
+use Aqua\Core\App;
+
+if(App::user()->loggedIn() && $contentType && $contentType->hasFilter('SubscriptionFilter') &&
+   $contentType->filter('SubscriptionFilter')->getOption('content', true)) {
+	ob_start();
+	$isSubbed = $contentType->isSubscribed(App::user()->account);
+?>
+<div class="ac-content-subscription <?php if($isSubbed) echo 'subscribed' ?>"
+     title="<?php echo __('content', 'sub-desc') ?>">
+	<div class="icon"></div>
+	<form method="POST" action="<?php echo $contentType->url(array( 'action' => 'subscribe' )) ?>">
+	<?php if($isSubbed) : ?>
+		<button type="submit"><?php echo __('content', 'unsubscribe') ?></button>
+	<?php else : ?>
+		<input type="hidden" name="subscribe" value="1">
+		<button type="submit"><?php echo __('content', 'subscribe') ?></button>
+	<?php endif; ?>
+	</form>
+</div>
+<?php
+	$page->title.= ob_get_contents();
+	ob_end_clean();
+}
+
 $dateFormat = \Aqua\Core\App::settings()->get('date_format');
 $timeFormat = \Aqua\Core\App::settings()->get('time_format');
 ?>

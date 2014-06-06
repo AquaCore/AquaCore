@@ -52,6 +52,8 @@
     <word namespace="settings" key="app-ssl-0">Disabled</word>
     <word namespace="settings" key="app-ssl-1">Form submission</word>
     <word namespace="settings" key="app-ssl-2">Every page</word>
+    <word namespace="settings" key="app-task-label">Enable Tasks</word>
+    <word namespace="settings" key="app-task-desc">Run pending tasks at the end of each request.</word>
     <word namespace="settings" key="email-address-label">Email Address</word>
     <word namespace="settings" key="email-name-label">Sender Name</word>
     <word namespace="settings" key="email-use-smtp-label">Use SMTP</word>

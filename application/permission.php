@@ -48,6 +48,10 @@ $permissions
 	->set('main/content/action/preview')
 	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
 	->allowPermission('view-admin-cp');
+$permissions
+	->set('main/content/action/subscribe')
+	->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_ROLE_PERMISSION)
+	->denyRole(Role::get(Role::ROLE_GUEST));
 if(Server::$serverCount === 0) {
 	$permissions
 		->set("main/ragnarok")

@@ -169,6 +169,7 @@ $page->theme->footer->enqueueScript('tpl.char-stats')
 				<tfoot>
 				<tr>
 					<td colspan="6">
+						<?php if(\Aqua\Core\App::user()->role()->hasPermission('view-user-items')) : ?>
 						<a href="<?php echo ac_build_url(array(
 							'path' => array( 'r', $char->charmap->server->key, $char->charmap->key ),
 						    'action' => 'inventory',
@@ -184,6 +185,7 @@ $page->theme->footer->enqueueScript('tpl.char-stats')
 						              class="ac-button"
 						              style="margin-right: 10px"
 								><?php echo __('ragnarok', 'cart') ?></button></a>
+						<?php endif; ?>
 					</td>
 				</tr>
 				</tfoot>

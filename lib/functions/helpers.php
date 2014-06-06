@@ -522,10 +522,69 @@ function ac_font_info($font, $info = null)
 	}
 }
 
-function ac_parse_content($content, &$pages, &$short_content)
+function ac_truncate_string($content, $max, $append = '')
+{
+	$out = '';
+	$printed = 0;
+	$pattern = '%</?([a-z]+)[^>]*/?>|&#?[a-zA-Z0-9]+;|[\x80-\xFF][\x80-\xBF]*%miS';
+	$offset = 0;
+	$tags = array();
+	while($printed < $max && preg_match($pattern, $content, $match, PREG_OFFSET_CAPTURE, $offset)) {
+		$tagLength = strlen($match[0][0]);
+		$tagOffset = $match[0][1];
+		$str = substr($content, $offset, $tagOffset - $offset);
+		if(($printed + strlen($str)) > $max) {
+			$str = substr($str, 0, $max - $printed);
+		}
+		$printed += strlen($str);
+		if(substr($match[0][0], 0, 2) === '</') {
+			$name = strtolower($match[1][0]);
+			for($i = count($tags) - 1; $i >= 0; --$i) {
+				if($name === $tags[$i]) {
+					break;
+				}
+				$printed.= "</{$tags[$i]}>";
+				array_pop($tags);
+			}
+		} else if($match[0][0][0] === '<' && isset($match[1]) &&
+		          substr($match[0][0], -2) !== '/>') {
+			$tags[] = strtolower($match[1][0]);
+		}
+		$out.= $str . $match[0][0];
+		$offset = $tagOffset + $tagLength;
+	}
+	if($printed < $max) {
+		$out.= substr($content, $offset, $max - $printed);
+	}
+	$out = substr($out, 0, strrpos($out, ' '));
+	$inline = array(
+		'b', 'big', 'i', 'small', 'tt', 'label',
+		'abbr', 'acronym', 'cite', 'code', 'input',
+		'dfn', 'em', 'kdb', 'strong', 'samp', 'select',
+		'var', 'a', 'bdo', 'br', 'img', 'map', 'textarea',
+		'object', 'span', 'sub', 'sup', 'button'
+	);
+	for($i = count($tags) - 1; $i >= 0; --$i) {
+		$name = $tags[$i];
+		if($append && !in_array($name, $inline, true)) {
+			$out.= $append;
+			$append = null;
+		}
+		$out.= "</$name>";
+	}
+	if($append) {
+		$out.= $append;
+	}
+
+	return $out;
+}
+
+function ac_parse_content($content, &$pages, &$shortContent)
 {
 	if(preg_match('/<!-{2,} *readmore *-{2,}>/i', $content, $match, PREG_OFFSET_CAPTURE)) {
-		$short_content = substr($content, 0, $match[0][1]);
+		$shortContent = substr($content, 0, $match[0][1]);
+	} else {
+
 	}
 	$pages = preg_split('/<!-{2,} *nextpage *-{2,}>/', $content);
 }

@@ -137,6 +137,23 @@ try {
 					'url'   => ac_build_url(array( 'path' => array( 'plugin' ) ))
 				));
 		}
+		if($role->hasPermission('manage-tasks')) {
+			$menu->append('tasks', array(
+					'class' => array( 'option-tasks' ),
+					'title' => __('admin-menu', 'tasks'),
+					'url'   => ac_build_url(array( 'path' => array( 'task' ) )),
+			        'submenu' => array(
+				        array(
+					        'title' => __('admin-menu', 'tasks'),
+					        'url'   => ac_build_url(array( 'path' => array( 'task' ) )),
+				        ),
+				        array(
+					        'title' => __('admin-menu', 'task-log'),
+					        'url'   => ac_build_url(array( 'path' => array( 'task' ), 'action' => 'log' )),
+				        )
+			        )
+				));
+		}
 		if($role->hasPermission('view-cp-logs')) {
 			$menu->append('logs', array(
 					'class'   => array( 'option-logs' ),
@@ -178,6 +195,10 @@ try {
 			            array(
 				            'title' => __('admin-menu', 'smileys'),
 				            'url' => ac_build_query(array( 'path' => array( 'bbcode' ), 'action' => 'smiley' )),
+			            ),
+			            array(
+				            'title' => __('admin-menu', 'emails'),
+				            'url' => ac_build_query(array( 'path' => array( 'mail' ) )),
 			            )
 			        )
 				));

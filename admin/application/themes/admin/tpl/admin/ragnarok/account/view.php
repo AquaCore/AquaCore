@@ -112,12 +112,14 @@ $datetimeFormat = App::$settings->get('datetime_format', '');
 		<tr>
 			<td colspan="7">
 				<div style="float: right">
+				<?php if(App::user()->role()->hasPermission('edit-server-user') &&
+				         ($account->owner !== 1 || App::user()->account->id === 1)) : ?>
 					<a class="ac-edit-account" href="<?php echo ac_build_url(array(
 						'path' => array( 'r', $account->server->key ),
 						'action' => 'editaccount',
 						'arguments' => array( $account->id )
 					)) ?>"><button><?php echo __('ragnarok', 'edit-account') ?></button></a>
-				<?php if($account->owner !== 1 || App::user()->account->id === 1) : ?>
+				<?php endif; if(App::user()->role()->hasPermission('view-user-items')) : ?>
 					<a class="ac-edit-account" href="<?php echo ac_build_url(array(
 							'path' => array( 'r', $account->server->key ),
 							'action' => 'storage',

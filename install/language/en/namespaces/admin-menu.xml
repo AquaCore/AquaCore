@@ -20,7 +20,10 @@
     <word namespace="admin-menu" key="pp-log">PlayPal Transfer Log</word>
     <word namespace="admin-menu" key="credit-log">Credit Transfer Log</word>
     <word namespace="admin-menu" key="ban-log">Ban Log</word>
+    <word namespace="admin-menu" key="task-log">Task Log</word>
     <word namespace="admin-menu" key="settings">Settings</word>
     <word namespace="admin-menu" key="smileys">Smileys</word>
+    <word namespace="admin-menu" key="emails">Email Templates</word>
+    <word namespace="admin-menu" key="tasks">Tasks</word>
   </wordgroup>
 </languageimport>

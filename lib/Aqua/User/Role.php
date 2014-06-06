@@ -521,17 +521,17 @@ class Role
 		}
 		$select = Query::select(App::connection())
 			->columns(array(
-				'id' => 'id',
-			    'name' => '_name',
-			    'color' => '_color',
-			    'background' => '_background',
-			    'protected' => '_protected',
-			    'editable' => '_editable',
+				'id'          => 'id',
+			    'name'        => '_name',
+			    'color'       => '_color',
+			    'background'  => '_background',
+			    'protected'   => '_protected',
+			    'editable'    => '_editable',
 			    'description' => '_description',
 			))
 			->setColumnType(array(
-				'id' => 'integer',
-			    'color' => 'integer',
+				'id'         => 'integer',
+			    'color'      => 'integer',
 			    'background' => 'integer',
 			))
 			->from(ac_table('roles'));

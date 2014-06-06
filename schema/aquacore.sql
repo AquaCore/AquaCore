@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `#tasks` (
   _next_run DATETIME NOT NULL,
   _running ENUM('y', 'n') NOT NULL DEFAULT 'n',
   _enabled ENUM('y','n') NOT NULL DEFAULT 'y',
+  _logging ENUM('y', 'n') NOT NULL DEFAULT 'y',
   _protected ENUM('y', 'n') NOT NULL DEFAULT 'n',
   _error_message VARCHAR(255) NOT NULL DEFAULT '',
   _plugin_id INT UNSIGNED NULL,
@@ -343,6 +344,28 @@ CREATE TABLE IF NOT EXISTS `#mail_recipient` (
   DEFAULT CHARACTER SET = utf8
   COLLATE = utf8_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `#content_type_subscriptions` (
+  _type INT UNSIGNED NOT NULL,
+  _user_id INT UNSIGNED NOT NULL,
+  _date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  PRIMARY KEY ( _type, _user_id )
+) ENGINE = MyIsam
+  ROW_FORMAT = FIXED
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS `#content_subscriptions` (
+  _content_id INT UNSIGNED NOT NULL,
+  _user_id INT UNSIGNED NOT NULL,
+  _date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  _type ENUM('comments', 'replies') NOT NULL,
+  PRIMARY KEY ( _content_id, _user_id )
+) ENGINE = MyIsam
+  ROW_FORMAT = FIXED
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `#smileys` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _file VARCHAR(32) NOT NULL,
@@ -357,8 +380,10 @@ CREATE TABLE IF NOT EXISTS `#content_type` (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   _key VARCHAR(32) COLLATE utf8_bin NOT NULL,
   _name VARCHAR(255) NOT NULL,
+  _item_name VARCHAR(255) NOT NULL,
   _table VARCHAR(32) COLLATE utf8_bin NOT NULL,
   _adapter VARCHAR(255),
+  _permission VARCHAR(32) DEFAULT NULL,
   _feed ENUM('y', 'n') NOT NULL DEFAULT 'y',
   _listing ENUM('y', 'n') NOT NULL DEFAULT 'y',
   _plugin_id INT UNSIGNED,
