@@ -65,6 +65,7 @@ class ShopCategory
 			return false;
 		}
 		$values[] = $this->id;
+		$update = substr($update, 0, -2);
 		$sth = $this->charmap->connection()->prepare("
 		UPDATE {$this->charmap->table('ac_cash_shop_categories')}
 		SET {$update}
@@ -108,6 +109,6 @@ class ShopCategory
 			'path'      => array( 'item' ),
 		    'action'    => 'shop',
 		    'arguments' => array( $this->slug )
-		));
+		), false);
 	}
 }

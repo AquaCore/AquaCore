@@ -79,7 +79,7 @@ $page->charmap->serverStatus($status['char'], $status['map']);
 		foreach($page->charmap->onlineStats(
 			'peak',
 			strtotime('sunday 1 week ago'),
-			strtotime('saturday this week'),
+			strtotime('saturday this week 23:59:59'),
 			'day',
 			300
 		) as $timestamp => $count) {

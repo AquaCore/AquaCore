@@ -48,10 +48,11 @@ $page->theme->set('sidebar', $sidebar);
 		<col>
 		<col>
 		<col>
+		<col>
 	</colgroup>
 	<thead>
 		<tr>
-			<td colspan="5" style="text-align: right">
+			<td colspan="6" style="text-align: right">
 				<select name="action">
 					<option value="order"><?php echo __('application', 'save-order') ?></option>
 					<option value="delete"><?php echo __('application', 'delete') ?></option>
@@ -62,14 +63,15 @@ $page->theme->set('sidebar', $sidebar);
 		<tr class="alt">
 			<td><input type="checkbox" ac-checkbox-toggle="categories[]"></td>
 			<td><?php echo __('content', 'id') ?></td>
-			<td><?php echo __('content', 'name') ?></td>
+			<td><?php echo __('content', 'category-name') ?></td>
 			<td><?php echo __('content', 'slug') ?></td>
-			<td><?php echo __('content', 'description') ?></td>
+			<td><?php echo __('content', 'category-description') ?></td>
+			<td><?php echo __('application', 'action') ?></td>
 		</tr>
 	</thead>
 	<tbody>
 	<?php if(empty($categories)) : ?>
-		<tr><td colspan="5" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
+		<tr><td colspan="6" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($categories as $category) : ?>
 		<tr>
 			<td>
@@ -84,11 +86,20 @@ $page->theme->set('sidebar', $sidebar);
 				</a>
 			</td>
 			<td><?php echo htmlspecialchars($category->description) ?></td>
+			<td class="ac-actions">
+				<a href="<?php echo $page->charmap->url(array(
+					'action' => 'editcategory',
+				    'arguments' => array( $category->id )
+				)) ?>"><button class="ac-action-edit"
+				        type="button">
+					<?php echo __('application', 'edit') ?>
+				</button></a>
+			</td>
 		</tr>
 	<?php endforeach; endif; ?>
 	</tbody>
 	<tfoot>
-		<tr><td colspan="5"></td></tr>
+		<tr><td colspan="6"></td></tr>
 	</tfoot>
 </table>
 </form>

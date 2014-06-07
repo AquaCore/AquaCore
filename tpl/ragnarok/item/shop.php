@@ -23,13 +23,14 @@ $base_item_url = $page->charmap->url(array(
 	'action' => 'view',
 	'arguments' => array( '' )
 ));
+$description = null;
 ?>
 <?php if(App::user()->loggedIn()) : ?>
 <div class="ac-user-credits"><?php echo __('donation', 'credit-points', number_format(App::user()->account->credits))?></div>
 <?php endif; ?>
 <div class="ac-cash-shop-categories">
 <?php foreach($categories as $id => $category) : ?>
-<?php if(strcasecmp($page->request->uri->arg(0, null), $category->slug) === 0) : ?>
+<?php if(strcasecmp($page->request->uri->arg(0, null), $category->slug) === 0) : $description = $category->description; ?>
 		<a href="<?php echo $page->charmap->url(array(
 			'path'   => array( 'item' ),
 			'action' => 'shop'
@@ -43,7 +44,11 @@ $base_item_url = $page->charmap->url(array(
 <?php endif; ?>
 <?php endforeach; ?>
 </div>
-<?php if(empty($items)) : ?>
+<?php if($description) : ?>
+<div style="white-space: pre-wrap; text-align: center">
+<?php echo $description ?>
+</div>
+<?php endif; if(empty($items)) : ?>
 	<div style="text-align: center"><?php echo __('application', 'no-search-results')?></div>
 	<?php return; ?>
 <?php else : ?>

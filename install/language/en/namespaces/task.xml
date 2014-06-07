@@ -23,6 +23,7 @@
     <word namespace="task" key="expression">Cron expression</word>
     <word namespace="task" key="cannot-edit">This task cannot be edited.</word>
     <word namespace="task" key="task-run"><![CDATA[Finished running <b>%s</b> task.]]></word>
+    <word namespace="task" key="name">Class name</word>
     <word namespace="task" key="cron">Cron</word>
     <word namespace="task" key="cron-key">Cron key</word>
     <word namespace="task" key="cron-help"><![CDATA[<h3>Specific Task</h3>

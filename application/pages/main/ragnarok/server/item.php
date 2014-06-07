@@ -259,7 +259,7 @@ extends Page
 	{
 		$this->theme->head->section = $this->title = __('ragnarok', 'cash-shop');
 		try {
-			$current_page = $this->request->uri->getInt('page', 1, 1);
+			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$categories = $this->charmap->shopCategorySearch()
 				->order(array( 'order' => 'ASC' ))
 				->query()
@@ -279,10 +279,10 @@ extends Page
 				} while(0);
 			}
 			$search->calcRows(true)
-				->limit(($current_page - 1) * self::$shopItemsPerPage, self::$shopItemsPerPage)
+				->limit(($currentPage - 1) * self::$shopItemsPerPage, self::$shopItemsPerPage)
 				->order(array( 'shop_order' => 'ASC' ))
 				->query();
-			$pgn = new Pagination(App::user()->request->uri, ceil($search->rowsFound / self::$shopItemsPerPage), $current_page);
+			$pgn = new Pagination(App::user()->request->uri, ceil($search->rowsFound / self::$shopItemsPerPage), $currentPage);
 			$tpl = new Template;
 			$tpl->set('items', $search->results)
 				->set('item_count', $search->rowsFound)

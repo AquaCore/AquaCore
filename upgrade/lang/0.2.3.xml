@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="ragnarok" key="edit-category">Edit Shop Category - %s</word>
+        <word namespace="ragnarok" key="shop-category-updated"><![CDATA[<b>%s</b> category has been updated.]]></word>
+        <word namespace="ragnarok" key="shop-order-saved">Shop order saved.</word>
+        <word namespace="task" key="name">Class name</word>
+    </wordgroup>
+</languageimport>

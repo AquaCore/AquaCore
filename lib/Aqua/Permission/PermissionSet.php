@@ -74,7 +74,9 @@ class PermissionSet
 				}
 			}
 		}
-		if(isset($permission[$action])) {
+		if(!is_array($permission)) {
+			return $permission;
+		} else if(isset($permission[$action])) {
 			return $permission[$action];
 		} else if(isset($permission['*'])) {
 			return $permission['*'];

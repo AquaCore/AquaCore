@@ -1176,19 +1176,19 @@ extends Page
 						}
 						$count = count($deleted);
 						if($count === 1) {
-							App::user()->addFlash('success', null, __('ragnarok-shop',
-							                                          'category-deleted-s',
+							App::user()->addFlash('success', null, __('ragnarok',
+							                                          'shop-category-removed-s',
 							                                          $deleted[0]));
 						} else if($count) {
-							App::user()->addFlash('success', null, __('ragnarok-shop',
-							                                          'category-deleted-p',
+							App::user()->addFlash('success', null, __('ragnarok',
+							                                          'shop-category-removed-p',
 							                                          $count));
 						}
 						break;
 					case 'order':
 						$order = array_flip(array_map('intval', $this->request->getArray('order')));
 						if($this->charmap->setShopCategoryOrder($order)) {
-							App::user()->addFlash('success', null, __('ragnarok-shop', 'order-saved'));
+							App::user()->addFlash('success', null, __('ragnarok', 'shop-order-saved'));
 						}
 						break;
 				}
@@ -1203,9 +1203,9 @@ extends Page
 			$frm->input('name')
 				->type('text')
 				->required()
-				->setLabel(__('ragnarok-shop', 'category-name'));
+				->setLabel(__('content', 'category-name'));
 			$frm->textarea('description')
-				->setLabel(__('ragnarok-shop', 'category-desc'));
+				->setLabel(__('content', 'category-description'));
 			$frm->submit();
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
@@ -1253,39 +1253,33 @@ extends Page
 			$frm->input('name', true)
 				->type('text')
 				->value(htmlspecialchars($category->name), false)
-				->setLabel(__('ragnarok-shop', 'category-name'));
+				->setLabel(__('content', 'category-name'));
 			$frm->textarea('description', true)
-				->append(htmlspecialchars($category->name), false)
-				->setLabel(__('ragnarok-shop', 'category-desc'));
+				->append(htmlspecialchars($category->description), false)
+				->setLabel(__('content', 'category-description'));
 			$frm->submit();
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				if($this->request->ajax) {
-					$this->error(204);
-					return;
-				}
+				$this->title = $this->theme->head->section = __('ragnarok', 'edit-category', htmlspecialchars($category->name));
 				$this->theme->set('return', $this->charmap->url(array( 'action' => 'category' )));
+				$tpl = new Template;
+				$tpl->set('category', $category)
+					->set('form', $frm)
+					->set('page', $this);
+				echo $tpl->render('admin/ragnarok/edit-shop-category');
 				return;
 			}
-			$error = false;
-			$message = '';
 			try {
-				$update = array();
-				if(!$frm->field('name')->getWarning()) {
-					$update['name'] = $this->request->getString('name');
-				}
-				if(!$frm->field('description')->getWarning()) {
-					$update['description'] = $this->request->getString('description');
-				}
-				if($category->update($update)) {
-					$message = __('ragnarok-shop', 'category-updated', htmlspecialchars($category->name));
-				} else {
-					$message = __('ragnarok-shop', 'category-not-updated');
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				if($category->update(array(
+						'name'        => trim($this->request->getString('name')),
+						'description' => trim($this->request->getString('description')),
+					))) {
+					App::user()->addFlash('success', null, __('ragnarok', 'shop-category-updated', htmlspecialchars($category->name)));
 				}
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
-				$error = true;
-				$message = __('application', 'unexpected-error');
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
@@ -1302,7 +1296,7 @@ extends Page
 				try {
 					if($this->request->getString('action') === 'order') {
 						$this->charmap->setShopItemsOrder(array_flip($this->request->getArray('order')));
-						App::user()->addFlash('success', null, __('ragnarok-charmap', 'shop-updated'));
+						App::user()->addFlash('success', null, __('ragnarok', 'shop-order-saved'));
 					} else {
 						$deleted = 0;
 						foreach($this->request->getArray('items') as $itemId) {
@@ -1843,7 +1837,7 @@ extends Page
 			        'zeny' => 'amount'
 				))
 				->limit(0, 6, 20, 5)
-				->defaultOrder('id')
+				->defaultOrder('id', \Aqua\UI\Search::SORT_DESC)
 				->defaultLimit(20)
 				->persist('admin.zenylog');
 			$frm->input('char')
@@ -1959,7 +1953,7 @@ extends Page
 			        'total'  => 'total'
 				))
 				->limit(0, 6, 20, 5)
-				->defaultOrder('id')
+				->defaultOrder('id', \Aqua\UI\Search::SORT_DESC)
 				->defaultLimit(20)
 				->persist('admin.shoplog');
 			$frm->input('id')
@@ -2048,7 +2042,7 @@ extends Page
 				    'cmd'  => 'command',
 				))
 				->limit(0, 6, 20, 5)
-				->defaultOrder('id')
+				->defaultOrder('id', \Aqua\UI\Search::SORT_DESC)
 				->defaultLimit(20)
 				->persist('admin.atcmdlog');
 			$frm->input('id')
@@ -2121,7 +2115,7 @@ extends Page
 			        'uniqid' => 'unique_id'
 				))
 				->limit(0, 6, 20, 5)
-				->defaultOrder('id')
+				->defaultOrder('id', \Aqua\UI\Search::SORT_DESC)
 				->defaultLimit(20)
 				->persist('admin.picklog');
 			$frm->input('id')
@@ -2249,7 +2243,7 @@ extends Page
 			        'dst'  => 'dst_char_name',
 				))
 				->limit(0, 6, 20, 5)
-				->defaultOrder('id')
+				->defaultOrder('id', \Aqua\UI\Search::SORT_DESC)
 				->defaultLimit(20)
 				->persist('admin.chatlog');
 			$frm->input('id')
