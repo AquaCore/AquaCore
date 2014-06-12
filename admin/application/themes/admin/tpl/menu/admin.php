@@ -20,7 +20,7 @@ if($depth) {
 				<div class="menu-option-icon"></div>
 				<div class="menu-option-title"><?php echo $option['title']?></div>
 				<?php if($option['warnings']) { ?>
-					<div class="menu-option-warning"><?php echo $option['warnings']?></div>
+					<div class="menu-option-warning"><?php echo ($option['warnings'] > 100 ? '100+' : $option['warnings']) ?></div>
 				<?php } ?>
 			</a>
 			<?php echo $option['submenu']?>

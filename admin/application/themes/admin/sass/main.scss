@@ -213,12 +213,15 @@ button.ac-delete-button {
 	}
 	.menu-option-warning {
 		float: right;
-		margin: 4px 10px 0;
-		padding: 3px 7px;
-		line-height: normal;
+		margin: 2px 10px 0;
+		width: 25px;
+		height: 25px;
+		line-height: 24px;
+		text-align: center;
+		font-size: .85em;
 		background: $lightRed-1;
 		color: white !important;
-		@include border-radius(10px);
+		@include border-radius(15px);
 		@include box-shadow(-1px -1px 0 0 $darkBlue-1);
 		@include text-shadow(-1px -1px 0 $midRed-1);
 	}
