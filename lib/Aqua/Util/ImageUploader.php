@@ -7,10 +7,13 @@ class ImageUploader
 	 * @var array
 	 */
 	public $mimeTypes = array(
-		'PNG'  => 'IMAGE/PNG',
-		'JPG'  => 'IMAGE/JPEG',
-		'JPEG' => 'IMAGE/JPEG',
-		'GIF'  => 'IMAGE/GIF',
+		'PNG'   => 'IMAGE/PNG',
+		'APNG'  => 'IMAGE/PNG',
+		'JPG'   => 'IMAGE/JPEG',
+		'JPEG'  => 'IMAGE/JPEG',
+		'GIF'   => 'IMAGE/GIF',
+		'SVG'   => 'IMAGE/SVG+XML',
+		'SVGX'  => 'IMAGE/SVG+XML',
 	);
 	/**
 	 * @var int
@@ -80,6 +83,7 @@ class ImageUploader
 	const UPLOAD_TIMEOUT            = 8;
 	const UPLOAD_INVALID_DIMENSIONS = 9;
 	const UPLOAD_FAILED_TO_SAVE     = 10;
+	const INVALID_ENCODING          = 11;
 
 	public function uploadLocal($path, $name)
 	{
@@ -149,10 +153,20 @@ class ImageUploader
 		$target = '/';
 		if(isset($urlParts['path'])) $target = $urlParts['path'];
 		if(isset($urlParts['query'])) $target.= '?' . $urlParts['query'];
+		$acceptEncoding = array_filter(array(
+			'gzip' => function_exists('gzdecode') || function_exists('gzdeflate'),
+		    'deflate' => function_exists('gzdeflate') && function_exists('gzuncompress')
+		));
 		$request = "GET $target HTTP/1.1\r\n";
 		$request.= "Host: $host\r\n";
-		$request.= "Accept: image/png, image/jpeg, image/gif\r\n";
+		$request.= "Accept: image/*;q=0.9,*/*;q=0.8\r\n";
+		if(!empty($acceptEncoding)) {
+			$request.= sprintf("Accept-Encoding: %s\r\n", implode(',', array_keys($acceptEncoding)));
+		}
 		$request.= "Connection: Close\r\n\r\n";
+		if($port === 443) {
+			$host = "ssl://$host";
+		}
 		$fp = @fsockopen($host, $port, $errno, $errstr, $this->connectionTimeout);
 		if(!is_resource($fp)) {
 			$this->error = self::UPLOAD_FAILED_TO_CONNECT;
@@ -170,7 +184,7 @@ class ImageUploader
 			return false;
 		}
 		$response = explode("\r\n\r\n", $response);
-		if(count($request) !== 2) {
+		if(count($response) !== 2) {
 			$this->error = self::UPLOAD_INVALID_IMAGE;
 			return false;
 		}
@@ -178,12 +192,40 @@ class ImageUploader
 			$this->error = self::UPLOAD_INVALID_IMAGE;
 			return false;
 		}
-		$len = (int)$match[1];
-		if($len !== strlen($response[1]) || ($this->maxSize && $len > $this->maxSize)) {
+		if((int)$match[1] !== strlen($response[1])) {
+			$this->error = self::UPLOAD_INVALID_IMAGE;
+			return false;
+		}
+		if(preg_match('/Content-Encoding: ([a-z]+)/m', $response[0], $match)) {
+			if(!array_key_exists($match[1], $acceptEncoding)) {
+				$this->error = self::INVALID_ENCODING;
+				return false;
+			}
+			try {
+				if($match[1] === 'gzip') {
+					if(function_exists('gzdecode')) {
+						$response[1] = gzdecode($response[1]);
+					} else {
+						$response[1] = gzinflate(substr($response[1], 10, -8));
+					}
+				} else if($match[1] === 'deflate') {
+					$zlibHeader = unpack('n', substr($response[1], 0, 2));
+					if($zlibHeader[1] % 31 == 0) {
+						$response[1] = gzuncompress($response[1]);
+					} else {
+						$response[1] = gzinflate($response[1]);
+					}
+				}
+			} catch(\Exception $exception) {
+				$this->error = self::INVALID_ENCODING;
+				return false;
+			}
+		}
+		if(($this->maxSize && strlen($response[1]) > $this->maxSize)) {
 			$this->error = self::UPLOAD_TOO_LARGE;
 			return false;
 		}
-		if (!function_exists('getimagesizefromstring')) {
+		if(!function_exists('getimagesizefromstring')) {
 			$data = getimagesize('data://application/octet-stream;base64,' . base64_encode($response[1]));
 		} else {
 			$data = getimagesizefromstring($response[1]);
@@ -199,8 +241,13 @@ class ImageUploader
 			$this->error = self::UPLOAD_INVALID_DIMENSIONS;
 			return false;
 		}
+		$mimeTypes = array_unique($this->mimeTypes);
+		foreach($mimeTypes as &$type) {
+			$type = preg_quote($type, '/');
+		}
+		$mimeTypes = strtolower(implode('|', $mimeTypes));
 		if(!in_array($mime, $this->mimeTypes) ||
-		   !preg_match('/Content-Type: (image\/(?:gif|png|jpeg))/m', $response[0], $match)) {
+		   !preg_match("/Content-Type: ($mimeTypes)/m", $response[0], $match)) {
 			$this->error = self::UPLOAD_INVALID_MIME;
 			return false;
 		}
@@ -296,6 +343,8 @@ class ImageUploader
 				return __('upload', 'image-too-large', $this->maxX, $this->maxY);
 			case self::UPLOAD_FAILED_TO_SAVE:
 				return __('upload', 'failed-to-move');
+			case self::INVALID_ENCODING:
+				return __('upload', 'invalid-encoding');
 			default: return null;
 		}
 	}
