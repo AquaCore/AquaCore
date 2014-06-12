@@ -10,6 +10,7 @@ use Aqua\Event\Event;
 use Aqua\Ragnarok\Server;
 use Aqua\SQL\Query;
 use Aqua\SQL\Search;
+use Aqua\UI\Tag;
 use Phpass\Hash;
 
 class Account
@@ -62,6 +63,10 @@ class Account
 	 * @var bool
 	 */
 	public $isAvatarUploaded = false;
+	/**
+	 * @var string
+	 */
+	public $profileUrl = '';
 	/**
 	 * @var \Aqua\Core\Meta
 	 */
@@ -173,11 +178,28 @@ class Account
 	}
 
 	/**
+	 * @param bool $link
 	 * @return \Aqua\UI\Tag
 	 */
-	public function display()
+	public function display($link = null)
 	{
-		return $this->role()->display($this->displayName, 'ac-username');
+		if($link === null) {
+			$link = (\Aqua\PROFILE !== 'ADMINISTRATION');
+		}
+		$display = $this->role()->display($this->displayName, 'ac-username');
+		if($link && $this->profileUrl) {
+			$link = new Tag('a');
+			$link->append($display);
+			if($this->profileUrl[0] === '/' &&
+			   $this->profileUrl[1] !== '/') {
+				$link->attr('href', \Aqua\URL . $this->profileUrl);
+			} else {
+				$link->attr('href', $this->profileUrl);
+			}
+			return $link;
+		} else {
+			return $display;
+		}
 	}
 
 	public function spamFilter()
@@ -312,7 +334,7 @@ class Account
 		$options = array_intersect_key($options, array_flip(array(
 				'username', 'credits', 'email', 'status', 'password',
 				'password_hashed', 'birthday', 'unban_date', 'role',
-				'avatar', 'display_name',
+				'avatar', 'display_name', 'profile_url'
 			)));
 		if(empty($options)) {
 			return false;
@@ -361,9 +383,13 @@ class Account
 			$values['role'] = $acc_data['roleId'] = $options['role'];
 			$update .= '_role_id = ?, ';
 		}
+		if(array_key_exists('profile_url', $options) && $options['profile_url'] !== $this->profileUrl) {
+			$values['profile_url'] = $acc_data['profileUrl'] = $options['profile_url'];
+			$update .= '_profile_url = ?, ';
+		}
 		if(array_key_exists('avatar', $options)) {
 			$values['avatar'] = $acc_data['avatar'] = $options['avatar'];
-			if(substr($options['avatar'], 0, 17) === '/updates/avatar/') {
+			if(substr($options['avatar'], 0, 17) === '/uploads/avatar/') {
 				$acc_data['isAvatarUploaded'] = true;
 			} else {
 				$acc_data['isAvatarUploaded'] = false;
@@ -547,6 +573,7 @@ class Account
 				'display_name'      => 'u._display_name',
 				'email'             => 'u._email',
 				'avatar'            => 'u._avatar',
+				'profile_url'       => 'u._profile_url',
 				'role_id'           => 'u._role_id',
 				'birthday'          => 'UNIX_TIMESTAMP(u._birthday)',
 				'status'            => 'u._status',
@@ -560,6 +587,7 @@ class Account
 				'display_name'      => 'u._display_name',
 				'email'             => 'u._email',
 				'avatar'            => 'u._avatar',
+				'profile_url'       => 'u._profile_url',
 				'role_id'           => 'u._role_id',
 				'birthday'          => 'u._birthday',
 				'status'            => 'u._status',
@@ -590,6 +618,7 @@ class Account
 					'display_name'      => 'u._display_name',
 					'email'             => 'u._email',
 					'avatar'            => 'u._avatar',
+					'profile_url'       => 'u._profile_url',
 					'role_id'           => 'u._role_id',
 					'birthday'          => 'UNIX_TIMESTAMP(u._birthday)',
 					'status'            => 'u._status',
@@ -1226,6 +1255,7 @@ class Account
 		$acc->displayName      = $data['display_name'];
 		$acc->email            = $data['email'];
 		$acc->avatar           = $data['avatar'];
+		$acc->profileUrl       = $data['profile_url'];
 		if(substr($acc->avatar, 0, 17) === '/uploads/avatar/') {
 			$acc->isAvatarUploaded = true;
 		}

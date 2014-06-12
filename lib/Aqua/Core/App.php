@@ -88,11 +88,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.2.3';
+	const VERSION = '0.2.4';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 203;
+	const VERSION_LONG = 204;
 
 	private function __construct() { }
 
@@ -460,7 +460,7 @@ class App
 				   !$type || !version_compare($version, $oldVersion, '>')) { continue; }
 				$query = file_get_contents($file);
 				if($type === 'aquacore') {
-					$query = str_pad('#', \Aqua\TABLE_PREFIX, $query);
+					$query = str_replace('#', \Aqua\TABLE_PREFIX, $query);
 					try { App::connection()->exec($query); } catch(\Exception $e) { }
 				} else {
 					foreach(Server::$servers as $server) {
