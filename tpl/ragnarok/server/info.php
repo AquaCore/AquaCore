@@ -89,6 +89,7 @@ $page->charmap->serverStatus($status['char'], $status['map']);
 			}
 			$stats[$i][$week] = $count;
 		}
+		$stats = array_values($stats);
 		for($j = 0; $j < 7; ++$j) {
 			if(!isset($stats[$i][$j])) {
 				$stats[$i][$j] = null;
