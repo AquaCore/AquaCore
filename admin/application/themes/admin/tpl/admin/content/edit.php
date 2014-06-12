@@ -7,10 +7,10 @@
 
 use Aqua\UI\ScriptManager;
 use Aqua\UI\Sidebar;
-registerCKEditorSettings($page->theme);
 $page->theme->template = 'sidebar-right';
 $page->theme
 	->set('wrapper', $form->buildTag())
+	->addSettings('CKEditorOptions', include \Aqua\ROOT . '/settings/ckeditor-admin.php')
 	->addSettings('contentData', array(
 		'title'       => (isset($content) ? $content->title : null),
 		'contentType' => $page->contentType->name,

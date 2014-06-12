@@ -6,9 +6,13 @@
  */
 use Aqua\UI\ScriptManager;
 use Aqua\UI\Sidebar;
-registerCKEditorEmailSettings($page->theme);
+$cke = include \Aqua\ROOT . '/settings/ckeditor-admin.php';
+$cke['fullPage'] = true;
+unset($cke['extraPlugins']);
 $page->theme->template = 'sidebar-right';
-$page->theme->set('wrapper', $form->buildTag());
+$page->theme
+	->set('wrapper', $form->buildTag())
+	->addSettings('CKEditorOptions', $cke);
 $page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
 $page->theme->footer->enqueueScript('theme.page')
 	->type('text/javascript')
