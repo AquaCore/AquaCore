@@ -7,7 +7,6 @@ use Aqua\Content\Feed\RssItem;
 use Aqua\Content\Filter\CategoryFilter\Category;
 use Aqua\Core\App;
 use Aqua\Core\Meta;
-use Aqua\Event\Event;
 
 class CategoryFilter
 extends AbstractFilter
@@ -163,7 +162,7 @@ extends AbstractFilter
 		$this->rebuildCache();
 		$category = $this->contentType_getCategory((int)App::connection()->lastInsertId(), 0);
 		$feedback = array( $category );
-		Event::fire('category.create', $feedback);
+		$this->notify('create', $feedback);
 
 		return $category;
 	}
@@ -187,7 +186,7 @@ extends AbstractFilter
 		$sth->execute();
 		$sth->closeCursor();
 		$feedback = array( $category );
-		Event::fire('category.delete', $feedback);
+		$this->notify('delete', $feedback);
 		$this->rebuildCache();
 
 		return true;
@@ -251,7 +250,7 @@ extends AbstractFilter
 			$values['protected'] = ($values['protected'] === 'y');
 		}
 		$feedback = array( $category, $values );
-		Event::fire('category.update', $feedback);
+		$this->notify('update', $feedback);
 		foreach($values as $key => $val) {
 			$category->$key = $val;
 		}

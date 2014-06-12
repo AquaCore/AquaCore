@@ -512,7 +512,7 @@ extends AbstractFilter
 			->query()
 			->current();
 		$feedback = array( $report, $comment, $user );
-		Event::fire('comment.report', $feedback);
+		$this->notify('report', $feedback);
 		self::$cache !== null or self::fetchCache(null, true);
 		if(!empty(self::$cache)) {
 			array_unshift(self::$cache['last_reports'], array(

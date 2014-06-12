@@ -129,6 +129,12 @@ extends AbstractFilter
 		$sth->bindValue(':type', $this->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->execute();
+		if($count = $sth->rowCount()) {
+			$feedback = array( $user );
+			$this->notify('content-type-subscribe', $feedback);
+		}
+		$sth->closeCursor();
+		return (bool)$count;
 	}
 
 	public function contentType_removeSubscription(Account $user)
@@ -141,6 +147,12 @@ extends AbstractFilter
 		$sth->bindValue(':type', $this->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->execute();
+		if($count = $sth->rowCount()) {
+			$feedback = array( $user );
+			$this->notify('content-type-unsubscribe', $feedback);
+		}
+		$sth->closeCursor();
+		return (bool)$count;
 	}
 
 	public function contentType_isSubscribed(Account $account)
@@ -190,6 +202,12 @@ extends AbstractFilter
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(':type', $type, \PDO::PARAM_INT);
 		$sth->execute();
+		if($count = $sth->rowCount()) {
+			$feedback = array( $content, $user, $type );
+			$this->notify('content-subscribe', $feedback);
+		}
+		$sth->closeCursor();
+		return (bool)$count;
 	}
 
 	public function contentData_removeSubscription(ContentData $content, Account $user)
@@ -202,6 +220,12 @@ extends AbstractFilter
 		$sth->bindValue(':content', $content->uid, \PDO::PARAM_INT);
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->execute();
+		if($count = $sth->rowCount()) {
+			$feedback = array( $content, $user );
+			$this->notify('content-unsubscribe', $feedback);
+		}
+		$sth->closeCursor();
+		return (bool)$count;
 	}
 
 	public function contentData_isSubscribed(ContentData $content, Account $account)

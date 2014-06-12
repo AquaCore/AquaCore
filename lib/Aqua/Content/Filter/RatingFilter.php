@@ -59,7 +59,7 @@ extends AbstractFilter
 	 */
 	public function contentData_rate(ContentData $content, Account $user, $weight)
 	{
-		$weight     = max(0, min((int)$this->getOption('maxweight', 10), $weight));
+		$weight = max(0, min((int)$this->getOption('maxweight', 10), $weight));
 		if($content->meta->exists('ratingVotesTotal') &&
 		   $content->meta->exists('ratingVotesSum')) {
 			$votesTotal = $content->meta->get('ratingVotesTotal', 0);
@@ -99,7 +99,8 @@ extends AbstractFilter
 					'ratingVotesSum'   => $votesSum
 				));
 		}
-
+		$feedback = array($content, $user, $weight);
+		$this->notify('rate', $feedback);
 		return $weight;
 	}
 
