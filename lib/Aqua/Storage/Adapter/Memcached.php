@@ -8,8 +8,7 @@ use Aqua\Storage\StorageInterface;
 
 class Memcached
 implements StorageInterface,
-           FlushableStorageInterface,
-           NumberStorageInterface
+           FlushableStorageInterface
 {
 	/**
 	 * @var \Memcached

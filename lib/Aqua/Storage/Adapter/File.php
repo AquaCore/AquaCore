@@ -13,7 +13,6 @@ class File
 implements StorageInterface,
            FlushableStorageInterface,
            FlushPrefixStorageInterface,
-           NumberStorageInterface,
 	       GCStorageInterface
 {
 	/**

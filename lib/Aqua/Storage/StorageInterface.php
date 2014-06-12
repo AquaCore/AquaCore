@@ -38,6 +38,24 @@ interface StorageInterface
 	function add($key, $value, $ttl = 0);
 
 	/**
+	 * @param string    $key
+	 * @param int|float $step
+	 * @param int|float $defaultValue
+	 * @param int       $ttl
+	 * @return int|float
+	 */
+	function increment($key, $step = 1, $defaultValue = 0, $ttl = 0);
+
+	/**
+	 * @param string    $key
+	 * @param int|float $step
+	 * @param int|float $defaultValue
+	 * @param int       $ttl
+	 * @return int|float
+	 */
+	function decrement($key, $step = 1, $defaultValue = 0, $ttl = 0);
+
+	/**
 	 * @param string $key
 	 * @param mixed  $value
 	 * @param int    $ttl

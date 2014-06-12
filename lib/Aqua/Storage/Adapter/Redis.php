@@ -13,7 +13,6 @@ use Aqua\Storage\StorageInterface;
  */
 class Redis
 implements StorageInterface,
-		   NumberStorageInterface,
            FlushableStorageInterface
 {
 	/**

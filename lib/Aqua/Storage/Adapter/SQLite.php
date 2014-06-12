@@ -11,7 +11,6 @@ use Aqua\Storage\StorageInterface;
 
 class SQLite
 implements StorageInterface,
-           NumberStorageInterface,
            FlushableStorageInterface,
            FlushPrefixStorageInterface,
            OptimizableStorageInterface,

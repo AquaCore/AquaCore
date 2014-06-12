@@ -11,7 +11,6 @@ use Aqua\Storage\StorageInterface;
 
 class Dba
 implements StorageInterface,
-           NumberStorageInterface,
            FlushableStorageInterface,
            FlushPrefixStorageInterface,
            OptimizableStorageInterface,

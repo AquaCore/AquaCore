@@ -9,7 +9,6 @@ use Aqua\Storage\FlushableStorageInterface;
 
 class xCache
 implements StorageInterface,
-           NumberStorageInterface,
            FlushableStorageInterface,
            FlushPrefixStorageInterface
 {

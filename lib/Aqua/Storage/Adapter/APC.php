@@ -9,7 +9,6 @@ use Aqua\Storage\FlushableStorageInterface;
 
 class APC
 implements StorageInterface,
-           NumberStorageInterface,
            FlushableStorageInterface,
            FlushPrefixStorageInterface
 {
