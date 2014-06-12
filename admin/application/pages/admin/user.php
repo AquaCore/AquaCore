@@ -167,6 +167,7 @@ extends Page
 			}
 			$avatarSettings = App::settings()->get('account')->get('avatar');
 			$frm = new Form($this->request);
+			$frm->enctype = 'multipart/form-data';
 			$frm->radio('avatar_type')
 				->value(array(
 					'image'    => __('profile', 'use-custom-pic'),
@@ -174,7 +175,12 @@ extends Page
 				))
 				->checked('image');
 			$frm->file('image')
-				->attr('accept', 'image/jpeg, image/png, image/gif')
+				->accept(array(
+					'image/png'     => array( 'png', 'apng' ),
+					'image/jpeg'    => array( 'jpg', 'jpeg' ),
+					'image/gif'     => array( 'gif' ),
+					'image/svg+xml' => array( 'svg', 'svgx' ),
+				))
 				->maxSize(ac_size($avatarSettings->get('max_size', '2MB')) ?: null)
 				->setLabel(__('profile', 'avatar'));
 			$frm->input('gravatar')

@@ -36,7 +36,7 @@ extends Form
 			               array( $settings->description, &$description ) ) as $x) {
 				$nodes = $x[0];
 				$var   = &$x[1];
-				foreach($nodes[0] as $str) {
+				foreach($nodes as $str) {
 					$language = (string)$str->attributes()->language;
 					if($language === '') {
 						$var = (string)$str;
@@ -61,7 +61,6 @@ extends Form
 				case 'color':
 				case 'url':
 				case 'input':
-					$type  = 'text';
 					$input = $this->input($key);
 					$input->type($type);
 					$input->value((string)$value);

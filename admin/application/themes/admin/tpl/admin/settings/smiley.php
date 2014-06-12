@@ -17,7 +17,7 @@ $count = ceil(count($smileys) / $smileysPerRow) * $smileysPerRow;
 <div class="smiley-form">
 	<div class="upload">
 	<?php
-	echo $form->field('smileys')->render(),
+	echo $form->field('smileys')->required(false)->render(),
 		 $form->submit()->value(__('upload', 'upload'))->render();
 	?>
 		<br/>
@@ -25,11 +25,11 @@ $count = ceil(count($smileys) / $smileysPerRow) * $smileysPerRow;
 	</div>
 	<div class="actions">
 		<select name="action">
-			<option value="order"><?php echo __('application', 'save-order') ?></option>
 			<option value="save"><?php echo __('application', 'save') ?></option>
+			<option value="order"><?php echo __('application', 'save-order') ?></option>
 			<option value="delete"><?php echo __('application', 'delete') ?></option>
 		</select>
-		<input type="submit" name="x-bulk" value="<?php echo __('application', 'apply')?>"/>
+		<input type="submit" name="x-bulk" value="<?php echo __('application', 'apply')?>" ac-default-submit="1"/>
 	</div>
 	<div style="clear: both"></div>
 </div>
@@ -50,6 +50,7 @@ $count = ceil(count($smileys) / $smileysPerRow) * $smileysPerRow;
 			</label>
 			<div class="input-wrapper">
 				<input name="smileytext[<?php echo $smileyId ?>]"
+				       maxlength="32"
 				       value="<?php echo htmlspecialchars($smiley['text']) ?>"/>
 			</div>
 		</div>

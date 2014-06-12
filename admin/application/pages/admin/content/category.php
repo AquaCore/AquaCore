@@ -76,8 +76,14 @@ extends Page
 		}
 		try {
 			$frm = new Form($this->request);
-			$frm->enctype = "multipart/form-data";
+			$frm->enctype = 'multipart/form-data';
 			$frm->file('image')
+				->accept(array(
+					'image/png'     => array( 'png', 'apng' ),
+					'image/jpeg'    => array( 'jpg', 'jpeg' ),
+					'image/gif'     => array( 'gif' ),
+					'image/svg+xml' => array( 'svg', 'svgx' ),
+				))
 			    ->attr('accept', 'image/jpeg, image/png, image/gif')
 			    ->setLabel(__('content', 'category-image'));
 			$frm->input('name', true)
@@ -125,8 +131,6 @@ extends Page
 				} else {
 					$category['image'] = $path;
 				}
-			} else if($error !== null) {
-				App::user()->addFlash('warning', null, $error_str);
 			}
 			if($category = $this->contentType->createCategory($category)) {
 				App::user()->addFlash('success', null, __('content', 'category-created',
@@ -174,8 +178,14 @@ extends Page
 				return;
 			}
 			$frm = new Form($this->request);
+			$frm->enctype = 'multipart/form-data';
 			$frm->file('image')
-			    ->attr('accept', 'image/jpeg, image/png, image/gif')
+			    ->accept(array(
+					'image/png'     => array( 'png', 'apng' ),
+					'image/jpeg'    => array( 'jpg', 'jpeg' ),
+					'image/gif'     => array( 'gif' ),
+					'image/svg+xml' => array( 'svg', 'svgx' ),
+				))
 			    ->setLabel(__('content', 'category-image'));
 			$frm->input('name', true)
 			    ->required()
@@ -223,8 +233,6 @@ extends Page
 				} else {
 					$options['image'] = $path;
 				}
-			} else if($error_num !== null) {
-				$frm->field('image')->setWarning($error_str);
 			}
 			if($category->update($options)) {
 				$message = __('content', 'category-updated', htmlspecialchars($category->name));

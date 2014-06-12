@@ -42,6 +42,10 @@ implements FieldInterface
 	 * @var int
 	 */
 	public $maxSize = 0;
+	/**
+	 * @var array
+	 */
+	public $accept = array();
 
 	const VALIDATION_REQUIRED           = 1;
 	const VALIDATION_MAX_FILE_SIZE      = 2;
@@ -50,6 +54,7 @@ implements FieldInterface
 	const VALIDATION_MISSING_TMP_FOLDER = 5;
 	const VALIDATION_UPLOAD_FAILED      = 5;
 	const VALIDATION_INVALID_MIME_TYPE  = 6;
+	const VALIDATION_INVALID_EXTENSION  = 7;
 
 	public function __construct($name = null)
 	{
@@ -61,21 +66,62 @@ implements FieldInterface
 		$this->closeTag = false;
 	}
 
+	/**
+	 * @param bool $val
+	 * @return \Aqua\UI\Form\File
+	 */
 	public function multiple($val = true)
 	{
 		$this->bool('multiple', $val);
 		return $this;
 	}
 
+	/**
+	 * @param int $num
+	 * @return \Aqua\UI\Form\File
+	 */
 	public function maxFiles($num)
 	{
 		$this->maxFiles = (int)$num;
+		if($num) {
+			$this->attr('max', $num);
+		} else {
+			$this->attr('max', null);
+		}
 		return $this;
 	}
 
+	/**
+	 * @param int $num
+	 * @return \Aqua\UI\Form\File
+	 */
 	public function maxSize($num)
 	{
 		$this->maxSize = (int)$num;
+		return $this;
+	}
+
+	/**
+	 * @param array $mimeTypes
+	 * @return \Aqua\UI\Form\File
+	 */
+	public function accept(array $mimeTypes)
+	{
+		if(empty($mimeTypes)) {
+			$this->accept = null;
+			$this->attr('accept', null);
+		} else {
+			$accept = array();
+			foreach($mimeTypes as $key => $val) {
+				if(is_int($key)) {
+					$accept[$val] = null;
+				} else {
+					$accept[$key] = $val;
+				}
+			}
+			$this->accept = $accept;
+			$this->attr('accept', implode(',', array_keys($accept)));
+		}
 		return $this;
 	}
 
@@ -176,7 +222,8 @@ implements FieldInterface
 		if(!$this->getAttr('name')) {
 			return Form::VALIDATION_SUCCESS;
 		}
-		if(empty($_FILES[$this->getAttr('name')])) {
+		$files = ac_files($this->getAttr('name'));
+		if(empty($files)) {
 			if($this->getAttr('required')) {
 				$this->error = self::VALIDATION_REQUIRED;
 				$this->_setWarning(__('form', 'field-required'));
@@ -188,47 +235,33 @@ implements FieldInterface
 		$error = null;
 		if(ac_file_uploaded($this->getAttr('name'),
 		                    $this->getBool('multiple'),
-		                    $error_num, $error,
+		                    $errorNum, $error,
 		                    $this->errorIndex)) do {
-			$accept = array_filter(preg_split(' *, *', $this->getAttr('accept', '')));
-			if(is_array($_FILES[$this->getAttr('name')]['name'])) {
+			if($this->getBool('multiple')) {
 				$i = 0;
-				if(!empty($accept)) foreach($_FILES[$this->getAttr('name')]['type'] as $mime) {
+				if($this->maxFiles && count($files) > $this->maxFiles) {
+					$this->error = self::VALIDATION_MAX_FILES;
+					$error = __('upload', 'too-many-files');
+					break;
+				}
+				foreach($files as $file) {
 					++$i;
-					if(!in_array($mime, $accept) || !in_array(preg_replace('/$[^\/]+\/(*)^/', '*', $mime, 1), $accept)) {
+					if($this->maxSize && $file['size'] > $this->maxSize) {
 						$this->errorIndex = $i;
 						$this->error = self::VALIDATION_INVALID_MIME_TYPE;
 						$error = __('upload', 'invalid-mime-type');
 						break 2;
 					}
-				}
-				$i = 0;
-				if($this->maxSize) foreach($_FILES[$this->getAttr('name')]['size'] as $size) {
-					++$i;
-					if($size > $this->maxSize) {
-						$this->errorIndex = $i;
-						$this->error = self::VALIDATION_INVALID_MIME_TYPE;
-						$error = __('upload', 'file-too-large');
+					if(!$this->_checkAccept($error, $file['type'], $file['name'], $i)) {
 						break 2;
 					}
 				}
-			} else if(!empty($accept) && !in_array($_FILES[$this->getAttr('name')]['type'], $accept) || !in_array(preg_replace('/$[^\/]+\/(.*)^/', '*', $_FILES[$this->getAttr('name')]['type'], 1), $accept)) {
-				$this->error = self::VALIDATION_INVALID_MIME_TYPE;
-				$error = __('upload', 'invalid-mime-type');
-				break;
-			} else if($this->maxSize && $_FILES[$this->getAttr('name')]['size'] > $this->maxSize) {
-				$this->error = self::VALIDATION_MAX_FILE_SIZE;
-				$error = __('upload', 'file-too-large');
-				break;
-			}
-			if($this->maxFiles && is_array($_FILES[$this->getAttr('name')]['name']) && count($_FILES[$this->getAttr('name')]['name']) > $this->maxFiles) {
-				$this->error = self::VALIDATION_MAX_FILES;
-				$error = __('upload', 'too-many-files');
-				break;
 			}
 			break;
 		} while(0);
-		else if($error_num !== null)  switch($error_num) {
+		else if($errorNum !== null)  switch($errorNum) {
+			case UPLOAD_ERR_NO_FILE:
+				break;
 			case UPLOAD_ERR_INI_SIZE:
 			case UPLOAD_ERR_FORM_SIZE:
 				$this->error = self::VALIDATION_MAX_FILE_SIZE;
@@ -253,7 +286,11 @@ implements FieldInterface
 
 	public function _setWarning($warning)
 	{
-
+		if(empty($this->errorMessage[$this->error])) {
+			$this->setWarning($warning);
+		} else {
+			$this->setWarning($this->errorMessage[$this->error]);
+		}
 	}
 
 	public function render()
@@ -266,5 +303,37 @@ implements FieldInterface
 		} else {
 			return parent::render();
 		}
+	}
+
+	protected function _checkAccept(&$error, $type, $name, $index)
+	{
+		$xType = preg_replace('/$[^\/]+\/(.*)^/', '*', $type, 1);
+		if(empty($this->accept)) {
+			return true;
+		}
+		if(array_key_exists($xType, $this->accept)) {
+			$type = $xType;
+		} else if(!array_key_exists($type, $this->accept)) {
+			$this->errorIndex = $index;
+			$this->error = self::VALIDATION_INVALID_MIME_TYPE;
+			$error = __('upload', 'invalid-mime-type');
+			return false;
+		}
+		if(is_array($this->accept[$type])) {
+			$ext = pathinfo($name, PATHINFO_EXTENSION);
+			if(!in_array(strtolower($ext), $this->accept[$type])) {
+				$this->errorIndex = $index;
+				$this->error = self::VALIDATION_INVALID_EXTENSION;
+				$error = __('upload', 'ext-mime-mismatch');
+				return false;
+			}
+		} else if(is_string($this->accept[$type]) && $this->accept[$type] &&
+		          !preg_match($this->accept[$type], $name)) {
+			$this->errorIndex = $index;
+			$this->error = self::VALIDATION_INVALID_EXTENSION;
+			$error = __('upload', 'ext-mime-mismatch');
+			return false;
+		}
+		return true;
 	}
 }

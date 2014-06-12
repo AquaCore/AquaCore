@@ -131,38 +131,15 @@ class Smiley
 		}
 	}
 
-	public static function upload($key, $multiple = false)
+	public static function upload($key)
 	{
 		$smileys = array();
-		if($multiple) {
-			$count = count($_FILES[$key]['name']);
-			for($i = 0; $i < $count; ++$i) {
-				if($_FILES[$key]['error'][$i]) {
-					continue;
-				}
-				switch(self::_getUploadedFileType($_FILES[$key]['type'][$i],
-				                                  $_FILES[$key]['name'][$i])) {
-					case 1:
-						$smileys = array_merge($smileys, self::_uploadImage($_FILES[$key]['tmp_name'][$i],
-						                                                    $_FILES[$key]['name'][$i]));
-						break;
-					case 2:
-						$smileys = array_merge($smileys, self::_uploadZip($_FILES[$key]['tmp_name'][$i],
-						                                                  $_FILES[$key]['name'][$i]));
-						break;
-				}
-			}
-		} else {
-			switch(self::_getUploadedFileType($_FILES[$key]['type'],
-			                                  $_FILES[$key]['name'])) {
-				case 1:
-					$smileys = self::_uploadImage($_FILES[$key]['tmp_name'],
-					                              $_FILES[$key]['name']);
-					break;
-				case 2:
-					$smileys = self::_uploadZip($_FILES[$key]['tmp_name'],
-					                            $_FILES[$key]['name']);
-					break;
+		foreach(ac_files($key) as $file) {
+			if($file['error']) continue;
+			if(preg_match('/^image\//i', $file['type'])) {
+				$smileys = array_merge($smileys, self::_uploadImage($file['tmp_name'], $file['name']));
+			} else {
+				$smileys = array_merge($smileys, self::_uploadZip($file['tmp_name'], $file['name']));
 			}
 		}
 		if(empty($smileys)) {
@@ -190,26 +167,6 @@ class Smiley
 		return $smileys;
 	}
 
-	protected static function _getUploadedFileType($type, $name)
-	{
-		switch($type) {
-			case 'application/zip':
-				return (preg_match('/\.zipx?$/i', $name) ? 2 :false);
-			case 'application/x-tar':
-				return (preg_match('/\.tar$/i', $name) ? 2 :false);
-			case 'application/x-gtar':
-				return (preg_match('/\.t(ar\.)?(gz|bz2)$/i', $name) ? 2 :false);
-			case 'image/png':
-				return (preg_match('/\.png$/i', $name) ? 1 :false);
-			case 'image/jpeg':
-				return (preg_match('/\.jpe?g/i', $name) ? 1 :false);
-			case 'image/gif':
-				return (preg_match('/\.gif/i', $name) ? 1 :false);
-			default:
-				return false;
-		}
-	}
-
 	protected static function _uploadImage($location, $name)
 	{
 		$extension = strtolower(ltrim(strrchr($name, '.'), '.'));
@@ -218,7 +175,7 @@ class Smiley
 		$smileys   = array();
 		$old       = umask(0);
 		if(move_uploaded_file($location, $file)) {
-			$smileys[$id] = basename($name, ".$extension");
+			$smileys[$id] = substr(basename($name, ".$extension"), 0, 32);
 		}
 		umask($old);
 		return $smileys;
@@ -226,7 +183,9 @@ class Smiley
 
 	protected static function _uploadZip($location, $name)
 	{
-		preg_match('/\.(zipx?|tar|t(?:ar\.)?(?:gz|bz2))$/i', $name, $match);
+		if(!preg_match('/\.(zipx?|tar|t(?:ar\.)?(?:gz|bz2))$/i', $name, $match)) {
+			return array();
+		}
 		$tmp = \Aqua\ROOT . '/tmp/' . uniqid() . $match[0];
 		if(!move_uploaded_file($location, $tmp)) {
 			return array();
@@ -241,7 +200,7 @@ class Smiley
 					$id   = uniqid() . ".$extension";
 					$file = \Aqua\ROOT . self::DIRECTORY . $id;
 					if(copy($fileInfo->getPathname(), $file)) {
-						$smileys[$id] = $fileInfo->getBasename(".$extension");
+						$smileys[$id] = substr($fileInfo->getBasename(".$extension"), 0, 32);
 						chmod($file, \Aqua\PUBLIC_FILE_PERMISSION);
 					}
 				}

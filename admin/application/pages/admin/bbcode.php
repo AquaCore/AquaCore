@@ -29,7 +29,8 @@ extends Page
 							$edit = array();
 							foreach($newTexts as $id => $text) {
 								if(isset($smileys[$id]) &&
-								   $smileys[$id]['text'] !== $text) {
+								   $smileys[$id]['text'] !== $text &&
+								   strlen($text) <= 32) {
 									$edit[$id] = $text;
 								}
 							}
@@ -71,11 +72,18 @@ extends Page
 			$frm->enctype = 'multipart/form-data';
 			$frm->file('smileys')
 			    ->multiple(true)
-			    ->attr('accept', 'image/png,image/jpeg,image/gif,application/zip,application/x-tar,application/x-gtar')
-			    ->required();
+				->accept(array(
+					'image/png'          => array( 'png' ),
+					'image/gif'          => array( 'gif' ),
+				    'image/jpeg'         => array( 'jpg', 'jpeg' ),
+				    'application/zip'    => '/\.zipx?$/i',
+				    'application/x-tar'  => '/\.tar$/i',
+				    'application/x-gtar' => '/\.t(ar\.)?(gz|bz2)$/i'
+				))
+				->required();
 			$frm->submit();
 			$frm->validate();
-			if($frm->status === Form::VALIDATION_SUCCESS && !empty($_FILES['smileys'])) {
+			if($frm->status === Form::VALIDATION_SUCCESS && ac_file_uploaded('smiley', true)) {
 				$this->response->status(302)->redirect(App::request()->uri->url());
 				try {
 					$newTexts = Smiley::upload('smileys', true);

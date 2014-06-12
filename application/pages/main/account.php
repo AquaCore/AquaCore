@@ -56,7 +56,7 @@ extends Page
 			$menu->append('account', array(
 				'title' => __('account', 'my-account'),
 				'url'   => "{$base_url}index"
-			))->append('editacc', array(
+			))->append('preferences', array(
 				'title' => __('profile', 'preferences'),
 				'url'   => "{$base_url}options"
 			))->append('logout', array(
@@ -132,7 +132,13 @@ extends Page
 			    ->checked('image')
 			    ->setLabel(__('profile', 'avatar-type'));
 			$frm->file('image')
-			    ->attr('accept', 'image/jpeg, image/png, image/gif')
+				->accept(array(
+					'image/png'     => array( 'png', 'apng' ),
+					'image/jpeg'    => array( 'jpg', 'jpeg' ),
+					'image/gif'     => array( 'gif' ),
+					'image/svg+xml' => array( 'svg', 'svgx' ),
+				))
+				->maxSize(ac_size(App::settings()->get('account')->get('avatar')->get('max_size', '2MB')) ?: null)
 			    ->setLabel(__('profile', 'avatar-file'));
 			$frm->input('url')
 			    ->type('text')
@@ -256,9 +262,9 @@ extends Page
 		try {
 			$updated  = 0;
 			$uploader = new ImageUploader;
-			$uploader->maxSize(ac_size(App::settings()->get('account')->get('avatar')->get('max_size', "100KB")))
-				->dimension(App::settings()->get('account')->get('avatar')->get('max_width', 100),
-				            App::settings()->get('account')->get('avatar')->get('max_height', 100));
+			$uploader->maxSize(ac_size(App::settings()->get('account')->get('avatar')->get('max_size', '2MB')) ?: null)
+					 ->dimension(App::settings()->get('account')->get('avatar')->get('max_width', 100),
+				                 App::settings()->get('account')->get('avatar')->get('max_height', 100));
 			$display  = trim($this->request->getString('display_name'));
 			$email    = trim($this->request->getString('email'));
 			$password = trim($this->request->getString('password'));

@@ -381,13 +381,13 @@ function ac_delete_dir($dir, $deleteSelf = false)
  * @param string       $key The $_FILES key
  * @param bool         $multiple Whether multiple files are expected
  * @param int|null     $error The error ID, if any
- * @param string|null  $error_str The error message, if any
+ * @param string|null  $errorStr The error message, if any
  * @param int|null     $index For multiple file uploads, the index number of the file with errors
  * @return bool
  */
-function ac_file_uploaded($key, $multiple = false, &$error = null, &$error_str = null, &$index = null)
+function ac_file_uploaded($key, $multiple = false, &$error = null, &$errorStr = null, &$index = null)
 {
-	$error = $error_str = null;
+	$error = $errorStr = null;
 	do {
 		if(!isset($_FILES[$key])
 		|| !isset($_FILES[$key]['name'])
@@ -431,16 +431,16 @@ function ac_file_uploaded($key, $multiple = false, &$error = null, &$error_str =
 	switch($error) {
 		case UPLOAD_ERR_INI_SIZE:
 		case UPLOAD_ERR_FORM_SIZE:
-			$error_str = __('upload', 'file-too-large');
+			$errorStr = __('upload', 'file-too-large');
 			break;
 		case UPLOAD_ERR_PARTIAL:
-			$error_str = __('upload', 'partially-uploaded');
+			$errorStr = __('upload', 'partially-uploaded');
 			break;
 		case UPLOAD_ERR_NO_TMP_DIR:
-			$error_str = __('upload', 'missing-tmp-folder');
+			$errorStr = __('upload', 'missing-tmp-folder');
 			break;
 		default:
-			$error_str = __('upload', 'upload-fail');
+			$errorStr = __('upload', 'upload-fail');
 			break;
 	}
 	return false;
@@ -805,4 +805,30 @@ function ac_define_constants()
 			$_SERVER['HTTP_HOST'] .
 			rtrim(dirname(dirname(getenv('PHP_SELF'))), '/'));
 	}
+}
+
+function ac_files($key)
+{
+	if(!array_key_exists($key, $_FILES)) {
+		return array();
+	}
+	$files = array();
+	$keys  = array_keys($_FILES[$key]);
+	if(!is_array($_FILES[$key][current($keys)])) {
+		if($_FILES[$key]['error'] === UPLOAD_ERR_NO_FILE) {
+			return array();
+		} else {
+			return array( $_FILES[$key] );
+		}
+	}
+	$count = count($_FILES[$key][current($keys)]);
+	for($i = 0; $i < $count; $i++) {
+		if($_FILES[$key]['error'][$i] === UPLOAD_ERR_NO_FILE) {
+			continue;
+		}
+		foreach($keys as $k) {
+			$files[$i][$k] = $_FILES[$key][$k][$i];
+		}
+	}
+	return $files;
 }

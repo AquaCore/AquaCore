@@ -4,10 +4,11 @@ use Aqua\UI\Form;
 /**
  * @var $plugins      \Aqua\Plugin\Plugin[]
  * @var $plugin_count int
+ * @var $upload       \Aqua\UI\Form
  * @var $paginator    \Aqua\UI\Pagination
- * @var $token        string
  * @var $page         \Page\Admin\Plugin
  */
+
 $page->theme->addWordGroup('plugin', array(
 		'plugin-settings',
 		'confirm-delete-s',
@@ -34,19 +35,19 @@ $settings = '';
 			<tr>
 				<td colspan="6">
 					<div style="float: left">
-						<input id="plugin-import" type="file" accept="application/zip,application/x-tar,application/x-gtar">
-						<noscript>
-							<input type="submit" name="x-import" value="<?php echo __('application', 'submit') ?>">
-						</noscript>
-						<small><?php echo __('plugin', 'import-desc') ?></small>
+						<?php
+						echo $upload->field('import')->render(),
+							 $upload->field('submit')->render(), '<br/>',
+							 $upload->field('import')->getDescription();
+						?>
 					</div>
-					<div style="float: right">
+					<div style="float: right; line-height: 3.5em">
 						<select name="action">
 							<option value="activate"><?php echo __('plugin', 'activate') ?></option>
 							<option value="deactivate"><?php echo __('plugin', 'deactivate') ?></option>
 							<option value="delete"><?php echo __('plugin', 'delete') ?></option>
 						</select>
-						<input type="submit" name="x-bulk" value="<?php echo __('application', 'apply') ?>">
+						<input type="submit" name="x-bulk" value="<?php echo __('application', 'apply') ?>" ac-default-submit="1">
 					</div>
 				</td>
 			</tr>
@@ -91,18 +92,12 @@ $settings = '';
 			</td>
 			<td rowspan="2" class="ac-actions">
 				<?php if($plugin->isEnabled) : ?>
-					<a href="<?php echo ac_build_url(array(
-							'path' => array( 'plugin' ),
-							'query' => array(
-								'id'     => $plugin->id,
-								'x-action' => 'deactivate',
-								'token'  => $token
-							))) ?>">
-						<button class="ac-action-plugin-deactivate"
-						        type="button">
+					<button class="ac-action-plugin-deactivate"
+					        type="submit"
+					        name="x-deactivate"
+					        value="<?php echo $plugin->id ?>">
 							<?php echo __('plugin', 'deactivate') ?>
-						</button>
-					</a>
+					</button>
 					<?php if($frm = $plugin->settings->buildForm($page->request)) : ?>
 					<a href="<?php echo $settings_action . $plugin->id ?>">
 						<button class="ac-action-plugin-settings"
@@ -120,32 +115,19 @@ $settings = '';
 					endif;
 					?>
 				<?php else : ?>
-					<a href="<?php echo ac_build_url(array(
-							'path' => array( 'plugin' ),
-							'query' => array(
-								'id'     => $plugin->id,
-								'x-action' => 'activate',
-								'token'  => $token
-							))) ?>">
-						<button class="ac-action-plugin-activate"
-						        type="button">
-							<?php echo __('plugin', 'activate') ?>
-						</button>
-					</a>
-				<?php endif; ?>
-				<a href="<?php ac_build_url(array(
-						'path' => array( 'plugin' ),
-						'query' => array(
-							'id'     => $plugin->id,
-							'x-action' => 'delete',
-							'token'  => $token
-						)
-					)) ?>">
-					<button class="ac-action-delete"
-					        type="button">
-						<?php echo __('plugin', 'delete') ?>
+					<button class="ac-action-plugin-activate"
+					        type="submit"
+					        name="x-activate"
+					        value="<?php echo $plugin->id ?>">
+						<?php echo __('plugin', 'activate') ?>
 					</button>
-				</a>
+				<?php endif; ?>
+				<button class="ac-action-delete"
+				        type="submit"
+				        name="x-delete"
+						value="<?php echo $plugin->id ?>">
+					<?php echo __('plugin', 'delete') ?>
+				</button>
 			</td>
 		</tr>
 		<tr<?php echo ($i % 2 ? ' class="odd"' : '')?>>

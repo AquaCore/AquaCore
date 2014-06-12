@@ -342,8 +342,14 @@ extends Page
 		try {
 			$settings = App::settings()->get('account');
 			$frm = new Form($this->request);
+			$frm->enctype = 'multipart/form-data';
 			$frm->file('default_avatar')
-		        ->attr('accept', 'image/jpeg, image/png, image/gif')
+		        ->accept(array(
+					'image/png'     => array( 'png', 'apng' ),
+					'image/jpeg'    => array( 'jpg', 'jpeg' ),
+					'image/gif'     => array( 'gif' ),
+					'image/svg+xml' => array( 'svg', 'svgx' ),
+				))
 		        ->setLabel(__('settings', 'acc-avatar-default-label'));
 			$frm->input('avatar_size', true)
 				->type('text')
@@ -523,7 +529,7 @@ extends Page
 				$timestamp = \DateTime::createFromFormat('Y-m-d', $timestamp)->getTimestamp();
 			}
 			$settings = App::settings()->get('account');
-			$settings->get('avatar')->set('max_size', $this->request->getString('avatar-size'));
+			$settings->get('avatar')->set('max_size', $this->request->getString('avatar_size'));
 			$settings->get('avatar')->set('max_width', $this->request->getInt('avatar_width'));
 			$settings->get('avatar')->set('max_height', $this->request->getInt('avatar_height'));
 			$settings->get('username')->set('min_length', $this->request->getInt('username_min_len'));
@@ -550,14 +556,12 @@ extends Page
 				                       $_FILES['default_avatar']['name']) &&
 				   ($path = $uploader->save('/uploads/application'))) {
 					if(($oldPath = $settings->get('default_avatar')) && is_readable(\Aqua\ROOT . $oldPath)) {
-						@unlink($oldPath);
+						@unlink(\Aqua\ROOT . $oldPath);
 					}
 					$settings->set('default_avatar', $path);
 				} else if($uploader->error) {
 					App::user()->addFlash('warning', null, $uploader->errorStr());
 				}
-			} else if($error) {
-				App::user()->addFlash('warning', null, $errorStr);
 			}
 			App::settings()->export(\Aqua\ROOT . '/settings/application.php');
 			App::user()->addFlash('success', null, __('settings', 'settings-saved'));
@@ -852,6 +856,7 @@ extends Page
 		try {
 			$settings = App::settings()->get('captcha');
 			$frm = new Form($this->request);
+			$frm->enctype = 'multipart/form-data';
 			$frm->input('width', true)
 		        ->type('number')
 		        ->attr('min', 1)
@@ -887,7 +892,12 @@ extends Page
 				->value(sprintf('#%06x', $settings->get('background_color', 0x000000)), false)
 				->setLabel(__('settings', 'captcha-bg-color-label'));
 			$frm->file('bg_file')
-				->attr('accept', 'image/png, image/jpeg, image/gif')
+				->accept(array(
+					'image/png'     => array( 'png', 'apng' ),
+					'image/jpeg'    => array( 'jpg', 'jpeg' ),
+					'image/gif'     => array( 'gif' ),
+					'image/svg+xml' => array( 'svg', 'svgx' ),
+				))
 				->setLabel(__('settings', 'captcha-bg-image-label'));
 			$frm->input('noise_color', true)
 				->type('color')
@@ -1018,15 +1028,13 @@ extends Page
 					$path = '/uploads/application/' . uniqid() . '.ttf';
 					$newFile = \Aqua\ROOT . $path;
 					if(!move_uploaded_file($_FILES['font_file']['tmp_name'], $newFile)) {
-						App::user()->addFlash('warning', null, __('upload', 'upload-fail'));
+						App::user()->addFlash('warning', null, __('upload', 'failed-to-move'));
 					} else {
 						if(($file = $settings->get('font_file')) && is_writable(\Aqua\ROOT . $file)) {
 							@unlink(\Aqua\ROOT . $file);
 						}
 						$settings->set('font_file', $path);
 					}
-				} else {
-					App::user()->addFlash('warning', null, $errorStr);
 				}
 				if(ac_file_uploaded('bg_file', false, $error, $errorStr)) {
 					$uploader = new ImageUploader;
@@ -1040,8 +1048,6 @@ extends Page
 					} else {
 						App::user()->addFlash('warning', null, $uploader->errorStr());
 					}
-				} else {
-					App::user()->addFlash('warning', null, $errorStr);
 				}
 			}
 			App::settings()->export(\Aqua\ROOT . '/settings/application.php');
