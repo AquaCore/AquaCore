@@ -273,9 +273,6 @@ implements SubjectInterface
 			if(headers_sent()) {
 				throw new HttpException(__('exception', 'headers-sent'));
 			}
-			if($close) {
-				ob_start();
-			}
 			if($this->compress) {
 				if(function_exists('ob_gzhandler')) {
 					ob_start('ob_gzhandler');
@@ -337,9 +334,6 @@ implements SubjectInterface
 					header('Content-Type: text/html');
 				}
 				ob_end_flush();
-				if(ob_get_level() > 0) {
-					ob_flush();
-				}
 				flush();
 				if(function_exists('fastcgi_finish_request')) {
 					@fastcgi_finish_request();
