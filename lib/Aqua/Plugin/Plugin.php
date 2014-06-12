@@ -1,9 +1,12 @@
 <?php
 namespace Aqua\Plugin;
 
+use Aqua\Content\ContentType;
 use Aqua\Core\App;
 use Aqua\Core\L10n;
 use Aqua\Event\Event;
+use Aqua\Log\ErrorLog;
+use Aqua\Plugin\Exception\PluginException;
 use Aqua\Plugin\Exception\PluginManagerException;
 use Aqua\Schedule\TaskManager;
 use Aqua\SQL\Query;
@@ -95,25 +98,35 @@ class Plugin
 		if($this->isEnabled) {
 			return false;
 		}
-		$tbl = ac_table('plugins');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
-		SET _enabled = 'y'
+		try {
+			$this->run('activate');
+		} catch(PluginException $exception) {
+			throw $exception;
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+		}
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE `%s`
+		SET _enabled = \'y\'
 		WHERE id = ?
-		");
+		', ac_table('plugins')));
 		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
 		$sth->execute();
-		$this->run('activate');
 		$this->settings->exportToDatabase();
 		$feedback = array( $this );
-		if($xml = $this->xml('language')) {
-			L10n::import($xml, $this->id);
-		}
 		if($xml = $this->xml('permission')) {
 			Role::importPermissions($xml, $this->id);
 		}
 		if($xml = $this->xml('task')) {
 			TaskManager::import($xml, $this->id);
+		}
+		if($xml = $this->xml('content')) {
+			ContentType::import($xml, $this->id);
+		}
+		if($xml = $this->xml('language.' . strtolower(L10n::$code))) {
+			L10n::import($xml, $this->id);
+		} else if($xml = $this->xml('language')) {
+			L10n::import($xml, $this->id);
 		}
 		self::rebuildCache(true);
 		Event::fire('plugin.enable', $feedback);
