@@ -1618,12 +1618,20 @@ class CharMap
 	{
 		$this->woeSchedule !== null or $this->fetchWoeSchedule();
 		$ids = array();
-		$now = (int)$this->time();
+		if($timezone = $this->getOption('timezone', null)) {
+			$timezone = new \DateTimeZone($timezone);
+		} else {
+			$timezone = null;
+		}
+		$now = new \DateTime('now', $timezone);
 		$weeks = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 		foreach($this->woeSchedule as $id => &$woe) {
-			$start = strtotime("{$weeks[$woe['start_day']]} {$woe['start_time']}");
-			$end = strtotime("{$weeks[$woe['end_day']]} {$woe['end_time']}");
-			if($now > $start && $now < $end) {
+			$start = clone $now;
+			$end   = clone $now;
+			$start->modify("{$weeks[$woe['start_day']]} {$woe['start_time']}");
+			$end->modify("{$weeks[$woe['end_day']]} {$woe['end_time']}");
+			if($now->getTimestamp() > $start->getTimestamp() &&
+			   $now->getTimestamp() < $end->getTimestamp()) {
 				$ids[] = $id;
 			}
 		}
