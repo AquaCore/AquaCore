@@ -214,6 +214,7 @@ class PayPalLog
 				'credit_exchange_rate' => 'pp._credit_rate',
 				'exchanged'            => 'pp._exchanged',
 				'item_name'            => 'pp._item_name',
+				'item_number'          => 'pp._item_number',
 				'quantity'             => 'pp._quantity',
 				'deposited'            => 'pp._deposited',
 				'gross'                => 'pp._gross',
@@ -226,6 +227,7 @@ class PayPalLog
 				'payer_status'         => 'pp._payer_status',
 				'payer_id'             => 'pp._payer_id',
 				'payer_email'          => 'pp._payer_email',
+				'payment_type'         => 'pp._payment_type',
 				'first_name'           => 'pp._first_name',
 				'last_name'            => 'pp._last_name',
 				'receiver_id'          => 'pp._receiver_id',
@@ -242,6 +244,7 @@ class PayPalLog
 				'credit_exchange_rate' => 'pp._credit_rate',
 				'exchanged'            => 'pp._exchanged',
 				'item_name'            => 'pp._item_name',
+				'item_number'          => 'pp._item_number',
 				'quantity'             => 'pp._quantity',
 				'deposited'            => 'pp._deposited',
 				'gross'                => 'pp._gross',
@@ -254,6 +257,7 @@ class PayPalLog
 				'payer_status'         => 'pp._payer_status',
 				'payer_id'             => 'pp._payer_id',
 				'payer_email'          => 'pp._payer_email',
+				'payment_type'         => 'pp._payment_type',
 				'first_name'           => 'pp._first_name',
 				'last_name'            => 'pp._last_name',
 				'receiver_id'          => 'pp._receiver_id',
@@ -282,12 +286,14 @@ class PayPalLog
 				'credit_exchange_rate' => 'pp._credit_rate',
 				'exchanged'            => 'pp._exchanged',
 				'item_name'            => 'pp._item_name',
+				'item_number'          => 'pp._item_number',
 				'quantity'             => 'pp._quantity',
 				'deposited'            => 'pp._deposited',
 				'gross'                => 'pp._gross',
 				'currency'             => 'pp._currency',
 				'fee'                  => 'pp._fee',
 				'payment_date'         => 'UNIX_TIMESTAMP(pp._payment_date)',
+				'payment_type'         => 'pp._payment_type',
 				'txn_type'             => 'pp._txn_type',
 				'txn_id'               => 'pp._txn_id',
 				'parent_txn_id'        => 'pp._parent_txn_id',
@@ -328,9 +334,8 @@ class PayPalLog
 	 */
 	public static function logSql(Request $request, $user_id, $credits, $exchange_rate, $exchanged)
 	{
-		$tbl           = ac_table('paypal_txn');
-		$sth           = App::connection()->prepare("
-		INSERT INTO `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s
 		(
 		  _sandbox,
 		  _process_date,
@@ -390,7 +395,7 @@ class PayPalLog
 		  :receiver_email,
 		  :request
 		)
-		");
+		', ac_table('paypal_txn')));
 		$mc_fee        = $request->getFloat('mc_fee');
 		$mc_gross      = $request->getFloat('mc_gross');
 		$settle_amount = $request->getFloat('settle_amount');
@@ -447,6 +452,7 @@ class PayPalLog
 				'gross'        => $pp->gross,
 				'currency'     => $pp->currency,
 				'fee'          => $pp->fee,
+				'process_date' => $pp->processDate,
 				'display_name' => null,
 				'role_id'      => null
 			);
@@ -522,11 +528,10 @@ class PayPalLog
 					'id'           => 'integer',
 					'user_id'      => 'integer',
 					'credits'      => 'integer',
-					'deposited'    => 'integer',
-					'gross'        => 'integer',
-					'fee'          => 'integer',
+					'deposited'    => 'float',
+					'gross'        => 'float',
+					'fee'          => 'float',
 					'process_date' => 'integer',
-					'display_name' => 'integer',
 					'role_id'      => 'integer',
 				))
 				->from(ac_table('paypal_txn'), 'pp')

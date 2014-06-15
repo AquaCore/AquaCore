@@ -57,8 +57,10 @@ return array(
 		)
 	),
 	'donation'           => array(
+		'pp_log_requests'   => true,
 		'pp_business_email' => isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : 'example@example.com',
 		'pp_receiver_email' => array(),
+		'pp_txn_types'      => array( 'web_accept' ),
 		'pp_sandbox'        => true,
 		'exchange_rate'     => 1,
 		'min_donation'      => 2,
