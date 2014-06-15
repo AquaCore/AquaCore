@@ -29,7 +29,7 @@ $settings_action = ac_build_url(array(
 	));
 $settings = '';
 ?>
-<form method="POST" id="plugin-form">
+<form method="POST" id="plugin-form" enctype="multipart/form-data">
 	<table class="ac-table ac-plugin-table">
 		<thead>
 			<tr>

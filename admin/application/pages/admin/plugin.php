@@ -89,14 +89,14 @@ extends Page
 		                'application/x-gtar' => '/\.t(ar\.)?(gz|bz2)$/i'
 	                ))
 			       ->setDescription(__('plugin', 'import-desc'));
-			$upload->submit();
+			$upload->submit(__('upload', 'upload'));
 			$upload->validate();
-			if($upload->status === Form::VALIDATION_SUCCESS && !empty($_FILES['import'])) {
+			if($upload->status === Form::VALIDATION_SUCCESS && ac_file_uploaded('import', false)) {
 				$this->response->status(302)->redirect(App::request()->uri->url());
 				try {
-					preg_match('/\.(zipx?|tar|t(?:ar\.)?(?:gz|bz2))$/i', $_FILES['plugin']['name'], $match);
+					preg_match('/\.(zipx?|tar|t(?:ar\.)?(?:gz|bz2))$/i', $_FILES['import']['name'], $match);
 					$tmp = \Aqua\ROOT . '/tmp/' . uniqid() . $match[0];
-					if(!move_uploaded_file($_FILES['plugin']['tmp_name'], $tmp)) {
+					if(!move_uploaded_file($_FILES['import']['tmp_name'], $tmp)) {
 						App::user()->addFlash('error', null, __('plugin', 'failed-to-import', __('upload', 'failed-to-move')));
 						return;
 					}
