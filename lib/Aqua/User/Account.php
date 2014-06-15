@@ -404,14 +404,13 @@ class Account
 			return false;
 		}
 		$update   = substr($update, 0, -2);
-		$tbl      = ac_table('users');
 		$values[] = $this->id;
-		$sth      = App::connection()->prepare("
-		UPDATE `{$tbl}`
-		SET {$update}
+		$sth      = App::connection()->prepare(sprintf('
+		UPDATE %s
+		SET %s
 		WHERE id = ?
 		LIMIT 1
-		");
+		', ac_table('users'), $update));
 		if(!$sth->execute(array_values($values)) || !$sth->rowCount()) {
 			return false;
 		}
@@ -536,15 +535,22 @@ class Account
 	 */
 	public function transferCredits(self $target, $amount)
 	{
-		$tbl = ac_table('users');
 		App::connection()->beginTransaction();
 		try {
-			$sth = App::connection()->prepare("UPDATE `$tbl` SET _credits = _credits - :amount WHERE id = :id");
+			$sth = App::connection()->prepare(sprintf('
+			UPDATE %s
+			SET _credits = _credits - :amount
+			WHERE id = :id
+			', ac_table('users')));
 			$sth->bindValue(':amount', $amount, \PDO::PARAM_INT);
 			$sth->bindValue(':id', $this->id, \PDO::PARAM_INT);
 			$sth->execute();
 			$sth->closeCursor();
-			$sth = App::connection()->prepare("UPDATE `$tbl` SET _credits = _credits + :amount WHERE id = :id");
+			$sth = App::connection()->prepare(sprintf('
+			UPDATE %s
+			SET _credits = _credits + :amount
+			WHERE id = :id
+			', ac_table('users')));
 			$sth->bindValue(':amount', $amount, \PDO::PARAM_INT);
 			$sth->bindValue(':id', $target->id, \PDO::PARAM_INT);
 			$sth->execute();
@@ -974,12 +980,11 @@ class Account
 		$email        = trim(strtolower($email));
 		$display_name = trim($display_name);
 		$display_name = empty($display_name) ? $username : $display_name;
-		$table        = ac_table('users');
 		if(($exists = self::exists($username, $display_name, $email)) !== 0) {
 			return $exists;
 		}
-		$sth      = App::connection()->prepare("
-		INSERT INTO `$table` (
+		$sth      = App::connection()->prepare(sprintf('
+		INSERT INTO %s (
 			_username,
 			_display_name,
 			_password,
@@ -1001,7 +1006,7 @@ class Account
 			:tos,
 			NOW()
 			)
-		");
+		', ac_table('users')));
 		$password = self::hashPassword($plain_password);
 		if(is_int($role)) {
 			$role = Role::get($role);
@@ -1182,20 +1187,19 @@ class Account
 				->get('count', 0);
 		}
 		if(!$name || $name === 'reg_stats') {
-			$tbl      = ac_table('users');
-			$sth      = App::connection()->query("
+			$sth      = App::connection()->query(sprintf('
 			SELECT UNIX_TIMESTAMP(_registration_date)
-			FROM `$tbl`
+			FROM %s
 			ORDER BY _registration_date ASC
 			LIMIT 1
-			");
+			', ac_table('users')));
 			$min_date = (int)$sth->fetchColumn(0);
-			$sth      = App::connection()->prepare("
+			$sth      = App::connection()->prepare(sprintf('
 			SELECT COUNT(*), UNIX_TIMESTAMP(DATE(_registration_date)) AS `date`
-			FROM `$tbl`
+			FROM %s
 			WHERE _registration_date BETWEEN :this_week AND :next_week
 			GROUP BY `date`;
-			");
+			', ac_table('users')));
 			$weekday  = (int)date('w');
 			if($weekday === 0) {
 				$sun = strtotime('midnight');

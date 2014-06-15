@@ -276,8 +276,12 @@ implements \Serializable
 			}
 			$values[] = $this->uid;
 			$update   = substr($update, 0, -2);
-			$tbl      = ac_table('content');
-			$sth      = App::connection()->prepare("UPDATE `$tbl` SET $update WHERE _uid = ? LIMIT 1");
+			$sth      = App::connection()->prepare(sprintf('
+			UPDATE %s
+			SET %s
+			WHERE _uid = ?
+			LIMIT 1
+			', ac_table('content'), $update));
 			$sth->execute(array_values($values));
 			array_pop($values);
 			if(isset($custom_values)) $values = array_merge($values, $custom_values);
@@ -299,13 +303,12 @@ implements \Serializable
 		$feedback = array( &$data, &$values );
 		if($this->applyFilters('afterUpdate', $feedback) || $updated) {
 			if(!isset($values['edit_date'])) {
-				$tbl = ac_table('content');
-				$sth = App::connection()->prepare("
-				UPDATE `$tbl`
+				$sth = App::connection()->prepare(sprintf('
+				UPDATE %s
 				SET _edit_date = NOW()
 				WHERE _uid = ?
 				LIMIT 1
-				");
+				', ac_table('content')));
 				$sth->bindValue(1, $this->uid, \PDO::PARAM_INT);
 				$sth->execute();
 				$values['edit_date'] = $this->editDate = time();
@@ -325,12 +328,10 @@ implements \Serializable
 	public function delete()
 	{
 		if($this->protected || $this->applyFilters('beforeDelete') === false) return false;
-		$content_tbl = ac_table('content');
-		$meta_tbl    = ac_table('content_meta');
-		$sth         = App::connection()->prepare("
-		DELETE FROM `$content_tbl` WHERE _uid = :id;
-		DELETE FROM `$meta_tbl` WHERE _content_id = :id;
-		");
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s WHERE _uid = :id;
+		DELETE FROM %s WHERE _content_id = :id;
+		', ac_table('content'), ac_table('content_meta')));
 		$sth->bindValue(':id', $this->uid, \PDO::PARAM_INT);
 		$sth->execute();
 		$sth->closeCursor();

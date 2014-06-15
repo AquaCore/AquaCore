@@ -12,7 +12,7 @@ extends TaskData
 		$this->isRunning = true;
 		$this->lastRun = microtime(true);
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _running = \'y\',
 			_last_run = ?
 		WHERE id = ?
@@ -37,7 +37,7 @@ extends TaskData
 	public final function abort()
 	{
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _running = \'n\',
 			_next_run = ?
 		WHERE id = ?

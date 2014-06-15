@@ -319,11 +319,10 @@ implements \Serializable, SubjectInterface
 		if($this->applyFilters('beforeCreate', $feedback) === false) {
 			return null;
 		}
-		$tbl = ac_table('content');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_type, _author_id, _publish_date, _title, _slug, _content, _plain_content, _protected, _options, _status)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_type, _author_id, _publish_date, _title, _slug, _content, _plain_content, _protected, _options, _status)
 		VALUES (:type, :author, :publish, :title, :slug, :content, :pcontent, :protected, :options, :status)
-		");
+		', ac_table('content')));
 		$sth->bindValue(':type', $this->id, \PDO::PARAM_INT);
 		$sth->bindValue(':author', $options['author'], \PDO::PARAM_INT);
 		$sth->bindValue(':publish', date('Y-m-d H:i:s', $options['publish_date']), \PDO::PARAM_STR);
@@ -364,10 +363,10 @@ implements \Serializable, SubjectInterface
 			}
 			$columns['_uid'] = \PDO::PARAM_INT;
 			$values['_uid']  = $id;
-			$insert_columns  = '`' . implode('`, `', array_keys($columns)) . '`';
-			$insert_values   = str_repeat('?, ', count($columns));
+			$insertColumns   = '`' . implode('`, `', array_keys($columns)) . '`';
+			$insertValues    = str_repeat('?, ', count($columns));
 			$sth             =
-				App::connection()->prepare("INSERT INTO `{$this->table}` ($insert_columns) VALUES ($insert_values)");
+				App::connection()->prepare("INSERT INTO `{$this->table}` ($insertColumns) VALUES ($insertValues)");
 			$i               = 0;
 			foreach($columns as $name => $type) {
 				$sth->bindValue(++$i, $values[$name], $type);
@@ -587,7 +586,7 @@ implements \Serializable, SubjectInterface
 			$adapter    = (string)$ctype->adapter;
 			$permission = (string)$ctype->permission;
 			$sth = App::connection()->prepare(sprintf('
-			INSERT INTO `%s` (_key, _name, _item_name, _listing, _feed, _adapter, _permission, _table, _plugin_id)
+			INSERT INTO %s (_key, _name, _item_name, _listing, _feed, _adapter, _permission, _table, _plugin_id)
 			VALUES (:key, :name, :item, :listing, :feed, :adapter, :permission, NULL, :plugin)
 			', ac_table('content_type')));
 			$sth->bindValue(':key', $key, \PDO::PARAM_STR);
@@ -685,13 +684,16 @@ implements \Serializable, SubjectInterface
 			$query->charset($charset);
 		}
 		$query->query();
-		App::connection()->prepare(sprintf('
-		UPDATE INTO `%s`
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE INTO %s
 		SET _table = ?
 		WHERE id = ?
-		', ac_table('content_type')))->execute(array( $query->tableName, $ctypeId ));
+		', ac_table('content_type')));
+		$sth->bindValue(1, trim($query->tableName, '`'), \PDO::PARAM_STR);
+		$sth->bindValue(2, $ctypeId, \PDO::PARAM_INT);
+		$sth->execute();
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_type, _name, _alias, _field_type)
+		INSERT INTO %s (_type, _name, _alias, _field_type)
 		VALUES (:id, :name, :alias, :type)
 		', ac_table('content_type_fields')));
 		foreach($columns as $column) {
@@ -705,7 +707,7 @@ implements \Serializable, SubjectInterface
 	protected static function _importFilters(\SimpleXMLElement $xml, $ctypeId = null)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_type, _name, _options)
+		INSERT INTO %s (_type, _name, _options)
 		VALUES (:id, :name, :opt)
 		', ac_table('content_type_filters')));
 		foreach($xml as $filter) {
@@ -723,8 +725,7 @@ implements \Serializable, SubjectInterface
 
 	public static function rebuildCache()
 	{
-		$tbl = ac_table('content_type');
-		$sth = App::connection()->query("
+		$sth = App::connection()->query(sprintf('
 		SELECT id,
 		       _key,
 		       _name,
@@ -735,8 +736,8 @@ implements \Serializable, SubjectInterface
 		       _plugin_id,
 		       _permission,
 		       _item_name
-		FROM `$tbl`
-		");
+		FROM %s
+		', ac_table('content_type')));
 		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 			$type             = new self;
 			$type->id         = (int)$data[0];
@@ -757,13 +758,12 @@ implements \Serializable, SubjectInterface
 			self::$contentTypes[$type->id] = $type;
 		}
 		$sth->closeCursor();
-		$tbl = ac_table('content_type_filters');
-		$sth = App::connection()->prepare("
+		$sth = App::connection()->prepare(sprintf('
 		SELECT _type,
 		       _name,
 		       _options
-		FROM `$tbl`
-		");
+		FROM %s
+		', ac_table('content_type_filters')));
 		$sth->execute();
 		while($data = $sth->fetch(\PDO::FETCH_NUM)) {
 			$class = "Aqua\\Content\\Filter\\{$data[1]}";
@@ -774,14 +774,13 @@ implements \Serializable, SubjectInterface
 			}
 		}
 		$sth->closeCursor();
-		$tbl = ac_table('content_type_fields');
-		$sth = App::connection()->prepare("
+		$sth = App::connection()->prepare(sprintf('
 		SELECT _type,
 		       _name,
 		       _alias,
 		       _field_type
-		FROM `$tbl`
-		");
+		FROM %s
+		', ac_table('content_type_fields')));
 		$sth->execute();
 		while($data = $sth->fetch(\PDO::FETCH_ASSOC)) {
 			if(isset(self::$contentTypes[$data[0]])) {

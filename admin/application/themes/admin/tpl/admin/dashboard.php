@@ -58,7 +58,7 @@ $donations = array();
 $donation_settings = App::settings()->get('donation');
 $base_txn_url = ac_build_url(array(
 		'path' => array( 'log' ),
-		'action' => 'view_paypal',
+		'action' => 'viewpaypal',
 		'arguments' => array( '' )
 	));
 if($goal = $donation_settings->get('goal', 0)) {

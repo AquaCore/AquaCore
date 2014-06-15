@@ -104,9 +104,8 @@ extends AbstractFilter
 			$anon = false;
 		}
 		$html = $this->parseCommentContent($bbcode);
-		$tbl  = ac_table('comments');
-		$sth  = App::connection()->prepare("
-		INSERT INTO `$tbl` (
+		$sth  = App::connection()->prepare(sprintf('
+		INSERT INTO %s (
 		_content_type,
 		_content_id,
 		_parent_id,
@@ -135,7 +134,7 @@ extends AbstractFilter
 		NOW(),
 		:opt
 		)
-		");
+		', ac_table('comments')));
 		$sth->bindValue(':ctype', $content->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(':id', $content->uid, \PDO::PARAM_INT);
 		$sth->bindValue(':author', $author->id, \PDO::PARAM_INT);
@@ -158,11 +157,11 @@ extends AbstractFilter
 		$comment  = $this->contentType_getComment((int)App::connection()->lastInsertId());
 		$feedback = array( $comment );
 		if($parent) {
-			$sth = App::connection()->prepare("
-			UPDATE `$tbl`
+			$sth = App::connection()->prepare(sprintf('
+			UPDATE %s
 			SET _children = _children + 1
 			WHERE id = ?
-			");
+			', ac_table('comments')));
 			$sth->bindValue(1, $parent->id, \PDO::PARAM_INT);
 			$sth->execute();
 		}
@@ -269,13 +268,12 @@ extends AbstractFilter
 		}
 		$update   = substr($update, 0, -2);
 		$values[] = $comment->id;
-		$tbl      = ac_table('comments');
-		$sth      = App::connection()->prepare("
-		UPDATE `$tbl`
-		SET {$update}
+		$sth      = App::connection()->prepare(sprintf('
+		UPDATE %s
+		SET %s
 		WHERE id = ?
 		LIMIT 1
-		");
+		', ac_table('comments'), $update));
 		if(!$sth->execute(array_values($values)) || !$sth->rowCount()) {
 			return false;
 		}
@@ -300,8 +298,11 @@ extends AbstractFilter
 	{
 		if($content->forged) return 0;
 		if(!array_key_exists('comment_count', $content->data)) {
-			$tbl = ac_table('comments');
-			$sth = App::connection()->prepare("SELECT COUNT(1) FROM `$tbl` WHERE _content_id = ?");
+			$sth = App::connection()->prepare(sprintf('
+			SELECT COUNT(1)
+			FROM %s
+			WHERE _content_id = ?
+			', ac_table('comments')));
 			$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 			$sth->execute();
 			$content->data['comment_count'] = (int)$sth->fetchColumn(0);
@@ -320,14 +321,13 @@ extends AbstractFilter
 		if(!$user || $content->forged) {
 			return ($content ? null : array());
 		}
-		$tbl     = ac_table('comment_ratings');
-		$query   = "
-		SELECT _comment_id, _weight
-		FROM `$tbl`
-		WHERE _user_id = ?
-		AND _content_id = ?";
 		$ratings = array();
-		$sth     = App::connection()->prepare($query);
+		$sth     = App::connection()->prepare(sprintf('
+		SELECT _comment_id, _weight
+		FROM %s
+		WHERE _user_id = ?
+		AND _content_id = ?
+		', ac_table('comment_ratings')));
 		$sth->bindValue(1, $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(2, $content->uid, \PDO::PARAM_INT);
 		$sth->execute();
@@ -434,23 +434,22 @@ extends AbstractFilter
 			return false;
 		}
 		$weight = max(-1, min(1, $weight));
-		$tbl    = ac_table('comment_ratings');
-		$sth    = App::connection()->prepare("
+		$sth    = App::connection()->prepare(sprintf('
 		SELECT _weight
-		FROM `$tbl`
+		FROM %s
 		WHERE _user_id = :user
 		AND _comment_id = :comment
 		LIMIT 1
-		");
+		', ac_table('comment_ratings')));
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(':comment', $comment->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$old_weight = (int)$sth->fetchColumn(0);
-		$sth        = App::connection()->prepare("
-		INSERT INTO `$tbl` (_user_id, _content_id, _comment_id, _ip_address, _weight)
+		$sth        = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_user_id, _content_id, _comment_id, _ip_address, _weight)
 		VALUES (:user, :content, :comment, :ip, :weight)
 		ON DUPLICATE KEY UPDATE _weight = :weight
-		");
+		', ac_table('comment_ratings')));
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(':content', $comment->contentId, \PDO::PARAM_INT);
 		$sth->bindValue(':comment', $comment->id, \PDO::PARAM_INT);
@@ -465,13 +464,12 @@ extends AbstractFilter
 			$operator = '-';
 		}
 		else $operator = '+';
-		$tbl = ac_table('comments');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
-		SET _rating = _rating $operator :weight
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE %s
+		SET _rating = _rating %s :weight
 		WHERE id = :comment
 		LIMIT 1
-		");
+		', ac_table('comments'), $operator));
 		$sth->bindValue(':weight', abs($weight_total), \PDO::PARAM_INT);
 		$sth->bindValue(':comment', $comment->id, \PDO::PARAM_INT);
 		$sth->execute();
@@ -484,11 +482,10 @@ extends AbstractFilter
 
 	public function contentType_reportComment(Comment $comment, Account $user, $report)
 	{
-		$tbl = ac_table('comment_reports');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_comment_id, _user_id, _ip_address, _date, _content)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_comment_id, _user_id, _ip_address, _date, _content)
 		VALUES (:comment, :user, :ip, NOW(), :content)
-		");
+		', ac_table('comment_reports')));
 		$sth->bindValue(':comment', $comment->id, \PDO::PARAM_INT);
 		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(':ip', App::request()->ipString, \PDO::PARAM_STR);
@@ -496,14 +493,13 @@ extends AbstractFilter
 		if(!$sth->execute() || !$sth->rowCount()) {
 			return false;
 		}
-		$tbl = ac_table('comments');
 		$reportId = App::connection()->lastInsertId();
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE %s
 		SET _reports = _reports + 1
 		WHERE id = ?
 		LIMIT 1
-		");
+		', ac_table('comments')));
 		$sth->bindValue(1, $comment->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$comment->reportCount++;

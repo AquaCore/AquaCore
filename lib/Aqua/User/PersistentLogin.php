@@ -9,22 +9,21 @@ class PersistentLogin
 	/**
 	 * Validate a persistent login key and generates a new one.
 	 *
-	 * @param string $login_key
+	 * @param string $loginKey
 	 * @return \Aqua\User\Account|bool
 	 */
-	public static function authenticate(&$login_key)
+	public static function authenticate(&$loginKey)
 	{
-		if(!self::getKey($login_key, $id, $key)) {
+		if(!self::getKey($loginKey, $id, $key)) {
 			return false;
 		}
 		$settings = App::settings()->get('account')->get('persistent_login');
-		$tbl  = ac_table('remember_me');
-		$sth  = App::connection()->prepare("
+		$sth  = App::connection()->prepare(sprintf('
 		SELECT COUNT(1)
-		FROM `$tbl`
+		FROM %s
 		WHERE _user_id = :id AND _key = :key
 		AND _date > DATE_SUB(NOW(), INTERVAL :interval DAY)
-		");
+		', ac_table('remember_me')));
 		$hkey = hash('sha512', $key);
 		$sth->bindValue(':id', $id, \PDO::PARAM_INT);
 		$sth->bindValue(':key', $hkey, \PDO::PARAM_STR);
@@ -34,17 +33,17 @@ class PersistentLogin
 			return false;
 		}
 		$key = bin2hex(secure_random_bytes((int)$settings->get('key_length', 128)));
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE %s
 		SET _key = ?
 		WHERE _user_id = ? AND _key = ?
 		LIMIT 1
-		");
+		', ac_table('remember_me')));
 		$sth->bindValue(1, hash('sha512', $key), \PDO::PARAM_LOB);
 		$sth->bindValue(2, $id, \PDO::PARAM_INT);
 		$sth->bindValue(3, $hkey, \PDO::PARAM_INT);
 		$sth->execute();
-		$login_key = base64_encode("$id::$key");
+		$loginKey = base64_encode("$id::$key");
 
 		return $user;
 	}
@@ -52,28 +51,27 @@ class PersistentLogin
 	/**
 	 * Create a persistent login key.
 	 *
-	 * @param int $user_id
+	 * @param int $userId
 	 * @return bool|string
 	 */
-	public static function create($user_id)
+	public static function create($userId)
 	{
 		$settings = App::settings()->get('account')->get('persistent_login');
-		$tbl      = ac_table('remember_me');
 		$key      = bin2hex(secure_random_bytes((int)$settings->get('key_length', 128)));
-		$sth      = App::connection()->prepare("
-		INSERT INTO `$tbl` (_user_id, _key)
+		$sth      = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_user_id, _key)
 		VALUES (?, ?)
-		");
-		$sth->bindValue(1, $user_id, \PDO::PARAM_INT);
+		', ac_table('remember_me')));
+		$sth->bindValue(1, $userId, \PDO::PARAM_INT);
 		$sth->bindValue(2, hash('sha512', $key), \PDO::PARAM_INT);
 		$sth->execute();
 		if(!$sth->rowCount()) {
 			return false;
 		}
-		$feedback = array( $user_id, $key );
+		$feedback = array( $userId, $key );
 		Event::fire('persistent-login.create', $feedback);
 
-		return base64_encode("$user_id::$key");
+		return base64_encode("$userId::$key");
 	}
 
 	/**
@@ -87,12 +85,11 @@ class PersistentLogin
 		if(!self::getKey($login_key, $id, $key)) {
 			return false;
 		}
-		$tbl     = ac_table('remember_me');
-		$sth     = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth     = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _user_id = ?
 		AND _key = ?
-		");
+		', ac_table('remember_me')));
 		$sth->bindValue(1, $id, \PDO::PARAM_INT);
 		$sth->bindValue(2, hash('sha512', $key), \PDO::PARAM_STR);
 		$sth->execute();
@@ -110,36 +107,37 @@ class PersistentLogin
 	/**
 	 * Deletes all persistent login keys from a user.
 	 *
-	 * @param int $user_id
+	 * @param int $userId
 	 * @return int
 	 */
-	public static function deleteAll($user_id)
+	public static function deleteAll($userId)
 	{
-		$tbl = ac_table('remember_me');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _user_id = ?
-		");
-		$sth->bindValue(1, $user_id, \PDO::PARAM_INT);
+		', ac_table('remember_me')));
+		$sth->bindValue(1, $userId, \PDO::PARAM_INT);
 		$sth->execute();
-		if(!($count = $sth->rowCount())) {
+		$count = $sth->rowCount();
+		$sth->closeCursor();
+		if(!$count) {
 			return 0;
 		}
-		$feedback = array( $user_id, $count );
+		$feedback = array( $userId, $count );
 		Event::fire('persistent-login.delete-all', $feedback);
 
 		return $count;
 	}
 
 	/**
-	 * @param string $login_key
+	 * @param string $loginKey
 	 * @param        $id
 	 * @param        $key
 	 * @return bool
 	 */
-	public static function getKey($login_key, &$id, &$key)
+	public static function getKey($loginKey, &$id, &$key)
 	{
-		if(!$login_key || !($key = base64_decode($login_key, true))) {
+		if(!$loginKey || !($key = base64_decode($loginKey, true))) {
 			return false;
 		}
 		$key = explode('::', $key);

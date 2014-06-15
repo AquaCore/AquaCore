@@ -125,11 +125,10 @@ class TransferLog
 		$transfer->receiverId = $receiver->id;
 		$transfer->amount     = $amount;
 		$transfer->date       = time();
-		$tbl                  = ac_table('transfer_log');
-		$sth                  = App::connection()->prepare("
-		INSERT INTO `$tbl` (_sender_id, _receiver_id, _amount, _date)
+		$sth                  = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_sender_id, _receiver_id, _amount, _date)
 		VALUES (:sender, :receiver, :amount, NOW())
-		");
+		', ac_table('transfer_log')));
 		$sth->bindValue(':sender', $sender->id, \PDO::PARAM_INT);
 		$sth->bindValue(':receiver', $receiver->id, \PDO::PARAM_INT);
 		$sth->bindValue(':amount', $amount, \PDO::PARAM_INT);

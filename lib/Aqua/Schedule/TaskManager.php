@@ -139,13 +139,13 @@ class TaskManager
 	public static function import(\SimpleXMLElement $xml, $pluginId = null, $override = false)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_title, _description, _expression, _enabled, _protected, _logging, _next_run, _error_message, _plugin_id)
-		VALUES (:title, :desc, :expr, :enabled, :protected, :logging, :nextrun, :error, :pluginid)
+		INSERT INTO %s (_title, _name, _description, _expression, _enabled, _protected, _logging, _next_run, _error_message, _plugin_id)
+		VALUES (:title, :name, :desc, :expr, :enabled, :protected, :logging, :nextrun, :error, :pluginid)
 		ON DUPLICATE KEY UPDATE
 		_title = VALUES(_title),
 		_description = VALUES(_description),
 		_expression = VALUES(_expression),
-		_error = VALUES(_error),
+		_error_message = VALUES(_error_message),
 		_plugin_id = VALUES(_plugin_id)
 		', ac_table('tasks')));
 		foreach($xml->task as $task) {

@@ -110,11 +110,10 @@ class LoginLog
 	 */
 	public static function logSql($username, $user_id, $type, $status)
 	{
-		$tbl = ac_table('login_log');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_ip_address, _username, _user_id, _type, _status, _date)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_ip_address, _username, _user_id, _type, _status, _date)
 		VALUES (:ip, :username, :id, :type, :status, NOW())
-		");
+		', ac_table('login_log')));
 		$sth->bindValue(':ip', App::request()->ipString, \PDO::PARAM_STR);
 		$sth->bindValue(':type', $type, \PDO::PARAM_INT);
 		$sth->bindValue(':status', $status, \PDO::PARAM_INT);

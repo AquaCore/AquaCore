@@ -71,7 +71,7 @@ implements FieldInterface
 		foreach($values as $key => $title) {
 			$opt = new Tag('option');
 			$opt->append($title)
-			->attr('value', $key);
+				->attr('value', $key);
 			$this->values[$key] = $opt;
 		}
 

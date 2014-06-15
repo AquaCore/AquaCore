@@ -186,7 +186,7 @@ class L10n
 	public static function importWordGroup(\SimpleXMLElement $xml, $pluginId = null, $rebuildCache = true)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		REPLACE INTO `%s` (_namespace, _key, _phrase, _plugin_id)
+		REPLACE INTO %s (_namespace, _key, _phrase, _plugin_id)
 		VALUES (:namespace, :key, :word, :plugin)
 		', ac_table('phrases')));
 		$namespaces = array();
@@ -218,7 +218,7 @@ class L10n
 	public static function importEmailGroup(\SimpleXMLElement $xml, $pluginId = null)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		REPLACE INTO `%s` (_key, _name, _default_subject, _default_body, _plugin_id)
+		REPLACE INTO %s (_key, _name, _default_subject, _default_body, _plugin_id)
 		VALUES (:key, :name, :subject, :body, :plugin)
 		', ac_table('email_templates')));
 
@@ -249,7 +249,7 @@ class L10n
 	protected static function _importEmailPlaceholders(\SimpleXMLElement $xml, $emailKey)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		REPLACE INTO `%s` (_email, _key, _description)
+		REPLACE INTO %s (_email, _key, _description)
 		VALUES (:email, :key, :description)
 		', ac_table('email_placeholders')));
 		foreach($xml->placeholder as $placeholder) {
@@ -267,7 +267,7 @@ class L10n
 	public static function importTaskGroup(\SimpleXMLElement $xml)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _title = :title,
 			_description = :desc
 		WHERE _name = :name
@@ -292,7 +292,7 @@ class L10n
 	public static function importPermissionGroup(\SimpleXMLElement $xml, $rebuildCache = true)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _name = :name,
 			_description = :desc
 		WHERE _permission = :key
@@ -320,7 +320,7 @@ class L10n
 	public static function importContentTypeGroup(\SimpleXMLElement $xml, $rebuildCache = true)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _name = :name,
 			_item_name = :item
 		WHERE _key = :key

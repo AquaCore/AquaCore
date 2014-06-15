@@ -235,11 +235,10 @@ class ErrorLog
 			}
 			$log->next  = $parent;
 			$log->trace = array();
-			$error_tbl  = ac_table('error_log');
-			$sth        = $dbh->prepare("
-			INSERT INTO `$error_tbl` (_url, _user_id, _ip_address, _date, _type, _code, _file, _line, _message, _parent)
+			$sth        = $dbh->prepare(sprintf('
+			INSERT INTO %s (_url, _user_id, _ip_address, _date, _type, _code, _file, _line, _message, _parent)
 			VALUES (:url, :user, :ip, NOW(), :type, :code, :file, :line, :message, :parent)
-			");
+			', ac_table('error_log')));
 			$sth->bindValue(':url', $log->url, \PDO::PARAM_STR);
 			$sth->bindValue(':ip', $log->ipAddress, \PDO::PARAM_STR);
 			$sth->bindValue(':type', $log->type, \PDO::PARAM_STR);
@@ -258,12 +257,11 @@ class ErrorLog
 			$log->id = (int)$dbh->lastInsertId();
 			$trace   = $exception->getTrace();
 			if(!empty($trace)) {
-				$trace_tbl = ac_table('error_trace');
 				$i         = -1;
-				$sth       = $dbh->prepare("
-				INSERT INTO `$trace_tbl` (id, _error_id, _file, _line, _class, _method, _type)
+				$sth       = $dbh->prepare(sprintf('
+				INSERT INTO %s (id, _error_id, _file, _line, _class, _method, _type)
 				VALUES (:id, :error, :file, :line, :class, :method, :type)
-				");
+				', ac_table('error_trace')));
 				foreach($trace as $t) {
 					++$i;
 					$t += array(

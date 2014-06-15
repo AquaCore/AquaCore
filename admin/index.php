@@ -190,15 +190,15 @@ try {
 			        'submenu' => array(
 				        array(
 					        'title' => __('admin-menu', 'settings'),
-				            'url' => ac_build_query(array( 'path' => array( 'settings' ) )),
+				            'url' => ac_build_url(array( 'path' => array( 'settings' ) )),
 				        ),
 			            array(
 				            'title' => __('admin-menu', 'smileys'),
-				            'url' => ac_build_query(array( 'path' => array( 'bbcode' ), 'action' => 'smiley' )),
+				            'url' => ac_build_url(array( 'path' => array( 'bbcode' ), 'action' => 'smiley' )),
 			            ),
 			            array(
 				            'title' => __('admin-menu', 'emails'),
-				            'url' => ac_build_query(array( 'path' => array( 'mail' ) )),
+				            'url' => ac_build_url(array( 'path' => array( 'mail' ) )),
 			            )
 			        )
 				));

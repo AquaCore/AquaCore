@@ -118,12 +118,11 @@ class Role
 		}
 		$update   = substr($update, 0, -2);
 		$values[] = $this->id;
-		$tbl      = ac_table('roles');
-		$sth      = App::connection()->prepare("
-		UPDATE `$tbl`
-		SET $update
+		$sth      = App::connection()->prepare(sprintf('
+		UPDATE %s
+		SET %s
 		WHERE id = ?
-		");
+		', ac_table('roles'), $update));
 		$sth->execute(array_values(array_filter($values, function($x) { return !is_null($x); })));
 		if(!$sth->rowCount()) {
 			return false;
@@ -170,7 +169,7 @@ class Role
 		$permissionList = array_column(self::permissions(), 'id', 'key');
 		$permissions    = array_unique($permissions);
 		$sth = App::connection()->prepare(sprintf('
-		REPLACE INTO `%s` (_role_id, _permission, _protected)
+		REPLACE INTO %s (_role_id, _permission, _protected)
 		VALUES (:role, :permission, :protected)
 		', ac_table('role_permissions')));
 		foreach($permissions as $name) {
@@ -209,7 +208,7 @@ class Role
 		$permissionList = array_column(self::permissions(), 'id', 'key');
 		$permissions    = array_unique($permissions);
 		$sth = App::connection()->prepare(sprintf('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE _role_id = :role
 		AND _permission = :permission
 		AND _protected = \'n\'
@@ -331,7 +330,7 @@ class Role
 	) {
 		self::$roles !== null or self::loadRoles();
 		$sth   = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_name, _description, _color, _background, _protected, _editable)
+		INSERT INTO %s (_name, _description, _color, _background, _protected, _editable)
 		VALUES (:name, :description, :color, :background, :protected, :editable)
 		', ac_table('roles')));
 		$sth->bindValue(':name', trim($name), \PDO::PARAM_STR);
@@ -356,7 +355,7 @@ class Role
 		}
 		unset($protected);
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_role_id, _permission, _protected)
+		INSERT INTO %s (_role_id, _permission, _protected)
 		VALUES (:role , :permission, :protected)
 		', ac_table('role_permissions')));
 		$existingPermissions = array_column(self::permissions(), 'key', 'id');
@@ -395,7 +394,7 @@ class Role
 		}
 
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _role_id = :newrole
 		WHERE _role_id = :oldrole
 		', ac_table('users')));
@@ -405,20 +404,22 @@ class Role
 		$sth->closeCursor();
 
 		$sth = App::connection()->prepare(sprintf('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE id = ?
 		LIMIT 1
 		', ac_table('roles')));
 		$sth->bindValue(1, $role->id, \PDO::PARAM_INT);
 		$sth->execute();
+		$sth->closeCursor();
 
 		$sth = App::connection()->prepare(sprintf('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE _role_id = ?
 		', ac_table('role_permissions')));
 		$sth->bindValue(1, $role->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$sth->closeCursor();
+
 		$feedback = array( $role );
 		Event::fire('role.delete', $feedback);
 		self::rebuildRoleCache();
@@ -449,15 +450,15 @@ class Role
 	public static function importPermissions(\SimpleXMLElement $xml, $pluginId = null)
 	{
 		$insertPermission = App::connection()->prepare(sprintf('
-		INSERT IGNORE INTO `%s` (_permission, _name, _description, _plugin_id)
+		INSERT IGNORE INTO %s (_permission, _name, _description, _plugin_id)
 		VALUES (:key, :name, :desc, :plugin)
 		', ac_table('permissions')));
 		$getPermissionId = App::connection()->prepare(sprintf('
-		SELECT id FROM `%s`
+		SELECT id FROM %s
 		WHERE _permission = :name
 		', ac_table('permissions')));
 		$addToRole = App::connection()->prepare(sprintf('
-		REPLACE INTO `%s` (_role_id, _permission, _protected)
+		REPLACE INTO %s (_role_id, _permission, _protected)
 		VALUE (:role, :permission, :protected)
 		', ac_table('role_permissions')));
 		foreach($xml->permission as $permission) {

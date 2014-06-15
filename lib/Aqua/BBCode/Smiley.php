@@ -63,7 +63,7 @@ class Smiley
 			$id = array( $id => $text);
 		}
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _text = ?
 		WHERE id = ?
 		LIMIT 1
@@ -107,7 +107,7 @@ class Smiley
 			->getColumn('file', 'id');
 		array_shift($ids);
 		$sth = App::connection()->prepare(sprintf('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE id = ?
 		', ac_table('smileys')));
 		$deleted = array();
@@ -152,7 +152,7 @@ class Smiley
 			->query()
 			->get('order', 0);
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_file, _text, _order)
+		INSERT INTO %s (_file, _text, _order)
 		VALUES (:file, :text, :order)
 		', ac_table('smileys')));
 		foreach($smileys as $fileName => &$name) {

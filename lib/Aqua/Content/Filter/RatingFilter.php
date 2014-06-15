@@ -12,11 +12,10 @@ extends AbstractFilter
 {
 	public function afterDelete(ContentData $content)
 	{
-		$tbl = ac_table('content_ratings');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _content_id = ?
-		");
+		', ac_table('content_ratings')));
 		$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 		$sth->execute();
 	}
@@ -78,7 +77,7 @@ extends AbstractFilter
 		}
 		$oldWeight  = $this->contentData_getRating($content, $user);
 		$sth        = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_user_id, _content_id, _weight)
+		INSERT INTO %s (_user_id, _content_id, _weight)
 		VALUES (?, ?, ?)
 		ON DUPLICATE KEY UPDATE _weight = VALUES(_weight)
 		', ac_table('content_ratings')));
@@ -114,14 +113,13 @@ extends AbstractFilter
 		if(!$user || $content->forged) {
 			return null;
 		}
-		$tbl = ac_table('content_ratings');
-		$sth = App::connection()->prepare("
+		$sth = App::connection()->prepare(sprintf('
 		SELECT _weight
-		FROM `$tbl`
+		FROM %s
 		WHERE _user_id = ?
 		AND _content_id = ?
 		LIMIT 1
-		");
+		', ac_table('content_ratings')));
 		$sth->bindValue(1, $user->id, \PDO::PARAM_INT);
 		$sth->bindValue(2, $content->uid, \PDO::PARAM_INT);
 		$sth->execute();

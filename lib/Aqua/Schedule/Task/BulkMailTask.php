@@ -92,7 +92,7 @@ extends AbstractTask
 		Email::phpMailer()->smtpClose();
 		Email::phpMailer()->SMTPKeepAlive = false;
 		$sth = App::connection()->prepare(sprintf('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE id IN (' . str_repeat('?,', count($emailIds) - 1) . '?)
 		', ac_table('mail_queue')));
 		$sth->execute($emailIds);

@@ -111,7 +111,7 @@ extends AbstractFilter
 	public function afterDelete(ContentData $content)
 	{
 		$sth = App::connection()->prepare('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE _content_id = ?
 		', ac_table('content_subscriptions'));
 		$sth->bindValue(1, $content->uid, \PDO::PARAM_STR);
@@ -122,7 +122,7 @@ extends AbstractFilter
 	public function contentType_addSubscription(Account $user)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_type, _user_id)
+		INSERT INTO %s (_type, _user_id)
 		VALUES (:type, :user)
 		ON DUPLICATE KEY UPDATE _type = VALUES(_type)
 		', ac_table('content_type_subscriptions')));
@@ -140,7 +140,7 @@ extends AbstractFilter
 	public function contentType_removeSubscription(Account $user)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE _type = :type
 		AND _user_id = :user
 		', ac_table('content_type_subscriptions')));
@@ -159,7 +159,7 @@ extends AbstractFilter
 	{
 		$sth = App::connection()->prepare(sprintf('
 		SELECT COUNT(1)
-		FROM `%s`
+		FROM %s
 		WHERE _type = :type
 		AND _user_id = :user
 		LIMIT 1
@@ -194,7 +194,7 @@ extends AbstractFilter
 	public function contentData_addSubscription(ContentData $content, Account $user, $type)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_content_id, _user_id, _type)
+		INSERT INTO %s (_content_id, _user_id, _type)
 		VALUES (:content, :user, :type)
 		ON DUPLICATE KEY UPDATE _type = VALUES(_type)
 		', ac_table('content_subscriptions')));
@@ -213,7 +213,7 @@ extends AbstractFilter
 	public function contentData_removeSubscription(ContentData $content, Account $user)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		DELETE FROM `%s`
+		DELETE FROM %s
 		WHERE _content_id = :content
 		AND _user_id = :user
 		', ac_table('content_subscriptions')));
@@ -232,7 +232,7 @@ extends AbstractFilter
 	{
 		$sth = App::connection()->prepare(sprintf('
 		SELECT (_type + 0)
-		FROM `%s`
+		FROM %s
 		WHERE _content_id = :content
 		AND _user_id = :user
 		LIMIT 1

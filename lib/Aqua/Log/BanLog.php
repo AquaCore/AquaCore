@@ -147,11 +147,10 @@ class BanLog
 	 */
 	public static function logSql(Account $account, Account $banned_account, $unban_time, $type, $reason)
 	{
-		$tbl = ac_table('ban_log');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_user_id, _banned_id, _type, _reason, _unban_date, _ban_date)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_user_id, _banned_id, _type, _reason, _unban_date, _ban_date)
 		VALUES (:user, :banned, :type, :reason, :unban, NOW())
-		");
+		', ac_table('ban_log')));
 		$sth->bindValue(':user', $account->id, \PDO::PARAM_INT);
 		$sth->bindValue(':banned', $banned_account->id, \PDO::PARAM_INT);
 		$sth->bindValue(':type', $type, \PDO::PARAM_INT);

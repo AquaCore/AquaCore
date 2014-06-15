@@ -53,12 +53,11 @@ class TaskData
 		if($this->isEnabled === $isEnabled) {
 			return false;
 		}
-		$tbl = ac_table('tasks');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE %s
 		SET _enabled = ?
 		WHERE id = ?
-		");
+		', ac_table('tasks')));
 		$sth->bindValue(1, $isEnabled ? 'y' : 'n', \PDO::PARAM_STR);
 		$sth->bindValue(2, $this->id, \PDO::PARAM_INT);
 		$sth->execute();
@@ -72,12 +71,11 @@ class TaskData
 
 	public function setError($errorMessage)
 	{
-		$tbl = ac_table('tasks');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE %s
 		SET _error_message = ?
 		WHERE id = ?
-		");
+		', ac_table('tasks')));
 		if($errorMessage === null || $errorMessage === '') {
 			$sth->bindValue(1, '', \PDO::PARAM_STR);
 		} else {
@@ -124,7 +122,7 @@ class TaskData
 		$value[] = $this->id;
 		$update = substr($update, 0, -2);
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET %s
 		WHERE id = ?
 		LIMIT 1
@@ -146,14 +144,15 @@ class TaskData
 
 	public function delete()
 	{
-		$tbl = ac_table('tasks');
-		$sth = App::connection()->prepare("DELETE FROM `$tbl` WHERE id = ?");
-		$sth->execute(array( $this->id ));
-		if($sth->rowCount()) {
-			return true;
-		} else {
-			return false;
-		}
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
+		WHERE id = ?
+		', ac_table('tasks')));
+		$sth->bindValue(1, $this->id, \PDO::PARAM_INT);
+		$sth->execute();
+		$return = $sth->rowCount();
+		$sth->closeCursor();
+		return $return;
 	}
 
 	public function cron()

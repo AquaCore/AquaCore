@@ -25,7 +25,7 @@ function __($namespace, $key)
  */
 function ac_table($table)
 {
-	return \Aqua\TABLE_PREFIX . $table;
+	return '`' . \Aqua\TABLE_PREFIX . $table . '`';
 }
 
 function ac_form_path($url = null, $action = null, $arg = null, $force = false)

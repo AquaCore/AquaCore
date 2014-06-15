@@ -13,13 +13,12 @@ extends AbstractFilter
 	public function parseData(ContentData $content, array &$data)
 	{
 		if((int)$data['status'] === self::STATUS_SCHEDULED && (int)$data['publish_date'] <= time()) {
-			$tbl = ac_table('content');
-			$sth = App::connection()->prepare("
-			UPDATE `$tbl`
+			$sth = App::connection()->prepare(sprintf('
+			UPDATE %s
 			SET _status = ?
 			WHERE _uid = ?
 			LIMIT 1
-			");
+			', ac_table('content')));
 			$sth->bindValue(1, ContentData::STATUS_PUBLISHED, \PDO::PARAM_INT);
 			$sth->bindValue(2, $data['uid'], \PDO::PARAM_INT);
 			$sth->execute();

@@ -111,7 +111,7 @@ implements \ArrayAccess,
 			$this->meta = array_merge($this->meta, $keys);
 		} else {
 			$sth = App::connection()->prepare(sprintf('
-			REPLACE INTO `%s` (_id, _key, _val, _type)
+			REPLACE INTO %s (_id, _key, _val, _type)
 			VALUES (:id, :key, :val, :type)
 			', $this->_table));
 			foreach($keys as $key => $val) {
@@ -147,7 +147,7 @@ implements \ArrayAccess,
 			}
 		} else {
 			$sth = App::connection()->prepare(sprintf('
-			DELETE FROM `%s`
+			DELETE FROM %s
 			WHERE _id = ?
 			AND   _key = ?
 			', $this->_table));
@@ -170,7 +170,7 @@ implements \ArrayAccess,
 		if($this->_id !== null) {
 			$sth = App::connection()->prepare(sprintf('
 			SELECT _key, _val, _type
-			FROM `%s`
+			FROM %s
 			WHERE _id = ?
 			', $this->_table));
 			$sth->bindValue(1, $this->_id, \PDO::PARAM_INT);

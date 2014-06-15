@@ -130,14 +130,13 @@ implements SubjectInterface
 			$opt = array( $opt => $value );
 		}
 		$this->options = array_filter(array_merge($this->options, $opt));
-		$tbl           = ac_table('content_type_filters');
-		$sth           = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth           = App::connection()->prepare(sprintf('
+		UPDATE %s
 		SET _options = :opt
 		WHERE _type = :type
 		AND _name = :name
 		LIMIT 1
-		");
+		', ac_table('content_type_filters')));
 		$class         = explode('\\', get_class($this));
 		$class         = end($class);
 		$sth->bindValue(':opt', serialize($this->options), \PDO::PARAM_LOB);

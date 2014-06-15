@@ -67,14 +67,13 @@ implements \Serializable
 	 */
 	public function merge($settings, $override = true, &$updated = null)
 	{
-		$tbl = ac_table('plugin_settings');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE %s
 		SET _value = ?
 		WHERE _plugin_id = ?
 		AND _key = ?
 		LIMIT 1
-		");
+		', ac_table('plugin_settings')));
 		if($settings instanceof Settings) {
 			$settings = $settings->toArray();
 		}
@@ -107,12 +106,11 @@ implements \Serializable
 		if(!is_array($key)) {
 			$key = array( $key );
 		}
-		$tbl = ac_table('plugin_settings');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _plugin_id = ?
 		AND _key = ?
-		");
+		', ac_table('plugin_settings')));
 		foreach($key as $k) {
 			$sth->bindValue(1, $this->plugin->id, \PDO::PARAM_INT);
 			$sth->bindValue(2, $k, \PDO::PARAM_STR);
@@ -143,12 +141,11 @@ implements \Serializable
 	 */
 	public function fetch()
 	{
-		$tbl = ac_table('plugin_settings');
-		$sth = App::connection()->prepare("
+		$sth = App::connection()->prepare(sprintf('
 		SELECT _key, _value
-		FROM `$tbl`
+		FROM %s
 		WHERE _plugin_id = ?
-		");
+		', ac_table('plugin_settings')));
 		$sth->bindValue(1, $this->plugin->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$this->data = array();
@@ -167,14 +164,13 @@ implements \Serializable
 	 */
 	public function reset(array $keys = null)
 	{
-		$tbl = ac_table('plugin_settings');
 		if($keys) {
-			$sth     = App::connection()->prepare("
-			UPDATE `$tbl`
+			$sth     = App::connection()->prepare(sprintf('
+			UPDATE %s
 			SET _value = _default
 			WHERE _plugin_id = ?
 			AND _key = ?
-			");
+			', ac_table('plugin_settings')));
 			$updated = 0;
 			foreach($keys as $key) {
 				$sth->bindValue(1, $this->plugin->id, \PDO::PARAM_INT);
@@ -187,11 +183,11 @@ implements \Serializable
 			}
 		}
 		else {
-			$sth = App::connection()->prepare("
-			UPDATE `$tbl`
+			$sth = App::connection()->prepare(sprintf('
+			UPDATE %s
 			SET _value = _default
 			WHERE _plugin_id = ?
-			");
+			', ac_table('plugin_settings')));
 			$sth->bindValue(1, $this->plugin->id, \PDO::PARAM_INT);
 			$sth->execute();
 		}
@@ -213,11 +209,10 @@ implements \Serializable
 		if(!($xml = $this->plugin->xml('settings'))) {
 			return false;
 		}
-		$tbl = ac_table('plugin_settings');
-		$sth = App::connection()->prepare("
-		REPLACE INTO `$tbl` (_plugin_id, _key, _default, _value)
+		$sth = App::connection()->prepare(sprintf('
+		REPLACE INTO %s (_plugin_id, _key, _default, _value)
 		VALUES (:plugin, :key, :default, :default)
-		");
+		', ac_table('plugin_settings')));
 		foreach($xml->settings as $settings) {
 			$key = (string)$settings->key;
 			if($key === '') {

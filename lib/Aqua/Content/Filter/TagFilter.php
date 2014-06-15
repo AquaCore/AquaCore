@@ -25,11 +25,10 @@ extends AbstractFilter
 		if(empty($data['tags'])) return;
 		if(!is_array($data['tags'])) $data['tags'] = preg_split('/\s*,\s*/', $data['tags']);
 		$data['tags'] = array_filter($data['tags']);
-		$tbl = ac_table('tags');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_name, _content_id)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_name, _content_id)
 		VALUES (:name, :id)
-		");
+		', ac_table('tags')));
 		$content->data['tags'] = array();
 		foreach($data['tags'] as $tag) {
 			$tag = substr($tag, 0, 255);
@@ -44,11 +43,10 @@ extends AbstractFilter
 
 	public function afterDelete(ContentData $content, $rebuild = true)
 	{
-		$tbl = ac_table('tags');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _content_id = ?
-		");
+		', ac_table('tags')));
 		$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 		$sth->execute();
 		$content->data['tags'] = array();
@@ -68,12 +66,12 @@ extends AbstractFilter
 	{
 		if(!isset($content->data['tags'])) {
 			$tbl = ac_table('tags');
-			$sth = App::connection()->prepare("
+			$sth = App::connection()->prepare(sprintf('
 			SELECT _name
-			FROM `$tbl`
+			FROM %s
 			WHERE _content_id = ?
 			ORDER BY _content_id, id
-			");
+			', ac_table('tags')));
 			$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 			$sth->execute();
 			$content->data['tags'] = $sth->fetchAll(\PDO::FETCH_COLUMN, 0);
@@ -107,16 +105,14 @@ extends AbstractFilter
 
 	public function rebuildCache()
 	{
-		$ttbl = ac_table('tags');
-		$ctbl = ac_table('content');
-		$query = "
+		$sth = App::connection()->prepare(sprintf('
 		SELECT DISTINCT t._name, COUNT(_name)
-		FROM `$ttbl` t
-		LEFT JOIN `$ctbl` c
+		FROM %s t
+		LEFT JOIN %s c
 		ON c._uid = t._content_id
 		WHERE c._type = ?
-		GROUP BY _name";
-		$sth = App::connection()->prepare($query);
+		GROUP BY _name
+		', ac_table('tags'), ac_table('content')));
 		$sth->bindValue(1, $this->contentType->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$this->tags = array();

@@ -38,14 +38,13 @@ class Captcha
 		if(!$this->checkValidKey($key)) {
 			return false;
 		}
-		$tbl = ac_table('captcha');
-		$sth = App::connection()->prepare("
-		UPDATE `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		UPDATE %s
 		SET _code = :code
 		WHERE _ip_address = :ip
 		AND id = :id
 		LIMIT 1
-		");
+		', ac_table('captcha')));
 		$sth->bindValue(':id', $key, \PDO::PARAM_STR);
 		$sth->bindValue(':ip', $ipAddress, \PDO::PARAM_LOB);
 		$sth->bindValue(':code', $this->generateCode(), \PDO::PARAM_STR);
@@ -61,12 +60,11 @@ class Captcha
 	 */
 	public function create($ipAddress)
 	{
-		$tbl = ac_table('captcha');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (id, _ip_address, _code)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (id, _ip_address, _code)
 		VALUES (:id, :ip, :code)
 		ON DUPLICATE KEY UPDATE _code = VALUES(_code)
-		");
+		', ac_table('captcha')));
 		$key = bin2hex(secure_random_bytes(16));
 		$sth->bindValue(':id', $key, \PDO::PARAM_STR);
 		$sth->bindValue(':ip', $ipAddress, \PDO::PARAM_LOB);
@@ -88,15 +86,14 @@ class Captcha
 		if(!$this->checkValidKey($key)) {
 			return null;
 		}
-		$tbl = ac_table('captcha');
-		$sth = App::connection()->prepare("
+		$sth = App::connection()->prepare(sprintf('
 		SELECT _code
-		FROM `$tbl`
+		FROM %s
 		WHERE _ip_address = :ip
 		AND id = :id
 		AND _date > DATE_SUB(NOW(), INTERVAL :interval MINUTE)
 		LIMIT 1
-		");
+		', ac_table('captcha')));
 		$sth->bindValue(':id', $key, \PDO::PARAM_STR);
 		$sth->bindValue(':ip', $ip_address, \PDO::PARAM_LOB);
 		$sth->bindValue(':interval', $this->settings->get('expire', 30), \PDO::PARAM_LOB);
@@ -138,12 +135,11 @@ class Captcha
 	 */
 	public function delete($key, $ip_address)
 	{
-		$tbl = ac_table('captcha');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _ip_address = :ip AND id = :id
 		LIMIT 1
-		");
+		', ac_table('captcha')));
 		$sth->bindValue(':id', $key, \PDO::PARAM_STR);
 		$sth->bindValue(':ip', $ip_address, \PDO::PARAM_LOB);
 		$sth->execute();
@@ -154,11 +150,10 @@ class Captcha
 	 */
 	public function gc()
 	{
-		$tbl = ac_table('captcha');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _date < DATE_SUB(NOW(), INTERVAL :interval MINUTE)
-		");
+		', ac_table('captcha')));
 		$sth->bindValue(':interval', $this->settings->get('expire', 30), \PDO::PARAM_INT);
 		$sth->execute();
 	}

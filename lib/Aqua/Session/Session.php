@@ -213,17 +213,16 @@ class Session
 		$this->open = true;
 		$this->notify('open');
 		if($this->sessionId && ctype_xdigit($this->sessionId) || strlen($this->sessionId) !== 127) {
-			$tbl   = ac_table('session');
-			$query = "
+			$query = sprintf('
 			SELECT _user_id,
 			       _data,
 			       _tmp,
 			       _flash,
 			       UNIX_TIMESTAMP(_session_start),
 			       UNIX_TIMESTAMP(_last_update)
-			FROM `$tbl`
+			FROM %s
 			WHERE _key = :key AND _last_update > DATE_SUB(NOW(), INTERVAL :expire MINUTE)
-			";
+			', ac_table('session'));
 			if($this->matchUserAgent) {
 				$query .= " AND _user_agent = :ua";
 			}
@@ -320,8 +319,12 @@ class Session
 	 */
 	public function regenerateId($id = null)
 	{
-		$tbl = ac_table('session');
-		$sth = App::connection()->prepare("SELECT COUNT(1) FROM `$tbl` WHERE _key = ? LIMIT 1");
+		$sth = App::connection()->prepare(sprintf('
+		SELECT COUNT(1)
+		FROM %s
+		WHERE _key = ?
+		LIMIT 1
+		', ac_table('session')));
 		if(!$id) {
 			for($i = 0; $i < $this->maxCollision; ++$i) {
 				$id = $this->generateId();
@@ -339,17 +342,22 @@ class Session
 				SessionException::COLLISION
 			);
 		}
-		$old_id          = $this->sessionId;
+		$oldId           = $this->sessionId;
 		$this->sessionId = $id;
 		$this->updateCookie();
 		if($this->exists) {
-			$sth = App::connection()->prepare("UPDATE `$tbl` SET _key = ? WHERE _key = ? LIMIT 1");
+			$sth = App::connection()->prepare(sprintf('
+			UPDATE %s
+			SET _key = ?
+			WHERE _key = ?
+			LIMIT 1
+			', ac_table('session')));
 			$sth->bindValue(1, hash('sha512', $id), \PDO::PARAM_STR);
-			$sth->bindValue(2, hash('sha512', $old_id), \PDO::PARAM_STR);
+			$sth->bindValue(2, hash('sha512', $oldId), \PDO::PARAM_STR);
 			$sth->execute();
 			$this->lastUpdate = time();
 		}
-		$feedback = array( 'old_id' => $old_id, 'new_id' => $id );
+		$feedback = array( 'old_id' => $oldId, 'new_id' => $id );
 		$this->notify('regenerate_id', $feedback);
 
 		return $this;
@@ -363,16 +371,15 @@ class Session
 	public function save()
 	{
 		if($this->open) {
-			$tbl = ac_table('session');
-			$sth = App::connection()->prepare("
-			INSERT INTO `$tbl` (_key, _ip_address, _user_agent, _user_id, _data, _tmp, _flash, _session_start)
+			$sth = App::connection()->prepare(sprintf('
+			INSERT INTO %s (_key, _ip_address, _user_agent, _user_id, _data, _tmp, _flash, _session_start)
 			VALUES (:id, :ip, :ua, :user, :data, :tmp, :flash, NOW())
 			ON DUPLICATE KEY UPDATE
 			_user_id = VALUES(_user_id),
 			_data = VALUES(_data),
 			_tmp = VALUES(_tmp),
 			_flash = VALUES(_flash)
-			");
+			', ac_table('session')));
 			$sth->bindValue(':id', hash('sha512', $this->sessionId), \PDO::PARAM_STR);
 			$sth->bindValue(':ip', $this->ipAddress, \PDO::PARAM_LOB);
 			$sth->bindValue(':ua', substr($this->userAgent, 0, 255), \PDO::PARAM_STR);
@@ -396,12 +403,11 @@ class Session
 	 */
 	public function destroy($reset = true)
 	{
-		$tbl = ac_table('session');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _key = ?
 		LIMIT 1
-		");
+		', ac_table('session')));
 		$sth->bindValue(1, hash('sha512', $this->sessionId), \PDO::PARAM_STR);
 		$sth->execute();
 		$sth->closeCursor();
@@ -424,12 +430,11 @@ class Session
 		if(!$this->userId) {
 			return 0;
 		}
-		$tbl = ac_table('session');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _user_id = ?
 		AND _key != ?
-		");
+		', ac_table('session')));
 		$sth->bindValue(1, $this->userId, \PDO::PARAM_INT);
 		$sth->bindValue(2, hash('sha512', $this->sessionId), \PDO::PARAM_STR);
 		$sth->execute();
@@ -461,13 +466,13 @@ class Session
 	 */
 	public function gc()
 	{
-		$tbl = ac_table('session');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _last_update < DATE_SUB(NOW(), INTERVAL :interval MINUTE)
-		");
+		', ac_table('session')));
 		$sth->bindValue(':interval', $this->expire, \PDO::PARAM_INT);
 		$sth->execute();
+		$sth->closeCursor();
 	}
 
 	/**

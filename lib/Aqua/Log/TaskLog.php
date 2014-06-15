@@ -34,11 +34,10 @@ class TaskLog
 
 	public static function logSql(TaskData $task, $startTime, $endTime, $outputShort, $outputFull)
 	{
-		$tbl = ac_table('task_log');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_task_id, _ip_address, _start, _end, _run_time, _output_short, _output_full)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_task_id, _ip_address, _start, _end, _run_time, _output_short, _output_full)
 		VALUES (:id, :ip, :start, :end, :time, :sout, :fout)
-		");
+		', ac_table('task_log')));
 		$time         = $endTime - $startTime;
 		$hours        = floor($time/ 3600);
 		$minutes      = floor(($time - $hours * 3600) / 60);

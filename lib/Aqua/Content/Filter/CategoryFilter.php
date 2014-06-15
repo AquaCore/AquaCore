@@ -28,11 +28,10 @@ extends AbstractFilter
 		if(empty($data['category'])) return;
 		if(!is_array($data['category'])) $data['category'] = array( $data['category'] );
 		$data['category']            = array_unique(array_filter($data['category']));
-		$tbl                         = ac_table('content_categories');
-		$sth                         = App::connection()->prepare("
-		REPLACE INTO `$tbl` (_content_id, _category_id)
+		$sth                         = App::connection()->prepare(sprintf('
+		REPLACE INTO %s (_content_id, _category_id)
 		VALUES (:content, :category)
-		");
+		', ac_table('content_categories')));
 		$content->data['categories'] = array();
 		foreach($data['category'] as $category) {
 			if(!$this->contentType_getCategory($category)) continue;
@@ -45,13 +44,13 @@ extends AbstractFilter
 
 	public function afterDelete(ContentData $content)
 	{
-		$tbl = ac_table('content_categories');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _content_id = :id
-		");
+		', ac_table('content_categories')));
 		$sth->bindValue(':id', $content->uid, \PDO::PARAM_INT);
 		$sth->execute();
+		$sth->closeCursor();
 		$content->data['categories'] = array();
 	}
 
@@ -81,12 +80,11 @@ extends AbstractFilter
 	public function contentData_categories(ContentData $content)
 	{
 		if(!isset($content->data['categories'])) {
-			$tbl = ac_table('content_categories');
-			$sth = App::connection()->prepare("
+			$sth = App::connection()->prepare(sprintf('
 			SELECT _category_id
-			FROM `$tbl`
+			FROM %s
 			WHERE _content_id = ?
-			");
+			', ac_table('content_categories')));
 			$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 			$sth->execute();
 			$content->data['categories'] = array();
@@ -146,11 +144,10 @@ extends AbstractFilter
 		if(!array_key_exists('slug', $data)) {
 			$data['slug'] = $this->slug($data['name']);
 		}
-		$tbl = ac_table('categories');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_type, _name, _slug, _image, _description, _options, _protected)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_type, _name, _slug, _image, _description, _options, _protected)
 		VALUES (:type, :name, :slug, :image, :desc, :opt, :protected)
-		");
+		', ac_table('categories')));
 		$sth->bindValue(':type', $this->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(':name', $data['name'], \PDO::PARAM_STR);
 		$sth->bindValue(':slug', $data['slug'], \PDO::PARAM_STR);
@@ -174,14 +171,11 @@ extends AbstractFilter
 	public function contentType_deleteCategory(Category $category)
 	{
 		if($category->protected) return false;
-		$category_tbl = ac_table('categories');
-		$content_tbl  = ac_table('content_categories');
-		$meta_tbl     = ac_table('category_meta');
-		$sth          = App::connection()->prepare("
-		DELETE FROM `$content_tbl` WHERE _category_id = :id;
-		DELETE FROM `$meta_tbl` WHERE _id = :id;
-		DELETE FROM `$category_tbl` WHERE id = :id;
-		");
+		$sth          = App::connection()->prepare(sprintf('
+		DELETE FROM %s WHERE _category_id = :id;
+		DELETE FROM %s WHERE _id = :id;
+		DELETE FROM %s WHERE id = :id;
+		', ac_table('content_categories'), ac_table('category_meta'), ac_table('categories')));
 		$sth->bindValue(':id', $category->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$sth->closeCursor();
@@ -239,8 +233,11 @@ extends AbstractFilter
 		}
 		$update   = substr($update, 0, -2);
 		$values[] = $category->id;
-		$tbl      = ac_table('categories');
-		$sth      = App::connection()->prepare("UPDATE `$tbl` SET $update WHERE id = ?");
+		$sth      = App::connection()->prepare(sprintf('
+		UPDATE %s
+		SET %s
+		WHERE id = ?
+		', ac_table('categories'), $update));
 		$sth->execute(array_values($values));
 		if(!$sth->rowCount()) {
 			return false;
@@ -299,13 +296,12 @@ extends AbstractFilter
 	{
 		if($title === '') $title = __('application', 'untitled');
 		$slug = ac_slug($title, 250);
-		$tbl  = ac_table('categories');
-		$sth  = App::connection()->prepare("
+		$sth  = App::connection()->prepare(sprintf('
 		SELECT _slug
-		FROM `$tbl`
+		FROM %s
 		WHERE _type = ?
 		AND _slug LIKE ?
-		" . ($id !== null ? 'AND id != ?' : ''));
+		', ac_table('categories')) . ($id !== null ? 'AND id != ?' : ''));
 		$sth->bindValue(1, $this->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(2, addcslashes($slug, '%_\\') . '%', \PDO::PARAM_STR);
 		if($id !== null) $sth->bindValue(3, $id, \PDO::PARAM_INT);
@@ -334,8 +330,7 @@ extends AbstractFilter
 
 	public function rebuildCache()
 	{
-		$tbl = ac_table('categories');
-		$sth = App::connection()->prepare("
+		$sth = App::connection()->prepare(sprintf('
 		SELECT id,
 		       _type,
 		       _name,
@@ -343,9 +338,9 @@ extends AbstractFilter
 		       _image,
 		       _description,
 		       _options
-		FROM `$tbl`
+		FROM %s
 		WHERE _type = ?
-		");
+		', ac_table('categories')));
 		$sth->bindValue(1, $this->contentType->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$this->categories = array();

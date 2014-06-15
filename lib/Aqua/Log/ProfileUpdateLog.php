@@ -146,11 +146,10 @@ class ProfileUpdateLog
 	 */
 	public static function logSql(Account $account, $field, $value, $old)
 	{
-		$tbl = ac_table('profile_update_log');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_user_id, _ip_address, _field, _old_value, _new_value, _date)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_user_id, _ip_address, _field, _old_value, _new_value, _date)
 		VALUES (:id, :ip, :field, :old, :new, NOW())
-		");
+		', ac_table('profile_update_log')));
 		$sth->bindValue(':id', $account->id, \PDO::PARAM_INT);
 		$sth->bindValue(':ip', App::request()->ipString, \PDO::PARAM_STR);
 		$sth->bindValue(':field', $field, \PDO::PARAM_STR);

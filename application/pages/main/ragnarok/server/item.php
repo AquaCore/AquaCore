@@ -387,12 +387,11 @@ extends Page
 					$dbh->rollBack();
 					return;
 				}
-				$tbl = ac_table('users');
-				$sth = $dbh->prepare("
-				UPDATE `$tbl`
+				$sth = $dbh->prepare(sprintf('
+				UPDATE %s
 				SET _credits = _credits - ?
 				WHERE id = ?
-				");
+				', ac_table('users')));
 				$sth->bindValue(1, $cart->total, \PDO::PARAM_INT);
 				$sth->bindValue(2, $user->account->id, \PDO::PARAM_INT);
 				$sth->execute();

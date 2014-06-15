@@ -106,7 +106,7 @@ class Plugin
 			ErrorLog::logSql($exception);
 		}
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _enabled = \'y\'
 		WHERE id = ?
 		', ac_table('plugins')));
@@ -163,8 +163,10 @@ class Plugin
 	{
 		$this->disable();
 		ac_delete_dir($this->directory, true);
-		$tbl = ac_table('plugins');
-		$sth = App::connection()->prepare("DELETE FROM `$tbl` WHERE id = :id");
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
+		WHERE id = :id
+		', ac_table('plugins')));
 		$sth->bindValue(':id', $this->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$sth->closeCursor();
@@ -314,11 +316,11 @@ class Plugin
 	 * Scan folder for a plugin and add it to the database
 	 *
 	 * @param string $dir
-	 * @param string $dir_name
+	 * @param string $dirName
 	 * @return \Aqua\Plugin\Plugin
 	 * @throws \Aqua\Plugin\Exception\PluginManagerException|\Exception
 	 */
-	public static function import($dir, $dir_name = null)
+	public static function import($dir, $dirName = null)
 	{
 		if(!file_exists("$dir/xml/plugin.xml") ||
 		   !file_exists("$dir/startup.php")
@@ -343,13 +345,15 @@ class Plugin
 			);
 		}
 		try {
-			$tbl = ac_table('plugins');
-			$sth = App::connection()->prepare("
-			INSERT INTO `$tbl` (_guid, _directory, _name, _description, _author, _author_url, _plugin_url, _version, _license, _enabled)
+			$sth = App::connection()->prepare(sprintf('
+			INSERT INTO %s (_guid, _directory, _name, _description, _author, _author_url, _plugin_url, _version, _license, _enabled)
 			VALUES (:guid, :dir, :title, :description, :author, :author_url, :url, :version, :license, :enabled)
-			");
+			', ac_table('plugins')));
+			if(!$dirName) {
+				$dirName = uniqid("$guid-");
+			}
 			$sth->bindValue(':guid', $guid, \PDO::PARAM_STR);
-			$sth->bindValue(':dir', ($dir_name ? $dir_name : $guid), \PDO::PARAM_STR);
+			$sth->bindValue(':dir', $dirName, \PDO::PARAM_STR);
 			$sth->bindValue(':title', (string)$xml->title, \PDO::PARAM_STR);
 			$sth->bindValue(':description', (string)$xml->description, \PDO::PARAM_LOB);
 			$sth->bindValue(':author', (string)$xml->author, \PDO::PARAM_STR);
@@ -359,11 +363,11 @@ class Plugin
 			$sth->bindValue(':license', (string)$xml->license, \PDO::PARAM_STR);
 			$sth->bindValue(':enabled', 'n', \PDO::PARAM_STR);
 			$sth->execute();
-			$id          = App::connection()->lastInsertId();
-			$plugin_dir  = \Aqua\ROOT . self::DIRECTORY . '/' . ($dir_name ? $dir_name : $id . '-' . $guid);
-			$old         = umask(0);
-			if(!is_dir($plugin_dir)) {
-				mkdir($dir, 644, true);
+			$id         = App::connection()->lastInsertId();
+			$pluginDir  = \Aqua\ROOT . self::DIRECTORY . '/' . $dirName;
+			$old        = umask(0);
+			if(!is_dir($pluginDir)) {
+				mkdir($pluginDir, \Aqua\PUBLIC_DIRECTORY_PERMISSION, true);
 				$iter = new \RecursiveIteratorIterator(
 					new \RecursiveDirectoryIterator(
 						$dir,
@@ -371,10 +375,10 @@ class Plugin
 					), \RecursiveIteratorIterator::SELF_FIRST);
 				foreach($iter as $item) {
 					if($item->isDir()) {
-						mkdir($plugin_dir . '/' . $iter->getSubPathName(), \Aqua\PUBLIC_DIRECTORY_PERMISSION);
+						mkdir($pluginDir . '/' . $iter->getSubPathName(), \Aqua\PUBLIC_DIRECTORY_PERMISSION);
 					}
 					else {
-						$name = $plugin_dir . '/' . $iter->getSubPathName();
+						$name = $pluginDir . '/' . $iter->getSubPathName();
 						copy($item, $name);
 						chmod($name, \Aqua\PUBLIC_FILE_PERMISSION);
 					}
@@ -388,10 +392,9 @@ class Plugin
 			return $plugin;
 		} catch(\Exception $exception) {
 			if(!empty($id)) {
-				$tbl = ac_table('plugins');
-				$sth = App::connection()->prepare("
-				DELETE FROM `$tbl` WHERE id = :id;
-				");
+				$sth = App::connection()->prepare(sprintf('
+				DELETE FROM %s WHERE id = :id;
+				', ac_table('plugins')));
 				$sth->bindParam(':id', $id, \PDO::PARAM_INT);
 				$sth->execute();
 			}

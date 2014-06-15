@@ -11,11 +11,10 @@ extends AbstractFilter
 	public function afterUpdate(ContentData $content, array $data, array &$values)
 	{
 		if(!array_key_exists('parent', $data)) return false;
-		$tbl = ac_table('content_relationship');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _content_id = ?
-		");
+		', ac_table('content_relationship')));
 		$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 		$sth->execute();
 		$this->afterCreate($content, $data);
@@ -29,12 +28,11 @@ extends AbstractFilter
 		if(empty($data['parent']) || $content->uid === $data['parent'] || !$this->contentType->get($data['parent'])) {
 			return;
 		}
-		$tbl = ac_table('content_relationship');
-		$sth = App::connection()->prepare("
-		INSERT INTO `$tbl` (_content_id, _parent_id)
+		$sth = App::connection()->prepare(sprintf('
+		INSERT INTO %s (_content_id, _parent_id)
 		VALUES (:id, :parent)
 		ON DUPLICATE KEY UPDATE _parent_id = :parent
-		");
+		', ac_table('content_relationship')));
 		$sth->bindValue(':id', $content->uid, \PDO::PARAM_INT);
 		$sth->bindValue(':parent', $data['parent'], \PDO::PARAM_INT);
 		$sth->execute();
@@ -43,11 +41,10 @@ extends AbstractFilter
 
 	public function afterDelete(ContentData $content)
 	{
-		$tbl = ac_table('content_relationship');
-		$sth = App::connection()->prepare("
-		DELETE FROM `$tbl`
+		$sth = App::connection()->prepare(sprintf('
+		DELETE FROM %s
 		WHERE _content_id = :id OR _parent_id = :id
-		");
+		', ac_table('content_relationship')));
 		$sth->bindValue(':id', $content->uid, \PDO::PARAM_INT);
 		$sth->execute();
 		$content->data['parent'] = null;
@@ -69,12 +66,11 @@ extends AbstractFilter
 	public function contentData_parent(ContentData $content)
 	{
 		if(!array_key_exists('parent', $content->data)) {
-			$tbl = ac_table('content_relationship');
-			$sth = App::connection()->prepare("
+			$sth = App::connection()->prepare(sprintf('
 			SELECT _parent_id
-			FROM `$tbl`
+			FROM %s
 			WHERE _content_id = ?
-			");
+			', ac_table('content_relationship')));
 			$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 			$sth->execute();
 			$content->data['parent'] = (int)$sth->fetchColumn(0);
@@ -91,12 +87,11 @@ extends AbstractFilter
 	public function contentData_children(ContentData $content)
 	{
 		if($content->forged) return array();
-		$tbl = ac_table('content_relationship');
-		$sth = App::connection()->prepare("
+		$sth = App::connection()->prepare(sprintf('
 		SELECT _content_id
-		FROM `$tbl`
+		FROM %s
 		WHERE _parent_id = ?
-		");
+		', ac_table('content_relationship')));
 		$sth->bindValue(1, $content->uid, \PDO::PARAM_INT);
 		$sth->execute();
 		$children = array();
@@ -113,10 +108,10 @@ extends AbstractFilter
 	 */
 	public function contentType_relationshipTree($data = array())
 	{
-		$query      = "
+		$query      = '
 		SELECT c._uid AS uid,
 		       r._parent_id  AS parent_uid
-		";
+		';
 		$data       = array_unique($data);
 		$join       = false;
 		$column_map = array(
@@ -151,8 +146,8 @@ extends AbstractFilter
 		$ctbl = ac_table('content');
 		$rtbl = ac_table('content_relationship');
 		$query .= "
-		FROM `$ctbl` c
-		LEFT JOIN `$rtbl` r
+		FROM $ctbl c
+		LEFT JOIN $rtbl r
 		ON c._uid = r._content_id
 		";
 		if($join && $this->contentType->table) {

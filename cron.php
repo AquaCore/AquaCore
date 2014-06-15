@@ -43,6 +43,9 @@ try {
 	}
 	ignore_user_abort(true);
 	set_time_limit(0);
+
+	\Aqua\Plugin\Plugin::init();
+
 	foreach($search as $taskData) {
 		if($task = TaskManager::task($taskData->id)) {
 			$task->beginTask();
