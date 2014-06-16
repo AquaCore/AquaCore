@@ -7,10 +7,7 @@ use Aqua\Captcha\Captcha;
 use Aqua\Core\Exception\CoreException;
 use Aqua\Http\Request;
 use Aqua\Http\Response;
-use Aqua\Log\ErrorLog;
-use Aqua\Permission\PermissionSet;
 use Aqua\Ragnarok\Server;
-use Aqua\Router\Router;
 use Aqua\Site\Dispatcher;
 use Aqua\Storage\StorageFactory;
 
@@ -88,11 +85,11 @@ class App
 	/**
 	 * Installed version of AquaCore (String)
 	 */
-	const VERSION = '0.2.5';
+	const VERSION = '0.2.6';
 	/**
 	 * Installed version of AquaCore (Integer)
 	 */
-	const VERSION_LONG = 205;
+	const VERSION_LONG = 206;
 
 	private function __construct() { }
 
@@ -451,9 +448,15 @@ class App
 		return ++self::$uid;
 	}
 
-	public static function upgrade()
+	public static function upgrade($oldVersion = null)
 	{
-		$oldVersion = (file_exists(\Aqua\ROOT . '/upgrade/version') ? file_get_contents(\Aqua\ROOT . '/upgrade/version') : '0.1.1');
+		if(!$oldVersion) {
+			if(file_exists(\Aqua\ROOT . '/upgrade/version')) {
+				$oldVersion = file_get_contents(\Aqua\ROOT . '/upgrade/version');
+			} else {
+				$oldVersion = '0.1.1';
+			}
+		}
 		if(version_compare(self::VERSION, $oldVersion, '>')) {
 			foreach(glob(\Aqua\ROOT . '/upgrade/sql/*.sql') as $file) {
 				if(!ac_parse_upgrade_file_name($file, $version, $num, $type) ||

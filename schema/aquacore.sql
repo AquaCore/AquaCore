@@ -382,7 +382,7 @@ CREATE TABLE IF NOT EXISTS `#content_type` (
   _key VARCHAR(32) COLLATE utf8_bin NOT NULL,
   _name VARCHAR(255) NOT NULL,
   _item_name VARCHAR(255) NOT NULL,
-  _table VARCHAR(32) COLLATE utf8_bin NOT NULL,
+  _table VARCHAR(32) COLLATE utf8_bin DEFAULT NULL,
   _adapter VARCHAR(255),
   _permission VARCHAR(32) DEFAULT NULL,
   _feed ENUM('y', 'n') NOT NULL DEFAULT 'y',

@@ -6,7 +6,7 @@ return array(
 	'date_format'        => '%x',
 	'time_format'        => '%X',
 	'datetime_format'    => '%x <small>%X</small>',
-	'language'           => 'en',
+	'language'           => array(),
 	'domain'             => '',
 	'base_dir'           => '',
 	'cron_key'           => '',

@@ -580,7 +580,7 @@ implements \Serializable, SubjectInterface
 		foreach($xml->contenttype as $ctype) {
 			$key  = (string)$ctype->attributes()->key;
 			$name = (string)$ctype->name;
-			if(!strlen($key) || strlen($name) || self::getContentType($key, 'key')) {
+			if(!strlen($key) || !strlen($name) || self::getContentType($key, 'key')) {
 				continue;
 			}
 			$adapter    = (string)$ctype->adapter;
@@ -597,9 +597,9 @@ implements \Serializable, SubjectInterface
 				$sth->bindValue(':item', $name, \PDO::PARAM_STR);
 			}
 			if(!$ctype->listing || filter_var((string)$ctype->listing, FILTER_VALIDATE_BOOLEAN)) {
-				$sth->bindValue(':list', 'y', \PDO::PARAM_STR);
+				$sth->bindValue(':listing', 'y', \PDO::PARAM_STR);
 			} else {
-				$sth->bindValue(':list', 'n', \PDO::PARAM_STR);
+				$sth->bindValue(':listing', 'n', \PDO::PARAM_STR);
 			}
 			if(!$ctype->feed || filter_var((string)$ctype->feed, FILTER_VALIDATE_BOOLEAN)) {
 				$sth->bindValue(':feed', 'y', \PDO::PARAM_STR);
@@ -685,7 +685,7 @@ implements \Serializable, SubjectInterface
 		}
 		$query->query();
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE INTO %s
+		UPDATE %s
 		SET _table = ?
 		WHERE id = ?
 		', ac_table('content_type')));

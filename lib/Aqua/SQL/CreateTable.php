@@ -298,6 +298,7 @@ extends AbstractQuery
 					$columns[] = $index;
 				}
 			}
+			$columns = array_filter($columns);
 			$query .= implode(",\r\n", $columns) . "\r\n";
 			$query .= ")\r\n";
 		}
@@ -462,7 +463,6 @@ extends AbstractQuery
 	public function parseColumnXml(\SimpleXMLElement $xml, $name = null)
 	{
 		$attributes = $xml->attributes();
-		$default = (string)$attributes->default;
 		$column = array(
 			'type'          => strtoupper((string)$attributes->type),
 			'length'        => (int)$attributes->length,
@@ -471,7 +471,6 @@ extends AbstractQuery
 			'collation'     => (string)$attributes->collation,
 			'format'        => (string)$attributes->format,
 			'storage'       => (string)$attributes->storage,
-			'default'       => ($default === 'NULL' ? null : $default),
 			'unsigned'      => filter_var((string)$attributes->unsigned,
 			                              FILTER_VALIDATE_BOOLEAN),
 			'zeroFill'      => filter_var((string)$attributes->zerofill,
@@ -487,6 +486,10 @@ extends AbstractQuery
 			'values'        => (array)$xml->value,
 			'reference'     => (array)$xml->reference[0],
 		);
+		if(isset($attributes['default'])) {
+			$default = (string)$attributes->default;
+			$column['default'] = ($default === 'NULL' ? null : $default);
+		}
 		$name = $name ?: (string)$attributes->name;
 		$this->columns(array( $name => $column ));
 		return $this;
