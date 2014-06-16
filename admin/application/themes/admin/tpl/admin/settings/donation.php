@@ -8,7 +8,7 @@ $option = &$menu->get('donation');
 $option['class'] = 'active';
 ?>
 <table class="ac-settings-form">
-	<?php echo $form->render(null, false, array( 'currency', 'min_donation', 'exchange_rate', 'goal', 'goal_interval' )) ?>
+	<?php echo $form->render(null, false, array( 'enable', 'currency', 'min_donation', 'exchange_rate', 'goal', 'goal_interval' )) ?>
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">
@@ -17,5 +17,5 @@ $option['class'] = 'active';
 			</div>
 		</td>
 	</tr>
-	<?php echo $form->render(null, false, array( 'pp_sandbox', 'business_email', 'receiver_email' )) ?>
+	<?php echo $form->render(null, false, array( 'logging', 'pp_sandbox', 'business_email', 'receiver_email' )) ?>
 </table>

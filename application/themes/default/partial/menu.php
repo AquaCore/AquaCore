@@ -1,10 +1,8 @@
 <?php
 use Aqua\Core\App;
-use Aqua\Ragnarok\Ragnarok;
 use Aqua\Ragnarok\Server;
-use Aqua\Ragnarok\Server\CharMap;
-use Aqua\Http\Uri;
 use Aqua\UI\Menu;
+
 $menu = new Menu;
 $menu->append('home', array(
 		'title' => __('menu', 'home'),
@@ -21,10 +19,13 @@ if(App::user()->loggedIn()) {
 			'url' => ac_build_url(array( 'path' => array( 'account' ), 'action' => 'register' ))
 		));
 }
-$menu->append('donation', array(
+if(App::settings()->get('donation')->get('enable')) {
+	$menu->append('donation', array(
 		'title' => __('menu', 'donate'),
 		'url' => ac_build_url(array( 'path' => array( 'donate' ) ))
-	))->append('news', array(
+	));
+}
+$menu->append('news', array(
 		'title' => __('menu', 'news'),
 		'url' => ac_build_url(array( 'path' => array( 'news' ) ))
 	));

@@ -754,9 +754,19 @@ extends Page
 	public function donation_action()
 	{
 		try {
-			$currencies = array( 'AUD', 'BRL', 'CAD', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS', 'JPY', 'MYR', 'MXN', 'NOK', 'NZD', 'PHP', 'PLN', 'GBP', 'SGD', 'SEK', 'CHF', 'TWD', 'THB', 'TRY', 'USD' );
+			$currencies = array( 'AUD', 'BRL', 'CAD', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS', 'JPY', 'MYR', 'MXN',
+			                     'NOK', 'NZD', 'PHP', 'PLN', 'GBP', 'SGD', 'SEK', 'CHF', 'TWD', 'THB', 'TRY', 'USD' );
 			$settings = App::settings()->get('donation');
 			$frm = new Form($this->request);
+			$frm->checkbox('enable')
+				->value(array( '1' => '' ))
+			    ->checked($settings->get('enable', true) ? '1' : null)
+			    ->setLabel(__('settings', 'donation-enable'));
+			$frm->checkbox('logging')
+				->value(array( '1' => '' ))
+			    ->checked($settings->get('pp_log_requests', false) ? '1' : null)
+			    ->setLabel(__('settings', 'donation-logging'))
+				->setDescription(__('settings', 'donation-logging-desc'));
 			$frm->checkbox('pp_sandbox')
 				->value(array( '1' => '' ))
 			    ->checked($settings->get('pp_sandbox', false) ? '1' : null)
@@ -835,6 +845,8 @@ extends Page
 		$this->response->status(302)->redirect(App::request()->uri->url());
 		try {
 			$settings = App::settings();
+			$settings->get('donation')->set('enable', (bool)$this->request->getInt('enable'));
+			$settings->get('donation')->set('pp_log_requests', (bool)$this->request->getInt('logging'));
 			$settings->get('donation')->set('pp_sandbox', (bool)$this->request->getInt('pp_sandbox'));
 			$settings->get('donation')->set('pp_business_email', $this->request->getString('business_email'));
 			$settings->get('donation')->set('pp_receiver_email', preg_split('/ *, */', $this->request->getString('receiver_email')));

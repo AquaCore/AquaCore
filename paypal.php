@@ -14,6 +14,9 @@ define('Aqua\PROFILE',     'PAYPAL_IPN_LISTENER');
 include 'lib/bootstrap.php';
 
 try {
+	if(!App::settings()->get('donation')->get('enable', true)) {
+		die;
+	}
 	Plugin::init();
 	$listener = new PayPalIPNListener(App::request(), App::settings()->get('donation'));
 	$listener->process();
