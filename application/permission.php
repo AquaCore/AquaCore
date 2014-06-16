@@ -59,7 +59,7 @@ if(Server::$serverCount === 0) {
 		->denyAll();
 } else {
 	$permissions
-		->set("main/ragnarok/action/[register|link|index]")
+		->set("main/ragnarok/action/[register|link]")
 		->order(Permission::ORDER_DENY_ALLOW | Permission::ORDER_PERMISSION_ROLE)
 		->allowPermission('register-account')
 		->addFilter('check_status_active', $filterActiveAccount);
