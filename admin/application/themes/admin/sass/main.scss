@@ -237,6 +237,7 @@ button.ac-delete-button {
 	.option-dashboard .menu-option-icon,
 	.option-pages .menu-option-icon,
 	.option-posts .menu-option-icon,
+	.option-comments .menu-option-icon,
 	.option-users .menu-option-icon,
 	.option-plugins .menu-option-icon,
 	.option-tasks .menu-option-icon,
@@ -272,6 +273,10 @@ button.ac-delete-button {
 	.option-tasks {
 		.menu-option-icon { background-position: -240px 0; }
 		&:hover .menu-option-icon { background-position: -240px -30px; }
+	}
+	.option-comments {
+		.menu-option-icon { background-position: -270px 0; }
+		&:hover .menu-option-icon { background-position: -270px -30px; }
 	}
 	.option-logs {
 		.menu-option-icon { background-position: -210px 0; }

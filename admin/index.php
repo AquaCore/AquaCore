@@ -66,6 +66,13 @@ try {
 				'title' => __('admin-menu', 'dashboard'),
 				'url'   => \Aqua\WORKING_URL
 			));
+		if(App::user()->role()->hasPermission('edit-comments')) {
+			$menu->append('comments', array(
+				'class' => array( 'option-comments' ),
+			    'title' => __('admin-menu', 'comments'),
+			    'url'   => ac_build_url(array( 'path' => array( 'content', 'comments' ) ))
+			));
+		}
 		if($role->hasPermission('create-pages')) {
 			$menu->append('pages', array(
 					'class'   => array( 'option-pages' ),
@@ -99,12 +106,15 @@ try {
 					array(
 						'title' => __('admin-menu', 'news-categories'),
 						'url'   => ac_build_url(array( 'path' => array( 'news', 'category' ) )),
-					),
-					array(
-						'title' => __('admin-menu', 'news-comments'),
-						'url'   => ac_build_url(array( 'path' => array( 'news', 'comments' ) )),
 					)
 				)));
+			if(App::user()->role()->hasPermission('edit-comments')) {
+				$item = $menu->get('posts');
+				$item['submenu']->append('comments', array(
+					'title' => __('admin-menu', 'comments'),
+					'url'   => ac_build_url(array( 'path' => array( 'news', 'comments' ) )),
+				));
+			}
 		}
 		$submenu = array(array(
 			'title' => __('admin-menu', 'users'),
