@@ -166,11 +166,6 @@ class ItemData
 		return __('ragnarok-item-type', $this->type);
 	}
 
-	public function url(array $options)
-	{
-		return $this->charmap->uri->url();
-	}
-
 	public static function getData($data, $type)
 	{
 		switch($type) {

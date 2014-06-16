@@ -81,7 +81,7 @@ implements \Iterator, \Countable
 	protected function _prepareOptions($template)
 	{
 		$options = array();
-		foreach($this as $key => $option) {
+		foreach($this as $option) {
 			if($option['submenu'] instanceof self) {
 				$option['submenu'] = $option['submenu']->render($template);
 			}

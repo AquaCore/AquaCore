@@ -65,7 +65,6 @@ extends AbstractFilter
 	public function contentData_tags(ContentData $content)
 	{
 		if(!isset($content->data['tags'])) {
-			$tbl = ac_table('tags');
 			$sth = App::connection()->prepare(sprintf('
 			SELECT _name
 			FROM %s
