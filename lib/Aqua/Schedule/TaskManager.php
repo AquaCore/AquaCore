@@ -1,7 +1,6 @@
 <?php
 namespace Aqua\Schedule;
 
-use Aqua\Autoloader\Autoloader;
 use Aqua\Core\App;
 use Aqua\Plugin\Plugin;
 use Aqua\SQL\Query;

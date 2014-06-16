@@ -106,7 +106,7 @@ class Autoloader
 
 	/**
 	 * @param \Aqua\Storage\StorageInterface $storage
-	 * @paren string                         $key
+	 * @param string                         $key
 	 * @return \Aqua\Autoloader\Autoloader
 	 */
 	public function setCache(StorageInterface $storage, $key = 'autoloader_cache')

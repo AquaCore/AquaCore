@@ -1,7 +1,6 @@
 <?php
 namespace Aqua\UI;
 
-use Aqua\Core\Exception\InvalidArgumentException;
 use Aqua\Http\Request;
 use Aqua\UI\Form\FieldInterface;
 

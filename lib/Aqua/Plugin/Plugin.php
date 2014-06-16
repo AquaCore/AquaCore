@@ -92,6 +92,7 @@ class Plugin
 
 	/**
 	 * @return bool
+	 * @throws \Aqua\Plugin\Exception\PluginException
 	 */
 	public function enable()
 	{

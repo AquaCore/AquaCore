@@ -2,7 +2,6 @@
 namespace Aqua\UI\Search;
 
 use Aqua\Core\Exception\InvalidArgumentException;
-use Aqua\Http\Request;
 use Aqua\SQL\Search;
 use Aqua\UI\AbstractForm;
 use Aqua\UI\Form\Select as FormSelect;

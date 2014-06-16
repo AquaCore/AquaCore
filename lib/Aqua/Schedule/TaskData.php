@@ -3,7 +3,6 @@ namespace Aqua\Schedule;
 
 use Aqua\Core\App;
 use Aqua\Event\Event;
-use Aqua\SQL\Query;
 use Cron\CronExpression;
 
 class TaskData

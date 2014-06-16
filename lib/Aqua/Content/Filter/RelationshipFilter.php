@@ -4,6 +4,7 @@ namespace Aqua\Content\Filter;
 use Aqua\Content\AbstractFilter;
 use Aqua\Content\ContentData;
 use Aqua\Core\App;
+use Aqua\SQL\Query;
 
 class RelationshipFilter
 extends AbstractFilter

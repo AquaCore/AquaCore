@@ -3,7 +3,6 @@ namespace Aqua\Storage\Adapter;
 
 use Aqua\Storage\Exception\StorageException;
 use Aqua\Storage\FlushableStorageInterface;
-use Aqua\Storage\NumberStorageInterface;
 use Aqua\Storage\StorageInterface;
 
 /**

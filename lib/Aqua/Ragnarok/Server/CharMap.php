@@ -2,8 +2,6 @@
 namespace Aqua\Ragnarok\Server;
 
 use Aqua\Core\App;
-use Aqua\Event\Event;
-use Aqua\Ragnarok\Account;
 use Aqua\Ragnarok\Character;
 use Aqua\Ragnarok\Guild;
 use Aqua\Ragnarok\Homunculus;

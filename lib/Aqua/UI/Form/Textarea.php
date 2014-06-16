@@ -1,7 +1,6 @@
 <?php
 namespace Aqua\UI\Form;
 
-use Aqua\Http\Request;
 use Aqua\UI\AbstractForm;
 use Aqua\UI\Form;
 use Aqua\UI\Tag;

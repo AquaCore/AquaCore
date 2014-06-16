@@ -1,8 +1,6 @@
 <?php
 namespace Aqua\Storage\Exception;
 
-use Aqua\Core\Exception\AbstractException;
-
 class FileStorageException
 extends \Exception
 {

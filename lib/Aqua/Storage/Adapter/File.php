@@ -6,7 +6,6 @@ use Aqua\Storage\Exception\StorageException;
 use Aqua\Storage\FlushableStorageInterface;
 use Aqua\Storage\FlushPrefixStorageInterface;
 use Aqua\Storage\GCStorageInterface;
-use Aqua\Storage\NumberStorageInterface;
 use Aqua\Storage\StorageInterface;
 
 class File
