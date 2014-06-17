@@ -137,20 +137,6 @@
 		frm.attr("method", "POST")
 			.attr("action", $(this).attr("href"))
 			.append(cke);
-		if(AquaCore.settings.contentData.allowAnonymous) {
-			frm.append(
-				$("<input>")
-					.attr("type", "checkbox")
-					.attr("value", "1")
-					.attr("name", "anonymous")
-					.attr("id", "anon-reply")
-				)
-				.append(
-					$("<label></label>")
-						.attr("for", "anon-reply")
-						.append(AquaCore.l("comment", "comment-anonymously"))
-				)
-		}
 		frm.append(
 				$("<button>")
 					.attr("type", "type")
@@ -162,7 +148,7 @@
 				$("<button>")
 					.attr("type", "submit")
 					.attr("class", "ac-button")
-					.append(AquaCore.l("comment", "reply"))
+					.append(AquaCore.l("comment", "edit"))
 			);
 		reply = $("<div></div>")
 			.addClass("ac-comment-reply-wrapper")
