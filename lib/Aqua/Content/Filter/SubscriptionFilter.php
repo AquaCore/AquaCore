@@ -30,20 +30,19 @@ extends AbstractFilter
 		$content        = $comment->content();
 		$datetimeFormat = App::settings()->get('datetime_format', '');
 		$replacements   = array(
-			'site-title'                => htmlspecialchars(App::settings()->get('title', '')),
-			'site-url'                  => \Aqua\URL,
-			'content-title'             => htmlspecialchars($content->title),
-			'content-url'               => $content->contentType->url(array( 'path' => array( $content->slug ) ), false),
-			'comment-url'               => $content->contentType->url(array(
+			'site-title'           => htmlspecialchars(App::settings()->get('title', '')),
+			'site-url'             => \Aqua\URL,
+			'content-title'        => htmlspecialchars($content->title),
+			'content-url'          => $content->contentType->url(array( 'path' => array( $content->slug ) ), false),
+			'comment-url'          => $content->contentType->url(array(
 					'path' => array( $content->slug ),
 					'query' => array( 'root' => $comment->id )
 				), false),
-			'content-date'              => $content->publishDate($datetimeFormat),
-			'comment-html'              => $comment->html,
-			'comment-bbcode'            => $comment->bbCode,
-			'comment-display-name'      => $comment->author()->displayName,
-			'comment-display-name-full' => $comment->authorDisplay(),
-			'comment-avatar'            => $comment->authorAvatar()
+			'content-date'         => $content->publishDate($datetimeFormat),
+			'comment-html'         => $comment->html,
+			'comment-bbcode'       => $comment->bbCode,
+			'comment-display-name' => $comment->anonymous ? __('comment', 'anonymous') : $comment->author()->displayName,
+			'comment-avatar'       => $comment->authorAvatar()
 		);
 		foreach($content->getSubscriptions($comment) as $sub) {
 			if(empty($sub['comment_id'])) {
@@ -57,14 +56,11 @@ extends AbstractFilter
 						), false)
 				));
 			}
-			if(!$role = Role::get($sub['role_id'])) {
-				$role = Role::get(Role::ROLE_USER);
-			}
 			$email->replace($replacements + array(
-					'user-display-name'      => htmlspecialchars($sub['display_name']),
-					'user-display-name-full' => $role->display($sub['display_name'], 'ac-username'),
-			        'user-email'             => htmlspecialchars($sub['email']),
-			        'username'               => htmlspecialchars($sub['username']),
+					'user-display-name' => htmlspecialchars($sub['display_name']),
+			        'user-email'        => htmlspecialchars($sub['email']),
+			        'user-avatar'       => $sub['avatar'],
+			        'username'          => htmlspecialchars($sub['username']),
 				))
 				->addAddress($sub['email'], $sub['display_name'])
 				->queue();
@@ -80,28 +76,23 @@ extends AbstractFilter
 			return;
 		}
 		$replacements = array(
-			'site-title'               => htmlspecialchars(App::settings()->get('title', '')),
-			'site-url'                 => \Aqua\URL,
-			'content-type-name'        => strtolower(htmlspecialchars($content->contentType->itemName)),
-			'content-title'            => htmlspecialchars($content->title),
-			'content-url'              => $content->contentType->url(array( 'path' => array( $content->slug ) ), false),
-		    'content-date'             => $content->publishDate(App::settings()->get('datetime_format', '')),
-		    'short-content'            => $content->shortContent ?: $content->truncate(600, '...'),
-		    'author-display-name'      => $content->author()->displayName,
-		    'author-display-name-full' => $content->author()->display(),
-		    'author-avatar'            => $content->author()->avatar(),
+			'site-title'          => htmlspecialchars(App::settings()->get('title', '')),
+			'site-url'            => \Aqua\URL,
+			'content-type-name'   => strtolower(htmlspecialchars($content->contentType->itemName)),
+			'content-title'       => htmlspecialchars($content->title),
+			'content-url'         => $content->contentType->url(array( 'path' => array( $content->slug ) ), false),
+		    'content-date'        => $content->publishDate(App::settings()->get('datetime_format', '')),
+		    'short-content'       => $content->shortContent ?: $content->truncate(600, '...'),
+		    'author-display-name' => $content->author()->displayName,
+		    'author-avatar'       => $content->author()->avatar(),
 		);
 		foreach($this->contentType->getSubscriptions() as $sub) {
-			if(!($role = Role::get($sub['role_id']))) {
-				$role = Role::get(Role::ROLE_USER);
-			}
 			Email::fromTemplate('sub-content')
 				->replace($replacements + array(
-					'username'               => $sub['username'],
-				    'user-display-name'      => $sub['display_name'],
-				    'user-display-name-full' => $role->display($sub['username'], 'ac-username'),
-				    'user-avatar'            => $sub['avatar'],
-				    'user-email'             => $sub['email']
+					'username'          => $sub['username'],
+				    'user-display-name' => $sub['display_name'],
+				    'user-avatar'       => $sub['avatar'],
+				    'user-email'        => $sub['email']
 				))
 				->addAddress($sub['email'], $sub['display_name'])
 				->queue();
@@ -172,7 +163,7 @@ extends AbstractFilter
 
 	public function contentType_getSubscriptions()
 	{
-		return Query::select(App::connection())
+		$subs = Query::select(App::connection())
 			->columns(array(
 				'id'           => 'u.id',
 				'username'     => 'u._username',
@@ -189,6 +180,19 @@ extends AbstractFilter
 			->setKey('id')
 			->query()
 			->results;
+		foreach($subs as &$user) {
+			if(substr($user['avatar'], 0, 16) === '/uploads/avatar/') {
+				$user['avatar'] = \Aqua\URL . $user['avatar'];
+			} else if(empty($user['avatar'])) {
+				$path = App::settings()->get('account')->get('default_avatar', '');
+				if($path) {
+					$user['avatar'] = \Aqua\URL . $path;
+				} else {
+					$user['avatar'] = \Aqua\BLANK;
+				}
+			}
+		}
+		return $subs;
 	}
 
 	public function contentData_addSubscription(ContentData $content, Account $user, $type)
@@ -301,6 +305,18 @@ extends AbstractFilter
 					$parentId = $select->get('parent_id');
 				} else {
 					break;
+				}
+			}
+		}
+		foreach($subs as &$user) {
+			if(substr($user['avatar'], 0, 16) === '/uploads/avatar/') {
+				$user['avatar'] = \Aqua\URL . $user['avatar'];
+			} else if(empty($user['avatar'])) {
+				$path = App::settings()->get('account')->get('default_avatar', '');
+				if($path) {
+					$user['avatar'] = \Aqua\URL . $path;
+				} else {
+					$user['avatar'] = \Aqua\BLANK;
 				}
 			}
 		}

@@ -306,5 +306,6 @@
     <word namespace="ragnarok" key="account-unbaned">%s has been unbaned.</word>
     <word namespace="ragnarok" key="account-banned-temporarily">%s is banned until %s.</word>
     <word namespace="ragnarok" key="account-banned-permanently">%s has been banned permanently.</word>
+    <word namespace="ragnarok" key="woe-disable">This page is disabled during WoE.</word>
   </wordgroup>
 </languageimport>

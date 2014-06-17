@@ -8,7 +8,6 @@
     <word namespace="admin-menu" key="news-posts">Posts</word>
     <word namespace="admin-menu" key="news-new-post">New Post</word>
     <word namespace="admin-menu" key="news-categories">Categories</word>
-    <word namespace="admin-menu" key="news-comments">Comments</word>
     <word namespace="admin-menu" key="users">Users</word>
     <word namespace="admin-menu" key="users-roles">Roles</word>
     <word namespace="admin-menu" key="ragnarok">Ragnarök</word>
@@ -25,5 +24,6 @@
     <word namespace="admin-menu" key="smileys">Smileys</word>
     <word namespace="admin-menu" key="emails">Email Templates</word>
     <word namespace="admin-menu" key="tasks">Tasks</word>
+    <word namespace="admin-menu" key="comments">Comments</word>
   </wordgroup>
 </languageimport>

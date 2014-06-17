@@ -6,7 +6,7 @@
       <subject>Registration</subject>
       <body><![CDATA[<html>
 	<body>
-	<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+	<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
 	Welcome, #display-name#.<br>
 	You have created an account on <a href="#site-url#">#site-title#</a>,<br>
 	in order to proceed with your registration please use the link below:<br>

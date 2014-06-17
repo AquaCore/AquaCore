@@ -6,9 +6,9 @@
       <subject>New reply to #content-title#</subject>
       <body><![CDATA[<html>
 	<body>
-		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
 		Hello, #user-display-name#,<br>
-		<p>#comment-display-name-full# has posted a new reply to <a href="#user-comment-url#">your comment</a> on <a href="#content-url#"></a><b>#content-title#</b></a>:</p>
+		<p>#comment-display-name# has posted a new reply to <a href="#user-comment-url#">your comment</a> on <a href="#content-url#"></a><b>#content-title#</b></a>:</p>
 		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
 		#comment-html#
 		</div>
@@ -24,14 +24,12 @@
       <placeholder key="content-date">Post's publish date</placeholder>
       <placeholder key="username">Recipient's username</placeholder>
       <placeholder key="user-display-name">Recipient's plain display name</placeholder>
-      <placeholder key="user-display-name-full">Recipient's display name with their role's style applied</placeholder>
       <placeholder key="user-email">Recipient's email address</placeholder>
       <placeholder key="user-avatar">Recipient's avatar url</placeholder>
       <placeholder key="user-comment-url">Parent comment's url</placeholder>
       <placeholder key="comment-html">Comment's html content</placeholder>
       <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
       <placeholder key="comment-display-name">Replier's plain display name</placeholder>
-      <placeholder key="comment-display-name-full">Replier's display name with their role's style applied, or "anonymous" if it's an anonymous comment</placeholder>
       <placeholder key="comment-avatar">Replier's avatar url</placeholder>
     </email>
   </emailgroup>

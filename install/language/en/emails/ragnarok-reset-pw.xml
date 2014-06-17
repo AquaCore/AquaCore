@@ -6,7 +6,7 @@
       <subject>Password Recovery</subject>
       <body><![CDATA[<html>
 	<body>
-		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
 		Hello, #display-name#,<br>
 		You have received this e-mail because you have requested
 		a new password for your Ragnarok account <b>#ro-username#</b><br>

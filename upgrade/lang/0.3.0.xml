@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="admin-menu" key="comments">Comments</word>
+        <word namespace="donation" key="payer-status">Payer status</word>
+        <word namespace="donation" key="view-transaction">View Transaction</word>
+        <word namespace="plugin" key="name">Plugin name</word>
+        <word namespace="plugin" key="plugin-url">Plugin URL</word>
+        <word namespace="plugin" key="x-delete-s"><![CDATA[The plugin <b>%s</b> has been deleted.]]></word>
+        <word namespace="plugin" key="plugin-imported"><![CDATA[Plugin <b>%s</b> imported successfully.]]></word>
+        <word namespace="ragnarok-ban-log" key="account">Banned account</word>
+        <word namespace="ragnarok-ban-log" key="banned-by">Banned ny</word>
+        <word namespace="ragnarok-ban-log" key="type">Ban type</word>
+        <word namespace="ragnarok-ban-log" key="date">Ban date</word>
+        <word namespace="ragnarok-ban-log" key="unban-date">Unban date</word>
+        <word namespace="ragnarok-charmap" key="edit-schedule">Edit WoE Scheudle - %s</word>
+        <word namespace="ragnarok-charmap" key="schedule-startday">Start day</word>
+        <word namespace="ragnarok-charmap" key="schedule-starttime">Start time</word>
+        <word namespace="ragnarok-charmap" key="schedule-endday">End day</word>
+        <word namespace="ragnarok-charmap" key="schedule-endtime">End time</word>
+        <word namespace="ragnarok-charmap" key="scheule-updated">The WoE schedule has been updated.</word>
+        <word namespace="ragnarok-charmap" key="confirm-delete-sch-s">Are you sure you want to delete this item from the WoE schedule?</word>
+        <word namespace="ragnarok-charmap" key="confirm-delete-sch-p">Are you sure you want to delete these items from the WoE schedule?</word>
+        <word namespace="ragnarok-charmap" key="schedule-updated">The WoE schedule has been updated.</word>
+        <word namespace="ragnarok-login-log" key="ip-address">IP address</word>
+        <word namespace="ragnarok-login-log" key="response">Response code</word>
+        <word namespace="ragnarok-login-log" key="message">Response message</word>
+        <word namespace="ragnarok-password-reset-log" key="request-date">Request date</word>
+        <word namespace="ragnarok-password-reset-log" key="reset-date">Reset date</word>
+        <word namespace="ragnarok-password-reset-log" key="reset-key">Reset key</word>
+        <word namespace="ragnarok-password-reset-log" key="ip-address">IP address</word>
+        <word namespace="ragnarok" key="woe-disable">This page is disabled during WoE.</word>
+        <word namespace="settings" key="app-ob-desc">Whether to compress the html output before sending responses.</word>
+        <word namespace="settings" key="captcha-font-desc">TTF font used to render the verification code.</word>
+        <word namespace="settings" key="acc-birthday-interval-desc">Time, in days, to reset the update limit.</word>
+        <word namespace="settings" key="acc-email-interval-desc">Time, in days, to reset the update limit.</word>
+        <word namespace="settings" key="ro-purchase-max-label">Maximum Shop Items</word>
+        <word namespace="settings" key="acc-password-interval-desc">Time, in days, to reset the update limit.</word>
+        <word namespace="settings" key="ro-emblem-ttl-desc">Time, in seconds, an emblem should remain in cache.</word>
+        <word namespace="settings" key="ro-sprite-ttl-desc">Time, in seconds, a sprite should remain in cache.</word>
+        <word namespace="settings" key="donation-enable">Enable Donations</word>
+        <word namespace="settings" key="donation-logging">Log Requests</word>
+        <word namespace="settings" key="donation-logging-desc">Log all requests to /paypal.php.</word>
+    </wordgroup>
+    <emailgroup>
+        <email key="ragnarok-reset-pw">
+            <name>Ragnarök Password Recovery</name>
+            <subject>Password Recovery</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #display-name#,<br>
+		You have received this e-mail because you have requested
+		a new password for your Ragnarok account <b>#ro-username#</b><br>
+		Please use the link below to reset your password:<br>
+		<a href="#url#">Reset Password</a>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="ro-username">Recipient's ragnarök username</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+        <email key="registration">
+            <name>Registration</name>
+            <subject>Registration</subject>
+            <body><![CDATA[<html>
+	<body>
+	<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+	Welcome, #display-name#.<br>
+	You have created an account on <a href="#site-url#">#site-title#</a>,<br>
+	in order to proceed with your registration please use the link below:<br>
+	<a href="#url#">Confirm Registration</a><br>
+	You may log in to your account using your username <b><i>(#username#)</i></b> and your password.<br>
+	This link will expire in <b>#time-left#</b> hours.
+	</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="time-left">Hours left until the confirmation url expires</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+        <email key="reset-pw">
+            <name>Site Password Recovery</name>
+            <subject>Password Recovery</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #display-name#.<br>
+		You have received this email because you or someone else have requested a new password for your account at <a href="#site-url#">#site-title#</a>,<br>
+		Please click the link below to proceed:<br>
+		<a href="#url#">Reset Password</a><br>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="username">Recipient's site username</placeholder>
+            <placeholder key="display-name">Recipient's site display name</placeholder>
+            <placeholder key="email">Recipient's email address</placeholder>
+            <placeholder key="time-now">Current date</placeholder>
+            <placeholder key="time-left">Hours left until the password recovery key expires</placeholder>
+            <placeholder key="url">Password recovery URL</placeholder>
+            <placeholder key="key">Password recovery key</placeholder>
+        </email>
+        <email key="sub-comment-reply">
+            <name>Comment Reply Subscription</name>
+            <subject>New reply to #content-title#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #user-display-name#,<br>
+		<p>#comment-display-name# has posted a new reply to <a href="#user-comment-url#">your comment</a> on <a href="#content-url#"></a><b>#content-title#</b></a>:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment.</a></p>
+		</div>
+		</body>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="user-comment-url">Parent comment's url</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+            <placeholder key="comment-avatar">Replier's avatar url</placeholder>
+        </email>
+        <email key="sub-comment">
+            <name>Comment Subscription</name>
+            <subject>New reply to #content-title#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #user-display-name#,<br>
+		<p>#comment-display-name# has posted a new comment to <a href="#content-url#"></a><b>#content-title#</b></a>:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment.</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+            <placeholder key="comment-avatar">Replier's avatar url</placeholder>
+        </email>
+        <email key="sub-content">
+            <name>Content Subscription</name>
+            <subject>New #content-type-name#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #user-display-name#,<br/>
+		<p>#author-display-name# has just posted a new #content-type-name#</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		<div style="font-size: 18px; color: #4586d0; border-bottom: 1px solid;">#content-title#</div>
+		#short-content#
+		</div>
+		<p><a href="#content-url#">Click here to read more.</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-type-name">Content type name (post, page, ...)</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="short-content">Post's short content</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="author-display-name">Author's plain display name</placeholder>
+            <placeholder key="author-avatar">Author's avatar url</placeholder>
+        </email>
+    </emailgroup>
+</languageimport>

@@ -74,7 +74,7 @@
     <word namespace="ragnarok-charmap" key="shop">Item Shop</word>
     <word namespace="ragnarok-charmap" key="shop-categories">Shop Categories</word>
     <word namespace="ragnarok-charmap" key="woe">WoE Schedule</word>
-    <word namespace="ragnarok-charmap" key="edit-schedule">Edit Woe Scheudle - %s</word>
+    <word namespace="ragnarok-charmap" key="edit-schedule">Edit WoE Scheudle - %s</word>
     <word namespace="ragnarok-charmap" key="characters">Characters</word>
     <word namespace="ragnarok-charmap" key="guilds">Guilds</word>
     <word namespace="ragnarok-charmap" key="settings">Settings</word>
@@ -90,12 +90,12 @@
     <word namespace="ragnarok-charmap" key="schedule-name">Name</word>
     <word namespace="ragnarok-charmap" key="schedule-castles">Castles IDs</word>
     <word namespace="ragnarok-charmap" key="schedule-castles-desc">Separate castle IDs with comma.</word>
-    <word namespace="ragnarok-charmap" key="schedule-startday">Start Day</word>
-    <word namespace="ragnarok-charmap" key="schedule-starttime">Start Time</word>
-    <word namespace="ragnarok-charmap" key="schedule-endday">End Day</word>
-    <word namespace="ragnarok-charmap" key="schedule-endtime">End Time</word>
+    <word namespace="ragnarok-charmap" key="schedule-startday">Start day</word>
+    <word namespace="ragnarok-charmap" key="schedule-starttime">Start time</word>
+    <word namespace="ragnarok-charmap" key="schedule-endday">End day</word>
+    <word namespace="ragnarok-charmap" key="schedule-endtime">End time</word>
     <word namespace="ragnarok-charmap" key="castle-id">Castle ID</word>
-    <word namespace="ragnarok-charmap" key="scheule-updated">The woe schedule has been updated.</word>
+    <word namespace="ragnarok-charmap" key="scheule-updated">The WoE schedule has been updated.</word>
     <word namespace="ragnarok-charmap" key="castle-name">Castle Name</word>
     <word namespace="ragnarok-charmap" key="add-castle">Add Castle</word>
     <word namespace="ragnarok-charmap" key="edit-shop">Edit Item Shop - %s</word>
@@ -105,10 +105,11 @@
     <word namespace="ragnarok-charmap" key="castle-id-number">Castle IDs must be numbers higher than 0.</word>
     <word namespace="ragnarok-charmap" key="castles-updated">Castles updated.</word>
     <word namespace="ragnarok-charmap" key="schedule-added"><![CDATA[<b>%s</b> added to woe schedule.]]></word>
-    <word namespace="ragnarok-charmap" key="confirm-delete-sch-s">Are you sure you want to delete this item from the woe schedule?</word>
-    <word namespace="ragnarok-charmap" key="confirm-delete-sch-p">Are you sure you want to delete these items from the woe schedule?</word>
+    <word namespace="ragnarok-charmap" key="confirm-delete-sch-s">Are you sure you want to delete this item from the WoE schedule?</word>
+    <word namespace="ragnarok-charmap" key="confirm-delete-sch-p">Are you sure you want to delete these items from the WoE schedule?</word>
     <word namespace="ragnarok-charmap" key="server-deleted"><![CDATA[Char/Map server <b>%s</b> removed from the control panel.]]></word>
     <word namespace="ragnarok-charmap" key="confirm-delete">Are you sure you want to remove this char/map server from the control panel?  This action will not affect the server and nothing will be deleted from the database.</word>
     <word namespace="ragnarok-charmap" key="search-card-desc">Separate card IDs with comma.</word>
+    <word namespace="ragnarok-charmap" key="schedule-updated">The WoE schedule has been updated.</word>
   </wordgroup>
 </languageimport>

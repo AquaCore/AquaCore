@@ -28,7 +28,7 @@
     <word namespace="donation" key="gross">Gross</word>
     <word namespace="donation" key="deposited">Deposited</word>
     <word namespace="donation" key="txn-type">Transaction type</word>
-    <word namespace="donation" key="payer-statys">Payer status</word>
+    <word namespace="donation" key="payer-status">Payer status</word>
     <word namespace="donation" key="payer-email">Payer email</word>
     <word namespace="donation" key="payer-id">Payer ID</word>
     <word namespace="donation" key="payer-name">Payer name</word>
@@ -51,5 +51,6 @@
     <word namespace="donation" key="transfer-not-enough-credits">You don't have enough credits.</word>
     <word namespace="donation" key="target-not-found">User not found.</word>
     <word namespace="donation" key="cannot-transfer-to-self">You cannot transfer credits to your own account.</word>
+    <word namespace="donation" key="view-transaction">View Transaction</word>
   </wordgroup>
 </languageimport>

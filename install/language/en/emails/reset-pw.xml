@@ -6,7 +6,7 @@
       <subject>Password Recovery</subject>
       <body><![CDATA[<html>
 	<body>
-		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
 		Hello, #display-name#.<br>
 		You have received this email because you or someone else have requested a new password for your account at <a href="#site-url#">#site-title#</a>,<br>
 		Please click the link below to proceed:<br>

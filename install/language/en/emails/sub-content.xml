@@ -6,9 +6,9 @@
       <subject>New #content-type-name#</subject>
       <body><![CDATA[<html>
 	<body>
-		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #97A5BA;">
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
 		Hello, #user-display-name#,<br/>
-		<p>#author-display-name-full# has just posted a new #content-type-name#</p>
+		<p>#author-display-name# has just posted a new #content-type-name#</p>
 		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
 		<div style="font-size: 18px; color: #4586d0; border-bottom: 1px solid;">#content-title#</div>
 		#short-content#
@@ -26,11 +26,9 @@
       <placeholder key="short-content">Post's short content</placeholder>
       <placeholder key="username">Recipient's username</placeholder>
       <placeholder key="user-display-name">Recipient's plain display name</placeholder>
-      <placeholder key="user-display-name-full">Recipient's display name with their role's style applied</placeholder>
       <placeholder key="user-email">Recipient's email address</placeholder>
       <placeholder key="user-avatar">Recipient's avatar url</placeholder>
       <placeholder key="author-display-name">Author's plain display name</placeholder>
-      <placeholder key="author-display-name-full">Author's display name with their role's style applied</placeholder>
       <placeholder key="author-avatar">Author's avatar url</placeholder>
     </email>
   </emailgroup>
