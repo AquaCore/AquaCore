@@ -119,17 +119,8 @@
 			);
 		}
 	}
-	.ac-reports {
-		td {
-			text-align: center !important;
-		}
-		.ac-report-message {
-			text-align: justify !important;
-			font-style: italic;
-		}
-	}
 	.ac-comments {
-		width: 50%;
+		width: 100%;
 	}
 	.ac-comment {
 		position: relative;
@@ -148,6 +139,7 @@
 	}
 	.ac-comment-avatar {
 		float: left;
+		margin-right: 10px;
 		height: 6em;
 		img {
 			max-height: 100%;
