@@ -32,7 +32,7 @@ if($comment->authorId === $content->authorId && !$comment->anonymous) {
 				              $comment->authorDisplay(),
 				              $comment->timeElapsedPublishDate()) ?>
 			</div>
-			<?php if($content->contentType->filter('CommentFilter')->getOption('rating', false)) : ?>
+			<?php if($content->contentType->filter('CommentFilter')->getOption('rating', true)) : ?>
 				<div class="ac-comment-rating">
 					<?php if($actions && !$isArchived &&
 					         App::user()->role()->hasPermission('rate')) : ?>
@@ -70,7 +70,18 @@ if($comment->authorId === $content->authorId && !$comment->anonymous) {
 						'hash' => 'comments'
 					)) ?>"><?php echo __('comment', 'parent') ?></a>
 				<?php endif; ?>
-				<?php if(!$isArchived && App::user()->role()->hasPermission('comment')) : ?>
+				<?php if(!$isArchived && App::user()->role()->hasPermission('comment')) :
+					if($comment->authorId === App::user()->account->id &&
+					   $comment->contentType->filter('CommentFilter')->getOption('editing', true)) :
+						$page->theme->jsSettings['commentSource'][$comment->id] = $comment->bbCode;
+					?>
+						<a class="ac-comment-edit" href="<?php echo ac_build_url(array(
+							'path' => array( 'comment' ),
+							'action' => 'edit',
+							'arguments' => array( $comment->contentType->key, $comment->id ),
+							'query' => array( 'return' => $page->theme->jsSettings['base64Url'] )
+						)) ?>"><?php echo __('comment', 'edit') ?></a>
+					<?php endif; ?>
 					<a class="ac-comment-reply" href="<?php echo ac_build_url(array(
 						'path' => array( 'comment' ),
 					    'action' => 'reply',

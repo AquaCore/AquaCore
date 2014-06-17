@@ -1,6 +1,7 @@
 <?php
 namespace Page;
 
+use Aqua\Core\L10n;
 use Aqua\Site\Page;
 
 class Common
@@ -18,6 +19,9 @@ extends Page
 		}
 		if(!$message) {
 			switch($code) {
+				case 500:
+				case 503:
+				case 405:
 				case 404:
 				case 403:
 				case 401: echo __('http-error', $code); break;

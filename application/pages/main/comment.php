@@ -14,11 +14,6 @@ extends Page
 	public function reply_action($cType = null, $contentId = null, $commentId = null)
 	{
 		try {
-			if(!App::user()->role()->hasPermission('comment')) {
-				$this->error(403);
-
-				return;
-			}
 			if(!$cType || !$contentId ||
 			   !($cType = ContentType::getContentType($cType, 'key')) ||
 			   !$cType->hasFilter('CommentFilter') ||
@@ -55,6 +50,7 @@ extends Page
 					$title = __('comment', 'reply-comment');
 				}
 				$this->title = $this->theme->head->section = $title;
+				$this->theme->set('return', $cType->url(array( 'path' => array( $comment->content()->slug ) )));
 				$tpl = new Template;
 				$tpl->set('content', $content)
 					->set('comment', isset($comment) ? $comment : null)
@@ -105,11 +101,6 @@ extends Page
 	public function report_action($cType = null, $commentId = null)
 	{
 		try {
-			if(!App::user()->role()->hasPermission('comment')) {
-				$this->error(403);
-
-				return;
-			}
 			if(!$commentId || !$cType ||
 			   !($cType = ContentType::getContentType($cType, 'key')) ||
 			   !($comment = $cType->getComment($commentId))) {
@@ -128,6 +119,7 @@ extends Page
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
 				$this->title = $this->theme->head->section = __('comment', 'report-comment');
+				$this->theme->set('return', $cType->url(array( 'path' => array( $comment->content()->slug ) )));
 				$tpl = new Template;
 				$tpl->set('comment', isset($comment) ? $comment : null)
 				    ->set('form', $frm)
@@ -149,6 +141,71 @@ extends Page
 				}
 				if($cType->reportComment($comment, App::user()->account, $this->request->getString('report', ''))) {
 					App::user()->addFlash('success', null, __('comment', 'report-sent'));
+				}
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
+		}
+	}
+
+	public function edit_action($cType = null, $commentId = null)
+	{
+		try {
+			if(!$commentId || !$cType ||
+			   !($cType = ContentType::getContentType($cType, 'key')) ||
+			   !$cType->hasFilter('CommentFilter') ||
+			   !($comment = $cType->getComment($commentId))) {
+				$this->error(404);
+
+				return;
+			}
+			if($comment->authorId !== App::user()->account->id ||
+			   !$cType->filter('CommentFilter')->getOption('editing', true) ||
+			   ($cType->hasFilter('ArchiveFilter') && $comment->content()->isArchived()) ||
+			   $comment->status !== \Aqua\Content\Filter\CommentFilter\Comment::STATUS_PUBLISHED) {
+				$this->error(403);
+
+				return;
+			}
+			$frm = new Form($this->request);
+			$content = $frm->textarea('content', true)->required();
+			if(!$this->request->getString('content')) {
+				$content->append($comment->bbCode);
+			}
+			$frm->submit();
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = $this->theme->head->section = __('comment', 'edit-comment');
+				$this->theme->set('return', $cType->url(array( 'path' => array( $comment->content()->slug ) )));
+				$tpl = new Template;
+				$tpl->set('comment', $comment)
+				    ->set('form', $frm)
+				    ->set('page', $this);
+				echo $tpl->render('content/comment-edit');
+
+				return;
+			}
+			$this->response->redirect(302);
+			try {
+				if(($url = base64_decode($this->request->uri->getString('return', ''))) &&
+				   parse_url($url, PHP_URL_HOST) === \Aqua\DOMAIN) {
+					$this->response->redirect($url);
+				} else {
+					$this->response->redirect($cType->url(array(
+						'path'  => array( $comment->content()->slug ),
+						'hash'  => 'comments',
+					    'query' => array( 'root' => $comment->id )
+					)));
+				}
+				if($comment->update(array(
+					'bbcode_content' => $this->request->getString('content'),
+				    'last_editor'    => App::user()->account->id
+				))) {
+					App::user()->addFlash('success', null, __('comment', 'comment-updated'));
 				}
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);

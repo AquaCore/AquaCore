@@ -12,5 +12,6 @@
     <word namespace="email" key="alt-body">Alternative Body</word>
     <word namespace="email" key="body-desc">HTML Body</word>
     <word namespace="email" key="alt-body-desc">Plain text Body (optional)</word>
+    <word namespace="email" key="template-saved"><![CDATA[The template <b>%s</b> has been updated.]]></word>
   </wordgroup>
 </languageimport>

@@ -36,6 +36,8 @@ $option['class'] = 'active';
 		'post_archive',
 		'post_rating',
 		'post_comments',
-		'post_anon'
+		'post_anon',
+		'post_comment_edit',
+		'post_comment_rate',
 	)) ?>
 </table>

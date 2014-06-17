@@ -689,6 +689,14 @@ extends Page
 				->attr('min', 1)
 				->value($post->filter('ratingFilter')->getOption('maxweight', 10), false)
 				->setLabel(__('settings', 'cms-weight-label'));
+			$frm->checkbox('post_comment_edit', true)
+				->value(array( '1' => '' ))
+				->checked($post->filter('commentFilter')->getOption('editing', true) ? '1' : null)
+				->setLabel(__('settings', 'cms-comment-edit'));
+			$frm->checkbox('post_comment_rate', true)
+				->value(array( '1' => '' ))
+				->checked($post->filter('commentFilter')->getOption('rating', true) ? '1' : null)
+				->setLabel(__('settings', 'cms-comment-rate'));
 			$frm->input('post_nesting', true)
 				->type('number')
 				->attr('min', 1)
@@ -720,20 +728,18 @@ extends Page
 			}
 			$this->response->status(302)->redirect(App::request()->uri->url());
 			try {
-				$page->filter('ratingFilter')->setOption(array(
+				$page->filter('RatingFilter')->setOption(array(
 					'maxweight' => $this->request->getInt('page_weight')
 				));
-				$post->filter('ratingFilter')->setOption(array(
-					'maxweight' => $this->request->getInt('post_weight')
+				$post->filter('CommentFilter')->setOption(array(
+					'nesting' => $this->request->getInt('post_nesting'),
+					'rating'  => (bool)$this->request->getInt('post_comment_rate'),
+					'editing' => (bool)$this->request->getInt('post_comment_edit')
 				));
-				$post->filter('commentFilter')->setOption(array(
-					'nesting' => $this->request->getInt('post_nesting')
-				));
-				$post->filter('archiveFilter')->setOption(array(
+				$post->filter('ArchiveFilter')->setOption(array(
 					'interval' => $this->request->getInt('post_archive_interval')
 				));
 				$settings->get('page')->set('enable_rating_by_default', (bool)$this->request->getString('page_rating'));
-				$settings->get('post')->set('enable_rating_by_default', (bool)$this->request->getString('post_rating'));
 				$settings->get('post')->set('enable_comments_by_default', (bool)$this->request->getString('post_comments'));
 				$settings->get('post')->set('enable_anonymous_by_default', (bool)$this->request->getString('post_anon'));
 				$settings->get('post')->set('enable_archiving_by_default', (bool)$this->request->getString('post_archive'));

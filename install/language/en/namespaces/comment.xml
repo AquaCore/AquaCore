@@ -32,5 +32,8 @@
     <word namespace="comment" key="view-comment">View Comment</word>
     <word namespace="comment" key="reports">Reports</word>
     <word namespace="comment" key="report-message">Report Message</word>
+    <word namespace="comment" key="edit">Edit</word>
+    <word namespace="comment" key="edit-comment">Edit Comment</word>
+    <word namespace="comment" key="comment-updated">Your comment has been updated.</word>
   </wordgroup>
 </languageimport>

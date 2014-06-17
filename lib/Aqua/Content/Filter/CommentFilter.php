@@ -428,7 +428,7 @@ extends AbstractFilter
 	 */
 	public function contentType_rateComment(Comment $comment, Account $user, $weight)
 	{
-		if(!$this->getOption('rating', false) ||
+		if(!$this->getOption('rating', true) ||
 		   ($comment->authorId === $user->id &&
 		    !$this->getOption('rateself', false))) {
 			return false;

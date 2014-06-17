@@ -1,8 +1,4 @@
 <?php
-use Aqua\Core\App;
-use Aqua\UI\ScriptManager;
-use Aqua\UI\StyleManager;
-
 /**
  * @var $content      \Aqua\Content\ContentData
  * @var $comments     \Aqua\Content\Filter\CommentFilter\Comment[]
@@ -10,7 +6,15 @@ use Aqua\UI\StyleManager;
  * @var $paginator    \Aqua\UI\Pagination
  * @var $page         \Aqua\Site\Page
  */
+
+use Aqua\Core\App;
+use Aqua\UI\ScriptManager;
+use Aqua\UI\StyleManager;
+
+$editComments = false;
+
 if($content->forged || App::user()->role()->hasPermission('comment')) {
+	$editComments = $content->contentType->filter('CommentFilter')->getOption('editing', true);
 	$page->theme->head->enqueueLink(StyleManager::style('bbcode'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('ckeditor'));
 	$page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
@@ -23,7 +27,7 @@ if($content->forged || App::user()->role()->hasPermission('comment')) {
 		)));
 	$ratings = $content->commentRatings(App::user()->account);
 	$page->theme
-		->addWordGroup('comment', array( 'cancel', 'reply', 'comment-anonymously', 'report', 'report-placeholder' ))
+		->addWordGroup('comment', array( 'cancel', 'edit', 'reply', 'comment-anonymously', 'report', 'report-placeholder' ))
 		->addSettings('contentData', array(
 			'ID' => $content->uid,
 		    'cType' => $content->contentType->id,
@@ -31,7 +35,8 @@ if($content->forged || App::user()->role()->hasPermission('comment')) {
 		))
 		->addSettings('commentRatings', $ratings)
 		->addSettings('base64Url', base64_encode(App::request()->uri->url()))
-		->addSettings('ckeComments', include \Aqua\ROOT . '/settings/ckeditor.php');
+		->addSettings('ckeComments', include \Aqua\ROOT . '/settings/ckeditor.php')
+		->addSettings('commentSource', array());
 } else {
 	$ratings = array();
 }

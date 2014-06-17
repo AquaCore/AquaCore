@@ -1,9 +1,8 @@
 <?php
 /**
- * @var $form    \Aqua\UI\Form
- * @var $content \Aqua\Content\ContentData
- * @var $comment null|\Aqua\Content\Filter\CommentFilter\Comment
- * @var $page    \Page\Main\Comment
+ * @var $comment \Aqua\Content\Filter\CommentFilter\Comment
+ * @var $form \Aqua\UI\Form
+ * @var $page \Page\Main\Comment
  */
 
 use Aqua\UI\StyleManager;
@@ -22,24 +21,18 @@ $page->theme->footer->enqueueScript('tpl.comments')
 $page->theme->addSettings('ckeComments',include \Aqua\ROOT . '/settings/ckeditor.php');
 ?>
 <div class="ac-comments ac-comments-action">
-<?php
-if(!empty($comment)) {
+	<?php
 	$tpl = new \Aqua\UI\Template;
-	$tpl->set('content', $content)
-		->set('comment', $comment)
-		->set('level', 0)
-		->set('actions', false)
-		->set('page', $page);
+	$tpl->set('content', $comment->content())
+	    ->set('comment', $comment)
+	    ->set('level', 0)
+	    ->set('actions', false)
+	    ->set('page', $page);
 	echo $tpl->render('content/comment');
-}
-?>
+	?>
 	<div class="ac-comment-submit">
 		<form method="POST">
-			<textarea name="content" id="cke-comment"></textarea>
-			<?php if($content->meta->get('comment-anonymously')) : ?>
-				<input type="checkbox" name="anonymous" value="1" id="anon-comment">
-				<label for="anon-comment"><?php echo __('comment', 'comment-anonymously') ?></label>
-			<?php endif; ?>
+			<?php echo $form->field('content')->attr('id', 'cke-comment')->render() ?>
 			<input type="submit" value="<?php echo __('application', 'submit') ?>" class="ac-button">
 			<div style="clear: both"></div>
 		</form>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="email" key="template-saved"><![CDATA[The template <b>%s</b> has been updated.]]></word>
+        <word namespace="comment" key="edit">Edit</word>
+        <word namespace="comment" key="edit-comment">Edit Comment</word>
+        <word namespace="comment" key="comment-updated">Your comment has been updated.</word>
+        <word namespace="application" key="error">Error %d</word>
+        <word namespace="settings" key="cms-comment-edit">Enable Comment Editing</word>
+        <word namespace="settings" key="cms-comment-rate">Enable Comment Rating</word>
+    </wordgroup>
+</languageimport>

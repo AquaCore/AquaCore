@@ -129,7 +129,9 @@ implements SubjectInterface
 		if(!is_array($opt)) {
 			$opt = array( $opt => $value );
 		}
-		$this->options = array_filter(array_merge($this->options, $opt));
+		$this->options = array_filter(array_merge($this->options, $opt), function($val) {
+			return ($val !== null);
+		});
 		$sth           = App::connection()->prepare(sprintf('
 		UPDATE %s
 		SET _options = :opt
@@ -139,9 +141,10 @@ implements SubjectInterface
 		', ac_table('content_type_filters')));
 		$class         = explode('\\', get_class($this));
 		$class         = end($class);
-		$sth->bindValue(':opt', serialize($this->options), \PDO::PARAM_LOB);
+		$sth->bindValue(':opt', serialize($this->options), \PDO::PARAM_STR);
 		$sth->bindValue(':type', $this->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(':name', $class, \PDO::PARAM_INT);
+		var_dump($this->options);
 		$sth->execute();
 		if($sth->rowCount()) {
 			ContentType::rebuildCache();

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <languageimport>
   <wordgroup>
+    <word namespace="application" key="error">Error %d</word>
     <word namespace="application" key="cp-title">AquaCore Admin</word>
     <word namespace="application" key="all">All</word>
     <word namespace="application" key="total">Total</word>

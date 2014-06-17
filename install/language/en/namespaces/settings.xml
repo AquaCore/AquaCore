@@ -209,6 +209,8 @@
     <word namespace="settings" key="cms-rating-label">Enable Rating By Default</word>
     <word namespace="settings" key="cms-weight-label">Maximum Rating Weight</word>
     <word namespace="settings" key="cms-comments-label">Enable Comments By Default</word>
+    <word namespace="settings" key="cms-comment-edit">Enable Comment Editing</word>
+    <word namespace="settings" key="cms-comment-rate">Enable Comment Rating</word>
     <word namespace="settings" key="cms-anon-label">Enable Anonymous Comments By Default</word>
     <word namespace="settings" key="cms-archive-label">Archive Interval</word>
     <word namespace="settings" key="cms-archive-desc"><![CDATA[Automatically archive posts after the number of days specified.<br/>Comments cannot be reported, rated or added to archived content.<br/>Use "0" to disable this feature.]]></word>
