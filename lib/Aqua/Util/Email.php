@@ -176,7 +176,7 @@ class Email
 	public function queue()
 	{
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_date, _from_address, _from_name, _subject, _content, _status)
+		INSERT INTO %s (_date, _from_address, _from_name, _subject, _content, _status)
 		VALUES (NOW(), :fromaddr, :fromname, :subject, :body, \'pending\')
 		', ac_table('mail_queue')));
 		$sth->bindValue(':subject', $this->subject, \PDO::PARAM_STR);
@@ -189,7 +189,7 @@ class Email
 		$id = App::connection()->lastInsertId();
 		$sth->closeCursor();
 		$sth = App::connection()->prepare(sprintf('
-		INSERT INTO `%s` (_mail_id, _address, _name, _type)
+		INSERT INTO %s (_mail_id, _address, _name, _type)
 		VALUES (:id, :addr, :name, :type)
 		', ac_table('mail_recipient')));
 		foreach($this->to as $address => $name) {
@@ -352,7 +352,7 @@ class Email
 	public static function editTemplate($template, $subject, $body, $altBody)
 	{
 		$sth = App::connection()->prepare(sprintf('
-		UPDATE `%s`
+		UPDATE %s
 		SET _subject = :subject,
 			_body = :body,
 			_alt_body = :alt

@@ -80,10 +80,10 @@ extends Page
 			$this->response->status(302)->redirect(App::request()->uri->url());
 			try {
 				Email::editTemplate($key,
-				                    $this->request->getString('subject') ?: null,
-				                    $this->request->getString('body')    ?: null,
+				                    $this->request->getString('subject') ?: '',
+				                    $this->request->getString('body')    ?: '',
 				                    $this->request->getString('altbody') ?: null);
-				App::user()->addFlash('success', null, __('email', 'template-saved', $template['name']));
+				App::user()->addFlash('success', null, __('email', 'template-saved', htmlspecialchars($template['name'])));
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
 				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
