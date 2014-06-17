@@ -156,6 +156,7 @@ class Captcha
 		', ac_table('captcha')));
 		$sth->bindValue(':interval', $this->settings->get('expire', 30), \PDO::PARAM_INT);
 		$sth->execute();
+		$sth->closeCursor();
 	}
 
 	/**
