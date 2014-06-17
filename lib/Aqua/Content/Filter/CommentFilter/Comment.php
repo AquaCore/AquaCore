@@ -77,6 +77,10 @@ class Comment
 	/**
 	 * @var int
 	 */
+	public $uniqueReportCount;
+	/**
+	 * @var int
+	 */
 	public $options;
 	/**
 	 * @var \Aqua\Content\Filter\CommentFilter\Comment|null

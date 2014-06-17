@@ -13,6 +13,8 @@ use Aqua\SQL\Query;
 use Aqua\SQL\Search;
 use Aqua\UI\Tag\Meta;
 use Aqua\User\Account;
+use Aqua\User\Role;
+use Aqua\Util\Email;
 
 class CommentFilter
 extends AbstractFilter
@@ -491,15 +493,35 @@ extends AbstractFilter
 		$sth->bindValue(':ip', App::request()->ipString, \PDO::PARAM_STR);
 		$sth->bindValue(':content', $report, \PDO::PARAM_STR);
 		if(!$sth->execute() || !$sth->rowCount()) {
+			$sth->closeCursor();
 			return false;
 		}
 		$reportId = App::connection()->lastInsertId();
 		$sth = App::connection()->prepare(sprintf('
+		SELECT COUNT(1)
+		FROM %s
+		WHERE _comment_id = :comment
+		AND _user_id = :user
+		LIMIT 1
+		', ac_table('comment_reports')));
+		$sth->bindValue(':comment', $comment->id, \PDO::PARAM_INT);
+		$sth->bindValue(':user', $user->id, \PDO::PARAM_INT);
+		$sth->execute();
+		$isUnique = ($sth->rowCount() > 0);
+		$sth->closeCursor();
+		$query = '
 		UPDATE %s
 		SET _reports = _reports + 1
+		';
+		if($isUnique) {
+			$comment->uniqueReportCount++;
+			$query.= ', _unique_reports = _unique_reports + 1';
+		}
+		$query.= '
 		WHERE id = ?
 		LIMIT 1
-		', ac_table('comments')));
+		';
+		$sth = App::connection()->prepare(sprintf($query, ac_table('comments')));
 		$sth->bindValue(1, $comment->id, \PDO::PARAM_INT);
 		$sth->execute();
 		$comment->reportCount++;
@@ -530,7 +552,70 @@ extends AbstractFilter
 			}
 			App::cache()->store(self::CACHE_KEY, self::$cache, self::CACHE_TTL);
 		}
+		if($isUnique) {
+			$this->_sendNotifications($comment);
+		}
 		return $report;
+	}
+
+	protected function _sendNotifications(Comment $comment)
+	{
+		$roles = array();
+		foreach(Role::roles() as $roleId) {
+			if(Role::get($roleId)->hasPermission('edit-comments')) {
+				$roles[] = $roleId;
+			}
+		}
+		if(empty($roles)) {
+			return;
+		}
+		array_unshift($roles, Search::SEARCH_IN);
+		$users = Query::select(App::connection())
+			->columns(array(
+				'id'           => 'u.id',
+				'username'     => 'u._username',
+			    'display_name' => 'u._display_name',
+			    'email'        => 'u._email'
+			))
+			->from(ac_table('user_meta'), 'm')
+			->innerJoin(ac_table('users'), 'm._id = u.id', 'u')
+			->where(array(
+				'm._key'     => 'commentReportThreshold',
+				'm._val'     => $comment->uniqueReportCount,
+				'u._role_id' => $roles
+			))
+			->query();
+		if(!$users->count()) {
+			return;
+		}
+		$replacements = array(
+			'site-title'           => htmlspecialchars(App::settings()->get('title', '')),
+		    'site-url'             => \Aqua\URL,
+		    'threshold'            => $comment->uniqueReportCount,
+		    'content-title'        => htmlspecialchars($comment->content()->title),
+		    'content-url'          => $comment->contentType->url(array(
+				'path' => array( $comment->content()->slug )
+			), false),
+		    'comment-html'         => $comment->html,
+		    'comment-bbcode'       => htmlspecialchars($comment->bbCode),
+		    'comment-display-name' => htmlspecialchars($comment->author()->displayName),
+			'comment-url'          => ac_build_url(array(
+				'path'      => array( 'content', 'comments' ),
+			    'action'    => 'edit',
+			    'arguments' => array( $comment->id ),
+			    'base_dir'  => 'admin'
+			))
+		);
+		foreach($users as $user) {
+			Email::fromTemplate('comment-report')
+				->addAddress($user['email'], $user['display_name'])
+				->replace($replacements + array(
+					'username'          => htmlspecialchars($user['username']),
+					'user-display-name' => htmlspecialchars($user['display_name']),
+				    'user-email'        => htmlspecialchars($user['email']),
+				))
+				->queue();
+		}
 	}
 
 	public function contentData_commentSpamFilter(ContentData $content, Comment $comment)
@@ -542,6 +627,20 @@ extends AbstractFilter
 			return true;
 		}
 		return false;
+	}
+
+	public static function setReportThreshold(Account $user, $threshold)
+	{
+		if($threshold <= 0) {
+			$user->meta->delete('commentReportThreshold');
+		} else {
+			$user->meta->set('commentReportThreshold', $threshold);
+		}
+	}
+
+	public static function getReportThreshold(Account $user)
+	{
+		return (int)$user->meta->get('commentReportThreshold', 0);
 	}
 
 	/**
@@ -562,27 +661,28 @@ extends AbstractFilter
 	 */
 	public static function parseCommentSql(array $data)
 	{
-		$comment               = new Comment;
-		$comment->meta         = new Meta(ac_table('comment_meta'), $data['id']);
-		$comment->contentType  = ContentType::getContentType($data['content_type']);
-		$comment->contentId    = (int)$data['content_id'];
-		$comment->parentId     = (int)$data['parent_id'];
-		$comment->rootId       = (int)$data['root_id'];
-		$comment->nestingLevel = (int)$data['nesting_level'];
-		$comment->childCount   = (int)$data['children'];
-		$comment->id           = (int)$data['id'];
-		$comment->status       = (int)$data['status'];
-		$comment->authorId     = (int)$data['author'];
+		$comment                    = new Comment;
+		$comment->meta              = new Meta(ac_table('comment_meta'), $data['id']);
+		$comment->contentType       = ContentType::getContentType($data['content_type']);
+		$comment->contentId         = (int)$data['content_id'];
+		$comment->parentId          = (int)$data['parent_id'];
+		$comment->rootId            = (int)$data['root_id'];
+		$comment->nestingLevel      = (int)$data['nesting_level'];
+		$comment->childCount        = (int)$data['children'];
+		$comment->id                = (int)$data['id'];
+		$comment->status            = (int)$data['status'];
+		$comment->authorId          = (int)$data['author'];
 		if($data['last_editor'] !== null) $comment->lastEditorId = (int)$data['last_editor'];
 		$comment->publishDate = (int)$data['publish_date'];
 		if($data['edit_date'] !== null) $comment->editDate = (int)$data['edit_date'];
-		$comment->options     = (int)$data['options'];
-		$comment->rating      = (int)$data['rating'];
-		$comment->reportCount = (int)$data['reports'];
-		$comment->anonymous   = ($data['anonymous'] === 'y');
-		$comment->ipAddress   = $data['ip_address'];
-		$comment->html        = $data['html'];
-		$comment->bbCode      = $data['bbcode'];
+		$comment->options           = (int)$data['options'];
+		$comment->rating            = (int)$data['rating'];
+		$comment->reportCount       = (int)$data['reports'];
+		$comment->uniqueReportCount = (int)$data['unique_reports'];
+		$comment->anonymous         = ($data['anonymous'] === 'y');
+		$comment->ipAddress         = $data['ip_address'];
+		$comment->html              = $data['html'];
+		$comment->bbCode            = $data['bbcode'];
 
 		return $comment;
 	}
@@ -611,43 +711,45 @@ extends AbstractFilter
 			->from(ac_table('comments'), 'co')
 			->groupBy('co.id')
 			->columns(array(
-				'id'            => 'co.id',
-				'content_id'    => 'co._content_id',
-				'content_type'  => 'co._content_type',
-				'parent_id'     => 'co._parent_id',
-				'root_id'       => 'co._root_id',
-				'nesting_level' => 'co._nesting_level',
-				'children'      => 'co._children',
-				'author'        => 'co._author_id',
-				'last_editor'   => 'co._editor_id',
-				'ip_address'    => 'co._ip_address',
-				'status'        => 'co._status',
-				'anonymous'     => 'co._anonymous',
-				'publish_date'  => 'UNIX_TIMESTAMP(co._publish_date)',
-				'edit_date'     => 'UNIX_TIMESTAMP(co._edit_date)',
-				'rating'        => 'co._rating',
-				'reports'       => 'co._reports',
-				'options'       => 'co._options',
-				'html'          => 'co._html_content',
-				'bbcode'        => 'co._bbc_content'
+				'id'             => 'co.id',
+				'content_id'     => 'co._content_id',
+				'content_type'   => 'co._content_type',
+				'parent_id'      => 'co._parent_id',
+				'root_id'        => 'co._root_id',
+				'nesting_level'  => 'co._nesting_level',
+				'children'       => 'co._children',
+				'author'         => 'co._author_id',
+				'last_editor'    => 'co._editor_id',
+				'ip_address'     => 'co._ip_address',
+				'status'         => 'co._status',
+				'anonymous'      => 'co._anonymous',
+				'publish_date'   => 'UNIX_TIMESTAMP(co._publish_date)',
+				'edit_date'      => 'UNIX_TIMESTAMP(co._edit_date)',
+				'rating'         => 'co._rating',
+				'reports'        => 'co._reports',
+				'unique_reports' => 'co._unique_reports',
+				'options'        => 'co._options',
+				'html'           => 'co._html_content',
+				'bbcode'         => 'co._bbc_content'
 			))->whereOptions(array(
-				'id'            => 'co.id',
-				'content_id'    => 'co._content_id',
-				'content_type'  => 'co._content_type',
-				'parent_id'     => 'co._parent_id',
-				'root_id'       => 'co._root_id',
-				'nesting_level' => 'co._nesting_level',
-				'children'      => 'co._children',
-				'author'        => 'co._author',
-				'last_editor'   => 'co._editor_id',
-				'ip_address'    => 'co._ip_address',
-				'status'        => 'co._status',
-				'anonymous'     => 'co._anonymous',
-				'publish_date'  => 'co._publish_date',
-				'edit_date'     => 'co._edit_date',
-				'rating'        => 'co._rating',
-				'reports'       => 'co._reports',
-				'options'       => 'co._options',
+				'id'             => 'co.id',
+				'content_id'     => 'co._content_id',
+				'content_type'   => 'co._content_type',
+				'parent_id'      => 'co._parent_id',
+				'root_id'        => 'co._root_id',
+				'nesting_level'  => 'co._nesting_level',
+				'children'       => 'co._children',
+				'author'         => 'co._author',
+				'last_editor'    => 'co._editor_id',
+				'ip_address'     => 'co._ip_address',
+				'status'         => 'co._status',
+				'anonymous'      => 'co._anonymous',
+				'publish_date'   => 'co._publish_date',
+				'edit_date'      => 'co._edit_date',
+				'rating'         => 'co._rating',
+				'reports'        => 'co._reports',
+				'unique_reports' => 'co._unique_reports',
+				'options'        => 'co._options',
 			));
 	}
 

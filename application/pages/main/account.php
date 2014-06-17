@@ -2,6 +2,7 @@
 namespace Page\Main;
 
 use Aqua\Content\ContentType;
+use Aqua\Content\Filter\CommentFilter;
 use Aqua\Core\App;
 use Aqua\Log\BanLog;
 use Aqua\Log\ErrorLog;
@@ -169,6 +170,14 @@ extends Page
 			    ->value(date('Y-m-d', $account->birthDate))
 			    ->placeholder('YYYY-MM-DD')
 			    ->setLabel(__('profile', 'birthday'));
+			if(App::user()->role()->hasPermission('edit-comments')) {
+				$frm->input('report_threshold')
+					->type('number')
+					->attr('min', 0)
+					->value(CommentFilter::getReportThreshold(App::user()->account))
+					->setLabel(__('comment', 'report-threshold'))
+					->setDescription(__('comment', 'report-threshold-desc'));
+			}
 			$frm->input('password')
 			    ->type('password')
 			    ->attr('autocomplete', 'off')
@@ -356,6 +365,9 @@ extends Page
 			}
 			if($updated) {
 				App::user()->addFlash('success', null, __('profile', 'account-updated'));
+			}
+			if(App::user()->role()->hasPermission('edit-comments')) {
+				CommentFilter::setReportThreshold(App::user()->account, $this->request->getInt('report_threshold'));
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);

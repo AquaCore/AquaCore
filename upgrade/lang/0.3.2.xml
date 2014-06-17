@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="comment" key="report-threshold">Comment Report Threshold</word>
+        <word namespace="comment" key="report-threshold-desc">Receive email notifications when comments reach this amount of unique reports.</word>
+    </wordgroup>
+    <permissiongroup>
+        <permission key="edit-comments">
+            <name>Manage Comments</name>
+        </permission>
+    </permissiongroup>
+    <emailgroup>
+        <email key="comment-report">
+            <name>Comment Report</name>
+            <subject>Comment Report</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		#user-display-name#,<br>
+		<p>A comment by #comment-display-name# to <b><a href="#content-url#">#content-title#</a></b> has just reach a threshold of #threshold# unique reports:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site URL</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's URL</placeholder>
+            <placeholder key="user-username">Recipient's site username</placeholder>
+            <placeholder key="user-display-name">Recipient's site display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="threshold">Recipient's comment report threshold</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-url">Comment's admin URL</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+        </email>
+        <email key="sub-comment-reply">
+            <name>Comment Reply Subscription</name>
+            <subject>New reply to #content-title#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #user-display-name#,<br>
+		<p>#comment-display-name# has posted a new reply to <a href="#user-comment-url#">your comment</a> on <b><a href="#content-url#">#content-title#</a></b>:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment.</a></p>
+		</div>
+		</body>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="user-comment-url">Parent comment's url</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+            <placeholder key="comment-avatar">Replier's avatar url</placeholder>
+        </email>
+        <email key="sub-comment">
+            <name>Comment Subscription</name>
+            <subject>New reply to #content-title#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #user-display-name#,<br>
+		<p>#comment-display-name# has posted a new comment to <b><a href="#content-url#">#content-title#</a></b>:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment.</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+            <placeholder key="comment-avatar">Replier's avatar url</placeholder>
+        </email>
+        <email key="sub-content">
+            <name>Content Subscription</name>
+            <subject>New #content-type-name#</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		Hello, #user-display-name#,<br/>
+		<p>#author-display-name# has just posted a new #content-type-name#</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		<div style="font-size: 18px; color: #4586d0; border-bottom: 1px solid;">#content-title#</div>
+		#short-content#
+		</div>
+		<p><a href="#content-url#">Click here to read more.</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site url</placeholder>
+            <placeholder key="content-type-name">Content type name (post, page, ...)</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's url</placeholder>
+            <placeholder key="content-date">Post's publish date</placeholder>
+            <placeholder key="short-content">Post's short content</placeholder>
+            <placeholder key="username">Recipient's username</placeholder>
+            <placeholder key="user-display-name">Recipient's plain display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="user-avatar">Recipient's avatar url</placeholder>
+            <placeholder key="author-display-name">Author's plain display name</placeholder>
+            <placeholder key="author-avatar">Author's avatar url</placeholder>
+        </email>
+    </emailgroup>
+</languageimport>

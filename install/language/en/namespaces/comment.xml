@@ -35,5 +35,7 @@
     <word namespace="comment" key="edit">Edit</word>
     <word namespace="comment" key="edit-comment">Edit Comment</word>
     <word namespace="comment" key="comment-updated">Your comment has been updated.</word>
+    <word namespace="comment" key="report-threshold">Comment Report Threshold</word>
+    <word namespace="comment" key="report-threshold-desc">Receive email notifications when comments reach this amount of unique reports.</word>
   </wordgroup>
 </languageimport>

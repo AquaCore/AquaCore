@@ -69,7 +69,7 @@
       <name>View guilds</name>
     </permission>
     <permission key="edit-comments">
-      <name>Edit Comments</name>
+      <name>Manage Comments</name>
     </permission>
   </permissiongroup>
   <taskgroup>

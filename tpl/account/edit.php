@@ -110,6 +110,17 @@ $page->theme->footer->enqueueScript('theme.account-preferences')
 			<td><?php echo $form->field('birthday')->render() ?></td>
 			<td colspan="2"></td>
 		</tr>
+		<?php if($form->field('report_threshold')) : ?>
+			<tr class="ac-form-warning">
+				<td colspan="2"><?php echo $form->field('report_threshold')->getWarning() ?></td>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
+				<td><b><?php echo $form->field('report_threshold')->getLabel() ?></b></td>
+				<td><?php echo $form->field('report_threshold')->render() ?></td>
+				<td colspan="2"><small><?php echo $form->field('report_threshold')->getDescription() ?></small></td>
+			</tr>
+		<?php endif; ?>
 	</tbody>
 	<tfoot>
 		<tr>
