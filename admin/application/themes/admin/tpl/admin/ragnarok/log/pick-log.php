@@ -72,16 +72,17 @@ $page->theme->set('sidebar', $sidebar);
 				'name'   => __('ragnarok', 'item'),
 				'amount' => __('ragnarok', 'amount'),
 				'uniqid' => __('ragnarok', 'unique-id'),
-				'cards'  => array( __('ragnarok', 'cards'), 3),
+				'cards'  => array( __('ragnarok', 'cards'), 4),
 			)) ?>
 	</tr>
 	</thead>
 	<tbody>
 	<?php if(empty($logs)) : ?>
-		<tr><td colspan="13" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
+		<tr><td colspan="14" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($logs as $pick) : ?>
 		<tr>
 			<td><?php echo $pick->id ?></td>
+			<td><img src="<?php echo ac_item_icon($pick->itemId) ?>"></td>
 			<td><?php echo $pick->date($datetimeFormat) ?></td>
 			<td><?php echo htmlspecialchars($pick->map) ?: '--' ?></td>
 			<?php if($char = $pick->character()) : if($char instanceof \Aqua\Ragnarok\Character) : ?>
@@ -95,7 +96,7 @@ $page->theme->set('sidebar', $sidebar);
 					'path' => array( 'mob' ),
 				    'action' => 'view',
 				    'arguments' => array( $char->id )
-				)) ?>"><?php echo htmlspecialchars($char->iName) ?></a></td>
+				), false) ?>"><?php echo htmlspecialchars($char->iName) ?></a></td>
 			<?php endif; else : ?>
 				<td><?php echo __('ragnarok', 'deleted', $pick->charId) ?></td>
 			<?php endif; ?>
@@ -125,7 +126,7 @@ $page->theme->set('sidebar', $sidebar);
 	</tbody>
 	<tfoot>
 	<tr>
-		<td colspan="13">
+		<td colspan="14">
 			<div style="position: relative">
 				<div style="position: absolute; right: 0;">
 					<form method="GET">

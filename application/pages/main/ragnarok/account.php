@@ -328,7 +328,7 @@ extends Page
 				$frm->status = Form::VALIDATION_FAIL;
 			} else $frm->validate(function(Form $frm) {
 				if(UserAccount::checkCredentials(App::$user->account->username,
-				                                 $this->request->getString('password'), $id) !== 0) {
+				                                 $frm->request->getString('password'), $id) !== 0) {
 					$frm->field('password')->setWarning(__('ragnarok', 'password-incorrect'));
 					return false;
 				}

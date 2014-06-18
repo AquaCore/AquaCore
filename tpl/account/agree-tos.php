@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $tos \Aqua\Content\Adapter\Page
+ * @var $tos \Aqua\Content\ContentData
  * @var $page \Page\Main\Account
  */
 ?>

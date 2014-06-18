@@ -3,7 +3,6 @@ use Aqua\Core\App;
 use Aqua\Log\ErrorLog;
 use Aqua\Plugin\Plugin;
 use Aqua\Ragnarok\Server;
-use Aqua\Site\Dispatcher;
 use Aqua\UI\Menu;
 
 define('Aqua\ROOT', str_replace('\\', '/', rtrim(dirname(__DIR__), DIRECTORY_SEPARATOR)));

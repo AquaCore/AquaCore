@@ -15,7 +15,7 @@ while(current($content)) : $items = 0; ?>
 				}
 				$items += $item['span'];
 				?>
-				<div class="ac-dashboard-item <?php echo $item['class'] ?>">
+				<div class="ac-dashboard-item <?php echo $item['class'] ?>" style="<?php if(isset($item['style'])) foreach($item['style'] as $key => $val) echo "$key: $val;"; ?>">
 					<table class="ac-table">
 						<thead>
 						<tr>

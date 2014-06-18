@@ -79,7 +79,7 @@
 				AquaCore.settings["charStats"]["dex"],
 				AquaCore.settings["charStats"]["int"],
 				AquaCore.settings["charStats"]["agi"],
-				AquaCore.settings["charStats"]["luk"],
+				AquaCore.settings["charStats"]["luk"]
 			]
 		}]
 	});

@@ -1,5 +1,4 @@
 <?php
-use Aqua\UI\Dashboard;
 use Aqua\Event\Event;
 use Aqua\Ragnarok\Server\Login;
 use Aqua\User\Role;

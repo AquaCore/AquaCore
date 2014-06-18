@@ -4,7 +4,6 @@ namespace Page\Main\Ragnarok\Server;
 use Aqua\Core\App;
 use Aqua\Core\L10n;
 use Aqua\Log\ErrorLog;
-use Aqua\Ragnarok\Ragnarok;
 use Aqua\Ragnarok\Server\CharMap;
 use Aqua\Site\Page;
 use Aqua\SQL\Query;

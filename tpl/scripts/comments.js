@@ -18,7 +18,8 @@
 			report.remove();
 			report = undefined;
 		}
-	};
+	}
+
 	$(".ac-comment-upvote, .ac-comment-downvote").on("click", function() {
 		var wrapper, id, ctype, weight, self = this;
 		wrapper = $(this).closest(".ac-comment");

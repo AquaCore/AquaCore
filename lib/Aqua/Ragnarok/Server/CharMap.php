@@ -1470,9 +1470,10 @@ class CharMap
 	 */
 	public function time($format = '%s')
 	{
-		$time = date_create('now');
-		if(($timezone = $this->getOption('timezone'))) {
-			$time->setTimeZone(new \DateTimeZone($timezone));
+		if($timezone = $this->getOption('timezone', null)) {
+			$time = new \DateTime('now', new \DateTimeZone($timezone));
+		} else {
+			$time = new \DateTime('now');
 		}
 		return gmstrftime($format, time() + $time->getOffset());
 	}
@@ -1617,11 +1618,10 @@ class CharMap
 		$this->woeSchedule !== null or $this->fetchWoeSchedule();
 		$ids = array();
 		if($timezone = $this->getOption('timezone', null)) {
-			$timezone = new \DateTimeZone($timezone);
+			$now = new \DateTime('now', new \DateTimeZone($timezone));
 		} else {
-			$timezone = null;
+			$now = new \DateTime('now');
 		}
-		$now = new \DateTime('now', $timezone);
 		$weeks = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 		foreach($this->woeSchedule as $id => &$woe) {
 			$start = clone $now;

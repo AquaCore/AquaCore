@@ -63,7 +63,7 @@ $page->theme->set('sidebar', $sidebar);
 	</thead>
 	<tbody>
 	<?php if(empty($characters)) : ?>
-		<tr><td colspan="11" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
+		<tr><td colspan="12" class="ac-table-no-result"><?php echo __('application', 'no-search-results') ?></td></tr>
 	<?php else : foreach($characters as $char) : ?>
 		<tr>
 			<td></td>
@@ -93,7 +93,7 @@ $page->theme->set('sidebar', $sidebar);
 	</tbody>
 	<tfoot>
 		<tr>
-			<td colspan="11">
+			<td colspan="12">
 				<div style="position: relative">
 					<div style="position: absolute; right: 0;">
 						<form method="GET">

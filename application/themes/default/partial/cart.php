@@ -1,5 +1,4 @@
 <?php
-use Aqua\Ragnarok\Ragnarok;
 use Aqua\Core\App;
 /**
  * @var $cart \Aqua\Ragnarok\Cart

@@ -26,7 +26,7 @@
 				AquaCore.l("week", 3),
 				AquaCore.l("week", 4),
 				AquaCore.l("week", 5),
-				AquaCore.l("week", 6),
+				AquaCore.l("week", 6)
 			]
 		},
 		yAxis: {

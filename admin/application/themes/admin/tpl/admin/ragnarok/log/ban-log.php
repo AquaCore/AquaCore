@@ -50,8 +50,15 @@ $page->theme->set('sidebar', $sidebar);
 	<?php else : foreach($logs as $log) : ?>
 		<tr>
 			<td><?php echo $log->id ?></td>
-			<td><?php echo htmlspecialchars($log->banned()->username) ?></td>
-			<td><?php echo $log->account()->display() ?></td>
+			<td><a href="<?php echo $log->login->server->url(array(
+					'action' => 'viewaccount',
+			        'arguments' => array( $log->bannedId )
+				)) ?>"><?php echo htmlspecialchars($log->banned()->username) ?></a></td>
+			<td><a href="<?php echo ac_build_url(array(
+					'path' => array( 'user' ),
+					'action' => 'view',
+			        'arguments' => array( $log->accountId ),
+				)) ?>"><?php echo $log->account()->display() ?></a></td>
 			<td class="ac-ban-type <?php if($log->type === BanLog::TYPE_UNBAN) echo 'ac-unban' ?>"><?php echo $log->type() ?></td>
 			<td><?php echo $log->banDate($datetimeFormat) ?></td>
 			<td><?php echo $log->unbanDate ? $log->unbanDate($datetimeFormat) : '--' ?></td>

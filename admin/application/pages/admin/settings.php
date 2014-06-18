@@ -118,7 +118,7 @@ extends Page
 						return false;
 					}
 					try {
-						$tz = trim($this->request->getString('timezone'));
+						$tz = trim($frm->request->getString('timezone'));
 						if(!empty($tz)) {
 							new \DateTimeZone($tz);
 						}
@@ -129,7 +129,7 @@ extends Page
 							                htmlspecialchars($frm->request->getString('timezone'))));
 						return false;
 					}
-					$domain = 'http://' . preg_replace('/$(https?:\/\/)/i', '', trim($this->request->getString('domain')));
+					$domain = 'http://' . preg_replace('/$(https?:\/\/)/i', '', trim($frm->request->getString('domain')));
 					if(!filter_var($domain, FILTER_VALIDATE_URL)) {
 						$frm->field('domain')
 							->setWarning(__('form', 'invalid-url'));

@@ -102,7 +102,7 @@ class Session
 	const TYPE_TEMPORARY       = 3;
 
 	/**
-	 * @param string|null              $session_id
+	 * @param string|null         $session_id
 	 * @param string              $ip_address
 	 * @param string              $user_agent
 	 * @param \Aqua\Http\Response $response

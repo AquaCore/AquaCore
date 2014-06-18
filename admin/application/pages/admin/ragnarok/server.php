@@ -266,7 +266,7 @@ extends Page
 						}
 					}
 					try {
-						$tz = trim($this->request->getString('timezone'));
+						$tz = trim($frm->request->getString('timezone'));
 						if(!empty($tz)) {
 							new \DateTimeZone($tz);
 						}
@@ -378,7 +378,7 @@ extends Page
 				$ldbh->exec(file_get_contents(\Aqua\ROOT . '/schema/charmap-log/ac_divorce_log.sql'));
 				$sth = $dbh->prepare("
 				REPLACE INTO `ac_char_map_settings` VALUES
-				 ('char-ip', :chost)
+				 ('char-ip', :chost)	
 				,('char-port', :cport)
 				,('map-ip', :mhost)
 				,('map-port', :mport)
@@ -600,7 +600,7 @@ extends Page
 					}
 				}
 				try {
-					$tz = trim($this->request->getString('timezone'));
+					$tz = trim($frm->request->getString('timezone'));
 					if(!empty($tz)) {
 						new \DateTimeZone($tz);
 					}
@@ -1855,15 +1855,11 @@ extends Page
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
 				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
-			$types = array();
-			foreach(range(1, 8) as $id) {
-				$types[$id] = __('ragnarok-zeny-log-type', $id);
-			}
 			$frm->select('type')
 			    ->setColumn('type')
 			    ->setLabel(__('ragnarok', 'type'))
 			    ->multiple()
-			    ->value($types);
+			    ->value(L10n::getNamespace('ragnarok-pick-type'));
 			$search = $this->charmap->log->searchZenyLog()->calcRows(true);
 			$frm->apply($search);
 			if(!$frm->field('char')->getWarning() && ($where = $frm->field('char')->parse($frm))) {
@@ -1889,7 +1885,7 @@ extends Page
 					if(!array_key_exists($charId, $this->charmap->characters)) {
 						$this->charmap->characters[$charId] = null;
 					}
-					switch($search->sourceType()) {
+					switch($log->sourceType()) {
 						case ZenyLog::SOURCE_MOB:
 							$monsters[] = $srcId;
 							if(!array_key_exists($srcId, $this->charmap->mobDb)) {
@@ -2170,6 +2166,11 @@ extends Page
 				->setLabel(__('ragnarok', 'date'))
 				->type('datetime')
 				->attr('placeholder', 'YYYY-MM-DD HH:MM:SS');
+			$frm->select('type')
+			    ->setColumn('type')
+			    ->setLabel(__('ragnarok', 'type'))
+			    ->multiple()
+			    ->value(L10n::getNamespace('ragnarok-pick-type'));
 			$search = $this->charmap->log->searchPickLog()->calcRows(true);
 			$frm->apply($search);
 			$search->query();

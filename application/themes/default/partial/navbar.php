@@ -1,6 +1,5 @@
 <?php
 use Aqua\Core\App;
-use Aqua\Ragnarok\Ragnarok;
 /**
  * @var $request \Aqua\Http\Request
  */

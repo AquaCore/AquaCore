@@ -956,7 +956,7 @@ extends Page
 			        'msg'  => 'message'
 				))
 				->limit(0, 6, 20, 5)
-				->defaultOrder('date')
+				->defaultOrder('date', \Aqua\UI\Search::SORT_DESC)
 				->defaultLimit(20);
 			$responseCodes = array();
 			foreach(array_merge(array( -3 ), range(0, 15), range(99, 104)) as $code) {
