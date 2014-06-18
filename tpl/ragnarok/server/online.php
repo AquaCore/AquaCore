@@ -84,7 +84,6 @@ $page->theme->footer->enqueueScript('tpl.server-online')
 					$marker->mark($char->lastX, $char->lastY);
 					echo $marker->render();
 				?>
-				</div>
 			</div>
 			<?php endif; ?>
 		</td>

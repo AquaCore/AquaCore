@@ -6,6 +6,18 @@
  */
 ?>
 <table class="ac-table ac-ranking ac-fame-ranking">
+	<colgroup>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col>
+		<col style="text-align: center; width: 30px">
+		<col>
+	</colgroup>
 	<thead>
 	<tr class="alt">
 		<td><?php echo __('ragnarok', 'rank')?></td>
@@ -31,7 +43,8 @@
 				<td><?php echo number_format($characters[$i]->jobLevel)?></td>
 				<td><?php echo number_format($characters[$i]->baseExp)?></td>
 				<td><?php echo number_format($characters[$i]->jobExp)?></td>
-				<td style="text-align: center; width: 30px">
+				<?php if($characters[$i]->guildId) : ?>
+				<td>
 					<img src="<?php echo ac_guild_emblem(
 						$characters[$i]->charmap->server->key,
 						$characters[$i]->charmap->key,
@@ -39,6 +52,9 @@
 					)?>">
 				</td>
 				<td><?php echo htmlspecialchars($characters[$i]->guildName)?></td>
+				<?php else : ?>
+				<td colspan="2"></td>
+				<?php endif; ?>
 			<?php else : ?>
 				<td colspan="9"></td>
 			<?php endif ?>

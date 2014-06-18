@@ -29,7 +29,8 @@
 			<td><?php echo $characters[$i]->baseLevel?></td>
 			<td><?php echo $characters[$i]->jobLevel?></td>
 			<td><?php echo number_format($characters[$i]->fame)?></td>
-			<td style="text-align: center; width: 30px">
+			<?php if($characters[$i]->guildId) : ?>
+			<td>
 				<img src="<?php echo ac_guild_emblem(
 					$characters[$i]->charmap->server->key,
 					$characters[$i]->charmap->key,
@@ -37,6 +38,9 @@
 				)?>">
 			</td>
 			<td><?php echo htmlspecialchars($characters[$i]->guildName)?></td>
+			<?php else : ?>
+			<td colspan="2"></td>
+			<?php endif; ?>
 			<?php else : ?>
 			<td colspan="8"></td>
 			<?php endif ?>
