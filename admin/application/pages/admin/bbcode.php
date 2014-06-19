@@ -83,7 +83,6 @@ extends Page
 				->required();
 			$frm->submit();
 			$frm->validate();
-			var_dump($frm->status === Form::VALIDATION_SUCCESS, ac_file_uploaded('smileys', true));
 			if($frm->status === Form::VALIDATION_SUCCESS && ac_file_uploaded('smileys', true)) {
 				$this->response->status(302)->redirect(App::request()->uri->url());
 				try {
