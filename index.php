@@ -48,5 +48,5 @@ try {
 		echo $tpl->render('exception/layout');
 	}
 }
-$response->send(true, App::request()->header('Accept-encoding'));
+$response->send(true, App::request()->header('Accept-Encoding'));
 ignore_user_abort(true);

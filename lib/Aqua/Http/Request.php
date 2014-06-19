@@ -204,7 +204,10 @@ class Request
 		} else {
 			foreach($_SERVER as $key => $value) {
 				if(substr($key, 0, 5) === 'HTTP_') {
-					$request->headers[str_replace('_', '-', ucfirst(strtolower(substr($key, 5))))] = $value;
+					$key = strtolower(substr($key, 5));
+					$key = array_map('ucfirst', explode('_', $key));
+					$key = implode('-', $key);
+					$request->headers[$key] = $value;
 				}
 			}
 		}
