@@ -409,11 +409,9 @@ function ac_file_uploaded($key, $multiple = false, &$error = null, &$errorStr = 
 					$error = (int)$_FILES[$key]['error'][$index];
 					break;
 				}
-				if(!is_uploaded_file($_FILES[$key]['tmp_name'][$index])) {
-					return false;
-				}
 			}
 			$index = null;
+			return true;
 		} else if(!is_array($_FILES[$key]['name']) &&
 				  !is_array($_FILES[$key]['tmp_name']) &&
 				  !is_array($_FILES[$key]['type']) &&

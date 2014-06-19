@@ -83,14 +83,13 @@ extends Page
 				->required();
 			$frm->submit();
 			$frm->validate();
-			if($frm->status === Form::VALIDATION_SUCCESS && ac_file_uploaded('smiley', true)) {
+			var_dump($frm->status === Form::VALIDATION_SUCCESS, ac_file_uploaded('smileys', true));
+			if($frm->status === Form::VALIDATION_SUCCESS && ac_file_uploaded('smileys', true)) {
 				$this->response->status(302)->redirect(App::request()->uri->url());
 				try {
 					$newTexts = Smiley::upload('smileys', true);
 					$count = count($newTexts);
-					if(!$count) {
-						App::user()->addFlash('warning', null, __('bbcode', 'smiley-uploaded-fail'));
-					} else {
+					if($count) {
 						App::user()->addFlash('success', null, __('bbcode', 'smiley-uploaded-' . ($count === 1 ? 's' : 'p'), $count));
 					}
 				} catch(\Exception $exception) {
