@@ -225,5 +225,5 @@ try {
 		echo $tpl->render('exception/layout');
 	}
 }
-$response->send(true);
+$response->send(true, App::request()->header('Accept-encoding'));
 ignore_user_abort(true);

@@ -259,19 +259,24 @@ implements SubjectInterface
 	}
 
 	/**
-	 * @param bool $close
+	 * @param bool   $close
+	 * @param string $acceptEncoding
 	 * @return \Aqua\Http\Response
 	 * @throws \Exception
 	 */
-	public function send($close = false)
+	public function send($close = false, $acceptEncoding = '')
 	{
 		$this->notify('send_start');
 		try {
+			$close = ($close && !defined('HHVM_VERSION'));
 			if($this->capturingOutput) {
 				$this->endCapture();
 			}
 			if(headers_sent()) {
 				throw new HttpException(__('exception', 'headers-sent'));
+			}
+			if($close) {
+				ob_start();
 			}
 			if($this->compress) {
 				if(function_exists('ob_gzhandler')) {
@@ -321,11 +326,13 @@ implements SubjectInterface
 			if($this->output) {
 				echo $this->output;
 			}
-			if($close && !defined('HHVM_VERSION')) {
+			if($close) {
 				ob_end_flush();
 				header('Connection: close');
-				if($this->compress) {
+				if($this->compress && strpos($acceptEncoding, 'gzip') !== false) {
 					header('Content-Encoding: gzip');
+				} else if($this->compress && strpos($acceptEncoding, 'deflate') !== false) {
+					header('Content-Encoding: deflate');
 				} else {
 					header('Content-Encoding: none');
 				}
