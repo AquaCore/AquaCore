@@ -58,7 +58,7 @@ return array(
 	),
 	'donation'           => array(
 		'enable'            => true,
-		'pp_log_requests'   => true,
+		'pp_log_requests'   => false,
 		'pp_business_email' => isset($_SERVER['SERVER_ADMIN']) ? $_SERVER['SERVER_ADMIN'] : 'example@example.com',
 		'pp_receiver_email' => array(),
 		'pp_txn_types'      => array( 'web_accept' ),
