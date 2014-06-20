@@ -146,7 +146,8 @@ class Cart
 		");
 		$soldCount = $this->charmap()->connection()->prepare("
 		UPDATE {$this->charmap->table('ac_cash_shop')}
-		SET sold = sold + :amount
+		SET sold = sold + :amount,
+			sold_unique = sold_unique + 1
 		WHERE item_id = :item
 		");
 		foreach($items as $item) {

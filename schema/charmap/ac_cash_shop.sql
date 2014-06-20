@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS ac_cash_shop (
   `order` SMALLINT UNSIGNED NOT NULL,
   price SMALLINT UNSIGNED NOT NULL,
   sold BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  sold_unique BIGINT UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY ( item_id ),
   INDEX _ac_cash_shop__category_IN ( category_id ),
   INDEX _ac_cash_shop__order_IN ( `order` )

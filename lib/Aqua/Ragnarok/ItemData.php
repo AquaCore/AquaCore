@@ -120,6 +120,10 @@ class ItemData
 	/**
 	 * @var int
 	 */
+	public $shopSoldUnique;
+	/**
+	 * @var int
+	 */
 	public $shopCategoryId;
 	/**
 	 * @var bool

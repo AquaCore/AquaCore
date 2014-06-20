@@ -332,12 +332,14 @@ class CharMap
 					'i.*',
 					'shop_price' => 'cs.`price`',
 					'shop_sold' => 'cs.`sold`',
+					'shop_sold_unique' => 'cs.`sold_unique`',
 					'shop_category' => 'cs.`category_id`',
 					'cash_shop' => 'COUNT(cs.`item_id`)'
 				))
 		        ->whereOptions(array(
 					'shop_price' => 'cs.price',
 					'shop_sold' => 'cs.sold',
+					'shop_sold_unique' => 'cs.sold_unique',
 					'shop_category' => 'cs.category_id',
 					'custom' => 'i.`custom`',
 				))
@@ -435,6 +437,7 @@ class CharMap
 				'shop_price' => 'cs.price',
 				'shop_category' => 'cs.category_id',
 				'shop_sold' => 'cs.`sold`',
+				'shop_sold_unique' => 'cs.`sold_unique`',
 				'shop_order' => 'cs.`order`',
 			))
 			->whereOptions(array(
@@ -443,6 +446,7 @@ class CharMap
 				'shop_category' => 'cs.category_id',
 				'shop_order' => 'cs.`order`',
 				'shop_sold' => 'cs.`sold`',
+				'shop_sold_unique' => 'cs.`sold_unique`',
 				'custom' => 'tmp_tbl.`custom`',
 			))
 			->from($this->table('ac_cash_shop'), 'cs')
@@ -847,12 +851,13 @@ class CharMap
 		                ->union($itemDb2, true);
 		$select = Query::select($this->connection())
 		               ->columns(array(
-			                         'i.*',
-			                         'shop_price' => 'cs.`price`',
-			                         'shop_sold' => 'cs.`sold`',
-			                         'shop_category' => 'cs.`category_id`',
-			                         'cash_shop' => 'COUNT(cs.`item_id`)'
-		                         ))
+							'i.*',
+							'shop_price' => 'cs.`price`',
+							'shop_sold' => 'cs.`sold`',
+							'shop_sold_unique' => 'cs.`sold_unique`',
+							'shop_category' => 'cs.`category_id`',
+							'cash_shop' => 'COUNT(cs.`item_id`)'
+						))
 		               ->from($itemDb, 'i')
 		               ->leftJoin($this->table('ac_cash_shop'), 'cs.item_id = i.id', 'cs')
 		               ->groupBy('i.id')
@@ -1749,6 +1754,57 @@ class CharMap
 	}
 
 	/**
+	 * @param int  $limit
+	 * @param bool $unique
+	 * @param int  $ttl
+	 * @return array
+	 */
+	public function popularItems($limit = 10, $unique = true, $ttl = 180)
+	{
+		$cacheKey = "ro.{$this->server->key}.{$this->key}.popular-items.";
+		if($unique) {
+			$cacheKey.= 'unique.';
+		}
+		if($limit) {
+			$cacheKey.= $limit;
+		} else {
+			$cacheKey.= 'x';
+		}
+		if($cache = App::cache()->fetch($cacheKey)) {
+			return $cache;
+		}
+		$items = $this->itemSearch()->where(array( 'cash_shop' => 1,
+		                                           'shop_sold_unique' => array( Search::SEARCH_HIGHER, 0 ) ));
+		if($unique) {
+			$items->order(array( 'shop_sold_unique' => 'DESC',
+				                 'shop_sold' => 'DESC' ));
+		} else {
+			$items->order(array( 'shop_sold' => 'DESC',
+			                     'shop_sold_unique' => 'DESC' ));
+		}
+		if($limit) {
+			$items->limit($limit);
+		}
+		$items->query();
+		$cache = array();
+		foreach($items as $item) {
+			$cache[] = array(
+				'id'            => $item->id,
+			    'name'          => $item->jpName,
+			    'type'          => $item->type,
+			    'description'   => $item->description,
+			    'price'         => $item->shopPrice,
+			    'sold'          => $item->shopSold,
+			    'sold_unique'   => $item->shopSoldUnique,
+			    'shop_category' => $item->shopCategoryId,
+			    'custom'        => $item->custom
+			);
+		}
+		App::cache()->store($cacheKey, $cache, $ttl);
+		return $cache;
+	}
+
+	/**
 	 * @param array $options
 	 * @param bool  $admin
 	 * @return string
@@ -1854,7 +1910,8 @@ class CharMap
 		if($data['shop_price'] !== null) {
 			$item->shopPrice      = (int)$data['shop_price'];
 			$item->shopSold       = (int)$data['shop_sold'];
-			$item->shopCategoryId = $data['shop_category'];
+			$item->shopSoldUnique = (int)$data['shop_sold_unique'];
+			$item->shopCategoryId = (int)$data['shop_category'];
 			$item->inCashShop     = true;
 		}
 
