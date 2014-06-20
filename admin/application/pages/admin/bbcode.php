@@ -72,14 +72,22 @@ extends Page
 			$frm->enctype = 'multipart/form-data';
 			$frm->file('smileys')
 			    ->multiple(true)
-				->accept(array(
-					'image/png'          => array( 'png' ),
-					'image/gif'          => array( 'gif' ),
-				    'image/jpeg'         => array( 'jpg', 'jpeg' ),
-				    'application/zip'    => '/\.zipx?$/i',
-				    'application/x-tar'  => '/\.tar$/i',
-				    'application/x-gtar' => '/\.t(ar\.)?(gz|bz2)$/i'
-				))
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpg', 'jpeg' ))
+				->accept('application/x-tar', 'tar')
+				->accept(array( 'application/gzip',
+				                'application/x-gzip',
+				                'application/x-gtar',
+				                'application/x-gtar-compressed',
+				                'application/x-compressed-tar' ), '/\.t(ar\.)?gz$/i' )
+				->accept(array( 'application/x-bzip2',
+				                'application/x-gtar',
+				                'application/x-gtar-compressed',
+				                'application/x-bzip2-compressed-tar' ), '/\.t(ar\.)?bz2$/i' )
+				->accept(array( 'application/zip',
+				                'application/x-zip',
+				                'application/x-zip-compressed' ), 'zip')
 				->required();
 			$frm->submit();
 			$frm->validate();

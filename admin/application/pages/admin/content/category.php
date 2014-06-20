@@ -78,12 +78,10 @@ extends Page
 			$frm = new Form($this->request);
 			$frm->enctype = 'multipart/form-data';
 			$frm->file('image')
-				->accept(array(
-					'image/png'     => array( 'png', 'apng' ),
-					'image/jpeg'    => array( 'jpg', 'jpeg' ),
-					'image/gif'     => array( 'gif' ),
-					'image/svg+xml' => array( 'svg', 'svgx' ),
-				))
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpg', 'jpeg' ))
+				->accept('image/svg+xml', array( 'svg', 'svgx' ))
 			    ->attr('accept', 'image/jpeg, image/png, image/gif')
 			    ->setLabel(__('content', 'category-image'));
 			$frm->input('name', true)
@@ -180,12 +178,10 @@ extends Page
 			$frm = new Form($this->request);
 			$frm->enctype = 'multipart/form-data';
 			$frm->file('image')
-			    ->accept(array(
-					'image/png'     => array( 'png', 'apng' ),
-					'image/jpeg'    => array( 'jpg', 'jpeg' ),
-					'image/gif'     => array( 'gif' ),
-					'image/svg+xml' => array( 'svg', 'svgx' ),
-				))
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpg', 'jpeg' ))
+				->accept('image/svg+xml', array( 'svg', 'svgx' ))
 			    ->setLabel(__('content', 'category-image'));
 			$frm->input('name', true)
 			    ->required()

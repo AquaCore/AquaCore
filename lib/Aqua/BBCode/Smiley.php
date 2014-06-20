@@ -183,7 +183,7 @@ class Smiley
 
 	protected static function _uploadZip($location, $name)
 	{
-		if(!preg_match('/\.(zipx?|tar|t(?:ar\.)?(?:gz|bz2))$/i', $name, $match)) {
+		if(!preg_match('/\.(tar\.)?[^\.]+$/i', $name, $match)) {
 			return array();
 		}
 		$tmp = \Aqua\ROOT . '/tmp/' . uniqid() . $match[0];
@@ -193,7 +193,11 @@ class Smiley
 		$old     = umask(0);
 		$smileys = array();
 		try {
-			$phar    = new \PharData($tmp);
+			try { $phar = new \PharData($tmp); } catch(\Exception $e) {
+				umask($old);
+				unlink($tmp);
+				return array();
+			}
 			foreach($phar as $fileInfo) {
 				$extension = $fileInfo->getExtension();
 				if($fileInfo->isFile() && in_array($extension, array( 'gif', 'jpeg', 'jpg', 'png' ))) {

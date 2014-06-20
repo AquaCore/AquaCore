@@ -83,12 +83,20 @@ extends Page
 			$this->title = $this->theme->head->section = __('plugin', 'plugins');
 			$upload = new Form($this->request);
 			$upload->file('import')
-			       ->accept(array(
-		                'application/zip'    => '/\.zipx?$/i',
-		                'application/x-tar'  => '/\.tar$/i',
-		                'application/x-gtar' => '/\.t(ar\.)?(gz|bz2)$/i'
-	                ))
-			       ->setDescription(__('plugin', 'import-desc'));
+				->accept('application/x-tar', 'tar')
+				->accept(array( 'application/gzip',
+				                'application/x-gzip',
+				                'application/x-gtar',
+				                'application/x-gtar-compressed',
+				                'application/x-compressed-tar' ), '/\.t(ar\.)?gz$/i' )
+				->accept(array( 'application/x-bzip2',
+				                'application/x-gtar',
+				                'application/x-gtar-compressed',
+				                'application/x-bzip2-compressed-tar' ), '/\.t(ar\.)?bz2$/i' )
+				->accept(array( 'application/zip',
+				                'application/x-zip',
+				                'application/x-zip-compressed' ), 'zip')
+				->setDescription(__('plugin', 'import-desc'));
 			$upload->submit(__('upload', 'upload'));
 			$upload->validate();
 			if($upload->status === Form::VALIDATION_SUCCESS && ac_file_uploaded('import', false)) {

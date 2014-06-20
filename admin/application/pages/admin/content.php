@@ -69,13 +69,13 @@ extends Page
 					}
 				} catch(\Exception $exception) {
 					ErrorLog::logSql($exception);
-					App::user()->addFlash('error', null, __('news', 'unexpected-error'));
+					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 				}
 				return;
 			}
 		}
 		try {
-			$this->theme->head->section = $this->title = __('news', 'news');
+			$this->theme->head->section = $this->title = htmlspecialchars($this->contentType->name);
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$frm = new Search(App::request(), $currentPage);
 			$frm->order(array(
@@ -160,14 +160,8 @@ extends Page
 			$frm = $this->buildForm();
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				switch($this->contentType->id) {
-					case ContentType::CTYPE_POST:
-						$this->theme->head->section = $this->title = __('news', 'new-post'); break;
-					case ContentType::CTYPE_PAGE:
-						$this->theme->head->section = $this->title = __('page', 'new-page'); break;
-					default:
-						$this->theme->head->section = $this->title = __('content', 'new-title', htmlspecialchars($this->contentType->name)); break;
-				}
+				$this->theme->head->section = $this->title = __('content', 'new-title',
+				                                                htmlspecialchars($this->contentType->itemName));
 				$this->theme->set('return', $this->contentType->url());
 				$tpl = new Template;
 				$tpl->set('form', $frm)
@@ -229,7 +223,7 @@ extends Page
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			App::user()->addFlash('error', null, __('news', 'unexpected-error'));
+			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			$this->response->redirect($this->contentType->url());
 		}
 	}
@@ -244,14 +238,8 @@ extends Page
 			$frm = $this->buildForm($content);
 			$frm->validate();
 			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				switch($this->contentType->id) {
-					case ContentType::CTYPE_POST:
-						$this->theme->head->section = $this->title = __('news', 'edit-post'); break;
-					case ContentType::CTYPE_PAGE:
-						$this->theme->head->section = $this->title = __('page', 'edit-page'); break;
-					default:
-						$this->theme->head->section = $this->title = __('content', 'edit-title', htmlspecialchars($this->contentType->name)); break;
-				}
+				$this->theme->head->section = $this->title = __('content', 'edit-title',
+				                                                htmlspecialchars($this->contentType->itemName));
 				$this->theme->set('return', $this->contentType->url());
 				$tpl = new Template;
 				$tpl->set('form', $frm)
@@ -315,7 +303,7 @@ extends Page
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
-			App::user()->addFlash('error', null, __('news', 'unexpected-error'));
+			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			$this->response->redirect($this->contentType->url());
 		}
 	}

@@ -175,12 +175,10 @@ extends Page
 				))
 				->checked('image');
 			$frm->file('image')
-				->accept(array(
-					'image/png'     => array( 'png', 'apng' ),
-					'image/jpeg'    => array( 'jpg', 'jpeg' ),
-					'image/gif'     => array( 'gif' ),
-					'image/svg+xml' => array( 'svg', 'svgx' ),
-				))
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpg', 'jpeg' ))
+				->accept('image/svg+xml', array( 'svg', 'svgx' ))
 				->maxSize(ac_size($avatarSettings->get('max_size', '2MB')) ?: null)
 				->setLabel(__('profile', 'avatar'));
 			$frm->input('gravatar')

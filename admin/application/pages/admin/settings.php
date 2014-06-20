@@ -344,12 +344,10 @@ extends Page
 			$frm = new Form($this->request);
 			$frm->enctype = 'multipart/form-data';
 			$frm->file('default_avatar')
-		        ->accept(array(
-					'image/png'     => array( 'png', 'apng' ),
-					'image/jpeg'    => array( 'jpg', 'jpeg' ),
-					'image/gif'     => array( 'gif' ),
-					'image/svg+xml' => array( 'svg', 'svgx' ),
-				))
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpg', 'jpeg' ))
+				->accept('image/svg+xml', array( 'svg', 'svgx' ))
 		        ->setLabel(__('settings', 'acc-avatar-default-label'));
 			$frm->input('avatar_size', true)
 				->type('text')
@@ -910,12 +908,10 @@ extends Page
 				->value(sprintf('#%06x', $settings->get('background_color', 0x000000)), false)
 				->setLabel(__('settings', 'captcha-bg-color-label'));
 			$frm->file('bg_file')
-				->accept(array(
-					'image/png'     => array( 'png', 'apng' ),
-					'image/jpeg'    => array( 'jpg', 'jpeg' ),
-					'image/gif'     => array( 'gif' ),
-					'image/svg+xml' => array( 'svg', 'svgx' ),
-				))
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpg', 'jpeg' ))
+				->accept('image/svg+xml', array( 'svg', 'svgx' ))
 				->setLabel(__('settings', 'captcha-bg-image-label'));
 			$frm->input('noise_color', true)
 				->type('color')
