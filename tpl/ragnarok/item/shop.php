@@ -72,9 +72,11 @@ $description = null;
 					<tbody>
 						<tr>
 							<td colspan="2" style="font-size: .85em">
+								<?php if($items[$i]->shopCategoryId) : ?>
 								<a href="<?php echo $page->charmap->shopCategory($items[$i]->shopCategoryId)->url()?>">
 									<?php echo htmlspecialchars($page->charmap->shopCategory($items[$i]->shopCategoryId)->name)?>
 								</a>
+								<?php else : echo __('application', 'none'); endif; ?>
 							</td>
 						</tr>
 						<tr>
