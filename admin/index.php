@@ -107,11 +107,17 @@ try {
 						'url'   => ac_build_url(array( 'path' => array( 'news', 'category' ) )),
 					)
 				)));
+			$item = $menu->get('posts');
 			if(App::user()->role()->hasPermission('edit-comments')) {
-				$item = $menu->get('posts');
 				$item['submenu']->append('comments', array(
 					'title' => __('admin-menu', 'comments'),
 					'url'   => ac_build_url(array( 'path' => array( 'news', 'comments' ) )),
+				));
+			}
+			if($role->hasPermission('edit-cp-settings')) {
+				$item['submenu']->append('feed', array(
+					'title' => __('admin-menu', 'feed'),
+				    'url'   => ac_build_url(array( 'path' => array( 'news' ), 'action' => 'feed' ))
 				));
 			}
 		}

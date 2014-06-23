@@ -25,5 +25,6 @@
     <word namespace="admin-menu" key="emails">Email Templates</word>
     <word namespace="admin-menu" key="tasks">Tasks</word>
     <word namespace="admin-menu" key="comments">Comments</word>
+    <word namespace="admin-menu" key="feed">Feed</word>
   </wordgroup>
 </languageimport>

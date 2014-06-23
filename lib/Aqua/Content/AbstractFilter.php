@@ -99,13 +99,6 @@ implements SubjectInterface
 	public function forge(ContentData $content, array $data) { return null; }
 
 	/**
-	 * @param \Aqua\Content\ContentData      $content
-	 * @param \Aqua\Content\Feed\RssItem     $item
-	 * @return null|bool
-	 */
-	public function rss(ContentData $content, RssItem $item) { return null; }
-
-	/**
 	 * @param string $opt
 	 * @param mixed  $default
 	 * @return mixed
@@ -144,7 +137,6 @@ implements SubjectInterface
 		$sth->bindValue(':opt', serialize($this->options), \PDO::PARAM_STR);
 		$sth->bindValue(':type', $this->contentType->id, \PDO::PARAM_INT);
 		$sth->bindValue(':name', $class, \PDO::PARAM_INT);
-		var_dump($this->options);
 		$sth->execute();
 		if($sth->rowCount()) {
 			ContentType::rebuildCache();

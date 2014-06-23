@@ -107,14 +107,27 @@ $timeFormat = \Aqua\Core\App::settings()->get('time_format');
 			<div style="position: relative">
 			<?php echo $paginator->render() ?>
 			<?php
-			if($contentType && $contentType->feed) :
-				$options = array( 'action' => 'feed' );
-				if(isset($category)) {
-					$options['arguments'] = array( $category->slug );
-				}
-				?>
+			if($contentType && $contentType->hasFilter('FeedFilter')) : ?>
 				<div style="position: absolute; top: 0; right: 10px; line-height: 2em">
-					<a href="<?php echo $contentType->url($options) ?>"><?php echo __('content', 'rss-feed') ?></a>
+				<?php if(isset($category)) : ?>
+					<a style="margin-right: 10px;" href="<?php echo $contentType->url(array(
+							'action' => 'feed',
+					        'arguments' => array( 'rss', $category->slug )
+						)) ?>"><?php echo __('content', 'rss-feed') ?></a>
+					<a href="<?php echo $contentType->url(array(
+							'action' => 'feed',
+					        'arguments' => array( 'atom', $category->slug )
+						)) ?>"><?php echo __('content', 'atom-feed') ?></a>
+				<?php else : ?>
+					<a style="margin-right: 10px;" href="<?php echo $contentType->url(array(
+							'action' => 'feed',
+					        'arguments' => array( 'rss' )
+						)) ?>"><?php echo __('content', 'rss-feed') ?></a>
+					<a href="<?php echo $contentType->url(array(
+							'action' => 'feed',
+					        'arguments' => array( 'atom' )
+						)) ?>"><?php echo __('content', 'atom-feed') ?></a>
+				<?php endif; ?>
 				</div>
 			<?php endif; ?>
 			</div>

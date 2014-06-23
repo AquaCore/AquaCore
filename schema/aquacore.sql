@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `#content_type` (
   _table VARCHAR(32) COLLATE utf8_bin DEFAULT NULL,
   _adapter VARCHAR(255),
   _permission VARCHAR(32) DEFAULT NULL,
-  _feed ENUM('y', 'n') NOT NULL DEFAULT 'y',
+  _search ENUM('y', 'n') NOT NULL DEFAULT 'y',
   _listing ENUM('y', 'n') NOT NULL DEFAULT 'y',
   _plugin_id INT UNSIGNED,
   PRIMARY KEY ( id ),

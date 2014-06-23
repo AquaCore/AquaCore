@@ -72,5 +72,21 @@
     <word namespace="content" key="content-create-fail"><![CDATA[Failed to create %s <b>"%s"</b>.]]></word>
     <word namespace="content" key="content-updated"><![CDATA[<b>"%2$s"</b> has been updated.]]></word>
     <word namespace="content" key="edit-comment">Edit Comment</word>
+    <word namespace="content" key="feed-settings">%s Feed Options</word>
+    <word namespace="content" key="feed-title">Feed Title</word>
+    <word namespace="content" key="feed-description">Feed Description</word>
+    <word namespace="content" key="feed-copyright">Copyright</word>
+    <word namespace="content" key="feed-length">Content Length</word>
+    <word namespace="content" key="feed-length-desc"><![CDATA[Truncate the content to this amount of characters. Use "0" to provide full content.]]></word>
+    <word namespace="content" key="feed-limit">Feed Entries</word>
+    <word namespace="content" key="feed-limit-desc">Amount of entries in the feed.</word>
+    <word namespace="content" key="feed-category">Categories</word>
+    <word namespace="content" key="feed-category-desc">Separate categories with comma.</word>
+    <word namespace="content" key="feed-ttl">Time to Live</word>
+    <word namespace="content" key="feed-ttl-desc">How long, num minutes, the feed will remain in cache.</word>
+    <word namespace="content" key="feed-icon">Feed Icon</word>
+    <word namespace="content" key="feed-icon-desc">Image (GIF, PNG, JPEG or ICO). Should have an acpect ratio of 1:1.</word>
+    <word namespace="content" key="feed-image">Feed Image</word>
+    <word namespace="content" key="feed-image-desc">Image (GIF, PNG or JPEG). Should have an acpect ratio of 2:1.</word>
   </wordgroup>
 </languageimport>

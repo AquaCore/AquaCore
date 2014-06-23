@@ -3,8 +3,8 @@ namespace Aqua\Content\Filter;
 
 use Aqua\Content\AbstractFilter;
 use Aqua\Content\ContentData;
-use Aqua\Content\Feed\RssItem;
 use Aqua\Content\Filter\CategoryFilter\Category;
+use Aqua\Content\Filter\FeedFilter\FeedItem;
 use Aqua\Core\App;
 use Aqua\Core\Meta;
 
@@ -12,6 +12,13 @@ class CategoryFilter
 extends AbstractFilter
 {
 	public $categories;
+
+	public function init()
+	{
+		if($this->contentType->hasFilter('FeedFilter')) {
+			$this->contentType->filter('FeedFilter')->attach('add-item', array( $this, 'rss' ));
+		}
+	}
 
 	public function afterUpdate(ContentData $content, array $data, array &$values)
 	{
@@ -66,10 +73,10 @@ extends AbstractFilter
 		}
 	}
 
-	public function rss(ContentData $content, RssItem $item)
+	public function rss(ContentData $content, FeedItem $item)
 	{
 		foreach($this->contentData_categories($content) as $category) {
-			$item->categories[] = $category->name;
+			$item->categories[$category->name] = $category->slug;
 		}
 	}
 
@@ -119,10 +126,12 @@ extends AbstractFilter
 		if($type === 'id') {
 			return (isset($this->categories[$id]) ? $this->categories[$id] : null);
 		}
-		$category = null;
-		foreach($this->categories as $category) {
-			if($category->slug === $id) break;
-		}
+		do {
+			foreach($this->categories as $category) {
+				if($category->slug === $id) break 2;
+			}
+			$category = null;
+		} while(0);
 		reset($this->categories);
 
 		return $category;

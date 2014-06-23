@@ -12,8 +12,6 @@ use Aqua\UI\Template;
 use Aqua\UI\Theme;
 use Aqua\User\Account;
 use Aqua\User\Role;
-use PHPMailer\PHPMailer;
-use PHPMailer\PHPMailerException;
 
 class Setup
 extends Page
@@ -71,16 +69,19 @@ extends Page
 				'mbstring-ext'  => extension_loaded('mbstring'),
 				'gd2-ext'       => extension_loaded('gd'),
 				'simplexml-ext' => extension_loaded('simplexml'),
+				'dom-ext'       => extension_loaded('dom'),
 				'ctype-ext'     => extension_loaded('ctype'),
 				'zlib-ext'      => extension_loaded('zlib'),
 			),
 			'file-permission'  => array(
-				'/.htaccess' => is_writable(\Aqua\ROOT . '/.htaccess'),
-				'/tmp'       => is_writable(\Aqua\ROOT . '/tmp') && is_readable(\Aqua\ROOT . '/tmp'),
-				'/tmp/cache' => is_writable(\Aqua\ROOT . '/tmp/cache') && is_readable(\Aqua\ROOT . '/tmp/cache'),
-				'/uploads'   => is_writable(\Aqua\ROOT . '/uploads') && is_readable(\Aqua\ROOT . '/uploads'),
-				'/settings'  => is_writable(\Aqua\ROOT . '/settings') && is_readable(\Aqua\ROOT . '/settings'),
-				'/plugins'   => is_writable(\Aqua\ROOT . '/plugins') && is_readable(\Aqua\ROOT . '/plugins')
+				'/.htaccess'     => $this->_access('w', '/.htaccess'),
+				'/tmp'           => $this->_access('rw', '/tmp', '/tmp/cache', '/tmp/emblem'),
+				'/tmp/error_log' => $this->_access('w', '/tmp/error_log'),
+				'/uploads'       => $this->_access('w', '/uploads/*'),
+				'/upgrade'       => $this->_access('rw', '/upgrade'),
+				'/settings'      => $this->_access('rw', '/settings', '/settings/*'),
+				'/plugins'       => $this->_access('rw', '/plugins'),
+				'/schema'        => $this->_access('r', '/schema', 'schema/*', '/schema/*/*'),
 			)
 		);
 		if($this->request->method === 'POST') {
@@ -333,7 +334,7 @@ extends Page
 		$settings = $this->setup->config->get('email');
 		$frm      = new Form($this->request);
 		$frm->input('address')
-		    ->type('text')
+		    ->type('email')
 		    ->required()
 		    ->value(htmlspecialchars($settings->get('from_address', '')))
 		    ->setLabel(__setup('mail-address-label'));
@@ -372,32 +373,7 @@ extends Page
 		    ->type('text')
 		    ->value(htmlspecialchars($settings->get('smtp_password', '')))
 		    ->setLabel(__setup('mail-smtp-password-label'));
-		$frm->validate(function (Form $frm, &$message) {
-			if($frm->request->getInt('smtp')) {
-				try {
-					$phpmailer = new PHPMailer(true);
-					$phpmailer->isSMTP();
-					$phpmailer->Host = $frm->request->getString('host');
-					$phpmailer->Port = $frm->request->getInt('port');
-					if(($enc = $frm->request->getString('smtp-encryption')) != '0') {
-						$phpmailer->SMTPSecure = $enc;
-					}
-					if($frm->request->getString('username')) {
-						$phpmailer->SMTPAuth = true;
-						$phpmailer->Username = $frm->request->getString('username');
-						$phpmailer->Password = $frm->request->getString('password');
-					}
-					$phpmailer->smtpConnect(array());
-					unset($phpmailer);
-				} catch(PHPMailerException $exception) {
-					$message = $exception->getMessage();
-
-					return false;
-				}
-			}
-
-			return true;
-		});
+		$frm->validate();
 		if($frm->status !== Form::VALIDATION_SUCCESS) {
 			$this->title = $this->theme->head->section = __setup('email');
 			$tpl         = new Template;
@@ -775,6 +751,7 @@ extends Page
 						case 1:
 							$query = file_get_contents(\Aqua\ROOT . '/schema/inserts.sql');
 							$query = str_replace('#', $this->setup->config->get('database')->get('prefix', ''), $query);
+							$query = str_replace('{rss-settings}', serialize(array( 'title' => $this->setup->config->get('application')->get('title', '') )), $query);
 							App::connection()->exec($query);
 							break;
 						case 2:
@@ -792,7 +769,7 @@ extends Page
 								Account::STATUS_NORMAL,
 								true
 							);
-							$settings->set('account_id', $account->id);
+							$settings->set('account_id', $account ? $account->id : null);
 							break;
 					}
 					$response = array( 'progress' => array( $progress, 2 ) );
@@ -847,5 +824,23 @@ extends Page
 		$tpl = new Template;
 		$tpl->set('page', $this);
 		echo $tpl->render('setup/finish');
+	}
+
+	protected function _access($type)
+	{
+		$directories = func_get_args();
+		array_shift($directories);
+		$read = (strpos($type, 'r') !== false);
+		$write = (strpos($type, 'w') !== false);
+		foreach($directories as $dir) {
+			foreach(glob($dir) as $path) {
+				if($read && !is_readable($path)) {
+					return false;
+				} else if($write && !is_writable($path)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

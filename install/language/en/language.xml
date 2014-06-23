@@ -28,6 +28,9 @@
     <permission key="edit-server-user">
       <name>Edit ragnarök users</name>
     </permission>
+    <permission key="view-server-acc">
+      <name>View ragnarök users</name>
+    </permission>
     <permission key="edit-cp-settings">
       <name>Edit site settings</name>
     </permission>
@@ -35,7 +38,7 @@
       <name>Edit server settings</name>
     </permission>
     <permission key="view-cp-logs">
-      <name>View dite logs</name>
+      <name>View site logs</name>
     </permission>
     <permission key="view-server-logs">
       <name>View server logs</name>

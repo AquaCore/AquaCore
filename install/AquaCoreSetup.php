@@ -82,8 +82,8 @@ class AquaCoreSetup
 		if(!($lang = $request->cookie(self::LANGUAGE_KEY, null)) || !isset($this->languagesAvailable[$lang])) {
 			$lang = 'en';
 		}
-		if(($current_step = array_search($request->uri->action, $this->steps)) === false) {
-			$current_step = 0;
+		if(($currentStep = array_search($request->uri->action, $this->steps)) === false) {
+			$currentStep = 0;
 		}
 		if(!file_exists(\Aqua\ROOT . '/settings/application.php')) {
 			try {
@@ -93,23 +93,23 @@ class AquaCoreSetup
 				$this->lastStep = 0;
 				$this->config   = array();
 			}
-			if($this->lastStep < $current_step) {
+			if($this->lastStep < $currentStep) {
 				$response->status(302)
 				         ->redirect(ac_build_url(array('action' => $this->steps[$this->lastStep])))
 				         ->send();
 				die;
 			}
-			$this->config       = new Settings($this->config);
-		} else if($current_step !== (count($this->steps) - 1)) {
+			$this->config = new Settings($this->config);
+		} else if($currentStep !== (count($this->steps) - 1)) {
 			$response->status(302)
 			         ->redirect(ac_build_url(array('action' => $this->steps[(count($this->steps) - 1)])))
 			         ->send();
 			die;
 		} else {
-			$this->lastStep = $current_step;
+			$this->lastStep = $currentStep;
 			$this->config   = new Settings(array());
 		}
-		$this->currentStep  = max(0, min($this->lastStep, $current_step));
+		$this->currentStep  = max(0, min($this->lastStep, $currentStep));
 		$this->languageCode = $lang;
 		$this->language     = include \Aqua\ROOT . "/install/language/$lang/language.php";
 	}
@@ -166,14 +166,14 @@ class AquaCoreSetup
 				$this->dbh = false;
 			} else {
 				$this->dbh = ac_mysql_connection(array(
-					                                 'host'     => $this->config->get('database')->get('host', ''),
-					                                 'port'     => $this->config->get('database')->get('port', ''),
-					                                 'database' => $this->config->get('database')->get('database', ''),
-					                                 'username' => $this->config->get('database')->get('username', ''),
-					                                 'password' => $this->config->get('database')->get('password', ''),
-					                                 'charset'  => $this->config->get('database')->get('charset', ''),
-					                                 'timezone' => $this->config->get('database')->get('timezone', ''),
-				                                 ));
+					'host'     => $this->config->get('database')->get('host', ''),
+					'port'     => $this->config->get('database')->get('port', ''),
+					'database' => $this->config->get('database')->get('database', ''),
+					'username' => $this->config->get('database')->get('username', ''),
+					'password' => $this->config->get('database')->get('password', ''),
+					'charset'  => $this->config->get('database')->get('charset', ''),
+					'timezone' => $this->config->get('database')->get('timezone', ''),
+				));
 			}
 		}
 

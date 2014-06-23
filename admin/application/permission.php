@@ -22,6 +22,11 @@ $permissions
 	->allowPermission('view-admin-cp')
 	->addFilter('can_edit_ctype', $filterContentType);
 $permissions
+	->set('admin/content/action/feed')
+	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
+	->allowPermission('view-admin-cp', 'edit-cp-settings')
+	->addFilter('can_edit_ctype', $filterContentType);
+$permissions
 	->set('admin/content/comments')
 	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
 	->allowPermission('view-admin-cp', 'edit-comments');

@@ -321,69 +321,30 @@ extends Page
 		}
 	}
 
-	public function feed_action($category = null)
+	public function feed_action($type = null, $category = null)
 	{
 		try {
-			if(!$this->contentType->feed || ($this->contentType->hasFilter('CategoryFilter') &&
-			   $category && !($category = $this->contentType->getCategory($category, 'slug')))) {
+			if(!in_array($type, array( 'atom', 'rss' ), true) ||
+			   !$this->contentType->hasFilter('FeedFilter') ||
+			   $category && (!$this->contentType->hasFilter('CategoryFilter') ||
+			    !($category = $this->contentType->getCategory($category, 'slug')))) {
 				$this->error(404);
 				return;
 			}
 			if(!($category instanceof Category)) {
 				$category = null;
 			}
-			$rss = Rss::get($category ? "{$this->contentType->key}.c.{$category->id}" : $this->contentType->key);
-			if(!$rss->inCache) {
-				$settings = App::settings()->get('rss');
-				$title = sprintf($settings->get('title', App::settings()->get('title', '')),
-				                 $this->contentType->name);
-				$rss->category($settings->get('categories')->toArray())
-					->ttl($settings->get('ttl', 60))
-					->copyright($settings->get('copyright', null));
-				if($category) {
-					$link = $this->contentType->url(array(
-						'path' => array( 'category', $category->slug )
-					));
-					$title .= " - {$category->name}";
-					$rss->title($title)
-						->link($link)
-						->description($category->description)
-						->category($category->name);
-					if($category->imageUrl) {
-						$rss->image($category->imageUrl, $title, $link);
-					}
-					$search = $this->contentType->categorySearch()
-						->where(array( 'category_id' => $category->id ));
-				} else {
-					$rss->title($title)
-						->link($this->contentType->listing ? \Aqua\URL : $this->contentType->url())
-						->description($settings->get('description', ''));
-					if($image = $settings->get('image', false)) {
-						$rss->image(
-						    $image,
-						    $settings->get('image_title', $title),
-						    $settings->get('image_link', \Aqua\URL),
-						    $settings->get('image_description', null)
-						);
-					}
-					$search = $this->contentType->search();
-				}
-				$search
-					->order(array( 'c._publish_date' => 'DESC' ))
-					->limit($search->get('limit', 20))
-					->query();
-				foreach($search as $item) {
-					$rss->addItem($item, $this->contentType->url(array(
-						'path' => array( $item->slug )
-					)));
-				}
-				$rss->save();
+			if($type === 'atom') {
+				echo $this->contentType->atomFeed($category);
+				$this->response->setHeader('Content-Type', 'application/atom+xml');
+			} else {
+				echo $this->contentType->rssFeed($category);
+				$this->response->setHeader('Content-Type', 'application/rss+xml');
 			}
-			echo $rss->build()->saveXML();
 			$this->theme = new Theme();
-			$this->response->setHeader('Content-Type', 'applucation/rss+xml');
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
+			var_dump($exception);
 			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}

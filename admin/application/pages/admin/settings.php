@@ -19,18 +19,8 @@ extends Page
 	public function index_action()
 	{
 		try {
-			if(isset($this->request->data['x-delete-rss-image'])) {
-				$this->response->status(302)->redirect(App::request()->uri->url());
-				if(preg_match('/(\/uploads\/application\/[^\.]+\.(png|jpeg|jpg|gif))$/i', App::settings()->get('rss')->get('image', ''), $match) && is_writable(\Aqua\ROOT . $match[1])) {
-					@unlink(\Aqua\ROOT . $match[1]);
-				}
-				App::settings()->get('rss')->set('image', null);
-				App::settings()->export(\Aqua\ROOT . '/settings/application.php');
-				return;
-			}
 			$settings = App::settings();
 			$frm = new Form($this->request);
-			// Application Settings
 			$frm->input('title')
 		        ->type('text')
 				->value(htmlspecialchars($settings->get('title', '')))

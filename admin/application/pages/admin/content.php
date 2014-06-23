@@ -17,6 +17,7 @@ use Aqua\UI\Search;
 use Aqua\UI\Template;
 use Aqua\User\Account;
 use Aqua\Util\DataPreload;
+use Aqua\Util\ImageUploader;
 
 class Content
 extends Page
@@ -32,7 +33,7 @@ extends Page
 		$pgn = &$this;
 		$this->attach('call_action', function() use($pgn) {
 			if(!$pgn->contentType) {
-				$pgn->error(403);
+				$pgn->error(404);
 				return;
 			}
 		});
@@ -305,6 +306,144 @@ extends Page
 			ErrorLog::logSql($exception);
 			App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 			$this->response->redirect($this->contentType->url());
+		}
+	}
+
+	public function feed_action()
+	{
+		try {
+			if(!$this->contentType->hasFilter('FeedFilter')) {
+				$this->error(404);
+				return;
+			}
+			$filter = $this->contentType->filter('FeedFilter');
+			if($this->request->method === 'POST' && isset($this->request->data['x-delete-icon'])) {
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				try {
+					if($filter->getOption('icon')) {
+						if(file_exists(\Aqua\ROOT . $filter->getOption('icon'))) {
+							@unlink(\Aqua\ROOT . $filter->getOption('icon'));
+						}
+						$filter->setOption(array( 'icon' => null ));
+					}
+				} catch(\Exception $exception) {
+					ErrorLog::logSql($exception);
+					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+				}
+				return;
+			} else if($this->request->method === 'POST' && isset($this->request->data['x-delete-image'])) {
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				try {
+					if($filter->getOption('image')) {
+						if(file_exists(\Aqua\ROOT . $filter->getOption('image'))) {
+							@unlink(\Aqua\ROOT . $filter->getOption('image'));
+						}
+						$filter->setOption(array( 'image' => null ));
+					}
+				} catch(\Exception $exception) {
+					ErrorLog::logSql($exception);
+					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+				}
+				return;
+			}
+			$frm = new Form($this->request);
+			$frm->enctype = 'multipart/form-data';
+			$frm->input('title')
+				->type('text')
+				->value(htmlspecialchars($filter->getOption('title', '')))
+				->setLabel(__('content', 'feed-title'));
+			$frm->input('description')
+				->type('text')
+				->value(htmlspecialchars($filter->getOption('description', '')))
+				->setLabel(__('content', 'feed-description'));
+			$frm->input('length')
+				->type('number')
+				->value($filter->getOption('length', null) ?: 0)
+				->setLabel(__('content', 'feed-length'))
+				->setDescription(__('content', 'feed-length-desc'));
+			$frm->input('category')
+				->type('text')
+				->value(htmlspecialchars(implode(', ', $filter->getOption('categories', array()))))
+				->setLabel(__('content', 'feed-category'))
+				->setDescription(__('content', 'feed-category-desc'));
+			$frm->input('copyright')
+				->type('text')
+				->value(htmlspecialchars($filter->getOption('copyright', '')))
+				->setLabel(__('content', 'feed-copyright'));
+			$frm->input('ttl')
+				->type('number')
+				->attr('min', 0)
+				->value($filter->getOption('ttl', 10))
+				->setLabel(__('content', 'feed-ttl'))
+				->setDescription(__('content', 'feed-ttl-desc'));
+			$frm->input('limit')
+				->type('number')
+				->attr('min', 1)
+				->attr('max', 100)
+				->value($filter->getOption('limit', 10))
+				->setLabel(__('content', 'feed-limit'))
+				->setDescription(__('content', 'feed-limit-desc'));
+			$frm->file('img')
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpeg', 'jpg' ))
+				->accept('image/svg+xml', array( 'svg', 'svgx' ))
+				->setLabel(__('content', 'feed-image'))
+				->setDescription(__('content', 'feed-image-desc'));
+			$frm->file('icon')
+				->accept('image/x-icon', 'ico')
+				->accept('image/png', 'png')
+				->accept('image/gif', 'gif')
+				->accept('image/jpeg', array( 'jpeg', 'jpg' ))
+				->accept('image/svg+xml', array( 'svg', 'svgx' ))
+				->setLabel(__('content', 'feed-icon'))
+				->setDescription(__('content', 'feed-icon-desc'));
+			$frm->validate();
+			if($frm->status !== Form::VALIDATION_SUCCESS) {
+				$this->title = __('content', 'feed-settings', htmlspecialchars($this->contentType->name));
+				$tpl = new Template;
+				$tpl->set('form', $frm)
+					->set('page', $this);
+				echo $tpl->render('admin/content/feed');
+				return;
+			}
+			$this->response->status(302)->redirect(App::request()->uri->url());
+			try {
+				$options = array(
+					'title'       => $this->request->getString('title'),
+				    'description' => $this->request->getString('description'),
+				    'copyright'   => $this->request->getString('copyright'),
+				    'categories'  => array_unique(preg_split('/\s*,\s*/m', $this->request->getString('category'))),
+				    'limit'       => $this->request->getInt('limit'),
+				    'length'      => $this->request->getInt('length'),
+				    'ttl'         => $this->request->getInt('ttl')
+				);
+				if(ac_file_uploaded('img', false)) {
+					$path = '/uploads/content/' . uniqid() . '.' . pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+					if(move_uploaded_file($_FILES['img']['tmp_name'], \Aqua\ROOT . $path)) {
+						if($filter->getOption('image') && file_exists(\Aqua\ROOT . $filter->getOption('image'))) {
+							@unlink(\Aqua\ROOT . $filter->getOption('image'));
+						}
+						$options['image'] = $path;
+					}
+				}
+				if(ac_file_uploaded('icon', false)) {
+					$path = '/uploads/content/' . uniqid() . '.' . pathinfo($_FILES['icon']['name'], PATHINFO_EXTENSION);
+					if(move_uploaded_file($_FILES['icon']['tmp_name'], \Aqua\ROOT . $path)) {
+						if($filter->getOption('icon') && file_exists(\Aqua\ROOT . $filter->getOption('icon'))) {
+							@unlink(\Aqua\ROOT . $filter->getOption('icon'));
+						}
+						$options['icon'] = $path;
+					}
+				}
+				$filter->setOption($options);
+			} catch(\Exception $exception) {
+				ErrorLog::logSql($exception);
+				App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+			}
+		} catch(\Exception $exception) {
+			ErrorLog::logSql($exception);
+			$this->error(500, __('application', 'unexpected-error-title'), __('application', 'unexpected-error'));
 		}
 	}
 

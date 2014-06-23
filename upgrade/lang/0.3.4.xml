@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="admin-menu" key="feed">Feed</word>
+        <word namespace="content" key="feed-settings">%s Feed Options</word>
+        <word namespace="content" key="feed-title">Feed Title</word>
+        <word namespace="content" key="feed-description">Feed Description</word>
+        <word namespace="content" key="feed-copyright">Copyright</word>
+        <word namespace="content" key="feed-length">Content Length</word>
+        <word namespace="content" key="feed-length-desc"><![CDATA[Truncate the content to this amount of characters. Use "0" to provide full content.]]></word>
+        <word namespace="content" key="feed-limit">Feed Entries</word>
+        <word namespace="content" key="feed-limit-desc">Amount of entries in the feed.</word>
+        <word namespace="content" key="feed-category">Categories</word>
+        <word namespace="content" key="feed-category-desc">Separate categories with comma.</word>
+        <word namespace="content" key="feed-ttl">Time to Live</word>
+        <word namespace="content" key="feed-ttl-desc">How long, num minutes, the feed will remain in cache.</word>
+        <word namespace="content" key="feed-icon">Feed Icon</word>
+        <word namespace="content" key="feed-icon-desc">Image (GIF, PNG, JPEG or ICO). Should have an acpect ratio of 1:1.</word>
+        <word namespace="content" key="feed-image">Feed Image</word>
+        <word namespace="content" key="feed-image-desc">Image (GIF, PNG or JPEG). Should have an acpect ratio of 2:1.</word>
+        <word namespace="task" key="cron-help"><![CDATA[<h3>Specific Task</h3>
+To run a specific tasks set your cron to run <b>%1$s/cron.php</b><br/>
+passing the task class name or a list of classes separated by comma in the first argument<br/>
+and the cron key in the second one.<br/>
+Example:<p/>
+<input type="text" style="width: 90%%" value="%1$s/cron.php BulkMailTask %3$s"><p/>
+"BulkMailTask" should be replaced with the tasks's class name.<br/>
+Tasks that have individual cron jobs should be disabled.<p/>
+<h3>All Tasks</h3>
+To run all pending tasks set cron to run the following command every minute:<p/>
+<input type="text" style="width: 90%%" value="%1$s/cron.php all %3$s"><p/>
+You can disable tasks altogether in the <a href="%2$s">settings page</a>.]]></word>
+        <word namespace="ragnarok" key="admin-account-updated">%s's account has been updated.</word>
+    </wordgroup>
+    <emailgroup>
+        <email key="comment-report">
+            <name>Comment Report</name>
+            <subject>Comment Report</subject>
+            <body><![CDATA[<html>
+	<body>
+		<div style="font-size: 14px; font-family:lucida sans unicode,lucida grande,sans-serif; color: #7A889E;">
+		#user-display-name#,<br>
+		<p>A comment by #comment-display-name# to <b><a href="#content-url#">#content-title#</a></b> has just reach #threshold# unique reports:</p>
+		<div style="border-radius: 5px; border: 1px solid #a3b1c7; padding: 10px 20px; box-shadow: inset 0 1px 3px 0 #a3b1c7;">
+		#comment-html#
+		</div>
+		<p><a href="#comment-url#">Click here to view this comment</a></p>
+		</div>
+	</body>
+</html>]]></body>
+            <placeholder key="site-title">Site title</placeholder>
+            <placeholder key="site-url">Site URL</placeholder>
+            <placeholder key="content-title">Post's title</placeholder>
+            <placeholder key="content-url">Post's URL</placeholder>
+            <placeholder key="user-username">Recipient's site username</placeholder>
+            <placeholder key="user-display-name">Recipient's site display name</placeholder>
+            <placeholder key="user-email">Recipient's email address</placeholder>
+            <placeholder key="threshold">Recipient's comment report threshold</placeholder>
+            <placeholder key="comment-html">Comment's html content</placeholder>
+            <placeholder key="comment-bbcode">Comment's bbcode content</placeholder>
+            <placeholder key="comment-url">Comment's admin URL</placeholder>
+            <placeholder key="comment-display-name">Replier's plain display name</placeholder>
+        </email>
+    </emailgroup>
+    <permissiongroup>
+        <permission key="view-server-acc">
+            <name>View ragnarök users</name>
+        </permission>
+        <permission key="view-cp-logs">
+            <name>View site logs</name>
+        </permission>
+    </permissiongroup>
+</languageimport>

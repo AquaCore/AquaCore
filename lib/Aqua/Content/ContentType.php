@@ -46,7 +46,7 @@ implements \Serializable, SubjectInterface
 	/**
 	 * @var bool
 	 */
-	public $feed;
+	public $search;
 	/**
 	 * @var int
 	 */
@@ -101,7 +101,7 @@ implements \Serializable, SubjectInterface
 				$this->permission,
 				$this->fields,
 				$this->listing,
-				$this->feed,
+				$this->search,
 				$this->pluginId,
 				$filters
 			));
@@ -118,7 +118,7 @@ implements \Serializable, SubjectInterface
 			$this->permission,
 			$this->fields,
 			$this->listing,
-			$this->feed,
+			$this->search,
 			$this->pluginId,
 			$filters
 			) = unserialize($serialized);
@@ -518,9 +518,17 @@ implements \Serializable, SubjectInterface
 			->groupBy('c._uid')
 			->parser(array( __CLASS__, 'parseContentSql' ));
 		$ids = array();
-		if($contentTypes) foreach($contentTypes as $cType) {
-			if($cType instanceof self || is_int($cType) && ($cType = self::getContentType($cType))) {
-				$ids[] = $cType->id;
+		if($contentTypes) {
+			foreach($contentTypes as $cType) {
+				if($cType instanceof self || is_int($cType) && ($cType = self::getContentType($cType))) {
+					$ids[] = $cType->id;
+				}
+			}
+		} else {
+			foreach(self::$contentTypes as $cType) {
+				if($cType->search) {
+					$ids[] = $cType->id;
+				}
 			}
 		}
 		if(!empty($ids)) {
@@ -586,8 +594,8 @@ implements \Serializable, SubjectInterface
 			$adapter    = (string)$ctype->adapter;
 			$permission = (string)$ctype->permission;
 			$sth = App::connection()->prepare(sprintf('
-			INSERT INTO %s (_key, _name, _item_name, _listing, _feed, _adapter, _permission, _table, _plugin_id)
-			VALUES (:key, :name, :item, :listing, :feed, :adapter, :permission, NULL, :plugin)
+			INSERT INTO %s (_key, _name, _item_name, _listing, _search, _adapter, _permission, _table, _plugin_id)
+			VALUES (:key, :name, :item, :listing, :search, :adapter, :permission, NULL, :plugin)
 			', ac_table('content_type')));
 			$sth->bindValue(':key', $key, \PDO::PARAM_STR);
 			$sth->bindValue(':name', $name, \PDO::PARAM_STR);
@@ -601,10 +609,10 @@ implements \Serializable, SubjectInterface
 			} else {
 				$sth->bindValue(':listing', 'n', \PDO::PARAM_STR);
 			}
-			if(!$ctype->feed || filter_var((string)$ctype->feed, FILTER_VALIDATE_BOOLEAN)) {
-				$sth->bindValue(':feed', 'y', \PDO::PARAM_STR);
+			if(!$ctype->search || filter_var((string)$ctype->search, FILTER_VALIDATE_BOOLEAN)) {
+				$sth->bindValue(':search', 'y', \PDO::PARAM_STR);
 			} else {
-				$sth->bindValue(':feed', 'n', \PDO::PARAM_STR);
+				$sth->bindValue(':search', 'n', \PDO::PARAM_STR);
 			}
 			if($adapter) {
 				$sth->bindValue(':adapter', $adapter, \PDO::PARAM_STR);
@@ -732,7 +740,7 @@ implements \Serializable, SubjectInterface
 		       _adapter,
 		       _table,
 		       _listing,
-		       _feed,
+		       _search,
 		       _plugin_id,
 		       _permission,
 		       _item_name
@@ -747,7 +755,7 @@ implements \Serializable, SubjectInterface
 			$type->table      = $data[4];
 			$type->permission = $data[8];
 			$type->listing    = ($data[5] === 'y');
-			$type->feed       = ($data[6] === 'y');
+			$type->search     = ($data[6] === 'y');
 			$type->pluginId   = (int)$data[7];
 			if($data[3]) {
 				$adapter = "Aqua\\Content\\Adapter\\{$data[3]}";

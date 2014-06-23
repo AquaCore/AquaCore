@@ -31,12 +31,12 @@ To run a specific tasks set your cron to run <b>%1$s/cron.php</b><br/>
 passing the task class name or a list of classes separated by comma in the first argument<br/>
 and the cron key in the second one.<br/>
 Example:<p/>
-<input type="text" style="width: 90%%" value="php %1$s/cron.php BulkMailTask %3$s"><p/>
+<input type="text" style="width: 90%%" value="%1$s/cron.php BulkMailTask %3$s"><p/>
 "BulkMailTask" should be replaced with the tasks's class name.<br/>
 Tasks that have individual cron jobs should be disabled.<p/>
 <h3>All Tasks</h3>
 To run all pending tasks set cron to run the following command every minute:<p/>
-<input type="text" style="width: 90%%" value="php %1$s/cron.php all %3$s"><p/>
+<input type="text" style="width: 90%%" value="%1$s/cron.php all %3$s"><p/>
 You can disable tasks altogether in the <a href="%2$s">settings page</a>.]]></word>
   </wordgroup>
 </languageimport>

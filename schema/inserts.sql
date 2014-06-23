@@ -104,6 +104,7 @@ INSERT INTO `#content_type_filters` VALUES
 ,(@CTYPE_POST, 'TagFilter', 'a:0:{}')
 ,(@CTYPE_POST, 'ArchiveFilter', 'a:0:{}')
 ,(@CTYPE_POST, 'SubscriptionFilter', 'a:0:{}')
+,(@CTYPE_POST, 'FeedFilter', '{rss-settings}')
 ,(@CTYPE_PAGE, 'RatingFilter', 'a:0:{}')
 ,(@CTYPE_PAGE, 'RelationshipFilter', 'a:0:{}')
 ;
