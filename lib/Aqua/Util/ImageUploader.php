@@ -7,13 +7,13 @@ class ImageUploader
 	 * @var array
 	 */
 	public $mimeTypes = array(
-		'PNG'   => 'IMAGE/PNG',
-		'APNG'  => 'IMAGE/PNG',
-		'JPG'   => 'IMAGE/JPEG',
-		'JPEG'  => 'IMAGE/JPEG',
-		'GIF'   => 'IMAGE/GIF',
-		'SVG'   => 'IMAGE/SVG+XML',
-		'SVGX'  => 'IMAGE/SVG+XML',
+		'png'   => 'image/png',
+		'apng'  => 'image/png',
+		'jpg'   => 'image/jpeg',
+		'jpeg'  => 'image/jpeg',
+		'gif'   => 'image/gif',
+		'svg'   => 'image/svg+xml',
+		'svgx'  => 'image/svg+xml',
 	);
 	/**
 	 * @var int
@@ -43,6 +43,10 @@ class ImageUploader
 	 * @var string
 	 */
 	public $mimeType;
+	/**
+	 * @var string
+	 */
+	public $extension;
 	/**
 	 * @var int
 	 */
@@ -87,7 +91,7 @@ class ImageUploader
 
 	public function uploadLocal($path, $name)
 	{
-		$extension = strtoupper(ltrim(strrchr($name, '.'), '.'));
+		$extension = strtolower(ltrim(strrchr($name, '.'), '.'));
 		if(!array_key_exists($extension, $this->mimeTypes)) {
 			$this->error = self::UPLOAD_INVALID_EXT;
 			return false;
@@ -105,7 +109,7 @@ class ImageUploader
 			$this->error = self::UPLOAD_INVALID_IMAGE;
 			return false;
 		}
-		$mime = strtoupper($data['mime']);
+		$mime = strtolower($data['mime']);
 		$x = $data[0];
 		$y = $data[1];
 		if($this->maxX && $x > $this->maxX || $this->maxY && $y > $this->maxY) {
@@ -116,20 +120,24 @@ class ImageUploader
 			$this->error = self::UPLOAD_MIME_MISMATCH;
 			return false;
 		}
-		switch($mime) {
-			case 'IMAGE/PNG': $source = @imagecreatefrompng($path); break;
-			case 'IMAGE/JPEG': $source = @imagecreatefromjpeg($path); break;
-			case 'IMAGE/GIF': $source = @imagecreatefromgif($path); break;
-			default: return self::UPLOAD_INVALID_IMAGE;
-		}
-		if(!is_resource($source)) {
-			$this->error = self::UPLOAD_INVALID_IMAGE;
-			return false;
-		}
+		$source = null;
+		do {
+			switch($mime) {
+				case 'image/png': $source = @imagecreatefrompng($path); break;
+				case 'image/jpeg': $source = @imagecreatefromjpeg($path); break;
+				case 'image/gif': $source = @imagecreatefromgif($path); break;
+				default: break 2;
+			}
+			if(!is_resource($source)) {
+				$this->error = self::UPLOAD_INVALID_IMAGE;
+				return false;
+			}
+		} while(0);
 		$this->source = $source;
 		$this->x = $x;
 		$this->y = $y;
 		$this->mimeType = $mime;
+		$this->extension = $extension;
 		$this->path = $path;
 		$this->isLocal = true;
 		$this->error = self::UPLOAD_OK;
@@ -234,7 +242,7 @@ class ImageUploader
 			$this->error = self::UPLOAD_INVALID_IMAGE;
 			return false;
 		}
-		$mime = strtoupper($data['mime']);
+		$mime = strtolower($data['mime']);
 		$x = $data[0];
 		$y = $data[1];
 		if($this->maxX && $x > $this->maxX || $this->maxY && $y > $this->maxY) {
@@ -247,23 +255,37 @@ class ImageUploader
 		}
 		$mimeTypes = strtolower(implode('|', $mimeTypes));
 		if(!in_array($mime, $this->mimeTypes) ||
-		   !preg_match("/Content-Type: ($mimeTypes)/m", $response[0], $match)) {
+		   !preg_match("/Content-Type: ($mimeTypes)/mi", $response[0], $match)) {
 			$this->error = self::UPLOAD_INVALID_MIME;
 			return false;
 		}
-		if(strtoupper($match[1]) !== $mime) {
+		if(strtolower($match[1]) !== $mime) {
 			$this->error = self::UPLOAD_MIME_MISMATCH;
 			return false;
 		}
-		$source = @imagecreatefromstring($response[1]);
-		if(!is_resource($source)) {
-			$this->error = self::UPLOAD_INVALID_IMAGE;
-			return false;
+		if($mime === 'image/png' || $mime === 'image/jpeg' || $mime === 'image/gif') {
+			$source = @imagecreatefromstring($response[1]);
+			if(!is_resource($source)) {
+				$this->error = self::UPLOAD_INVALID_IMAGE;
+				return false;
+			}
+		} else {
+			$source = null;
+		}
+		if(!($extension = strtolower(ltrim(strrchr($url, '.'), '.'))) ||
+		   !array_key_exists($extension, $this->mimeTypes) ||
+		   $this->mimeTypes[$extension] !== $mime) {
+			foreach($this->mimeTypes as $extension => $type) {
+				if($type === $mime) {
+					break;
+				}
+			}
 		}
 		$this->source = $source;
 		$this->content = $response[1];
 		$this->x = $x;
 		$this->y = $y;
+		$this->extension = $extension;
 		$this->mimeType = $mime;
 		$this->isLocal = false;
 		$this->path = $url;
@@ -295,13 +317,9 @@ class ImageUploader
 		if($name === null) {
 			$name = uniqid();
 		}
+		$name.= '.' . $this->extension;
 		if($permission === null) {
 			$permission = \Aqua\PUBLIC_FILE_PERMISSION;
-		}
-		switch($this->mimeType) {
-			case 'IMAGE/PNG': $name.= '.png'; break;
-			case 'IMAGE/JPEG': $name.= '.jpg'; break;
-			case 'IMAGE/GIF': $name.= '.gif'; break;
 		}
 		$file = \Aqua\ROOT . "$directory/$name";
 		if($this->isLocal) {
