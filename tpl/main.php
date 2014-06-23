@@ -18,7 +18,7 @@ $posts = ContentType::getContentType(ContentType::CTYPE_POST)->featured(5);
 			<div style="position: relative">
 			<div class="ac-site-search">
 				<form method="GET"
-				      action="<?php ac_build_path(array(
+				      action="<?php echo ac_build_path(array(
 						'path' => array( 'content' ),
 				        'action' => 'search'
 					)) ?>"
@@ -34,8 +34,11 @@ $posts = ContentType::getContentType(ContentType::CTYPE_POST)->featured(5);
 				<a href="<?php echo ac_build_url(array( 'path' => array( 'news' ) )) ?>">
 					<?php echo __('news', 'more-posts') ?>
 				</a>
-				<a href="<?php echo ac_build_url(array( 'path' => array( 'news' ), 'action' => 'feed' )) ?>">
+				<a href="<?php echo ac_build_url(array( 'path' => array( 'news' ), 'action' => 'feed', 'arguments' => array( 'rss' ) )) ?>">
 					<?php echo __('content', 'rss-feed') ?>
+				</a>
+				<a href="<?php echo ac_build_url(array( 'path' => array( 'news' ), 'action' => 'feed', 'arguments' => array( 'atom' ) )) ?>">
+					<?php echo __('content', 'atom-feed') ?>
 				</a>
 			</div>
 			</div>

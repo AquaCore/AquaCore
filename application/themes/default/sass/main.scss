@@ -674,8 +674,9 @@ iframe[src="about:blank"]{ display: none !important; }
 		a {
 			padding: 0 5px;
 			color: #fff;
-			&:first-child {
-				border-right: 1px solid;
+			border-right: 1px solid;
+			&:last-child {
+				border-right: none;
 			}
 		}
 	}
