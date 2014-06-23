@@ -28,7 +28,6 @@ $direction = $setup->languageDirection();
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<?php echo $head->render() ?>
 	<link type="text/css" href="<?php echo $this->url ?>/style.css" rel="stylesheet" />
-	<script src="<?php echo $this->url ?>/main.js"></script>
 </head>
 <body class="<?php echo $body_class?>">
 <div id="main">

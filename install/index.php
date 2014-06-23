@@ -6,7 +6,9 @@ use Aqua\Router\Router;
 use Aqua\UI\Form;
 use Aqua\UI\Template;
 
-if(!ini_get('date.timezone') || !date_default_timezone_get()) {
+define('DEFAULT_TIMEZONE', ini_get('date.timezone'));
+
+if(!DEFAULT_TIMEZONE) {
 	date_default_timezone_set('UTC');
 	ini_set('date.timezone', 'UTC');
 }

@@ -8,6 +8,7 @@ use Aqua\Log\ErrorLog;
 use Aqua\Site\Page;
 use Aqua\UI\Form;
 use Aqua\UI\Menu;
+use Aqua\UI\Search\Input;
 use Aqua\UI\Template;
 use Aqua\UI\Theme;
 use Aqua\User\Account;
@@ -112,28 +113,29 @@ extends Page
 	{
 		$settings = $this->setup->config->get('address');
 		$frm      = new Form($this->request);
-		$frm->input('domain')
+		$frm->input('domain', true)
 		    ->type('text')
 		    ->required()
-		    ->value(htmlspecialchars($settings->get('domain', \Aqua\DOMAIN)))
+		    ->value(htmlspecialchars($settings->get('domain', \Aqua\DOMAIN)), false)
 		    ->setLabel(__setup('url-domain-label'));
-		$frm->input('base-dir')
+		$frm->input('base-dir', true)
 		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('base_dir', \Aqua\DIR)))
+		    ->value(htmlspecialchars($settings->get('base_dir', \Aqua\DIR)), false)
 		    ->setLabel(__setup('url-base-dir-label'))
 		    ->setDescription(__setup('url-base-dir-desc'));
-		$frm->checkbox('rewrite')
+		$frm->checkbox('rewrite', true)
 		    ->value(array('1' => ''))
-		    ->checked($settings->get('rewrite_url', false) ? '1' : null)
+		    ->checked($settings->get('rewrite_url', false) ? '1' : null, false)
 		    ->setLabel(__setup('url-rewrite-label'))
 		    ->setDescription(__setup('url-rewrite-desc'));
+		$this->_setDefaultErrorMessages($frm);
 		$frm->validate();
 		if($frm->status !== Form::VALIDATION_SUCCESS) {
 			$this->title = $this->theme->head->section = __setup('address');
 			$tpl         = new Template;
 			$tpl->set('form', $frm)
 			    ->set('page', $this);
-			echo $tpl->render('setup/address');
+			echo $tpl->render('setup/address', 'setup/step');
 
 			return;
 		}
@@ -148,45 +150,46 @@ extends Page
 	{
 		$settings = $this->setup->config->get('database');
 		$frm      = new Form($this->request);
-		$frm->input('host')
+		$frm->input('host', true)
 		    ->type('text')
 		    ->required()
-		    ->value(htmlspecialchars($settings->get('host', '127.0.0.1')))
+		    ->value(htmlspecialchars($settings->get('host', '127.0.0.1')), false)
 		    ->setLabel(__setup('db-host-label'));
-		$frm->input('port')
+		$frm->input('port', true)
 		    ->type('number')
 		    ->required()
 		    ->attr('min', 0)
-		    ->value($settings->get('port', 3306))
+		    ->value($settings->get('port', 3306), false)
 		    ->setLabel(__setup('db-port-label'));
-		$frm->input('database')
+		$frm->input('database', true)
 		    ->type('text')
 		    ->required()
-		    ->value($settings->get('database', ''))
+		    ->value($settings->get('database', ''), false)
 		    ->setLabel(__setup('db-database-label'));
-		$frm->input('username')
+		$frm->input('username', true)
 		    ->type('text')
 		    ->required()
-		    ->value(htmlspecialchars($settings->get('username', 'root')))
+		    ->value(htmlspecialchars($settings->get('username', 'root')), false)
 		    ->setLabel(__setup('db-username-label'));
-		$frm->input('password')
+		$frm->input('password', true)
 		    ->type('password')
-		    ->value(htmlspecialchars($settings->get('password', '')))
+		    ->value(htmlspecialchars($settings->get('password', '')), false)
 		    ->setLabel(__setup('db-password-label'));
-		$frm->input('timezone')
+		$frm->input('timezone', true)
 		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('timezone', '')))
+		    ->value(htmlspecialchars($settings->get('timezone', '')), false)
 		    ->setLabel(__setup('db-timezone-label'))
 		    ->setDescription(__setup('db-timezone-desc'));
-		$frm->input('charset')
+		$frm->input('charset', true)
 		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('charset', 'UTF8')))
+		    ->value(htmlspecialchars($settings->get('charset', 'UTF8')), false)
 		    ->setLabel(__setup('db-charset-label'));
-		$frm->input('prefix')
+		$frm->input('prefix', true)
 		    ->type('text')
 		    ->attr('maxlength', 50)
-		    ->value(htmlspecialchars($settings->get('prefix', 'ac_')))
+		    ->value(htmlspecialchars($settings->get('prefix', 'ac_')), false)
 		    ->setLabel(__setup('db-prefix-label'));
+		$this->_setDefaultErrorMessages($frm);
 		$frm->validate(function (Form $frm, &$message) {
 			try {
 				if($prefix = $frm->request->getString('prefix')) {
@@ -241,7 +244,7 @@ extends Page
 			$tpl         = new Template;
 			$tpl->set('form', $frm)
 			    ->set('page', $this);
-			echo $tpl->render('setup/database');
+			echo $tpl->render('setup/database', 'setup/step');
 
 			return;
 		}
@@ -264,40 +267,41 @@ extends Page
 	{
 		$settings = $this->setup->config->get('application');
 		$frm      = new Form($this->request);
-		$frm->input('title')
+		$frm->input('title', true)
 		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('title', '')))
+		    ->value(htmlspecialchars($settings->get('title', '')), false)
 		    ->setLabel(__setup('app-title-label'));
-		$frm->select('ssl')
+		$frm->select('ssl', true)
 		    ->value(array(
 				0 => __setup('ssl-0'),
 				1 => __setup('ssl-1'),
 				2 => __setup('ssl-2')
 			))
-		    ->selected($settings->get('ssl', 0))
+		    ->selected($settings->get('ssl', 0), false)
 		    ->setLabel(__setup('app-ssl-label'))
 		    ->setDescription(__setup('app-ssl-desc'));
 		$languages = $this->setup->languagesAvailable;
 		foreach($languages as &$lang) {
 			$lang = $lang[0];
 		}
-		$frm->select('language')
+		$frm->select('language', true)
 		    ->value($languages)
-		    ->selected($settings->get('language', key($languages)))
+		    ->selected($settings->get('language', key($languages)), false)
 		    ->setLabel(__setup('app-language-label'));
-		$frm->input('timezone')
+		$frm->input('timezone', true)
 		    ->type('text')
-		    ->value($settings->get('timezone', ''))
+		    ->value($settings->get('timezone', ''), false)
 		    ->setLabel(__setup('app-timezone-label'))
 		    ->setDescription(__setup('app-timezone-desc'));
-		if(!ini_get('date.timezone')) {
+		if(!DEFAULT_TIMEZONE) {
 			$frm->input('timezone')->required();
 		}
-		$frm->checkbox('ob')
+		$frm->checkbox('ob', true)
 		    ->value(array('1' => ''))
-		    ->checked($settings->get('output_compression', true) ? '1' : null)
+		    ->checked($settings->get('output_compression', true) ? '1' : null, false)
 		    ->setLabel(__setup('app-ob-label'))
 		    ->setDescription(__setup('app-ob-desc'));
+		$this->_setDefaultErrorMessages($frm);
 		$frm->validate(function (Form $frm) {
 			if($timezone = $frm->request->getString('timezone')) {
 				try {
@@ -316,7 +320,7 @@ extends Page
 			$tpl         = new Template;
 			$tpl->set('form', $frm)
 			    ->set('page', $this);
-			echo $tpl->render('setup/application');
+			echo $tpl->render('setup/application', 'setup/step');
 
 			return;
 		}
@@ -333,53 +337,54 @@ extends Page
 	{
 		$settings = $this->setup->config->get('email');
 		$frm      = new Form($this->request);
-		$frm->input('address')
+		$frm->input('address', true)
 		    ->type('email')
 		    ->required()
-		    ->value(htmlspecialchars($settings->get('from_address', '')))
+		    ->value(htmlspecialchars($settings->get('from_address', '')), false)
 		    ->setLabel(__setup('mail-address-label'));
-		$frm->input('name')
+		$frm->input('name', true)
 		    ->type('text')
 		    ->required()
-		    ->value(htmlspecialchars($settings->get('from_name', '')))
+		    ->value(htmlspecialchars($settings->get('from_name', '')), false)
 		    ->setLabel(__setup('mail-sender-label'));
-		$frm->checkbox('smtp')
+		$frm->checkbox('smtp', true)
 		    ->value(array('1' => ''))
-		    ->checked($settings->get('use_smtp', false) ? '1' : null)
+		    ->checked($settings->get('use_smtp', false) ? '1' : null, false)
 		    ->setLabel(__setup('mail-smtp-label'));
-		$frm->input('smtp-host')
+		$frm->input('smtp-host', true)
 		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('smtp_host', '')))
+		    ->value(htmlspecialchars($settings->get('smtp_host', '')), false)
 		    ->setLabel(__setup('mail-smtp-host-label'));
-		$frm->input('smtp-port')
+		$frm->input('smtp-port', true)
 		    ->type('number')
 		    ->attr('min', 0)
-		    ->value(htmlspecialchars($settings->get('smtp_port', 25)))
+		    ->value(htmlspecialchars($settings->get('smtp_port', 25)), false)
 		    ->setLabel(__setup('mail-smtp-port-label'));
-		$frm->select('smtp-encryption')
+		$frm->select('smtp-encryption', true)
 		    ->value(array(
 				''    => __setup('smtp-none'),
 				'tls' => __setup('smtp-tls'),
 				'ssl' => __setup('smtp-ssl'),
 			))
-		    ->selected(htmlspecialchars($settings->get('smtp_encryption', '')))
+		    ->selected(htmlspecialchars($settings->get('smtp_encryption', '')), false)
 		    ->setLabel(__setup('mail-smtp-encryption-label'));
-		$frm->input('smtp-username')
+		$frm->input('smtp-username', true)
 		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('smtp_username', '')))
+		    ->value(htmlspecialchars($settings->get('smtp_username', '')), false)
 		    ->setLabel(__setup('mail-smtp-username-label'))
 		    ->setDescription(__setup('mail-smtp-username-desc'));
-		$frm->input('smtp-password')
-		    ->type('text')
-		    ->value(htmlspecialchars($settings->get('smtp_password', '')))
+		$frm->input('smtp-password', true)
+		    ->type('password')
+		    ->value(htmlspecialchars($settings->get('smtp_password', '')), false)
 		    ->setLabel(__setup('mail-smtp-password-label'));
+		$this->_setDefaultErrorMessages($frm);
 		$frm->validate();
 		if($frm->status !== Form::VALIDATION_SUCCESS) {
 			$this->title = $this->theme->head->section = __setup('email');
 			$tpl         = new Template;
 			$tpl->set('form', $frm)
 			    ->set('page', $this);
-			echo $tpl->render('setup/email');
+			echo $tpl->render('setup/email', 'setup/step');
 
 			return;
 		}
@@ -399,7 +404,7 @@ extends Page
 	{
 		$settings = $this->setup->config->get('phpass');
 		$frm      = new Form($this->request);
-		$frm->select('adapter')
+		$frm->select('adapter', true)
 		    ->value(array(
 				'bcrypt'   => 'BCrypt',
 				'md5'      => 'MD5',
@@ -409,76 +414,77 @@ extends Page
 				'sha512'   => 'Sha512',
 				'portable' => 'Portable'
 			))
-		    ->selected($settings->get('adapter', 'bcrypt'))
+		    ->selected($settings->get('adapter', 'bcrypt'), false)
 		    ->setLabel(__setup('pw-hash-label'));
 		if(!version_compare(PHP_VERSION, '5.3.7', '<')) {
-			$frm->select('identifier')
+			$frm->select('identifier', true)
 				->value(array(
 					'2a' => '2a',
 				    '2x' => '2x',
 				    '2y' => '2y'
 				))
-				->selected($settings->get('identifier', '2y'))
+				->selected($settings->get('identifier', '2y'), false)
 				->setLabel(__setup('pw-identifier-label'));
 		}
-		$frm->input('bcrypt-iteration')
+		$frm->input('bcrypt-iteration', true)
 			->type('number')
 			->attr('min', 4)
 			->attr('max', 31)
-			->value($settings->get('bcrypt_iteration', 12))
+			->value($settings->get('bcrypt_iteration', 12), false)
 			->setLabel(__setup('pw-itercountlog2-label'))
 			->setDescription(__setup('pw-itercountlog2-desc'));
-		$frm->input('pbkdf2-iteration')
+		$frm->input('pbkdf2-iteration', true)
 			->type('number')
 			->attr('min', 1)
 			->attr('max', 4294967296)
-			->value($settings->get('pbkdf2_iteration', 12000))
+			->value($settings->get('pbkdf2_iteration', 12000), false)
 			->setLabel(__setup('pw-itercount-label'))
 			->setDescription(__setup('pw-itercount-desc'));
-		$frm->input('sha1-iteration')
+		$frm->input('sha1-iteration', true)
 			->type('number')
 			->attr('min', 1)
 			->attr('max', 4294967296)
-			->value($settings->get('sha1_iteration', 40000))
+			->value($settings->get('sha1_iteration', 40000), false)
 			->setLabel(__setup('pw-itercount-label'))
 			->setDescription(__setup('pw-itercount-desc'));
-		$frm->input('sha256-iteration')
+		$frm->input('sha256-iteration', true)
 			->type('number')
 			->attr('min', 100)
 			->attr('max', 999999)
-			->value($settings->get('sha1_iteration', 80000))
+			->value($settings->get('sha1_iteration', 80000), false)
 			->setLabel(__setup('pw-itercount-label'))
 			->setDescription(__setup('pw-itercount-desc'));
-		$frm->input('sha512-iteration')
+		$frm->input('sha512-iteration', true)
 			->type('number')
 			->attr('min', 100)
 			->attr('max', 999999)
-			->value($settings->get('sha512_iteration', 60000))
+			->value($settings->get('sha512_iteration', 60000), false)
 			->setLabel(__setup('pw-itercount-label'))
 			->setDescription(__setup('pw-itercount-desc'));
-		$frm->input('portable-iteration')
+		$frm->input('portable-iteration', true)
 			->type('number')
 			->attr('min', 7)
 			->attr('max', 30)
-			->value($settings->get('portable_iteration', 12))
+			->value($settings->get('portable_iteration', 12), false)
 			->setLabel(__setup('pw-itercountlog2-label'))
 			->setDescription(__setup('pw-itercountlog2-desc'));
-		$frm->select('digest')
+		$frm->select('digest', true)
 			->value(array(
 				'sha1'   => 'Sha1',
 			    'sha256' => 'Sha256',
 			    'sha512' => 'Sha512',
 			))
-			->selected($settings->get('digest', 'sha512'))
+			->selected($settings->get('digest', 'sha512'), false)
 			->setLabel(__setup('pw-digest-label'))
 			->setDescription(__setup('pw-digest-desc'));
+		$this->_setDefaultErrorMessages($frm);
 		$frm->validate();
 		if($frm->status !== Form::VALIDATION_SUCCESS) {
 			$this->title = $this->theme->head->section = __setup('phpass');
 			$tpl         = new Template;
 			$tpl->set('form', $frm)
 			    ->set('page', $this);
-			echo $tpl->render('setup/phpass');
+			echo $tpl->render('setup/phpass', 'setup/step');
 
 			return;
 		}
@@ -515,37 +521,38 @@ extends Page
 	{
 		$settings = $this->setup->config->get('account');
 		$frm = new Form($this->request);
-		$frm->input('username')
+		$frm->input('username', true)
 			->type('text')
 			->required()
-			->value(htmlspecialchars($settings->get('username', '')))
+			->value(htmlspecialchars($settings->get('username', '')), false)
 			->setLabel(__setup('acc-username-label'));
-		$frm->input('display-name')
+		$frm->input('display-name', true)
 			->type('text')
 			->required()
-			->value(htmlspecialchars($settings->get('display_name', '')))
+			->value(htmlspecialchars($settings->get('display_name', '')), false)
 			->setLabel(__setup('acc-display-name-label'));
-		$frm->input('email')
+		$frm->input('email', true)
 			->type('text')
 			->required()
-			->value(htmlspecialchars($settings->get('email', '')))
+			->value(htmlspecialchars($settings->get('email', '')), false)
 			->setLabel(__setup('acc-email-label'));
-		$frm->input('password')
+		$frm->input('password', true)
 			->type('password')
 			->required()
-			->value(htmlspecialchars($settings->get('password', '')))
+			->value(htmlspecialchars($settings->get('password', '')), false)
 			->setLabel(__setup('acc-password-label'));
-		$frm->input('repeat-password')
+		$frm->input('repeat-password', true)
 			->type('password')
 			->required()
-			->value(htmlspecialchars($settings->get('password', '')))
+			->value(htmlspecialchars($settings->get('password', '')), false)
 			->setLabel(__setup('acc-repeat-password-label'));
-		$frm->input('birthday')
+		$frm->input('birthday', true)
 			->type('date')
 			->placeholder('YYYY-MM-DD')
 			->required()
-			->value($settings->exists('birthday') ? date('Y-m-d', $settings->get('birthday')) : null)
+			->value($settings->exists('birthday') ? date('Y-m-d', $settings->get('birthday')) : null, false)
 			->setLabel(__setup('acc-birthday-label'));
+		$this->_setDefaultErrorMessages($frm);
 		$frm->validate(function(Form $frm) {
 			if(!($date = \DateTime::createFromFormat('Y-m-d', $frm->request->getString('birthday'))) || $date->getTimestamp() > time()) {
 				$frm->field('birthday')->setWarning(__setup('invalid-birthday'));
@@ -576,7 +583,7 @@ extends Page
 			$tpl         = new Template;
 			$tpl->set('form', $frm)
 			    ->set('page', $this);
-			echo $tpl->render('setup/account');
+			echo $tpl->render('setup/account', 'setup/step');
 
 			return;
 		}
@@ -842,5 +849,40 @@ extends Page
 			}
 		}
 		return true;
+	}
+
+	protected function _setDefaultErrorMessages(Form $form)
+	{
+		foreach($form->content as $field) {
+			if($field instanceof Form\Input) {
+				$field->setDefaultErrorMessage(__setup('err-invalid-length'), Input::VALIDATION_INVALID_LENGTH);
+				$field->setDefaultErrorMessage(__setup('err-invalid-pattern'), Input::VALIDATION_PATTERN);
+				$field->setDefaultErrorMessage(__setup('err-required'), Input::VALIDATION_EMPTY_VALUE);
+				switch($field->getAttr('type')) {
+					case 'date':
+					case 'datetime':
+					case 'time':
+						$field->setDefaultErrorMessage(__setup('err-invalid-date'), Input::VALIDATION_INVALID_TYPE);
+						$field->setDefaultErrorMessage(__setup('err-invalid-date-range'), Input::VALIDATION_INVALID_RANGE);
+						break;
+					case 'email':
+						$field->setDefaultErrorMessage(__setup('err-invalid-email'), Input::VALIDATION_INVALID_TYPE);
+						break;
+					case 'url':
+						$field->setDefaultErrorMessage(__setup('err-invalid-url'), Input::VALIDATION_INVALID_TYPE);
+						break;
+					case 'number':
+					case 'range':
+						$field->setDefaultErrorMessage(__setup('err-invalid-number'), Input::VALIDATION_INVALID_TYPE);
+						break;
+				}
+			} else if($field instanceof Form\Checkbox) {
+				$field->setDefaultErrorMessage(__setup('err-invalid-option'), Form\Checkbox::VALIDATION_INVALID_OPTION);
+			} else if($field instanceof Form\Select) {
+				$field->setDefaultErrorMessage(__setup('err-invalid-option'), Form\Select::VALIDATION_INVALID_OPTION);
+				$field->setDefaultErrorMessage(__setup('err-required'), Form\Select::VALIDATION_FIELD_REQUIRED);
+			}
+		}
+		reset($form->content);
 	}
 }

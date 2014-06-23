@@ -281,6 +281,16 @@ td.ac-form-label {
 	border-radius: 5px;
 }
 
+.ac-field-warning {
+	color: #d03248;
+	font-weight: bold;
+	font-size: .9em;
+}
+
+.ac-field-warning td {
+	padding: 5px 20px;
+}
+
 .installation-steps {
 	margin: 0;
 	padding: 20px 0 0 30px;
