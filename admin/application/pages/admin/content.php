@@ -194,7 +194,7 @@ extends Page
 				'title'               => $this->request->getString('title'),
 			    'content'             => $this->request->getString('content'),
 			    'status'              => $this->request->getInt('status'),
-			    'parent'              => $this->request->getInt('parent', ''),
+			    'parent'              => $this->request->getInt('parent', null) ?: null,
 			    'category'            => $this->request->getArray('category'),
 			    'tags'                => $this->request->getString('tags'),
 			    'publish_date'        => $publishDate,
@@ -373,7 +373,7 @@ extends Page
 			$frm->input('ttl')
 				->type('number')
 				->attr('min', 0)
-				->value($filter->getOption('ttl', 10))
+				->value($filter->getOption('ttl', 1440))
 				->setLabel(__('content', 'feed-ttl'))
 				->setDescription(__('content', 'feed-ttl-desc'));
 			$frm->input('limit')
@@ -418,9 +418,11 @@ extends Page
 				    'length'      => $this->request->getInt('length'),
 				    'ttl'         => $this->request->getInt('ttl')
 				);
+				$x = umask(0);
 				if(ac_file_uploaded('img', false)) {
 					$path = '/uploads/content/' . uniqid() . '.' . pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
 					if(move_uploaded_file($_FILES['img']['tmp_name'], \Aqua\ROOT . $path)) {
+						chmod(\Aqua\ROOT . $path, \Aqua\PUBLIC_FILE_PERMISSION);
 						if($filter->getOption('image') && file_exists(\Aqua\ROOT . $filter->getOption('image'))) {
 							@unlink(\Aqua\ROOT . $filter->getOption('image'));
 						}
@@ -430,12 +432,14 @@ extends Page
 				if(ac_file_uploaded('icon', false)) {
 					$path = '/uploads/content/' . uniqid() . '.' . pathinfo($_FILES['icon']['name'], PATHINFO_EXTENSION);
 					if(move_uploaded_file($_FILES['icon']['tmp_name'], \Aqua\ROOT . $path)) {
+						chmod(\Aqua\ROOT . $path, \Aqua\PUBLIC_FILE_PERMISSION);
 						if($filter->getOption('icon') && file_exists(\Aqua\ROOT . $filter->getOption('icon'))) {
 							@unlink(\Aqua\ROOT . $filter->getOption('icon'));
 						}
 						$options['icon'] = $path;
 					}
 				}
+				umask($x);
 				$filter->setOption($options);
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
@@ -495,29 +499,28 @@ extends Page
 		}
 		if($this->contentType->hasFilter('RelationshipFilter')) {
 			$tree = $this->contentType->relationshipTree(array( 'title' ));
-			if(empty($tree)) {
-				return null;
-			}
-			$field = $frm->select('parent')
-				->value(array( '' => __('content', 'select-parent') ))
-				->setLabel(__('content', 'parent'));
-			if($content && ($parent = $content->parent())) {
-				$field->selected($parent->uid);
-			} else {
-				$field->selected('');
-			}
-			$depth = 0;
-			$fn = function($branch) use (&$content, &$field, &$fn, &$depth) {
-				foreach($branch as $id => $data) {
-					if($content && $id === $content->uid) continue;
-					$field->value(array( $id => htmlspecialchars($data['title']) ));
-					$field->option($id)->attr('ac-tree-depth', $depth);
-					++$depth;
-					$fn($data['children']);
-					--$depth;
+			if(!empty($tree)) {
+				$field = $frm->select('parent')
+					->value(array( '' => __('content', 'select-parent') ))
+					->setLabel(__('content', 'parent'));
+				if($content && ($parent = $content->parent())) {
+					$field->selected($parent->uid);
+				} else {
+					$field->selected('');
 				}
-			};
-			$fn($tree);
+				$depth = 0;
+				$fn = function($branch) use (&$content, &$field, &$fn, &$depth) {
+					foreach($branch as $id => $data) {
+						if($content && $id === $content->uid) continue;
+						$field->value(array( $id => htmlspecialchars($data['title']) ));
+						$field->option($id)->attr('ac-tree-depth', $depth);
+						++$depth;
+						$fn($data['children']);
+						--$depth;
+					}
+				};
+				$fn($tree);
+			}
 		}
 		if($this->contentType->hasFilter('TagFilter')) {
 			$frm->input('tags', true)
@@ -531,11 +534,13 @@ extends Page
 			foreach($this->contentType->categories() as $category) {
 				$categories[$category->id] = htmlspecialchars($category->name);
 			}
-			$frm->checkbox('category', true)
-			    ->multiple()
-			    ->value($categories)
-				->checked($content ? array_keys($content->categories() ?: array()) : null, false)
-			    ->setLabel(__('content', 'category'));
+			if(!empty($categories)) {
+				$frm->checkbox('category', true)
+				    ->multiple()
+				    ->value($categories)
+					->checked($content ? array_keys($content->categories() ?: array()) : null, false)
+				    ->setLabel(__('content', 'category'));
+			}
 		}
 		$status = $frm->select('status')
 		    ->required()

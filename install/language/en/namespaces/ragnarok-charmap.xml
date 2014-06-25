@@ -100,7 +100,8 @@
     <word namespace="ragnarok-charmap" key="add-castle">Add Castle</word>
     <word namespace="ragnarok-charmap" key="edit-shop">Edit Item Shop - %s</word>
     <word namespace="ragnarok-charmap" key="shop-updated">Item shop updated.</word>
-    <word namespace="ragnarok-charmap" key="shop-removed"><![CDATA[<b>%s</b> removed from the item shop.]]></word>
+    <word namespace="ragnarok-charmap" key="shop-removed-s"><![CDATA[<b>%s</b> removed from the item shop.]]></word>
+    <word namespace="ragnarok-charmap" key="shop-removed-p"><![CDATA[<b>%s</b> items removed from the item shop.]]></word>
     <word namespace="ragnarok-charmap" key="castle-name-empty">Castle names cannot be empty.</word>
     <word namespace="ragnarok-charmap" key="castle-id-number">Castle IDs must be numbers higher than 0.</word>
     <word namespace="ragnarok-charmap" key="castles-updated">Castles updated.</word>

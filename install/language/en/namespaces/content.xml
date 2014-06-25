@@ -38,6 +38,7 @@
     <word namespace="content" key="publishing-options">Publishing Options</word>
     <word namespace="content" key="read-more">Read More</word>
     <word namespace="content" key="rss-feed">Rss Feed</word>
+    <word namespace="content" key="atom-feed">Atom Feed</word>
     <word namespace="content" key="save">Save Changes</word>
     <word namespace="content" key="slug">Slug</word>
     <word namespace="content" key="status">Status</word>
@@ -72,6 +73,8 @@
     <word namespace="content" key="content-create-fail"><![CDATA[Failed to create %s <b>"%s"</b>.]]></word>
     <word namespace="content" key="content-updated"><![CDATA[<b>"%2$s"</b> has been updated.]]></word>
     <word namespace="content" key="edit-comment">Edit Comment</word>
+    <word namespace="content" key="new-title">New %s</word>
+    <word namespace="content" key="uses">Uses</word>
     <word namespace="content" key="feed-settings">%s Feed Options</word>
     <word namespace="content" key="feed-title">Feed Title</word>
     <word namespace="content" key="feed-description">Feed Description</word>

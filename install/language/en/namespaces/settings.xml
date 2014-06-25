@@ -11,7 +11,6 @@
     <word namespace="settings" key="user">User Settings</word>
     <word namespace="settings" key="account">Account Settings</word>
     <word namespace="settings" key="content">Content Settings</word>
-    <word namespace="settings" key="rss">RSS Settings</word>
     <word namespace="settings" key="ragnarok">Ragnarök Settings</word>
     <word namespace="settings" key="section-registration">Registration</word>
     <word namespace="settings" key="section-persistent-login">Persistent Login</word>
@@ -68,13 +67,6 @@
     <word namespace="settings" key="email-enc-none">None</word>
     <word namespace="settings" key="email-enc-ssl">SSL</word>
     <word namespace="settings" key="email-enc-tls">TLS</word>
-    <word namespace="settings" key="rss-title-label">Channel Title</word>
-    <word namespace="settings" key="rss-category-label">Channel Categories</word>
-    <word namespace="settings" key="rss-category-desc">Separate categories with comma.</word>
-    <word namespace="settings" key="rss-description-label">Channel Description</word>
-    <word namespace="settings" key="rss-image-label">Channel Image</word>
-    <word namespace="settings" key="rss-ttl-label">Cache Time to Live</word>
-    <word namespace="settings" key="rss-copyright-label">Copyright</word>
     <word namespace="settings" key="use-recaptcha-label">Use ReCaptcha</word>
     <word namespace="settings" key="use-recaptcha-desc"><![CDATA[<a href="%s" target="_blank">Create a reCaptcha key pair</a> and paste keys on the fields below.]]></word>
     <word namespace="settings" key="recaptcha-public-label">ReCaptcha Public Key</word>
@@ -252,12 +244,9 @@
     <word namespace="settings" key="invalid-lines-color"><![CDATA[<b>Lines Color</b>: "%s" is not a valid hex color.]]></word>
     <word namespace="settings" key="captcha-font-upload-error"><![CDATA[<b>Font</b>: %s.]]></word>
     <word namespace="settings" key="invalid-captcha-font"><![CDATA[<b>Font</b>: The file uploaded is not a valid TTF font.]]></word>
-    <word namespace="settings" key="rss-upload-error"><![CDATA[<b>Channel Image</b>: %s]]></word>
     <word namespace="settings" key="avatar-upload-error"><![CDATA[<b>Default Avatar</b>: %s]]></word>
-    <word namespace="settings" key="invalid-rss-image"><![CDATA[<b>Channel Image</b>: The file uploaded is not a valid JPEG, PNG or GIF image.]]></word>
     <word namespace="settings" key="invalid-avatar-image"><![CDATA[<b>Default Avatar</b>: The file uploaded is not a valid JPEG, PNG or GIF image.]]></word>
     <word namespace="settings" key="failed-to-upload-avatar"><![CDATA[<b>Default Avatar</b>: Failed to save uploaded file.]]></word>
-    <word namespace="settings" key="failed-to-upload-rss-image"><![CDATA[<b>Channel Image</b>: Failed to save uploaded file.]]></word>
     <word namespace="settings" key="settings-saved">Settings Saved</word>
   </wordgroup>
 </languageimport>

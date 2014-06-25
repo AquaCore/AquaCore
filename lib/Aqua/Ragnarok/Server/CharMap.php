@@ -1580,16 +1580,24 @@ class CharMap
 
 	public function removeWoeTime($id)
 	{
-		$sth = $this->connection()->prepare("DELETE FROM {$this->table('ac_woe_schedule')} WHERE id = ?");
-		$sth->bindValue(1, $id, \PDO::PARAM_INT);
-		$sth->execute();
-		if($sth->rowCount()) {
-			unset($this->woeSchedule[$id]);
-			$this->fetchWoeSchedule(true);
-			return true;
-		} else {
-			return false;
+		if(!is_array($id)) {
+			$id = array( $id );
 		}
+		$deleted = array();
+		$sth = $this->connection()->prepare("DELETE FROM {$this->table('ac_woe_schedule')} WHERE id = ?");
+		foreach($id as $i) {
+			$sth->bindValue(1, $i, \PDO::PARAM_INT);
+			$sth->execute();
+			if($sth->rowCount()) {
+				$deleted[] = $i;
+				unset($this->woeSchedule[$i]);
+			}
+			$sth->closeCursor();
+		}
+		if(count($deleted)) {
+			$this->fetchWoeSchedule(true);
+		}
+		return $deleted;
 	}
 
 	public function editWoeCastles($id, array $castles)

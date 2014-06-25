@@ -49,8 +49,8 @@ extends AbstractFilter
 		$feedback = array( $dom );
 		$this->notify($type, $feedback);
 		$xml = $dom->saveXML();
-		if($this->getOption('ttl', 10)) {
-			App::cache()->store($cacheKey, $xml, $this->getOption('ttl', 10) * 60);
+		if($this->getOption('ttl', 1440)) {
+			App::cache()->store($cacheKey, $xml, $this->getOption('ttl', 1440) * 60);
 		}
 		return $xml;
 	}

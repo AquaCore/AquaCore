@@ -163,7 +163,7 @@ extends Page
 				->type('text')
 				->required()
 			    ->setLabel(__('ragnarok-charmap', 'db-username-label'));
-			$frm->input('sql-password', true)
+			$frm->input('sql-password', false)
 				->type('password')
 			    ->setLabel(__('ragnarok-charmap', 'db-password-label'));
 			$frm->input('sql-charset', true)
@@ -192,7 +192,7 @@ extends Page
 				->type('text')
 				->required()
 			    ->setLabel(__('ragnarok-charmap', 'db-username-label'));
-			$frm->input('log-password', true)
+			$frm->input('log-password', false)
 				->type('password')
 			    ->setLabel(__('ragnarok-charmap', 'db-password-label'));
 			$frm->input('log-charset', true)
@@ -897,6 +897,26 @@ extends Page
 	public function woe_action()
 	{
 		try {
+			if($this->request->method === 'POST' &&
+			   isset($this->request->data['x-bulk']) &&
+			   isset($this->request->data['action']) &&
+			   ($ids = $this->request->getArray('schedule', null)) &&
+			   !empty($ids)) {
+				$this->response->status(302)->redirect(App::request()->uri->url());
+				try {
+					if($this->request->data('action') === 'delete') {
+						$deleted = $this->charmap->removeWoeTime($ids);
+						$deleted = count($deleted);
+						if($deleted) {
+							App::user()->addFlash('success', null, __('ragnarok-charmap', 'schedule-updated'));
+						}
+					}
+				} catch(\Exception $exception) {
+					ErrorLog::logSql($exception);
+					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
+				}
+				return;
+			}
 			$castlesForm = new Form($this->request);
 			$castlesForm->input('setcastles')
 				->type('submit')
@@ -1138,18 +1158,23 @@ extends Page
 			}
 			$this->response->status(302)->redirect(App::request()->uri->url());
 			try {
-				$startTime = date('H:i:s', strtotime($this->request->getString('starttime')));
-				$endTime   = date('H:i:s', strtotime($this->request->getString('endtime')));
-				$castles   = array_map(function($x) {
-					return intval(trim($x));
-				}, preg_split('/\s*,\s*/', $this->request->getString('castles')));
-				$this->charmap->editWoeCastles($id, $castles);
-				$this->charmap->editWoeTime((int)$id,
-			                               $this->request->getString('name'),
-			                               $this->request->getInt('startday'),
-			                               $startTime,
-			                               $this->request->getInt('endday'),
-			                               $endTime);
+				if(isset($this->request->data['delete'])) {
+					$this->response->redirect($this->charmap->url(array( 'action' => 'woe' )));
+					$this->charmap->removeWoeTime($id);
+				} else {
+					$startTime = date('H:i:s', strtotime($this->request->getString('starttime')));
+					$endTime   = date('H:i:s', strtotime($this->request->getString('endtime')));
+					$castles   = array_map(function($x) {
+						return intval(trim($x));
+					}, preg_split('/\s*,\s*/', $this->request->getString('castles')));
+					$this->charmap->editWoeCastles($id, $castles);
+					$this->charmap->editWoeTime((int)$id,
+				                               $this->request->getString('name'),
+				                               $this->request->getInt('startday'),
+				                               $startTime,
+				                               $this->request->getInt('endday'),
+				                               $endTime);
+				}
 				App::user()->addFlash('success', null, __('ragnarok-charmap', 'schedule-updated'));
 			} catch(\Exception $exception) {
 				ErrorLog::logSql($exception);
@@ -1306,8 +1331,10 @@ extends Page
 							$item->removeFromShop();
 							++$deleted;
 						}
-						if($deleted) {
-							App::user()->addFlash('success', null, __('ragnarok-charmap', 'shop-removed-' . ($deleted != 1 ? 'p' : 's')), $deleted);
+						if($deleted === 1) {
+							App::user()->addFlash('success', null, __('ragnarok-charmap', 'shop-removed-p', htmlspecialchars($item->jpName)));
+						} else if($deleted) {
+							App::user()->addFlash('success', null, __('ragnarok-charmap', 'shop-removed-s', $deleted));
 						}
 					}
 				} catch(\Exception $exception) {
@@ -1433,9 +1460,10 @@ extends Page
 			$this->response->status(302)->redirect(App::request()->uri->url());
 			try {
 				if(!empty($this->request->data['delete'])) {
+					$this->response->redirect($this->charmap->url(array( 'action' => 'shop' )));
 					if($item->removeFromShop()) {
 						App::user()->addFlash('success', null, __('ragnarok-charmap',
-						                                          'shop-removed',
+						                                          'shop-removed-s',
 						                                          htmlspecialchars($item->jpName)));
 					}
 				} else {

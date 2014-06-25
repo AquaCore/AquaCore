@@ -143,10 +143,13 @@ implements \Iterator, \ArrayAccess, \Countable
 			@unlink($file);
 		}
 		$settings = $this->dump();
-		$old = umask(0);
+		if(!file_exists($file)) {
+			$old = umask(0);
+			touch($file);
+			chmod($file, \Aqua\PRIVATE_FILE_PERMISSION);
+			umask($old);
+		}
 		file_put_contents($file, $settings);
-		chmod($file, \Aqua\PRIVATE_FILE_PERMISSION);
-		umask($old);
 
 		return $this;
 	}

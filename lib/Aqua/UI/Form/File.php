@@ -321,7 +321,6 @@ implements FieldInterface
 
 	protected function _checkAccept(&$error, $type, $name, $index)
 	{
-		var_dump($type, $name);
 		if(empty($this->accept)) {
 			return true;
 		}

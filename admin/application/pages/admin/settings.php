@@ -1138,7 +1138,7 @@ extends Page
 					RORender::DIRECTION_EAST => __('settings', 'ro-pos-e'),
 					RORender::DIRECTION_SOUTHEAST => __('settings', 'ro-pos-se'),
 				))
-				->selected($chargen->get('sprite')->get('head_direction', RORender::DIRECTION_NORTH), false)
+				->selected($chargen->get('sprite')->get('head_direction', RORender::DIRECTION_SOUTH), false)
 				->setLabel(__('settings', 'ro-head-dir-label'));
 			$frm->select('body_pos', true)
 				->value(array(
@@ -1151,7 +1151,7 @@ extends Page
 					RORender::DIRECTION_EAST => __('settings', 'ro-pos-e'),
 					RORender::DIRECTION_SOUTHEAST => __('settings', 'ro-pos-se'),
 				))
-				->selected($chargen->get('sprite')->get('body_direction', RORender::DIRECTION_NORTH), false)
+				->selected($chargen->get('sprite')->get('body_direction', RORender::DIRECTION_SOUTH), false)
 				->setLabel(__('settings', 'ro-body-dir-label'));
 			$frm->select('body_act', true)
 				->value(array(

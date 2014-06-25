@@ -17,7 +17,7 @@ $page->theme->set('wrapper', $form->buildTag());
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">
-				<div class="title"><?php echo __('ragnarok-charmap-settings', 'section-sql-connection') ?></div>
+				<div class="title"><?php echo __('ragnarok-charmap', 'section-sql-connection') ?></div>
 				<div class="separator"></div>
 			</div>
 		</td>
@@ -26,7 +26,7 @@ $page->theme->set('wrapper', $form->buildTag());
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">
-				<div class="title"><?php echo __('ragnarok-charmap-settings', 'section-log-connection') ?></div>
+				<div class="title"><?php echo __('ragnarok-charmap', 'section-log-connection') ?></div>
 				<div class="separator"></div>
 			</div>
 		</td>
@@ -35,7 +35,7 @@ $page->theme->set('wrapper', $form->buildTag());
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">
-				<div class="title"><?php echo __('ragnarok-charmap-settings', 'section-settings') ?></div>
+				<div class="title"><?php echo __('ragnarok-charmap', 'section-settings') ?></div>
 				<div class="separator"></div>
 			</div>
 		</td>
@@ -44,7 +44,7 @@ $page->theme->set('wrapper', $form->buildTag());
 	<tr>
 		<td colspan="3">
 			<div class="ac-settings-section">
-				<div class="title"><?php echo __('ragnarok-charmap-settings', 'section-map-reset') ?></div>
+				<div class="title"><?php echo __('ragnarok-charmap', 'section-map-reset') ?></div>
 				<div class="separator"></div>
 			</div>
 		</td>

@@ -79,10 +79,18 @@ ob_end_clean();
 $sidebar->wrapper($schedule_form->buildTag());
 $page->theme->set('sidebar', $sidebar);
 ?>
+<form method="POST">
 <table class="ac-table">
 	<thead>
 		<tr>
-			<td colspan="9"></td>
+			<td colspan="9">
+				<div style="float: right">
+					<select name="action">
+						<option value="delete"><?php echo __('application', 'delete') ?></option>
+					</select>
+					<input type="submit" name="x-bulk" value="<?php echo __('application', 'submit') ?>">
+				</div>
+			</td>
 		</tr>
 		<tr class="alt">
 			<td><input type="checkbox" ac-checkbox-toggle="schedule[]"</td>
@@ -131,6 +139,7 @@ $page->theme->set('sidebar', $sidebar);
 	</tbody>
 	<tfoot><tr><td colspan="9"></td></tr></tfoot>
 </table>
+</form>
 <form method="POST">
 <table class="ac-castles ac-settings-form">
 	<tr>

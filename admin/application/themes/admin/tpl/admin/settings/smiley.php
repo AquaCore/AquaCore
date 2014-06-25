@@ -16,10 +16,11 @@ $count = ceil(count($smileys) / $smileysPerRow) * $smileysPerRow;
 <form method="POST" enctype="multipart/form-data">
 <div class="smiley-form">
 	<div class="upload">
-	<?php
-	echo $form->field('smileys')->required(false)->render(),
-		 $form->submit()->value(__('upload', 'upload'))->render();
-	?>
+		<?php if($form->field('smileys')->getWarning()) : ?>
+			<div class="ac-field-warning"><?php echo $form->field('smileys')->getWarning() ?></div>
+		<?php endif; ?>
+		<?php echo $form->field('smileys')->required(false)->render(),
+			 $form->submit()->value(__('upload', 'upload'))->render(); ?>
 		<br/>
 		<span class="upload-message"><?php echo __('bbcode', 'smiley-upload') ?></span>
 	</div>

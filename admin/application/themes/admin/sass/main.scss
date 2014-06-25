@@ -1122,6 +1122,11 @@ button.ac-delete-button {
 .ui-helper-clearfix {
 	min-height: 0; /* support: IE7 */
 }
+.ac-form-warning, .ac-field-warning {
+	color: #ec4b69;
+	font-size: 0.8em;
+	font-weight: bold;
+}
 .ac-settings {
 	display: none;
 	table {
@@ -1130,9 +1135,6 @@ button.ac-delete-button {
 		border-spacing: 0;
 		.ac-form-warning td {
 			padding-top: 5px;
-			color: $lightRed-1;
-			font-size: 0.8em;
-			font-weight: bold;
 			border-top: 1px solid $midGray-3;
 			div {
 				height: 0;
@@ -1258,7 +1260,6 @@ button.ac-delete-button {
 	}
 	.ac-field-warning td {
 		padding: 3px 20px;
-		color: #ec4b69;
 	}
 	.ac-form-error div {
 		padding: 5px 10px;
@@ -1355,6 +1356,7 @@ button.ac-delete-button {
 .ac-delete-wrapper {
 	position: relative;
 	display: inline-block;
+	@include min-height(27px);
 	.ac-delete-button {
 		z-index: 1;
 	}

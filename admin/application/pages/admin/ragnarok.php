@@ -254,6 +254,7 @@ extends Page
 			    ->setLabel(__('ragnarok-server', 'username-max-label'));
 			$frm->input('username-regex', true)
 			    ->type('text')
+				->value('/[^a-zA-Z0-9!@#$%&*-+_\^?<> ]/', false)
 			    ->setLabel(__('ragnarok-server', 'username-regex-label'))
 			    ->setDescription(__('ragnarok-server', 'username-regex-desc'));
 			$frm->submit();

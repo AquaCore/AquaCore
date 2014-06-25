@@ -252,7 +252,7 @@
     <word namespace="ragnarok" key="castle-id">Castle ID</word>
     <word namespace="ragnarok" key="castle-name">Castle Name</word>
     <word namespace="ragnarok" key="price">Price</word>
-    <word namespace="ragnarok" key="shop-category">Shop Category</word>
+    <word namespace="ragnarok" key="shop-category">Shop category</word>
     <word namespace="ragnarok" key="new-item">Add Item</word>
     <word namespace="ragnarok" key="new-category">Add Category</word>
     <word namespace="ragnarok" key="edit-category">Edit Shop Category - %s</word>
@@ -279,7 +279,7 @@
     <word namespace="ragnarok" key="items-purchased">Items Purchased</word>
     <word namespace="ragnarok" key="subtotal">Subtotal</word>
     <word namespace="ragnarok" key="character-id">Character ID</word>
-    <word namespace="ragnarok" key="deleted"><![CDATA[<span class="ac-char-deleted">Deleted <small>(%s)</small></span>]]></word>
+    <word namespace="ragnarok" key="deleted"><![CDATA[<span class="ac-user-deleted">[Deleted] <small>(%s)</small></span>]]></word>
     <word namespace="ragnarok" key="command">Command</word>
     <word namespace="ragnarok" key="parameters">Parameters</word>
     <word namespace="ragnarok" key="type-id">Type ID</word>

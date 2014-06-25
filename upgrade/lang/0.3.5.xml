@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="content" key="atom-feed">Atom Feed</word>
+        <word namespace="content" key="new-title">New %s</word>
+        <word namespace="content" key="uses">Uses</word>
+        <word namespace="ragnarok-ban-log" key="banned-by">Banned by</word>
+        <word namespace="ragnarok-charmap" key="shop-removed-s"><![CDATA[<b>%s</b> removed from the item shop.]]></word>
+        <word namespace="ragnarok-charmap" key="shop-removed-p"><![CDATA[<b>%s</b> items removed from the item shop.]]></word>
+        <word namespace="ragnarok" key="deleted"><![CDATA[<span class="ac-user-deleted">[Deleted] <small>(%s)</small></span>]]></word>
+        <word namespace="ragnarok" key="shop-category">Shop category</word>
+    </wordgroup>
+</languageimport>

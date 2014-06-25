@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var $page \Page\Admin
+ */
+
 use Aqua\Core\App;
 use Aqua\Content\ContentType;
 use Aqua\Content\Filter\CommentFilter;
@@ -8,9 +12,7 @@ use Aqua\UI\ScriptManager;
 use Aqua\UI\Dashboard;
 use Aqua\User\Account;
 use Aqua\User\Role;
-/**
- * @var $page \Page\Admin
- */
+
 Account::rebuildCache('last_user');
 $account_cache = Account::fetchCache();
 $page->theme->footer->enqueueScript(ScriptManager::script('highsoft.highchart'));
