@@ -73,8 +73,6 @@ ScriptManager::register('aquacore')
 			'aquacore.ajax-form',
 			'aquacore.flash',
 			'aquacore.cart',
-			'aquacore.rating',
-			'aquacore.content'
 		));
 ScriptManager::register('aquacore.aquacore')
 	->src(\Aqua\URL . '/assets/scripts/aquacore/aquacore.js')
@@ -94,9 +92,3 @@ ScriptManager::register('aquacore.flash')
 ScriptManager::register('aquacore.cart')
 	->src(\Aqua\URL . '/assets/scripts/aquacore/cart.js')
 	->dependsOn(array( 'aquacore.build-url', 'jquery-ui' ));
-ScriptManager::register('aquacore.rating')
-	->src(\Aqua\URL . '/assets/scripts/aquacore/rating.js')
-	->dependsOn(array( 'aquacore.build-url' ));
-ScriptManager::register('aquacore.content')
-	->src(\Aqua\URL . '/assets/scripts/aquacore/content.js')
-	->dependsOn(array( 'codemirror', 'jquery' ));

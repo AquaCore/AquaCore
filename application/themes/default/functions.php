@@ -4,7 +4,7 @@ use Aqua\UI\ScriptManager;
 /**
  * @var $this \Aqua\UI\Theme
  */
-$this->footer->enqueueScript(ScriptManager::script('aquacore.flash'), false);
+$this->footer->enqueueScript(ScriptManager::script('aquacore'), false);
 $json = json_encode(App::user()->getFlash());
 $this->footer->enqueueScript('theme.flash')
 	->type('text/javascript')

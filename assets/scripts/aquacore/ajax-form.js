@@ -119,4 +119,4 @@ var AquaCore = AquaCore || {};
 			return false;
 		}
 	});
-}(jQuery));
+})(jQuery);

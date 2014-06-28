@@ -1,5 +1,5 @@
-var	AquaCore = AquaCore || {};
-(function ($) {
+var AquaCore = AquaCore || {};
+(function($) {
 	AquaCore = $.extend({
 		id: 0,
 		TIME_OFFSET: 0,

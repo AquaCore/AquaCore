@@ -1,6 +1,8 @@
 <?php
 namespace Aqua\Util;
 
+use Aqua\Core\App;
+
 class ImageUploader
 {
 	/**
@@ -167,6 +169,7 @@ class ImageUploader
 		));
 		$request = "GET $target HTTP/1.1\r\n";
 		$request.= "Host: $host\r\n";
+		$request.= sprintf("User-Agent: AquaCore/%s; PHP/%s\r\n", App::VERSION, PHP_VERSION);
 		$request.= "Accept: image/*;q=0.9,*/*;q=0.8\r\n";
 		if(!empty($acceptEncoding)) {
 			$request.= sprintf("Accept-Encoding: %s\r\n", implode(',', array_keys($acceptEncoding)));
@@ -191,7 +194,7 @@ class ImageUploader
 			$this->error = self::UPLOAD_TIMEOUT;
 			return false;
 		}
-		$response = explode("\r\n\r\n", $response);
+		$response = explode("\r\n\r\n", $response, 2);
 		if(count($response) !== 2) {
 			$this->error = self::UPLOAD_INVALID_IMAGE;
 			return false;
