@@ -40,6 +40,7 @@ if($page->contentType->hasFilter('CommentFilter')) {
 	++$colspan;
 }
 $page->theme->template = 'sidebar-right';
+$page->theme->addWordGroup('content', array( 'confirm-delete-p', 'confirm-delete-s' ));
 $page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
 $page->theme->footer->enqueueScript('theme.content-search')
 	->type('text/javascript')
@@ -100,7 +101,7 @@ $page->theme->set('sidebar', $sidebar);
 		<tr>
 			<td><input type="checkbox" name="content[]" value="<?php echo $post->uid ?>"></td>
 			<td><?php echo $post->uid ?></td>
-			<td><a href="<?php echo $post->contentType->url(array(
+			<td class="content-title"><a href="<?php echo $post->contentType->url(array(
 					'action' => 'edit',
 			        'arguments' => array( $post->uid )
 				)) ?>"><?php echo htmlspecialchars($post->title) ?></a></td>
@@ -156,13 +157,9 @@ $page->theme->set('sidebar', $sidebar);
 				<div style="position: relative">
 					<?php echo $paginator->render() ?>
 					<div style="position: absolute; top: 3px; right: 10px">
-						<a href="<?php echo $page->contentType->url(array( 'action' => 'new' )) ?>"><button type="button"><?php
-								switch($page->contentType->id) {
-									case ContentType::CTYPE_PAGE: echo __('page', 'new-page'); break;
-									case ContentType::CTYPE_POST: echo __('news', 'new-post'); break;
-									default: echo __('content', 'new', htmlspecialchars($page->contentType->name)); break;
-								}
-							?></button></a>
+						<a href="<?php echo $page->contentType->url(array( 'action' => 'new' )) ?>">
+							<button type="button"><?php echo __('content', 'new-title', htmlspecialchars($page->contentType->name)); ?></button>
+						</a>
 					</div>
 				</div>
 			</td>

@@ -101,10 +101,10 @@ extends AbstractFilter
 
 	public function afterDelete(ContentData $content)
 	{
-		$sth = App::connection()->prepare('
+		$sth = App::connection()->prepare(sprintf('
 		DELETE FROM %s
 		WHERE _content_id = ?
-		', ac_table('content_subscriptions'));
+		', ac_table('content_subscriptions')));
 		$sth->bindValue(1, $content->uid, \PDO::PARAM_STR);
 		$sth->execute();
 		$sth->closeCursor();
