@@ -88,29 +88,41 @@ function ac_item_icon($item_id) { return Aqua\URL . "/assets/images/item/icon/{$
 function ac_item_collection($item_id) { return Aqua\URL . "/assets/images/item/collection/{$item_id}.png"; }
 function ac_item_cardbmp($item_id) { return Aqua\URL . "/assets/images/item/cardbmp/{$item_id}.bmp"; }
 function ac_mob_sprite($mob_id) { return Aqua\URL . "/assets/images/mob/{$mob_id}.gif"; }
-function ac_guild_emblem($server_name, $charmap_name, $guild_id) {
-	return \Aqua\URL . '/img.php?' . http_build_query(array(
-		'x' => 'guild',
-		's' => $server_name,
-		'c' => $charmap_name,
-		'i' => $guild_id
-	));
+function ac_guild_emblem($serverName, $charMapName, $guildId) {
+	if(\Aqua\REWRITE) {
+		return \Aqua\URL . sprintf('/guild/%s/%s/%d', $serverName, $charMapName, $guildId);
+	} else {
+		return \Aqua\URL . '/img.php?' . http_build_query(array(
+			'x' => 'guild',
+			's' => $serverName,
+			'c' => $charMapName,
+			'i' => $guildId
+		));
+	}
 }
 function ac_char_head(Character $char) {
-	return \Aqua\URL . '/img.php?' . http_build_query(array(
-		'x' => 'head',
-		's' => $char->charmap->server->key,
-		'c' => $char->charmap->key,
-		'i' => $char->id
-	));
+	if(\Aqua\REWRITE) {
+		return \Aqua\URL . sprintf('/head/%s/%s/%d', $char->charmap->server->key, $char->charmap->key, $char->id);
+	} else {
+		return \Aqua\URL . '/img.php?' . http_build_query(array(
+			'x' => 'head',
+			's' => $char->charmap->server->key,
+			'c' => $char->charmap->key,
+			'i' => $char->id
+		));
+	}
 }
 function ac_char_body(Character $char) {
-	return \Aqua\URL . '/img.php?' . http_build_query(array(
-		'x'  => 'body',
-		's' => $char->charmap->server->key,
-		'c' => $char->charmap->key,
-		'i' => $char->id
-	));
+	if(\Aqua\REWRITE) {
+		return \Aqua\URL . sprintf('/char/%s/%s/%d', $char->charmap->server->key, $char->charmap->key, $char->id);
+	} else {
+		return \Aqua\URL . '/img.php?' . http_build_query(array(
+			'x'  => 'body',
+			's' => $char->charmap->server->key,
+			'c' => $char->charmap->key,
+			'i' => $char->id
+		));
+	}
 }
 
 function ac_server_status($ip, $port, $timeout = 1)
@@ -581,8 +593,7 @@ function ac_parse_content($content, &$pages, &$shortContent)
 {
 	if(preg_match('/<!-{2,} *readmore *-{2,}>/i', $content, $match, PREG_OFFSET_CAPTURE)) {
 		$shortContent = substr($content, 0, $match[0][1]);
-	} else {
-
+		$shortContent = ac_truncate_string($shortContent, strlen($shortContent));
 	}
 	$pages = preg_split('/<!-{2,} *nextpage *-{2,}>/', $content);
 }

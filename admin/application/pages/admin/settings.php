@@ -1095,10 +1095,6 @@ extends Page
 				->attr('min', 0)
 				->value($settings->get('cash_shop_max_amount', 4), false)
 				->setLabel(__('settings', 'ro-purchase-max-label'));
-			$frm->checkbox('emblem_cache', true)
-			    ->value(array( '1' => '' ))
-			    ->checked($chargen->get('emblem')->get('cache_browser', false) ? '1' : null, false)
-			    ->setLabel(__('settings', 'ro-emblem-cache-label'));
 			$frm->input('emblem_ttl', true)
 				->type('number')
 				->attr('min', -1)
@@ -1111,10 +1107,6 @@ extends Page
 				->attr('max', 9)
 				->value($chargen->get('emblem')->get('compression', 0), false)
 				->setLabel(__('settings', 'ro-emblem-compress-label'));
-			$frm->checkbox('sprite_cache', true)
-			    ->value(array( '1' => '' ))
-			    ->checked($chargen->get('sprite')->get('cache_browser', false) ? '1' : null, false)
-			    ->setLabel(__('settings', 'ro-sprite-cache-label'));
 			$frm->input('sprite_ttl', true)
 				->type('number')
 				->attr('min', -1)
@@ -1202,10 +1194,8 @@ extends Page
 			$settings->get('ragnarok')->set('cash_shop_min_amount', $this->request->getInt('shop_min'));
 			$settings->get('ragnarok')->set('cash_shop_max_amount', $this->request->getInt('shop_max'));
 			$settings->get('chargen')->get('emblem')->set('cache_ttl', $this->request->getInt('emblem_ttl'));
-			$settings->get('chargen')->get('emblem')->set('cache_browser', (bool)$this->request->getInt('emblem_cache'));
 			$settings->get('chargen')->get('emblem')->set('compression', $this->request->getInt('emblem_compress'));
 			$settings->get('chargen')->get('sprite')->set('cache_ttl', $this->request->getInt('sprite_ttl'));
-			$settings->get('chargen')->get('sprite')->set('cache_browser', (bool)$this->request->getInt('sprite_cache'));
 			$settings->get('chargen')->get('sprite')->set('compression', $this->request->getInt('sprite_compress'));
 			$settings->get('chargen')->get('sprite')->set('head_direction', $this->request->getInt('head_pos'));
 			$settings->get('chargen')->get('sprite')->set('body_direction', $this->request->getInt('body_pos'));

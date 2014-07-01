@@ -5,6 +5,12 @@ AddType image/x-icon .ico
   RewriteEngine On
   RewriteBase /
 
+  RewriteRule ^/?guild/([^/]+)/([^/]+)/(\d+)$ img.php?x=guild&s=$1&c=$2&i=$3 [L,QSA]
+
+  RewriteRule ^/?head/([^/]+)/([^/]+)/(\d+)$ img.php?x=head&s=$1&c=$2&i=$3 [L,QSA]
+
+  RewriteRule ^/?char/([^/]+)/([^/]+)/(\d+)$ img.php?x=body&s=$1&c=$2&i=$3 [L,QSA]
+
   RewriteRule ^index\.php$ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L,QSA]
 
   RewriteCond %{REQUEST_FILENAME} !-f
