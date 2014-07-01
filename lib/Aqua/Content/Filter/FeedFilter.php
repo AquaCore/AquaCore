@@ -48,9 +48,12 @@ extends AbstractFilter
 		$dom = new $class($feed);
 		$feedback = array( $dom );
 		$this->notify($type, $feedback);
-		$xml = $dom->saveXML();
-		if($this->getOption('ttl', 1440)) {
-			App::cache()->store($cacheKey, $xml, $this->getOption('ttl', 1440) * 60);
+		$xml = array(
+			'lastModified' => time(),
+			'xml'          => $dom->saveXML()
+		);
+		if($this->ttl()) {
+			App::cache()->store($cacheKey, $xml, $this->ttl());
 		}
 		return $xml;
 	}
@@ -114,5 +117,32 @@ extends AbstractFilter
 		}
 
 		return $feed;
+	}
+
+	public function ttl()
+	{
+		return $this->getOption('ttl', 1440) * 60;
+	}
+
+	public function clearCache($category = null)
+	{
+		if($this->contentType->hasFilter('CategoryFilter')) {
+			if($category instanceof Category) {
+				$category = array( $category );
+			} else if($category === null || $category === true) {
+				$category = $this->contentType->categories();
+			}
+			if(is_array($category)) {
+				foreach($category as $cat) {
+					App::cache()->delete(sprintf('atom-feed.%d.%d', $this->contentType->id, $cat->id));
+					App::cache()->delete(sprintf('rss-feed.%d.%d', $this->contentType->id, $cat->id));
+				}
+			}
+			if($category === true) {
+				return;
+			}
+		}
+		App::cache()->delete(sprintf('atom-feed.%d', $this->contentType->id));
+		App::cache()->delete(sprintf('rss-feed.%d', $this->contentType->id));
 	}
 }

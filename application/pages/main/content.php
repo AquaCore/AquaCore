@@ -3,7 +3,6 @@ namespace Page\Main;
 
 use Aqua\Content\ContentData;
 use Aqua\Content\ContentType;
-use Aqua\Content\Feed\Rss;
 use Aqua\Content\Filter\ArchiveFilter;
 use Aqua\Content\Filter\CategoryFilter\Category;
 use Aqua\Content\Filter\ScheduleFilter;
@@ -56,6 +55,16 @@ extends Page
 			if(!$this->contentType->listing) {
 				$this->error(404);
 				return;
+			}
+			if($this->contentType->hasFilter('FeedFilter')) {
+				$this->theme->head->enqueueLink('rss')
+					->rel('alternate')
+					->type('application/rss+xml')
+					->href($this->contentType->url(array( 'action' => 'feed', 'arguments' => array( 'rss' ) )));
+				$this->theme->head->enqueueLink('atom')
+					->rel('alternate')
+					->type('application/atom+xml')
+					->href($this->contentType->url(array( 'action' => 'feed', 'arguments' => array( 'atom' ) )));
 			}
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$this->title = $this->theme->head->section = htmlspecialchars($this->contentType->name);
@@ -248,6 +257,16 @@ extends Page
 				$this->error(404);
 				return;
 			}
+			if($this->contentType->hasFilter('FeedFilter')) {
+				$this->theme->head->enqueueLink('rss')
+					->rel('alternate')
+					->type('application/rss+xml')
+					->href($this->contentType->url(array( 'action' => 'feed', 'arguments' => array( 'rss', $slug ) )));
+				$this->theme->head->enqueueLink('atom')
+					->rel('alternate')
+					->type('application/atom+xml')
+					->href($this->contentType->url(array( 'action' => 'feed', 'arguments' => array( 'atom', $slug ) )));
+			}
 			$currentPage = $this->request->uri->getInt('page', 1, 1);
 			$this->title = $this->theme->head->section = __('content', 'category-title',
 			                                                htmlspecialchars($this->contentType->name),
@@ -335,13 +354,29 @@ extends Page
 				$category = null;
 			}
 			if($type === 'atom') {
-				echo $this->contentType->atomFeed($category);
-				$this->response->setHeader('Content-Type', 'application/atom+xml');
+				$feed = $this->contentType->atomFeed($category);
 			} else {
-				echo $this->contentType->rssFeed($category);
-				$this->response->setHeader('Content-Type', 'application/rss+xml');
+				$feed = $this->contentType->rssFeed($category);
 			}
-			$this->theme = new Theme();
+			$ttl = $this->contentType->filter('FeedFilter')->ttl();
+			if($ttl) {
+				$this->response
+					->setHeader('Cache-Control', sprintf('max-age=%d, public', $ttl))
+					->setHeader('Expires', $feed['lastModified'] + $ttl);
+			}
+			$this->response
+				->setHeader('Last-Modified', $feed['lastModified'])
+				->setHeader('Age', time() - $feed['lastModified']);
+			if($ifModifiedSince = $this->request->header('If-Modified-Since', null)) {
+				$ifModifiedSince = strtotime($ifModifiedSince);
+			}
+			if($feed['lastModified'] >= $ifModifiedSince) {
+				$this->response->status(304);
+			} else {
+				$this->response->setHeader('Content-Type', "application/$type+xml");
+				echo $feed['xml'];
+			}
+			$this->theme = new Theme;
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);
 			var_dump($exception);
