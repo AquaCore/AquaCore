@@ -22,7 +22,15 @@ if($depth) {
 		}
 		?>
 		<li class="<?php echo $optClass . ' ' . $option['class'] . ' ' . $parity[0]?>">
-			<a <?php if($option['url']) { echo "href=\"{$option['url']}\""; } ?> class="menu-option-link">
+			<a <?php
+				$attr = array();
+				if($option['url']) { $attr[] = "href=\"{$option['url']}\""; }
+				if($option['rel']) { $attr[] = "rel=\"{$option['rel']}\""; };
+				if($option['target']) { $attr[] = "target=\"{$option['target']}\""; };
+				if($option['type']) { $attr[] = "type=\"{$option['type']}\""; };
+				if($option['language']) { $attr[] = "hreflang=\"{$option['language']}\""; };
+				echo implode(' ', $attr);
+				?> class="menu-option-link">
 				<div class="menu-option-icon"></div>
 				<div class="menu-option-title"><?php echo $option['title']?></div>
 				<?php if($option['warnings']) { ?>

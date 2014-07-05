@@ -98,6 +98,10 @@ implements \Iterator, \Countable
 			'class'    => array(),
 			'title'    => '',
 			'url'      => '#',
+			'target'   => '',
+			'rel'      => '',
+			'type'     => '',
+			'language' => '',
 			'submenu'  => null,
 			'warnings' => 0
 		);
