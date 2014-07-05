@@ -4,14 +4,27 @@ namespace Aqua\UI;
 use Aqua\Core\L10n;
 use Aqua\Core\Settings;
 use Aqua\Http\Request;
+use Aqua\UI\Form\FieldInterface;
 
 class FormXML
 extends Form
 {
 	/**
+	 * @var \SimpleXMLElement
+	 */
+	public $xml;
+	/**
 	 * @var int
 	 */
 	public $fields = 0;
+	/**
+	 * @var array
+	 */
+	public $fieldsValidateFunctions = array();
+	/**
+	 * @var string
+	 */
+	public $validateFunction;
 
 	/**
 	 * @param \Aqua\Http\Request  $request
@@ -20,10 +33,12 @@ extends Form
 	 */
 	public function __construct(Request $request, \SimpleXMLElement $xml, Settings $defaults = null)
 	{
+		$this->xml = $xml;
 		$this->request = $request;
 		if(!$defaults instanceof Settings) {
 			$defaults = new Settings;
 		}
+		$this->validateFunction = (string)$xml->validate;
 		foreach($xml->settings as $settings) {
 			$key         = (string)$settings->key;
 			$type        = strtolower((string)$settings->type);
@@ -115,6 +130,9 @@ extends Form
 					}
 				}
 			}
+			if($settings->validate) {
+				$this->fieldsValidateFunctions[$key] = (string)$settings->validate;
+			}
 			++$this->fields;
 		}
 	}
@@ -134,5 +152,59 @@ extends Form
 				return (string)$value;
 			}
 		}
+	}
+
+	public function validate($validator = null, $stop_on_error = true)
+	{
+		if(strcasecmp($this->method, $this->request->method) !== 0) {
+			$this->status = self::VALIDATION_INCOMPLETE;
+
+			return $this->status;
+		}
+		do {
+			$tag = current($this->content);
+			if(!$tag instanceof FieldInterface) {
+				continue;
+			}
+			$this->status = $tag->validate($this, $this->message);
+			if($this->status === self::VALIDATION_INCOMPLETE ||
+			   ($stop_on_error && $this->status !== self::VALIDATION_SUCCESS)) {
+				reset($this->content);
+				return $this->status;
+			}
+			$key = key($this->content);
+			if(isset($this->fieldsValidateFunctions[$key])) {
+				$fn = create_function('$form,$value,&$message', $this->fieldsValidateFunctions[$key]);
+				$res = $fn($this, $this->request->data($key));
+				if($res === false || $res === self::VALIDATION_FAIL) {
+					$this->status = self::VALIDATION_FAIL;
+				} else if($res === self::VALIDATION_INCOMPLETE) {
+					$this->status = self::VALIDATION_INCOMPLETE;
+				} else {
+					continue;
+				}
+				reset($this->content);
+				return $this->status;
+			}
+		} while(next($this->content));
+		reset($this->content);
+		$validators = array( $validator );
+		if($this->validateFunction) {
+			$fn = create_function('$form,&$message', $this->validateFunction);
+			$validators[] = $fn;
+		}
+		foreach($validators as $validator) {
+			if(is_callable($validator)) {
+				$res = $validator($this, $this->message);
+				if($res === false || $res === self::VALIDATION_FAIL) {
+					$this->status = self::VALIDATION_FAIL;
+				} else if($res === self::VALIDATION_INCOMPLETE) {
+					$this->status = self::VALIDATION_INCOMPLETE;
+				}
+				return $this->status;
+			}
+		}
+
+		return $this->status;
 	}
 }
