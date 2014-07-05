@@ -96,7 +96,7 @@ extends Page
 				->accept(array( 'application/zip',
 				                'application/x-zip',
 				                'application/x-zip-compressed' ), 'zip')
-				->setDescription(__('plugin', 'import-desc'));
+				->setDescription(__('upload', 'accepted-types', 'ZIP, TAR, TAR.GZ, TAR.BZ2'));
 			$upload->submit(__('upload', 'upload'));
 			$upload->validate();
 			if($upload->status === Form::VALIDATION_SUCCESS && ac_file_uploaded('import', false)) {
@@ -146,90 +146,109 @@ extends Page
 	public function settings_action($id = null)
 	{
 		try {
-			if(!$id || !($plugin = P::get($id)) || !($frm = $plugin->settings->buildForm($this->request))) {
+			if(!$id || !($plugin = P::get($id))) {
 				$this->error(404);
 
 				return;
 			}
-			$frm->submit();
-			$frm->validate();
-			if($frm->status !== Form::VALIDATION_SUCCESS) {
-				$this->title =
-				$this->theme->head->section = __('plugin', 'x-plugin-settings', htmlspecialchars($plugin->name));
-				$this->theme->set('return', ac_build_url(array( 'path' => array( 'plugin' ) )));
-				$tpl         = new Template;
-				$tpl->set('plugin', $plugin)
-				    ->set('form', $frm)
-				    ->set('page', $this);
-				echo $tpl->render('admin/plugin/settings');
+			$this->title = $this->theme->head->section = __('plugin', 'x-plugin-settings',
+			                                                htmlspecialchars($plugin->name));
+			$this->theme->set('return', ac_build_url(array( 'path' => array( 'plugin' ) )));
+			if(file_exists("{$plugin->directory}/settings.php")) {
+				include "{$plugin->directory}/settings.php";
+			} else if($frm = $plugin->settings->buildForm($this->request)) {
+				$frm->submit();
+				$frm->validate(null, false);
+				if($frm->status !== Form::VALIDATION_SUCCESS) {
+					$tpl         = new Template;
+					$tpl->set('plugin', $plugin)
+					    ->set('form', $frm)
+					    ->set('page', $this);
+					echo $tpl->render('admin/plugin/settings');
 
-				return;
-			}
-			try {
-				$error   = array();
-				$message = '';
-				if($frm->status === Form::VALIDATION_SUCCESS) {
-					$updated = $plugin->settings->update(new Settings($this->request->data), $error, $message);
-				} else {
-					$updated = 0;
+					return;
 				}
-				if($this->request->ajax) {
-					$this->theme = new Theme;
-					$this->response->setHeader('Content-Type', 'application/json');
-					$response = array(
-							'message' => '',
-							'error' => $frm->status !== Form::VALIDATION_SUCCESS,
-							'warning' => array()
-						);
-					foreach($frm->content as $key => $field) {
-						if($field instanceof Form\FieldInterface && ($warning = $field->getWarning())) {
-							$response['warning'][$key] = $warning;
-						}
-					}
-					foreach($error as $key => $mes) {
-						if($field = $frm->field($key)) {
-							$response['warning'][$key] = $mes;
-						}
-					}
-					if($frm->message) {
-						$response['message'] = $frm->message;
-					} else if($updated) {
-						$response['message'] = __('plugin', 'settings-saved');
-					}
-					$response['data'] = $plugin->settings->toArray();
-					echo json_encode($response);
-				} else {
-					$this->response->status(302)->redirect(App::request()->uri->url());
-					$user = App::user();
-					if(!empty($error)) {
-						foreach($error as $key => $mes) {
-							if($field = $frm->field($key)) {
-								$user->addFlash('warning', null, $mes);
-							} else {
-								$user->addFlash('warning', $field->getLabel(), $mes);
+				try {
+					$error   = array();
+					$message = '';
+					if($frm->status === Form::VALIDATION_SUCCESS) {
+						$options = array();
+						foreach($this->request->data as $key => $data) {
+							if(array_key_exists($key, $frm->content)) {
+								$options[$key] = $data;
 							}
 						}
+						$options = new Settings($options);
+						if($frm->xml->update) {
+							try {
+								$fn = create_function('$settings,$plugin', (string)$frm->xml->update);
+								$fn($options, $plugin);
+							} catch(\Exception $e) { }
+						}
+						$plugin->settings->merge($options, true, $updated);
+					} else {
+						$updated = 0;
 					}
-					if($message) {
-						$user->addFlash('warning', null, $message);
-					} else if($updated) {
-						$user->addFlash('success', null, __('plugin', 'settings-saved'));
+					if($this->request->ajax) {
+						$this->theme = new Theme;
+						$this->response->setHeader('Content-Type', 'application/json');
+						$response = array(
+								'message' => '',
+								'error' => $frm->status !== Form::VALIDATION_SUCCESS,
+								'warning' => array()
+							);
+						foreach($frm->content as $key => $field) {
+							if($field instanceof Form\FieldInterface && ($warning = $field->getWarning())) {
+								$response['warning'][$key] = $warning;
+							}
+						}
+						foreach($error as $key => $mes) {
+							if($field = $frm->field($key)) {
+								$response['warning'][$key] = $mes;
+							}
+						}
+						if($frm->message) {
+							$response['message'] = $frm->message;
+						} else if($updated) {
+							$response['message'] = __('plugin', 'settings-saved');
+						}
+						$response['data'] = $plugin->settings->toArray();
+						echo json_encode($response);
+					} else {
+						$this->response->status(302)->redirect(App::request()->uri->url());
+						$user = App::user();
+						if(!empty($error)) {
+							foreach($error as $key => $mes) {
+								if($field = $frm->field($key)) {
+									$user->addFlash('warning', null, $mes);
+								} else {
+									$user->addFlash('warning', $field->getLabel(), $mes);
+								}
+							}
+						}
+						if($message) {
+							$user->addFlash('warning', null, $message);
+						} else if($updated) {
+							$user->addFlash('success', null, __('plugin', 'settings-saved'));
+						}
+					}
+				} catch(\Exception $exception) {
+					ErrorLog::logSql($exception);
+					if($this->request->ajax) {
+						$this->theme = new Theme;
+						$this->response->setHeader('Content-Type', 'application/json');
+						echo json_encode(array(
+								'message' => __('application', 'unexpected-error'),
+								'error'   => true,
+								'warning' => array(),
+								'data'    => $plugin->settings->toArray()
+							));
+					} else {
+						App::user()->addFlash('error', null, __('application', 'unexpected-error'));
 					}
 				}
-			} catch(\Exception $exception) {
-				ErrorLog::logSql($exception);
-				if($this->request->ajax) {
-					$this->theme = new Theme;
-					$this->response->setHeader('Content-Type', 'application/json');
-					echo json_encode(array(
-							'message' => __('application', 'unexpected-error'),
-							'error'   => true,
-							'warning' => array(),
-							'data'    => $plugin->settings->toArray()
-						));
-				} else {
-					App::user()->addFlash('error', null, __('application', 'unexpected-error'));
-				}
+			} else {
+				$this->error(404);
 			}
 		} catch(\Exception $exception) {
 			ErrorLog::logSql($exception);

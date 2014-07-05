@@ -18,7 +18,7 @@
 			success: formSuccess
 		});
 	});
-	$(".ac-action-plugin-settings", form).bind("click", function(e) {
+	$(".ac-action-plugin-settings[ac-plugin-id]", form).bind("click", function(e) {
 		$(document.getElementById("plugin-settings" + $(this).attr("ac-plugin-id"))).dialog("open");
 		e.preventDefault();
 		e.stopPropagation();

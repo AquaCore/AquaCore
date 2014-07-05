@@ -98,7 +98,14 @@ $settings = '';
 					        value="<?php echo $plugin->id ?>">
 							<?php echo __('plugin', 'deactivate') ?>
 					</button>
-					<?php if($frm = $plugin->settings->buildForm($page->request)) : ?>
+					<?php if(file_exists("{$plugin->directory}/settings.php")) : ?>
+						<a href="<?php echo $settings_action . $plugin->id ?>">
+							<button class="ac-action-plugin-settings"
+							        type="button">
+								<?php echo __('plugin', 'settings') ?>
+							</button>
+						</a>
+					<?php elseif($frm = $plugin->settings->buildForm($page->request)) : ?>
 					<a href="<?php echo $settings_action . $plugin->id ?>">
 						<button class="ac-action-plugin-settings"
 						        ac-plugin-id="<?php echo $plugin->id ?>"
