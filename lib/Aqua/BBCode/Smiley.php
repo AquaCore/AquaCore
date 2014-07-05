@@ -195,7 +195,7 @@ class Smiley
 		try {
 			try { $phar = new \PharData($tmp); } catch(\Exception $e) {
 				umask($old);
-				unlink($tmp);
+				@unlink($tmp);
 				return array();
 			}
 			foreach($phar as $fileInfo) {
@@ -211,11 +211,11 @@ class Smiley
 			}
 		} catch(\Exception $exception) {
 			umask($old);
-			unlink($tmp);
+			@unlink($tmp);
 			throw $exception;
 		}
 		umask($old);
-		unlink($tmp);
+		@unlink($tmp);
 		return $smileys;
 	}
 

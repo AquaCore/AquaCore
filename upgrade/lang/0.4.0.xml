@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languageimport>
+    <wordgroup>
+        <word namespace="admin-menu" key="themes">Themes</word>
+        <word namespace="content" key="edit-title">Edit %s</word>
+        <word namespace="theme" key="themes">Themes</word>
+        <word namespace="theme" key="theme-options">%s Theme Options</word>
+        <word namespace="theme" key="theme-added">Theme added successfuly</word>
+        <word namespace="theme" key="by-author">by %s</word>
+        <word namespace="theme" key="disable">Disable</word>
+        <word namespace="theme" key="enable">Enable</word>
+        <word namespace="theme" key="comfirm-delete">Are you sure you want to delete this theme?</word>
+        <word namespace="theme" key="failed-to-delete"><![CDATA[Failed to delete theme.<br>%s]]></word>
+        <word namespace="theme" key="/">Main Site</word>
+        <word namespace="upload" key="accepted-types"><![CDATA[Accepted file types: <span style="font-size: .8em; font-weight: bold;">%s</span>]]></word>
+    </wordgroup>
+</languageimport>

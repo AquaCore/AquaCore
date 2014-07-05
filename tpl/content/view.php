@@ -90,7 +90,7 @@ if($content->contentType->hasFilter('SubscriptionFilter') &&
 				<div class="ac-post-category ac-category-<?php echo $category->id ?>">
 					<a href="<?php echo $content->contentType->url(array(
 							'path' => array( 'category', $category->slug ),
-						)) ?>"><?php echo htmlspecialchars($category->name) ?></a>
+						)) ?>" rel="tag"><?php echo htmlspecialchars($category->name) ?></a>
 				</div>
 			<?php endforeach; ?>
 		</div>
@@ -102,7 +102,7 @@ if($content->contentType->hasFilter('SubscriptionFilter') &&
 		<div class="ac-post-tags">
 			<?php foreach($tags as $tag) : ?>
 				<div class="ac-post-tag">
-					<a href="<?php echo $content->contentType->url(array( 'path' => array( 'tagged', $tag ) )) ?>">
+					<a href="<?php echo $content->contentType->url(array( 'path' => array( 'tagged', $tag ) )) ?>" rel="tag">
 						<?php echo $tag; ?>
 					</a>
 				</div>

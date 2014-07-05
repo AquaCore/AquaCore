@@ -5,8 +5,6 @@ use Aqua\Log\ErrorLog;
 use CharGen\Client;
 use CharGen\DB;
 
-isset($_GET['x']) or die;
-
 define('Aqua\ROOT',         str_replace('\\', '/', rtrim(__DIR__, DIRECTORY_SEPARATOR)));
 define('Aqua\SCRIPT_NAME', basename(__FILE__));
 define('Aqua\ENVIRONMENT', 'MINIMAL');
@@ -20,9 +18,7 @@ $response->capture();
 function blank()
 {
 	$gif = base64_decode('R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
-	App::response()
-	   ->setHeader('Content-Type', 'image/gif')
-	   ->setHeader('Content-Length', strlen($gif));
+	App::response()->setHeader('Content-Type', 'image/gif');
 	echo $gif;
 }
 
@@ -271,6 +267,8 @@ try {
 		if($server && $charMap && $id) {
 			call_user_func($fn, $charMap, $id);
 		}
+	} else {
+		$response->status(404);
 	}
 } catch (Exception $exception) {
 	ErrorLog::logSql($exception);

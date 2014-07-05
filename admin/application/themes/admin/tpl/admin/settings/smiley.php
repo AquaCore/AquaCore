@@ -22,7 +22,7 @@ $count = ceil(count($smileys) / $smileysPerRow) * $smileysPerRow;
 		<?php echo $form->field('smileys')->required(false)->render(),
 			 $form->submit()->value(__('upload', 'upload'))->render(); ?>
 		<br/>
-		<span class="upload-message"><?php echo __('bbcode', 'smiley-upload') ?></span>
+		<span class="upload-message"><?php echo __('upload', 'accepted-types', 'PNG, GIF, JPEG, ZIP, TAR, TAR.GZ, TAR.BZ2') ?></span>
 	</div>
 	<div class="actions">
 		<select name="action">

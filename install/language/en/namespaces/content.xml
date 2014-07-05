@@ -74,6 +74,7 @@
     <word namespace="content" key="content-updated"><![CDATA[<b>"%2$s"</b> has been updated.]]></word>
     <word namespace="content" key="edit-comment">Edit Comment</word>
     <word namespace="content" key="new-title">New %s</word>
+    <word namespace="content" key="edit-title">Edit %s</word>
     <word namespace="content" key="uses">Uses</word>
     <word namespace="content" key="feed-settings">%s Feed Options</word>
     <word namespace="content" key="feed-title">Feed Title</word>

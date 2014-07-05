@@ -63,6 +63,10 @@ $permissions
 	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
 	->allowPermission('view-admin-cp', 'edit-cp-settings');
 $permissions
+	->set('admin/theme')
+	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
+	->allowPermission('view-admin-cp', 'edit-cp-settings');
+$permissions
 	->set('admin/mail')
 	->order(Permission::ORDER_ALLOW_DENY | Permission::ORDER_PERMISSION_ROLE)
 	->allowPermission('view-admin-cp', 'edit-cp-settings');

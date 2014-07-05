@@ -10,6 +10,10 @@ class Template
 	 */
 	public $data = array();
 	/**
+	 * @var array
+	 */
+	public $directories = array();
+	/**
 	 * @var int
 	 */
 	protected $obLevel = 0;
@@ -25,7 +29,7 @@ class Template
 	/**
 	 * @var array
 	 */
-	public static $directories = array( 'tpl' );
+	public static $defaultDirectories = array( 'tpl' );
 
 	/**
 	 * @param string $key
@@ -84,27 +88,31 @@ class Template
 	 */
 	public function render($template)
 	{
-		$templates      = func_get_args();
-		$template_count = func_num_args();
-		for($i = 0; $i < $template_count; ++$i) {
+		$templates     = func_get_args();
+		$templateCount = func_num_args();
+		$directories   = $this->directories;
+		if(empty($directories)) {
+			$directories = static::$defaultDirectories;
+		}
+		for($i = 0; $i < $templateCount; ++$i) {
 			$this->file = null;
 			$template   = $templates[$i];
-			foreach(static::$directories as $directory) {
+			foreach($directories as $directory) {
 				if(file_exists(\Aqua\ROOT . "/$directory/$template.php")) {
 					$this->file = \Aqua\ROOT . "/$directory/$template.php";
 					$this->url  = \Aqua\URL . "/$directory";
 					break;
 				}
 			}
-			reset(static::$directories);
 			if(!$this->file) {
 				continue;
 			}
 			ob_start();
 			$this->obLevel = ob_get_level();
 			try {
+				unset($directories);
 				unset($templates);
-				unset($template_count);
+				unset($templateCount);
 				unset($template);
 				extract($this->data, EXTR_SKIP | EXTR_REFS);
 				include $this->file;

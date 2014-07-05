@@ -26,5 +26,6 @@
     <word namespace="admin-menu" key="tasks">Tasks</word>
     <word namespace="admin-menu" key="comments">Comments</word>
     <word namespace="admin-menu" key="feed">Feed</word>
+    <word namespace="admin-menu" key="themes">Themes</word>
   </wordgroup>
 </languageimport>

@@ -28,6 +28,5 @@
     <word namespace="plugin" key="settings-reset">Settings have been reset.</word>
     <word namespace="plugin" key="failed-to-import"><![CDATA[Failed to import plugin.<br/><i>%s</i>]]></word>
     <word namespace="plugin" key="plugin-imported"><![CDATA[Plugin <b>%s</b> imported successfully.]]></word>
-    <word namespace="plugin" key="import-desc"><![CDATA[Import a plugin. <small>(.ZIP, .TAR, TAR.GZ, .TAR.BZ2)</small>]]></word>
   </wordgroup>
 </languageimport>

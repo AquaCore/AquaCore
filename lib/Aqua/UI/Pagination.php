@@ -142,7 +142,7 @@ HTML;
 
 			return <<<HTML
 <a class="ac-pagination-link ac-pagination-first" href="$first_url">&#171;</a>
-<a class="ac-pagination-link ac-pagination-previous" href="$prev_url">&lsaquo;</a>
+<a class="ac-pagination-link ac-pagination-previous" href="$prev_url" rel="prev">&lsaquo;</a>
 HTML;
 		}
 	}
@@ -164,7 +164,7 @@ HTML;
 
 			return <<<HTML
 <a class="ac-pagination-link ac-pagination-last" href="$next_url">&rsaquo;</a>
-<a class="ac-pagination-link ac-pagination-next" href="$last_url">&#187;</a>
+<a class="ac-pagination-link ac-pagination-next" href="$last_url" rel="next">&#187;</a>
 HTML;
 		}
 	}

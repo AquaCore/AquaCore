@@ -16,5 +16,6 @@
     <word namespace="upload" key="image-too-large">The image uploaded is too large. The maximum dimensions are %dx%d</word>
     <word namespace="upload" key="failed-to-connect">Failed to connect to remote server.</word>
     <word namespace="upload" key="connection-timeout">Connection timeout.</word>
+    <word namespace="upload" key="accepted-types"><![CDATA[Accepted file types: <span style="font-size: .8em; font-weight: bold;">%s</span>]]></word>
   </wordgroup>
 </languageimport>

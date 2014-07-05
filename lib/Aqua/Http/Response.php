@@ -306,8 +306,10 @@ implements SubjectInterface
 				}
 				header($cookie, false);
 			}
-			if(isset($this->headers['Expires'])) {
-				$this->headers['Expires'] = gmstrftime('%a, %d %b %Y %H:%M:%S GMT', $this->headers['Expires']);
+			foreach(array( 'Expires', 'Last-Modified', 'Date' ) as $key) {
+				if(isset($this->headers[$key])) {
+					$this->headers[$key] = gmstrftime('%a, %d %b %Y %H:%M:%S GMT', $this->headers[$key]);
+				}
 			}
 			foreach($this->headers as $header => $value) {
 				if(is_array($value)) {

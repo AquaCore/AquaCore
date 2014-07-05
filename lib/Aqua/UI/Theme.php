@@ -77,17 +77,19 @@ extends Template
 		$this->set('head', $this->head);
 		$this->set('footer', $this->footer);
 		$this->bind('body_class', $this->bodyClass);
-		$this->url       = \Aqua\WORKING_URL . "/application/themes/$name";
-		$this->directory = \Aqua\ROOT;
-		if(\Aqua\WORKING_DIR) {
-			$this->directory .= '/' . \Aqua\WORKING_DIR;
-		}
-		$this->directory .= "/application/themes/$name";
-		if(is_dir($this->directory . '/tpl')) {
-			array_unshift(Template::$directories, ltrim(\Aqua\WORKING_DIR . "/application/themes/$name/tpl", '/'));
-		}
-		if(file_exists($this->directory . '/functions.php')) {
-			include $this->directory . '/functions.php';
+		if($name) {
+			$this->url       = \Aqua\WORKING_URL . "/application/themes/$name";
+			$this->directory = \Aqua\ROOT;
+			if(\Aqua\WORKING_DIR) {
+				$this->directory .= '/' . \Aqua\WORKING_DIR;
+			}
+			$this->directory .= "/application/themes/$name";
+			if(is_dir($this->directory . '/tpl')) {
+				array_unshift(Template::$defaultDirectories, ltrim(\Aqua\WORKING_DIR . "/application/themes/$name/tpl", '/'));
+			}
+			if(file_exists($this->directory . '/functions.php')) {
+				include $this->directory . '/functions.php';
+			}
 		}
 	}
 
@@ -158,22 +160,24 @@ extends Template
 	 */
 	public function renderTemplate($title, $content)
 	{
-		$template = strtolower($this->template);
-		foreach(array( $template, 'default' ) as $name) {
-			$file = $this->directory . "/templates/$name.php";
-			if(file_exists($file)) {
-				$this->addBodyClass("ac-template-$name");
-				extract($this->data, EXTR_SKIP | EXTR_REFS);
-				ob_start();
-				include $file;
-				$content = ob_get_contents();
-				ob_end_clean();
+		if($this->directory) {
+			$template = strtolower($this->template);
+			foreach(array( $template, 'default' ) as $name) {
+				$file = $this->directory . "/templates/$name.php";
+				if(file_exists($file)) {
+					$this->addBodyClass("ac-template-$name");
+					extract($this->data, EXTR_SKIP | EXTR_REFS);
+					ob_start();
+					include $file;
+					$content = ob_get_contents();
+					ob_end_clean();
 
-				return $content;
+					return $content;
+				}
 			}
 		}
 
-		return $title . $content;
+		return $content;
 	}
 
 	/**
@@ -230,11 +234,10 @@ var AquaCore = AquaCore || {};
 ");
 		unset($json, $tz, $now, $lang);
 		extract($this->data, EXTR_SKIP | EXTR_REFS);
-		$__url  = $this->url;
-		$__file = $this->directory . "/$template.php";
-		if($this->directory && (file_exists($__file) || ($__file = $this->directory . "/layout.php") && file_exists($__file))) {
+		$this->file = $this->directory . "/$template.php";
+		if($this->directory && (file_exists($this->file) || ($this->file = $this->directory . "/layout.php") && file_exists($this->file))) {
 			ob_start();
-			include $__file;
+			include $this->file;
 			$content = ob_get_contents();
 			ob_end_clean();
 

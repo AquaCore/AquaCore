@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <?php
-use Aqua\Core\App;
-use Aqua\UI\StyleManager;
-use Aqua\UI\ScriptManager;
 /**
- * @var $body_class string
+ * @var $options    \Aqua\Core\Settings
  * @var $head       \Aqua\UI\Theme\Head
  * @var $footer     \Aqua\UI\Theme\Footer
+ * @var $body_class string
  * @var $content    string
  * @var $js_lang    string
  */
+
+use Aqua\Core\App;
+use Aqua\UI\StyleManager;
+use Aqua\UI\ScriptManager;
+
 $head->enqueueScript(ScriptManager::script('jquery-ui'));
 ?>
 <!--[if lt IE 7 ]>

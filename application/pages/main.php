@@ -11,7 +11,8 @@ extends Page
 {
 	public function run()
 	{
-		$this->theme = new Theme(App::settings()->get('theme', 'default'));
+		$this->theme = new Theme(App::settings()->get('themes')->get('/')->get('theme', 'default'));
+		$this->theme->set('options', App::settings()->get('themes')->get('/')->get('options'));
 		$this->theme->head->title = htmlspecialchars(App::settings()->get('title', 'AquaCore'));
 	}
 

@@ -2,7 +2,6 @@
 <languageimport>
   <wordgroup>
     <word namespace="bbcode" key="smileys">Smileys</word>
-    <word namespace="bbcode" key="smiley-upload">Upload smileys (GIF, JPEG, JPG, PNG, ZIP, TAR, TAR.GZ, TAR.BZ2)</word>
     <word namespace="bbcode" key="smiley-order-saved">Smiley order saved.</word>
     <word namespace="bbcode" key="smiley-deleted-s">%s smiley deleted.</word>
     <word namespace="bbcode" key="smiley-deleted-p">%s smileys deleted.</word>

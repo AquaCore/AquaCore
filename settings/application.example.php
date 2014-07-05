@@ -13,6 +13,12 @@ return array(
 	'tasks'              => true,
 	'rewrite_url'        => false,
 	'output_compression' => true,
+	'themes'             => array(
+		'/' => array(
+			'theme'   => 'default',
+		    'options' => array()
+		)
+	),
 	'ragnarok'           => array(
 		'pincode_min_len'      => 4,
 		'pincode_max_len'      => 4,
@@ -156,12 +162,10 @@ return array(
 	'chargen'            => array(
 		'emblem' => array(
 			'cache_ttl'     => 300,
-			'cache_browser' => true,
-			'compression'   => 0,
+			'compression'   => 9,
 		),
 		'sprite' => array(
-			'cache_ttl'     => 300,
-			'cache_browser' => true,
+			'cache_ttl'     => 900,
 			'compression'   => 9,
 		),
 	),

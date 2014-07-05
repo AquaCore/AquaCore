@@ -78,11 +78,11 @@ try {
 					'title'   => __('admin-menu', 'pages'),
 					'url'     => ac_build_url(array( 'path' => array( 'page' ) )),
 					'submenu' => array(
-					array(
+					'content' => array(
 						'title' => __('admin-menu', 'pages'),
 						'url'   => ac_build_url(array( 'path' => array( 'page' ) )),
 					),
-					array(
+					'new' => array(
 						'title' => __('admin-menu', 'new-page'),
 						'url'   => ac_build_url(array( 'path' => array( 'page' ), 'action' => 'new' )),
 					)
@@ -94,15 +94,15 @@ try {
 					'title'   => __('admin-menu', 'news'),
 					'url'     => ac_build_url(array( 'path' => array( 'news' ) )),
 					'submenu' => array(
-					array(
+					'content' => array(
 						'title' => __('admin-menu', 'news-posts'),
 						'url'   => ac_build_url(array( 'path' => array( 'news' ) )),
 					),
-					array(
+					'new' => array(
 						'title' => __('admin-menu', 'news-new-post'),
 						'url'   => ac_build_url(array( 'path' => array( 'news' ), 'action' => 'new' )),
 					),
-					array(
+					'categories' => array(
 						'title' => __('admin-menu', 'news-categories'),
 						'url'   => ac_build_url(array( 'path' => array( 'news', 'category' ) )),
 					)
@@ -158,11 +158,11 @@ try {
 					'title' => __('admin-menu', 'tasks'),
 					'url'   => ac_build_url(array( 'path' => array( 'task' ) )),
 			        'submenu' => array(
-				        array(
+				        'tasks' => array(
 					        'title' => __('admin-menu', 'tasks'),
 					        'url'   => ac_build_url(array( 'path' => array( 'task' ) )),
 				        ),
-				        array(
+				        'log' => array(
 					        'title' => __('admin-menu', 'task-log'),
 					        'url'   => ac_build_url(array( 'path' => array( 'task' ), 'action' => 'log' )),
 				        )
@@ -175,23 +175,23 @@ try {
 					'title'   => __('admin-menu', 'logs'),
 					'url'     => '#',
 					'submenu' => array(
-					array(
+					'login' => array(
 						'title' => __('admin-menu', 'login-log'),
 						'url'   => ac_build_url(array( 'path' => array( 'log' ), 'action' => 'login' ))
 					),
-					array(
+					'ban' => array(
 						'title' => __('admin-menu', 'ban-log'),
 						'url'   => ac_build_url(array( 'path' => array( 'log' ), 'action' => 'ban' ))
 					),
-					array(
+					'paypal' => array(
 						'title' => __('admin-menu', 'pp-log'),
 						'url'   => ac_build_url(array( 'path' => array( 'log' ), 'action' => 'paypal' ))
 					),
-					array(
+					'transfer' => array(
 						'title' => __('admin-menu', 'credit-log'),
 						'url'   => ac_build_url(array( 'path' => array( 'log' ), 'action' => 'credit' ))
 					),
-					array(
+					'error' => array(
 						'title' => __('admin-menu', 'error-log'),
 						'url'   => ac_build_url(array( 'path' => array( 'log' ), 'action' => 'error' ))
 					)
@@ -203,15 +203,19 @@ try {
 					'title' => __('admin-menu', 'settings'),
 					'url'   => ac_build_url(array( 'path' => array( 'settings' ) )),
 			        'submenu' => array(
-				        array(
+				        'settings' => array(
 					        'title' => __('admin-menu', 'settings'),
 				            'url' => ac_build_url(array( 'path' => array( 'settings' ) )),
 				        ),
-			            array(
+			            'theme' => array(
+				            'title' => __('admin-menu', 'themes'),
+				            'url' => ac_build_url(array( 'path' => array( 'theme' ) )),
+			            ),
+			            'smiley' => array(
 				            'title' => __('admin-menu', 'smileys'),
 				            'url' => ac_build_url(array( 'path' => array( 'bbcode' ), 'action' => 'smiley' )),
 			            ),
-			            array(
+			            'mail' => array(
 				            'title' => __('admin-menu', 'emails'),
 				            'url' => ac_build_url(array( 'path' => array( 'mail' ) )),
 			            )

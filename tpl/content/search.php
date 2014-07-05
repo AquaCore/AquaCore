@@ -76,8 +76,8 @@ $timeFormat = \Aqua\Core\App::settings()->get('time_format');
 						<?php foreach($tags as $tag) : ?>
 							<div class="ac-post-tag">
 								<a href="<?php echo $post->contentType->url(array(
-									                                            'path' => array( 'tagged', $tag ),
-								                                            )) ?>"><?php echo htmlspecialchars($tag) ?></a>
+										'path' => array( 'tagged', $tag ),
+									)) ?>"><?php echo htmlspecialchars($tag) ?></a>
 							</div>
 						<?php endforeach; ?>
 					</div>

@@ -14,7 +14,7 @@
 <head>
 	<?php echo $head->render()?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link type="text/css" href="<?php echo $__url?>/stylesheets/error.css" rel="stylesheet" />
+	<link type="text/css" href="<?php echo $this->url?>/stylesheets/error.css" rel="stylesheet" />
 </head>
 <body class="<?php echo $body_class?>">
 <div id="main">

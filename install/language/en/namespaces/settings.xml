@@ -168,11 +168,9 @@
     <word namespace="settings" key="ro-pincode-min-label">Minimum Pincode Length</word>
     <word namespace="settings" key="ro-pincode-max-label">Maximum Pincode Length</word>
     <word namespace="settings" key="ro-purchase-max-label">Maximum Shop Items</word>
-    <word namespace="settings" key="ro-emblem-cache-label">Browser Caching</word>
     <word namespace="settings" key="ro-emblem-ttl-label">Expiration Time</word>
     <word namespace="settings" key="ro-emblem-ttl-desc">Time, in seconds, an emblem should remain in cache.</word>
     <word namespace="settings" key="ro-emblem-compress-label">Image Compression</word>
-    <word namespace="settings" key="ro-sprite-cache-label">Browser Caching</word>
     <word namespace="settings" key="ro-sprite-ttl-label">Expiration Time</word>
     <word namespace="settings" key="ro-sprite-ttl-desc">Time, in seconds, a sprite should remain in cache.</word>
     <word namespace="settings" key="ro-sprite-compress-label">Image Compression</word>

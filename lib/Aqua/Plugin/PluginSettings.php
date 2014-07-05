@@ -236,25 +236,6 @@ implements \Serializable
 	}
 
 	/**
-	 * @param Settings $settings
-	 * @param          $error
-	 * @param          $message
-	 * @return bool
-	 */
-	public function update(Settings $settings, &$error = array(), &$message = null)
-	{
-		$vars = array(
-			'settings' => $settings,
-			'error'    => &$error,
-			'message'  => &$message
-		);
-		$this->plugin->run('settings', $vars);
-		$this->merge($settings, true, $updated);
-
-		return (bool)$updated;
-	}
-
-	/**
 	 * @param \Aqua\Http\Request $request
 	 * @return \Aqua\UI\FormXML|null
 	 */
