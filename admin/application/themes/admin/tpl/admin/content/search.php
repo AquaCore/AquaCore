@@ -42,9 +42,30 @@ if($page->contentType->hasFilter('CommentFilter')) {
 $page->theme->template = 'sidebar-right';
 $page->theme->addWordGroup('content', array( 'confirm-delete-p', 'confirm-delete-s' ));
 $page->theme->footer->enqueueScript(ScriptManager::script('aquacore.build-url'));
-$page->theme->footer->enqueueScript('theme.content-search')
+$page->theme->footer->enqueueScript('theme.account-search')
 	->type('text/javascript')
-	->src($page->theme->url . '/scripts/content-search.js');
+	->append('
+(function($) {
+	$("#content-form").on("submit", function(e) {
+		var checkboxes = $("input[name=\"content[]\"]:checked", this),
+			count = checkboxes.length;
+		if($("select[name=action]", this).val() === "delete") {
+			if(count > 1 && !confirm(AquaCore.l("content", "confirm-delete-p"))) {
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			} else if(count === 1) {
+				var title = checkboxes.eq(0).closest("tr").find(".content-title a").text();
+				if(!confirm(AquaCore.l("content", "confirm-delete-s", title))) {
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}
+			}
+		}
+	});
+})(jQuery);
+');
 $sidebar = new Sidebar;
 foreach($search->content as $key => $field) {
 	$str = $field->render();
@@ -158,7 +179,7 @@ $page->theme->set('sidebar', $sidebar);
 					<?php echo $paginator->render() ?>
 					<div style="position: absolute; top: 3px; right: 10px">
 						<a href="<?php echo $page->contentType->url(array( 'action' => 'new' )) ?>">
-							<button type="button"><?php echo __('content', 'new-title', htmlspecialchars($page->contentType->name)); ?></button>
+							<button type="button"><?php echo __('content', 'new-title', htmlspecialchars($page->contentType->itemName)); ?></button>
 						</a>
 					</div>
 				</div>
